@@ -1,0 +1,12 @@
+﻿name = " website\
+main = \worker.js\
+compatibility_date = \2024-09-01\
+
+[assets]
+directory = \wedsite\
+binding = \ASSETS\
+run_worker_first = true
+
+[[kv_namespaces]]
+binding = \POSTS_KV\
+id = \998d7b8018334359920f3c5ca1117b86\
