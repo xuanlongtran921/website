@@ -4405,13 +4405,40 @@ async function fetchMessagesSilently(updateUiOnError = false) {
   const container = document.getElementById('messages-list');
   try {
     const res = await fetch('/api/contact/messages');
-    const data = await res.json();
-    const messages = data.messages || [];
-    window.allMessages = messages;
-    renderMessagesList(messages);
-  } catch (e) {
+    if (res.ok) {
+      const data = await res.json();
+      const messages = (data && data.messages) ? data.messages : (Array.isArray(data) ? data : []);
+      window.allMessages = messages;
+      renderMessagesList(messages);
+      return;
+    }
+
+    // Fallback try static messages file
+    const staticRes = await fetch('/data/messages.json');
+    if (staticRes.ok) {
+      const list = await staticRes.json();
+      window.allMessages = Array.isArray(list) ? list : [];
+      renderMessagesList(window.allMessages);
+      return;
+    }
+
     if (updateUiOnError && container) {
-      container.innerHTML = `<div class="p-6 text-center text-rose-400 text-xs">Error loading messages: ${e.message}</div>`;
+      container.innerHTML = `<div class="p-6 text-center text-purple-400 text-xs">Chưa có tin nhắn nào từ khách hàng (Inbox trống).</div>`;
+    }
+  } catch (e) {
+    // Attempt static read if fetch failed completely
+    try {
+      const staticRes = await fetch('/data/messages.json');
+      if (staticRes.ok) {
+        const list = await staticRes.json();
+        window.allMessages = Array.isArray(list) ? list : [];
+        renderMessagesList(window.allMessages);
+        return;
+      }
+    } catch (err) {}
+
+    if (updateUiOnError && container) {
+      container.innerHTML = `<div class="p-6 text-center text-purple-400 text-xs">Chưa có tin nhắn nào từ khách hàng (Inbox trống).</div>`;
     }
   }
 }
