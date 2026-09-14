@@ -3325,10 +3325,29 @@ function initHeroPinManagement() {
 }
 
 async function loadHeroPinData() {
+  const deck = document.getElementById('hero-top3-deck');
   try {
-    const res = await fetch('/api/pinned-project?t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    let data = null;
+    try {
+      const res = await fetch('/api/pinned-project?t=' + Date.now());
+      if (res.ok) {
+        data = await res.json();
+      }
+    } catch (apiErr) {
+      console.warn('API /api/pinned-project unavailable, attempting static fallback:', apiErr);
+    }
+
+    if (!data) {
+      const fallbackRes = await fetch('/data/pinned_project.json?t=' + Date.now());
+      if (fallbackRes.ok) {
+        data = await fallbackRes.json();
+      }
+    }
+
+    if (!data) {
+      throw new Error('Không thể tải cấu hình ghim từ cả API lẫn file tĩnh.');
+    }
+
     window.currentPinnedHero = data;
 
     // Render Top 3 Visual Deck
@@ -3340,7 +3359,16 @@ async function loadHeroPinData() {
     populateQuickPinOptions();
     updateHeroLivePreview();
   } catch (err) {
-    console.warn('Cannot load pinned project:', err);
+    console.error('Cannot load pinned project:', err);
+    if (deck) {
+      deck.innerHTML = `
+        <div class="col-span-3 text-center py-6 text-rose-400 text-xs space-y-2">
+          <p>⚠️ Lỗi tải cấu hình Top 3 ghim: ${escapeHtml(err.message)}</p>
+          <button type="button" onclick="loadHeroPinData()" class="px-3 py-1 rounded-lg bg-purple-900/80 hover:bg-purple-800 text-purple-200 hover:text-white text-xs font-bold border border-purple-700/60 cursor-pointer">
+            🔄 Thử lại
+          </button>
+        </div>`;
+    }
   }
 }
 
@@ -3918,10 +3946,20 @@ async function loadTickerManagerData() {
   if (!container) return;
 
   try {
-    const res = await fetch('/api/ticker?t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = await res.json();
-    window.currentTickerItems = items || [];
+    let items = null;
+    try {
+      const res = await fetch('/api/ticker?t=' + Date.now());
+      if (res.ok) items = await res.json();
+    } catch (e) {}
+
+    if (!items || !Array.isArray(items)) {
+      try {
+        const fbRes = await fetch('/data/ticker_items.json?t=' + Date.now());
+        if (fbRes.ok) items = await fbRes.json();
+      } catch (e) {}
+    }
+
+    window.currentTickerItems = Array.isArray(items) ? items : [];
 
     if (badgeCount) {
       badgeCount.textContent = `${window.currentTickerItems.length} mục`;

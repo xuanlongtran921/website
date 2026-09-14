@@ -26,6 +26,8 @@ const CORS_HEADERS = {
 let inMemoryPosts = [];
 let inMemoryHtml = new Map();
 let inMemoryMessages = [];
+let inMemoryPinned = null;
+let inMemoryTicker = null;
 
 export default {
   async fetch(request, env, ctx) {
@@ -442,7 +444,539 @@ export default {
     }
 
     // -------------------------------------------------------------
-    // 6. DYNAMIC POST HTML SERVING (FOR NEWLY PUBLISHED POSTS)
+    // 6. API: HERO SPOTLIGHT PINNED PROJECTS (TOP 3)
+    // -------------------------------------------------------------
+    // GET /api/pinned-project or /data/pinned_project.json
+    if ((url.pathname === '/api/pinned-project' || url.pathname === '/data/pinned_project.json') && request.method === 'GET') {
+      let pinnedData = null;
+      if (env.POSTS_KV) {
+        try {
+          const raw = await env.POSTS_KV.get('pinned_project');
+          if (raw) pinnedData = JSON.parse(raw);
+        } catch (e) {}
+      } else {
+        pinnedData = inMemoryPinned;
+      }
+
+      if (!pinnedData && env.ASSETS) {
+        try {
+          const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/pinned_project.json', request.url)));
+          if (assetRes.ok) pinnedData = await assetRes.json();
+        } catch (e) {}
+      }
+
+      if (!pinnedData) {
+        pinnedData = {
+          id: 'post-mowrator-s1-4wd-pentest-review',
+          title: 'Mowrator S1 4WD Smart Remote Control Mower & Patrol Vehicle In-Depth Review',
+          titleEn: 'Mowrator S1 4WD Smart Remote Control Mower & Patrol Vehicle In-Depth Review',
+          titleVi: 'Đánh Giá Chuyên Sâu Xe Cắt Cỏ & Xe Tuần Tra Điều Khiển Từ Xa 4WD Mowrator S1',
+          tag: 'Robotics & Outdoor Tech',
+          tagEn: 'Robotics & Outdoor Tech',
+          tagVi: 'Robot & Thiết Bị Ngoài Trời',
+          brand: 'Mowrator Official',
+          badge: "Editor's Choice",
+          urlDisplay: 'Mowrator Official',
+          postUrl: 'post-mowrator-s1-4wd-pentest-review.html',
+          affiliateUrl: 'https://eu.mowrator.com/?ref=LONGXUANTRAN',
+          image: 'images/mowrator-s1-4wd-pro.jpg',
+          priceUsd: '$1,499.00',
+          priceVnd: '37.475.000₫',
+          discountPercent: '17% OFF All-Terrain 4WD Series',
+          pinnedList: []
+        };
+      }
+
+      return new Response(JSON.stringify(pinnedData, null, 2), {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      });
+    }
+
+    // POST /api/pinned-project or /api/pin-project
+    if ((url.pathname === '/api/pinned-project' || url.pathname === '/api/pin-project') && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        let currentPinned = null;
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('pinned_project');
+            if (raw) currentPinned = JSON.parse(raw);
+          } catch (e) {}
+        } else {
+          currentPinned = inMemoryPinned;
+        }
+
+        if (!currentPinned && env.ASSETS) {
+          try {
+            const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/pinned_project.json', request.url)));
+            if (assetRes.ok) currentPinned = await assetRes.json();
+          } catch (e) {}
+        }
+        if (!currentPinned) currentPinned = { pinnedList: [] };
+
+        let list = (currentPinned && Array.isArray(currentPinned.pinnedList)) ? [...currentPinned.pinnedList] : [];
+
+        if (Array.isArray(json.pinnedList)) {
+          list = json.pinnedList;
+          currentPinned = { ...json };
+        } else {
+          const cleanAff = json.affiliateUrl && !json.affiliateUrl.startsWith('http://') && !json.affiliateUrl.startsWith('https://')
+            ? 'https://' + json.affiliateUrl : (json.affiliateUrl || '#');
+          const pinnedObj = {
+            id: json.id || 'hero-pinned-' + Date.now(),
+            title: json.title,
+            titleEn: json.titleEn || json.title,
+            titleVi: json.titleVi || json.title,
+            titleZh: json.titleZh || json.title,
+            tag: json.tag || 'REVIEW FLAGSHIP',
+            tagEn: json.tagEn || 'FLAGSHIP REVIEW',
+            tagVi: json.tagVi || 'SẢN PHẨM NỔI BẬT',
+            tagZh: json.tagZh || '旗舰特选',
+            brand: json.brand || json.urlDisplay || 'BullBoost Performance',
+            badge: json.badge || "Editor's Choice",
+            badgeEn: json.badgeEn || "Editor's Choice",
+            badgeVi: json.badgeVi || "Lựa Chọn Biên Tập Viên",
+            badgeZh: json.badgeZh || "编辑特选推荐",
+            urlDisplay: json.urlDisplay || json.brand || 'BullBoost Performance',
+            postUrl: json.postUrl || 'post.html',
+            affiliateUrl: cleanAff,
+            image: json.image || '',
+            priceVnd: json.priceVnd || '0₫',
+            priceUsd: json.priceUsd || '$0.00',
+            priceOrigVnd: json.priceOrigVnd || '',
+            priceOrigUsd: json.priceOrigUsd || '',
+            discountPercent: json.discountPercent || '-20%'
+          };
+          if (list.length > 0) {
+            list[0] = pinnedObj;
+          } else {
+            list = [pinnedObj];
+          }
+          currentPinned = { ...pinnedObj, pinnedList: list };
+        }
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('pinned_project', JSON.stringify(currentPinned));
+        } else {
+          inMemoryPinned = currentPinned;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã ghim dự án lên đầu trang chủ thành công!',
+          pinnedData: currentPinned
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi ghim dự án: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // POST /api/pin-swap (Hoán đổi vị trí giữa slot A và B)
+    if (url.pathname === '/api/pin-swap' && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        const idxA = parseInt(json.indexA, 10);
+        const idxB = parseInt(json.indexB, 10);
+
+        let currentPinned = null;
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('pinned_project');
+            if (raw) currentPinned = JSON.parse(raw);
+          } catch (e) {}
+        } else {
+          currentPinned = inMemoryPinned;
+        }
+        if (!currentPinned && env.ASSETS) {
+          try {
+            const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/pinned_project.json', request.url)));
+            if (assetRes.ok) currentPinned = await assetRes.json();
+          } catch (e) {}
+        }
+
+        let list = (currentPinned && Array.isArray(currentPinned.pinnedList)) ? [...currentPinned.pinnedList] : [];
+        if (idxA >= 0 && idxA < list.length && idxB >= 0 && idxB < list.length) {
+          const temp = list[idxA];
+          list[idxA] = list[idxB];
+          list[idxB] = temp;
+
+          const top = list[0] || {};
+          const updatedObj = {
+            ...top,
+            pinnedList: list
+          };
+
+          if (env.POSTS_KV) {
+            await env.POSTS_KV.put('pinned_project', JSON.stringify(updatedObj));
+          } else {
+            inMemoryPinned = updatedObj;
+          }
+
+          return new Response(JSON.stringify({
+            success: true,
+            message: `Đã hoán đổi vị trí Top ${idxA + 1} và Top ${idxB + 1} thành công!`,
+            pinnedList: list
+          }), {
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        }
+
+        return new Response(JSON.stringify({ success: false, message: 'Chỉ mục slot không hợp lệ!' }), {
+          status: 400,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi hoán đổi ghim: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // POST /api/pin-set-slot (Gán bài viết/sản phẩm vào vị trí slot 0, 1, 2)
+    if (url.pathname === '/api/pin-set-slot' && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        const slot = parseInt(json.slot, 10);
+        let newItem = json.item;
+
+        if (isNaN(slot) || slot < 0 || slot > 2) {
+          return new Response(JSON.stringify({ success: false, message: 'Slot không hợp lệ (phải từ 0 đến 2)!' }), {
+            status: 400,
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        }
+
+        // If postId provided instead of item object, find from catalog
+        if (!newItem && json.postId) {
+          let allPosts = [];
+          if (env.POSTS_KV) {
+            try {
+              const raw = await env.POSTS_KV.get('custom_posts_list');
+              if (raw) allPosts = JSON.parse(raw);
+            } catch (e) {}
+          }
+          if (env.ASSETS) {
+            try {
+              const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/posts.json', request.url)));
+              if (assetRes.ok) {
+                const bPosts = await assetRes.json();
+                allPosts = [...allPosts, ...(Array.isArray(bPosts) ? bPosts : [])];
+              }
+            } catch (e) {}
+          }
+          const found = allPosts.find(p => p.id === json.postId || p.slug === json.postId);
+          if (found) {
+            newItem = {
+              id: found.id,
+              title: found.title,
+              titleEn: found.titleEn || found.title,
+              titleVi: found.titleVi || found.title,
+              titleZh: found.titleZh || found.title,
+              tag: 'REVIEW ' + (found.category || 'FLAGSHIP').toUpperCase(),
+              tagEn: 'REVIEW ' + (found.categoryEn || found.category || 'FLAGSHIP').toUpperCase(),
+              tagVi: (found.categoryVi || found.category || 'SẢN PHẨM NỔI BẬT').toUpperCase(),
+              brand: found.brand || 'SmartPicks Official',
+              badge: "Editor's Choice",
+              badgeEn: "Editor's Choice",
+              badgeVi: "Lựa Chọn Biên Tập Viên",
+              urlDisplay: found.brand || 'SmartPicks Official',
+              postUrl: found.slug || 'post.html',
+              affiliateUrl: found.affiliateLink || '#',
+              image: found.image || '',
+              priceUsd: found.priceUsd || '$0.00',
+              priceVnd: found.priceVnd || '0₫',
+              priceOrigUsd: found.priceOrig || '',
+              priceOrigVnd: found.originalPrice || '',
+              discountPercent: found.couponDiscount || '-15%'
+            };
+          }
+        }
+
+        if (!newItem) {
+          return new Response(JSON.stringify({ success: false, message: 'Dữ liệu bài viết không hợp lệ!' }), {
+            status: 400,
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        }
+
+        let currentPinned = null;
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('pinned_project');
+            if (raw) currentPinned = JSON.parse(raw);
+          } catch (e) {}
+        } else {
+          currentPinned = inMemoryPinned;
+        }
+        if (!currentPinned && env.ASSETS) {
+          try {
+            const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/pinned_project.json', request.url)));
+            if (assetRes.ok) currentPinned = await assetRes.json();
+          } catch (e) {}
+        }
+
+        let list = (currentPinned && Array.isArray(currentPinned.pinnedList)) ? [...currentPinned.pinnedList] : [];
+        while (list.length <= slot) {
+          list.push(newItem);
+        }
+        list[slot] = newItem;
+
+        const top = list[0] || {};
+        const updatedObj = {
+          ...top,
+          pinnedList: list
+        };
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('pinned_project', JSON.stringify(updatedObj));
+        } else {
+          inMemoryPinned = updatedObj;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: `Đã cập nhật vị trí Top ${slot + 1} thành công!`,
+          pinnedList: list
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi gán slot: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // POST /api/pin-reorder
+    if (url.pathname === '/api/pin-reorder' && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        const list = Array.isArray(json.pinnedList) ? json.pinnedList : [];
+        if (list.length === 0) {
+          return new Response(JSON.stringify({ success: false, message: 'Danh sách ghim trống!' }), {
+            status: 400,
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        }
+
+        const top = list[0] || {};
+        const updatedObj = {
+          ...top,
+          pinnedList: list
+        };
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('pinned_project', JSON.stringify(updatedObj));
+        } else {
+          inMemoryPinned = updatedObj;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã cập nhật thứ tự ghim thành công!',
+          pinnedList: list
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi sắp xếp ghim: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 7. API: TOP BAR TICKER ITEMS
+    // -------------------------------------------------------------
+    // GET /api/ticker & /data/ticker_items.json
+    if ((url.pathname === '/api/ticker' || url.pathname === '/data/ticker_items.json') && request.method === 'GET') {
+      let tickerList = null;
+      if (env.POSTS_KV) {
+        try {
+          const raw = await env.POSTS_KV.get('ticker_items');
+          if (raw) tickerList = JSON.parse(raw);
+        } catch (e) {}
+      } else {
+        tickerList = inMemoryTicker;
+      }
+
+      if ((!tickerList || tickerList.length === 0) && env.ASSETS) {
+        try {
+          const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/ticker_items.json', request.url)));
+          if (assetRes.ok) tickerList = await assetRes.json();
+        } catch (e) {}
+      }
+
+      return new Response(JSON.stringify(Array.isArray(tickerList) ? tickerList : [], null, 2), {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      });
+    }
+
+    // POST /api/pin-ticker (Ghim bài viết lên thanh ticker chạy)
+    if (url.pathname === '/api/pin-ticker' && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        let tickerList = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('ticker_items');
+            if (raw) tickerList = JSON.parse(raw);
+          } catch (e) {}
+        } else {
+          tickerList = inMemoryTicker || [];
+        }
+
+        if ((!tickerList || tickerList.length === 0) && env.ASSETS) {
+          try {
+            const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/ticker_items.json', request.url)));
+            if (assetRes.ok) tickerList = await assetRes.json();
+          } catch (e) {}
+        }
+        if (!Array.isArray(tickerList)) tickerList = [];
+
+        const itemId = json.id || 'ticker-' + crypto.randomUUID().slice(0, 8);
+        const itemUrl = json.url || 'index.html';
+        const itemBadge = json.badge || 'HOT REVIEW';
+        const itemBadgeClass = json.badgeClass || 'bg-rose-500 text-white';
+        const itemIcon = json.icon || 'sparkles';
+
+        const tEn = (json.text && json.text.en) || json.titleEn || json.title || 'Featured Deal';
+        const tVi = (json.text && json.text.vi) || json.titleVi || json.title || tEn;
+        const tZh = (json.text && json.text.zh) || json.titleZh || json.title || tEn;
+
+        const tickerObj = {
+          id: itemId,
+          badge: itemBadge,
+          badgeClass: itemBadgeClass,
+          icon: itemIcon,
+          text: {
+            en: tEn,
+            vi: tVi,
+            zh: tZh
+          },
+          url: itemUrl
+        };
+
+        const filtered = tickerList.filter(item => item && item.id !== itemId && item.url !== itemUrl);
+        const updated = [tickerObj, ...filtered];
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('ticker_items', JSON.stringify(updated));
+        } else {
+          inMemoryTicker = updated;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã ghim lên thanh ticker đầu trang thành công!',
+          items: updated
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi ghim ticker: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // POST /api/unpin-ticker (Gỡ ghim bài viết khỏi thanh ticker)
+    if (url.pathname === '/api/unpin-ticker' && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        let tickerList = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('ticker_items');
+            if (raw) tickerList = JSON.parse(raw);
+          } catch (e) {}
+        } else {
+          tickerList = inMemoryTicker || [];
+        }
+
+        if ((!tickerList || tickerList.length === 0) && env.ASSETS) {
+          try {
+            const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/ticker_items.json', request.url)));
+            if (assetRes.ok) tickerList = await assetRes.json();
+          } catch (e) {}
+        }
+        if (!Array.isArray(tickerList)) tickerList = [];
+
+        const targetId = json.id;
+        const targetUrl = json.url;
+
+        const updated = tickerList.filter(item => {
+          if (!item) return false;
+          const matchId = targetId ? item.id === targetId : false;
+          const matchUrl = targetUrl ? item.url === targetUrl : false;
+          return !(matchId || matchUrl);
+        });
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('ticker_items', JSON.stringify(updated));
+        } else {
+          inMemoryTicker = updated;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã gỡ mục khỏi thanh ticker thành công!',
+          items: updated
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi gỡ ghim ticker: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // POST /api/ticker (Lưu toàn bộ danh sách ticker)
+    if (url.pathname === '/api/ticker' && request.method === 'POST') {
+      try {
+        const json = await request.json();
+        const items = Array.isArray(json) ? json : (Array.isArray(json.items) ? json.items : []);
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('ticker_items', JSON.stringify(items));
+        } else {
+          inMemoryTicker = items;
+        }
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã lưu danh sách ticker thành công!',
+          items: items
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi lưu ticker: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 8. DYNAMIC POST HTML SERVING (FOR NEWLY PUBLISHED POSTS)
     // -------------------------------------------------------------
     if (url.pathname.startsWith('/post-')) {
       const cleanPath = url.pathname.replace(/^\//, '');
