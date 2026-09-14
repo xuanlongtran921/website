@@ -565,7 +565,7 @@ function Extract-BrandPriceInfo([string]$TargetUrl) {
 }
 
 function Send-CustomerContactEmail($msgObj) {
-    $targetEmail = "supportsmartpickshub@gmail.com"
+    $targetEmail = "support@smartpicksreview.online"
     $emailConfigPath = Join-Path $RootPath "data\email_config.json"
     $emailConfig = $null
     if (Test-Path $emailConfigPath) {
@@ -2035,7 +2035,7 @@ while ($listener.IsListening) {
         # -------------------------------------------------------------
         # -------------------------------------------------------------
         # API: POST /api/contact
-        # Saves customer contact messages and forwards email to supportsmartpickshub@gmail.com
+        # Saves customer contact messages and forwards email to support@smartpicksreview.online
         # -------------------------------------------------------------
         if ($request.HttpMethod -eq "POST" -and $path -eq "/api/contact") {
             try {
@@ -2072,7 +2072,7 @@ while ($listener.IsListening) {
                 }
                 [System.IO.File]::WriteAllText($messagesJsonPath, $updatedJson, [System.Text.Encoding]::UTF8)
 
-                # Dispatch email to supportsmartpickshub@gmail.com
+                # Dispatch email to support@smartpicksreview.online
                 $emailDispatch = Send-CustomerContactEmail $msgObj
 
                 $response.ContentType = "application/json; charset=utf-8"
@@ -2177,7 +2177,7 @@ while ($listener.IsListening) {
             $emailConfigPath = Join-Path $RootPath "data\email_config.json"
             if ($request.HttpMethod -eq "GET") {
                 try {
-                    $cfg = @{ targetEmail = "supportsmartpickshub@gmail.com"; forwarder = "formsubmit"; smtp = @{ enabled = $false; host = "smtp.gmail.com"; port = 587; user = "supportsmartpickshub@gmail.com"; passSet = $false } }
+                    $cfg = @{ targetEmail = "support@smartpicksreview.online"; forwarder = "formsubmit"; smtp = @{ enabled = $false; host = "smtp.gmail.com"; port = 587; user = "support@smartpicksreview.online"; passSet = $false } }
                     if (Test-Path $emailConfigPath) {
                         $raw = [System.IO.File]::ReadAllText($emailConfigPath, [System.Text.Encoding]::UTF8)
                         if ($raw) {
@@ -2246,16 +2246,16 @@ while ($listener.IsListening) {
 
         # -------------------------------------------------------------
         # API: POST /api/contact/test
-        # Sends a test email to supportsmartpickshub@gmail.com
+        # Sends a test email to support@smartpicksreview.online
         # -------------------------------------------------------------
         if ($request.HttpMethod -eq "POST" -and $path -eq "/api/contact/test") {
             try {
                 $testMsg = [PSCustomObject]@{
                     id = "test-" + ([System.Guid]::NewGuid().ToString().Substring(0, 8))
                     name = "SmartPicks Test System"
-                    email = "supportsmartpickshub@gmail.com"
+                    email = "support@smartpicksreview.online"
                     subject = "Test Email Connection & Delivery"
-                    message = "Xin chao! Day la email thu nghiem tu he thong website Smart Picks Review nham kiem tra ket noi gui mail den supportsmartpickshub@gmail.com."
+                    message = "Xin chao! Day la email thu nghiem tu he thong website Smart Picks Review nham kiem tra ket noi gui mail den support@smartpicksreview.online."
                     createdAt = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
                     sourceUrl = "http://localhost:3000/admin-cms/"
                 }

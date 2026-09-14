@@ -481,8 +481,8 @@ window.simulateSuccessfulPayment = function() {
     })
   }).catch(() => {});
 
-  // 2. Direct Cloud Forwarder to supportsmartpickshub@gmail.com
-  fetch('https://formsubmit.co/ajax/supportsmartpickshub@gmail.com', {
+  // 2. Direct Cloud Forwarder to support@smartpicksreview.online
+  fetch('https://formsubmit.co/ajax/support@smartpicksreview.online', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({
@@ -501,7 +501,7 @@ window.simulateSuccessfulPayment = function() {
     document.getElementById('checkout-step-3').classList.remove('hidden');
     lucide.createIcons();
     if (typeof showToast === 'function') {
-      showToast('🎉 Xác nhận thanh toán thành công! Thông báo đơn hàng đã gửi về supportsmartpickshub@gmail.com');
+      showToast('🎉 Xác nhận thanh toán thành công! Thông báo đơn hàng đã gửi về support@smartpicksreview.online');
     }
   }, 1000);
 };

@@ -1,12 +1,12 @@
 {
-    "targetEmail":  "supportsmartpickshub@gmail.com",
+    "targetEmail":  "support@smartpicksreview.online",
     "forwarder":  "formsubmit",
     "smtp":  {
                  "enabled":  false,
                  "host":  "smtp.gmail.com",
                  "port":  587,
                  "enableSsl":  true,
-                 "user":  "supportsmartpickshub@gmail.com",
+                 "user":  "support@smartpicksreview.online",
                  "pass":  "1532004Long@"
              }
 }

@@ -1,4 +1,4 @@
-﻿// Main JavaScript for Monetization Blog
+// Main JavaScript for Monetization Blog
 document.addEventListener('DOMContentLoaded', () => {
   initPageTransitions();
   initTheme();
@@ -2385,7 +2385,7 @@ async function handleContactSubmit(e) {
   } catch (err) {
     console.warn('Backend /api/contact unavailable, falling back to direct cloud forwarder:', err);
     try {
-      await fetch('https://formsubmit.co/ajax/supportsmartpickshub@gmail.com', {
+      await fetch('https://formsubmit.co/ajax/support@smartpicksreview.online', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -2400,7 +2400,7 @@ async function handleContactSubmit(e) {
       });
       form.reset();
       const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
-      const successMsg = (typeof translations !== 'undefined' && translations[lang] && translations[lang].contact_success_toast) || (lang === 'vi' ? 'Cảm ơn bạn! Tin nhắn đã được gửi thành công đến supportsmartpickshub@gmail.com.' : 'Thank you! Your message has been sent successfully to supportsmartpickshub@gmail.com.');
+      const successMsg = (typeof translations !== 'undefined' && translations[lang] && translations[lang].contact_success_toast) || (lang === 'vi' ? 'Cảm ơn bạn! Tin nhắn đã được gửi thành công đến support@smartpicksreview.online.' : 'Thank you! Your message has been sent successfully to support@smartpicksreview.online.');
       if (typeof showToast === 'function') showToast(successMsg);
       else alert(successMsg);
     } catch (fwdErr) {
