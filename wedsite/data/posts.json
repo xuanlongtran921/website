@@ -1,6 +1,64 @@
 {
     "value":  [
                   {
+                      "id":  "post-test-review",
+                      "title":  "Test Review Article",
+                      "titleEn":  "Test Review Article",
+                      "titleVi":  "Test Review Article",
+                      "titleZh":  "Test Review Article",
+                      "slug":  "post-test-review.html",
+                      "excerpt":  "Testing publish",
+                      "excerptEn":  "Testing publish",
+                      "excerptVi":  "Testing publish",
+                      "excerptZh":  "Testing publish",
+                      "category":  "Tech",
+                      "categoryEn":  "Tech",
+                      "categoryVi":  "Tech",
+                      "categoryZh":  "Tech",
+                      "categorySlug":  "tech",
+                      "rating":  null,
+                      "date":  "14/09/2026",
+                      "image":  null,
+                      "isFeatured":  true,
+                      "affiliateCount":  1,
+                      "brand":  "Test Brand",
+                      "btnText":  "ORDER NOW",
+                      "btnTextEn":  "ORDER NOW",
+                      "btnTextVi":  "ĐẶT HÀNG NGAY",
+                      "btnTextZh":  "立即前往订购",
+                      "affiliateLink":  "https://example.com/?ref=TEST",
+                      "priceUsd":  null,
+                      "priceVnd":  null,
+                      "priceOrig":  null,
+                      "coupon":  null,
+                      "couponDiscount":  null,
+                      "couponExpiry":  null,
+                      "pros":  [
+                                   "Pro 1"
+                               ],
+                      "prosEn":  "Pro 1",
+                      "prosVi":  "Pro 1",
+                      "prosZh":  "Pro 1",
+                      "cons":  [
+                                   "Con 1"
+                               ],
+                      "consEn":  "Con 1",
+                      "consVi":  "Con 1",
+                      "consZh":  "Con 1",
+                      "intro":  "Intro text",
+                      "introEn":  "Intro text",
+                      "introVi":  "Intro text",
+                      "introZh":  "Intro text",
+                      "body":  "Body text",
+                      "bodyEn":  "Body text",
+                      "bodyVi":  "Body text",
+                      "bodyZh":  "Body text",
+                      "verdict":  "Verdict text",
+                      "verdictEn":  "Verdict text",
+                      "verdictVi":  "Verdict text",
+                      "verdictZh":  "Verdict text"
+                  },
+                  {
                       "id":  "post-mowrator-pro-test",
                       "title":  "Mowrator S1 4WD Remote Slope Mower Pro Tested",
                       "titleEn":  "Mowrator S1 4WD Remote Slope Mower Pro Tested",
@@ -11,9 +69,9 @@
                       "excerptEn":  "Full field testing on 75% slope with AWD electric power.",
                       "excerptVi":  "Kiểm thử thực tế khả năng leo dốc 75% với hệ dẫn động điện 4WD.",
                       "excerptZh":  "Full field testing on 75% slope with AWD electric power.",
-                      "category":  "Robotics & Outdoor Tech",
-                      "categoryEn":  "Robotics & Outdoor Tech",
-                      "categoryVi":  "Robot & Thiết Bị Ngoài Trời",
+                      "category":  "Robotics \u0026 Outdoor Tech",
+                      "categoryEn":  "Robotics \u0026 Outdoor Tech",
+                      "categoryVi":  "Robot \u0026 Thiết Bị Ngoài Trời",
                       "categoryZh":  "机器人与户外自动化",
                       "categorySlug":  "tech",
                       "rating":  "9.8",
@@ -1142,5 +1200,5 @@
                       "verdict":  "A game-changing operational multiplier that allows a solo creator to produce the output of a ten-person editorial newsroom."
                   }
               ],
-    "Count":  22
+    "Count":  23
 }

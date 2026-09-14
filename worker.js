@@ -30,6 +30,20 @@ let inMemoryPinned = null;
 let inMemoryTicker = null;
 let inMemoryProducts = null;
 
+function safeJsonParse(text, fallback = null) {
+  if (!text) return fallback;
+  if (typeof text !== 'string') return text;
+  let clean = text;
+  if (clean.charCodeAt(0) === 0xFEFF) {
+    clean = clean.slice(1);
+  }
+  try {
+    return JSON.parse(clean.trim());
+  } catch (e) {
+    return fallback;
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -250,7 +264,8 @@ export default {
           const assetReq = new Request(new URL('/data/posts.json', request.url));
           const assetRes = await env.ASSETS.fetch(assetReq);
           if (assetRes.ok) {
-            const parsed = await assetRes.json();
+            const rawText = await assetRes.text();
+            const parsed = safeJsonParse(rawText, []);
             basePosts = Array.isArray(parsed) ? parsed : (parsed.value || []);
           }
         } catch (e) {}
@@ -301,7 +316,8 @@ export default {
           const assetReq = new Request(new URL('/data/products.json', request.url));
           const assetRes = await env.ASSETS.fetch(assetReq);
           if (assetRes.ok) {
-            const parsed = await assetRes.json();
+            const rawText = await assetRes.text();
+            const parsed = safeJsonParse(rawText, []);
             baseProducts = Array.isArray(parsed) ? parsed : (parsed.value || []);
           }
         } catch (e) {}
@@ -605,7 +621,7 @@ export default {
       if (!pinnedData && env.ASSETS) {
         try {
           const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/pinned_project.json', request.url)));
-          if (assetRes.ok) pinnedData = await assetRes.json();
+          if (assetRes.ok) pinnedData = safeJsonParse(await assetRes.text(), null);
         } catch (e) {}
       }
 
@@ -865,7 +881,7 @@ export default {
         if (!currentPinned && env.ASSETS) {
           try {
             const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/pinned_project.json', request.url)));
-            if (assetRes.ok) currentPinned = await assetRes.json();
+            if (assetRes.ok) currentPinned = safeJsonParse(await assetRes.text(), null);
           } catch (e) {}
         }
 
@@ -959,7 +975,7 @@ export default {
       if ((!tickerList || tickerList.length === 0) && env.ASSETS) {
         try {
           const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/ticker_items.json', request.url)));
-          if (assetRes.ok) tickerList = await assetRes.json();
+          if (assetRes.ok) tickerList = safeJsonParse(await assetRes.text(), []);
         } catch (e) {}
       }
 
