@@ -1,7 +1,7 @@
 /**
  * =========================================================================
  * Cloudflare Worker Backend for SmartPicks Hub & Admin CMS
- * Domain: website.xuanlongtran921.workers.dev
+ * Domain: smartpicksreview.online (website.xuanlongtran921.workers.dev)
  * =========================================================================
  * Features:
  * 1. POST /api/publish: Saves articles directly to Cloudflare KV without downloading files.
@@ -1361,7 +1361,354 @@ export default {
     }
 
     // -------------------------------------------------------------
-    // 8. DYNAMIC POST HTML SERVING (FOR NEWLY PUBLISHED POSTS)
+    // 8. ROUTE NORMALIZATION: /admin-cms -> /admin-cms/
+    // -------------------------------------------------------------
+    if (url.pathname === '/admin-cms') {
+      return Response.redirect(new URL('/admin-cms/', request.url).toString(), 301);
+    }
+
+    // -------------------------------------------------------------
+    // 9. API: CUSTOMER INQUIRIES & EMAIL FORWARDING
+    // -------------------------------------------------------------
+
+    // POST /api/contact (Khách gửi tin nhắn từ form Get in Touch)
+    if (url.pathname === '/api/contact' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const name = (body.name || '').trim();
+        const email = (body.email || '').trim();
+        const subject = (body.subject || '').trim() || 'Yêu cầu tư vấn / Hợp tác';
+        const message = (body.message || '').trim();
+        const sourceUrl = (body.sourceUrl || '').trim() || 'https://smartpicksreview.online';
+
+        if (!email || !message) {
+          return new Response(JSON.stringify({
+            success: false,
+            message: 'Vui lòng cung cấp đầy đủ email và nội dung tin nhắn!'
+          }), {
+            status: 400,
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        }
+
+        const msgId = 'msg-' + crypto.randomUUID().slice(0, 8);
+        const msgObj = {
+          id: msgId,
+          name: name || 'Khách hàng ẩn danh',
+          email: email,
+          subject: subject,
+          message: message,
+          createdAt: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+          sourceUrl: sourceUrl
+        };
+
+        // 1. Lưu tin nhắn vào Cloudflare KV messages_list
+        let messagesList = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('messages_list');
+            if (raw) messagesList = safeJsonParse(raw, []);
+          } catch (e) {}
+        } else {
+          messagesList = inMemoryMessages || [];
+        }
+
+        messagesList = [msgObj, ...(messagesList || [])];
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('messages_list', JSON.stringify(messagesList));
+        } else {
+          inMemoryMessages = messagesList;
+        }
+
+        // 2. Đọc cấu hình email đích
+        let targetEmail = 'supportsmartpickshub@gmail.com';
+        if (env.POSTS_KV) {
+          try {
+            const rawCfg = await env.POSTS_KV.get('email_config');
+            if (rawCfg) {
+              const parsedCfg = safeJsonParse(rawCfg, {});
+              if (parsedCfg.targetEmail) targetEmail = parsedCfg.targetEmail;
+            }
+          } catch (e) {}
+        }
+
+        // 3. Chuyển tiếp email đến supportsmartpickshub@gmail.com qua FormSubmit
+        let emailSent = false;
+        try {
+          const fwdRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'User-Agent': 'SmartPicksReview-Notifier/1.0'
+            },
+            body: JSON.stringify({
+              _subject: `[Smart Picks Review] ${subject} (Từ: ${name || 'Khách hàng'})`,
+              _replyto: email,
+              _captcha: 'false',
+              _template: 'table',
+              KhachHang: name || 'Ẩn danh',
+              EmailLienHe: email,
+              TieuDe: subject,
+              NoiDung: message,
+              TrangGui: sourceUrl,
+              ThoiGian: msgObj.createdAt
+            })
+          });
+          if (fwdRes.ok) emailSent = true;
+        } catch (fwdErr) {
+          console.warn('Email dispatch warning:', fwdErr);
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: `Cảm ơn bạn! Tin nhắn đã được tiếp nhận và gửi đến ${targetEmail}.`,
+          id: msgId,
+          emailSent: emailSent,
+          targetEmail: targetEmail
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({
+          success: false,
+          message: 'Lỗi tiếp nhận tin nhắn: ' + err.message
+        }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // GET /api/contact/messages (Lấy danh sách tin nhắn cho Admin CMS)
+    if (url.pathname === '/api/contact/messages' && request.method === 'GET') {
+      let messagesList = [];
+      if (env.POSTS_KV) {
+        try {
+          const raw = await env.POSTS_KV.get('messages_list');
+          if (raw) messagesList = safeJsonParse(raw, []);
+        } catch (e) {}
+      } else {
+        messagesList = inMemoryMessages || [];
+      }
+
+      // Fallback nạp từ file tĩnh nếu KV chưa có tin nhắn
+      if ((!messagesList || messagesList.length === 0) && env.ASSETS) {
+        try {
+          const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/messages.json', request.url)));
+          if (assetRes.ok) {
+            const raw = await assetRes.text();
+            messagesList = safeJsonParse(raw, []);
+          }
+        } catch (e) {}
+      }
+
+      return new Response(JSON.stringify({
+        success: true,
+        messages: messagesList || [],
+        count: (messagesList || []).length
+      }), {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      });
+    }
+
+    // DELETE /api/contact/messages (Xóa tin nhắn)
+    if (url.pathname === '/api/contact/messages' && request.method === 'DELETE') {
+      try {
+        const delId = url.searchParams.get('id');
+        let messagesList = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('messages_list');
+            if (raw) messagesList = safeJsonParse(raw, []);
+          } catch (e) {}
+        } else {
+          messagesList = inMemoryMessages || [];
+        }
+
+        if (delId) {
+          messagesList = (messagesList || []).filter(m => m && m.id !== delId);
+          if (env.POSTS_KV) {
+            await env.POSTS_KV.put('messages_list', JSON.stringify(messagesList));
+          } else {
+            inMemoryMessages = messagesList;
+          }
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã xóa tin nhắn thành công!'
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi xóa tin nhắn: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // GET & POST /api/contact/config (Đọc và Lưu cấu hình Email)
+    if (url.pathname === '/api/contact/config') {
+      if (request.method === 'GET') {
+        let cfg = {
+          targetEmail: 'supportsmartpickshub@gmail.com',
+          forwarder: 'formsubmit',
+          smtp: {
+            enabled: false,
+            host: 'smtp.gmail.com',
+            port: 587,
+            user: 'supportsmartpickshub@gmail.com',
+            passSet: false
+          }
+        };
+
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('email_config');
+            if (raw) {
+              const parsed = safeJsonParse(raw, null);
+              if (parsed) cfg = { ...cfg, ...parsed };
+            }
+          } catch (e) {}
+        } else if (env.ASSETS) {
+          try {
+            const assetRes = await env.ASSETS.fetch(new Request(new URL('/data/email_config.json', request.url)));
+            if (assetRes.ok) {
+              const raw = await assetRes.text();
+              const parsed = safeJsonParse(raw, null);
+              if (parsed) cfg = { ...cfg, ...parsed };
+            }
+          } catch (e) {}
+        }
+
+        return new Response(JSON.stringify(cfg), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+
+      if (request.method === 'POST') {
+        try {
+          const newCfg = await request.json();
+          if (env.POSTS_KV) {
+            await env.POSTS_KV.put('email_config', JSON.stringify(newCfg));
+          }
+          return new Response(JSON.stringify({
+            success: true,
+            message: 'Đã lưu cấu hình email thành công!'
+          }), {
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        } catch (err) {
+          return new Response(JSON.stringify({ success: false, message: 'Lỗi lưu cấu hình: ' + err.message }), {
+            status: 500,
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+          });
+        }
+      }
+    }
+
+    // POST /api/contact/test (Gửi thư thử nghiệm)
+    if (url.pathname === '/api/contact/test' && request.method === 'POST') {
+      try {
+        let targetEmail = 'supportsmartpickshub@gmail.com';
+        if (env.POSTS_KV) {
+          try {
+            const rawCfg = await env.POSTS_KV.get('email_config');
+            if (rawCfg) {
+              const parsedCfg = safeJsonParse(rawCfg, {});
+              if (parsedCfg.targetEmail) targetEmail = parsedCfg.targetEmail;
+            }
+          } catch (e) {}
+        }
+
+        const testId = 'test-' + crypto.randomUUID().slice(0, 8);
+        const testMsg = {
+          id: testId,
+          name: 'SmartPicks Test System',
+          email: targetEmail,
+          subject: 'Kiểm tra kết nối gửi/nhận email - Smart Picks Review',
+          message: `Xin chào! Đây là email thử nghiệm gửi từ hệ thống website Smart Picks Review (https://smartpicksreview.online) nhằm kiểm tra kết nối chuyển tiếp thư đến ${targetEmail}. Nếu bạn nhận được thư này, hệ thống nhận email đang hoạt động rất tốt!`,
+          createdAt: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+          sourceUrl: 'https://smartpicksreview.online/admin-cms/'
+        };
+
+        // Lưu tin nhắn thử nghiệm vào KV để hiện ngay trong Inbox Admin
+        let messagesList = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('messages_list');
+            if (raw) messagesList = safeJsonParse(raw, []);
+          } catch (e) {}
+        } else {
+          messagesList = inMemoryMessages || [];
+        }
+        messagesList = [testMsg, ...(messagesList || [])];
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('messages_list', JSON.stringify(messagesList));
+        } else {
+          inMemoryMessages = messagesList;
+        }
+
+        // Chuyển tiếp thử nghiệm qua FormSubmit
+        let emailSent = false;
+        let responseDetail = '';
+        try {
+          const fwdRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'User-Agent': 'SmartPicksReview-Test/1.0'
+            },
+            body: JSON.stringify({
+              _subject: '[Test] Kiểm tra kết nối nhận Email - Smart Picks Review',
+              _replyto: targetEmail,
+              _captcha: 'false',
+              _template: 'table',
+              HeThong: 'SmartPicks Review Live System',
+              TargetEmail: targetEmail,
+              NoiDung: testMsg.message,
+              ThoiGian: testMsg.createdAt,
+              TrangGui: testMsg.sourceUrl
+            })
+          });
+          if (fwdRes.ok) {
+            emailSent = true;
+            responseDetail = 'Đã gửi yêu cầu chuyển tiếp thư thành công!';
+          } else {
+            responseDetail = `Dịch vụ email phản hồi mã ${fwdRes.status}`;
+          }
+        } catch (fwdErr) {
+          responseDetail = fwdErr.message;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: emailSent
+            ? `Đã gửi thử email test thành công đến ${targetEmail}! Tin nhắn cũng đã được đưa vào hộp thư Admin.`
+            : `Tin nhắn test đã được lưu vào Inbox Admin. Ghi chú gửi ra ngoài: ${responseDetail}`,
+          targetEmail: targetEmail,
+          emailSent: emailSent
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi gửi test: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 10. DYNAMIC POST HTML SERVING (FOR NEWLY PUBLISHED POSTS)
     // -------------------------------------------------------------
     if (url.pathname.startsWith('/post-')) {
       const cleanPath = url.pathname.replace(/^\//, '');

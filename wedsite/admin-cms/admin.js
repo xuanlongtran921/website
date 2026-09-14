@@ -214,15 +214,22 @@ function initAdminAuth() {
   }
 }
 
+const PRIMARY_DOMAIN = 'https://smartpicksreview.online';
+
+function getLiveBaseUrl() {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocal ? 'http://localhost:3000' : PRIMARY_DOMAIN;
+}
+
 function initDynamicOriginLinks() {
-  const currentOrigin = window.location.origin;
+  const targetLiveUrl = getLiveBaseUrl();
   const liveLink = document.getElementById('header-live-site-link');
   const liveText = document.getElementById('header-live-site-text');
   const viewLiveBtn = document.getElementById('btn-view-live-site');
 
-  if (liveLink) liveLink.href = currentOrigin;
-  if (liveText) liveText.textContent = currentOrigin;
-  if (viewLiveBtn) viewLiveBtn.href = currentOrigin;
+  if (liveLink) liveLink.href = targetLiveUrl;
+  if (liveText) liveText.textContent = targetLiveUrl;
+  if (viewLiveBtn) viewLiveBtn.href = targetLiveUrl;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1970,7 +1977,9 @@ function initPublishSystem() {
         const result = await res.json();
 
         if (res.ok && result.success) {
-          const liveUrl = result.url || `${window.location.origin}/${data.fileName}`;
+          const liveUrl = (result.url && result.url.startsWith('http'))
+            ? result.url
+            : `${getLiveBaseUrl()}/${data.fileName}`;
           showSuccessModal(data.fileName, liveUrl, isEditAction);
           loadPostsList();
           if (typeof loadProductsList === 'function') loadProductsList(true);
@@ -2823,7 +2832,7 @@ function renderPostsTable(posts) {
 
     const slugRaw = p.slug || p.id || 'post';
     const fileUrl = slugRaw.endsWith('.html') ? slugRaw : (slugRaw + '.html');
-    const viewUrl = `http://localhost:3000/${fileUrl}`;
+    const viewUrl = `${getLiveBaseUrl()}/${fileUrl}`;
     const postId = p.id || fileUrl;
 
     tr.innerHTML = `
@@ -3124,11 +3133,11 @@ function renderProductsTable(products) {
             <span>Pin</span>
           </button>
           ${p.reviewUrl ? `
-          <a href="http://localhost:3000/${escapeHtml(p.reviewUrl)}" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-pink-900/40 hover:bg-pink-600 text-pink-300 hover:text-white font-bold text-xs flex items-center gap-1 border border-pink-700/50 transition-all" title="View editorial review article">
+          <a href="${getLiveBaseUrl()}/${escapeHtml(p.reviewUrl)}" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-pink-900/40 hover:bg-pink-600 text-pink-300 hover:text-white font-bold text-xs flex items-center gap-1 border border-pink-700/50 transition-all" title="View editorial review article">
             <i data-lucide="file-text" class="w-3 h-3"></i>
             <span>Review</span>
           </a>` : ''}
-          <a href="http://localhost:3000/shop.html" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-purple-900/70 hover:bg-purple-800 text-purple-200 hover:text-white font-bold text-xs flex items-center gap-1 border border-purple-700/50 transition-all" title="Open Store catalog">
+          <a href="${getLiveBaseUrl()}/shop.html" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-purple-900/70 hover:bg-purple-800 text-purple-200 hover:text-white font-bold text-xs flex items-center gap-1 border border-purple-700/50 transition-all" title="Open Store catalog">
             <i data-lucide="shopping-bag" class="w-3 h-3"></i>
             <span>Store</span>
           </a>
@@ -3456,7 +3465,7 @@ function renderHeroTop3Deck() {
           <!-- Brand & Post Link -->
           <div class="text-[11px] text-purple-300/80 mb-3 flex items-center justify-between border-t border-purple-900/40 pt-2">
             <span class="truncate max-w-[140px] font-semibold text-purple-200">🏢 ${escapeHtml(brandDisp)}</span>
-            <a href="http://localhost:3000/${escapeHtml(item.postUrl || '#')}" target="_blank" class="text-amber-400 hover:text-amber-300 text-[10px] font-bold flex items-center gap-0.5">
+            <a href="${getLiveBaseUrl()}/${escapeHtml(item.postUrl || '#')}" target="_blank" class="text-amber-400 hover:text-amber-300 text-[10px] font-bold flex items-center gap-0.5">
               <span>Xem bài</span>
               <i data-lucide="external-link" class="w-3 h-3"></i>
             </a>
@@ -4020,7 +4029,7 @@ async function loadTickerManagerData() {
             </div>
           </div>
           <div class="flex items-center gap-1.5 flex-shrink-0">
-            <a href="http://localhost:3000/${url}" target="_blank" class="p-1.5 rounded-lg bg-purple-900/60 hover:bg-purple-800 text-purple-200 hover:text-white transition-all border border-purple-700/50" title="Xem trên website">
+            <a href="${getLiveBaseUrl()}/${url}" target="_blank" class="p-1.5 rounded-lg bg-purple-900/60 hover:bg-purple-800 text-purple-200 hover:text-white transition-all border border-purple-700/50" title="Xem trên website">
               <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
             </a>
             <button type="button" onclick="unpinTickerItem('${escapeHtml(itemId)}', '${escapeHtml(url)}')" class="p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-600 text-rose-400 hover:text-white transition-all border border-rose-900/60 cursor-pointer" title="Gỡ ghim khỏi Ticker">
