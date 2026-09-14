@@ -214,7 +214,19 @@ function initAdminAuth() {
   }
 }
 
+function initDynamicOriginLinks() {
+  const currentOrigin = window.location.origin;
+  const liveLink = document.getElementById('header-live-site-link');
+  const liveText = document.getElementById('header-live-site-text');
+  const viewLiveBtn = document.getElementById('btn-view-live-site');
+
+  if (liveLink) liveLink.href = currentOrigin;
+  if (liveText) liveText.textContent = currentOrigin;
+  if (viewLiveBtn) viewLiveBtn.href = currentOrigin;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initDynamicOriginLinks();
   initAdminAuth();
   initTabs();
   initLivePreview();
@@ -2181,17 +2193,16 @@ function initPublishSystem() {
         const result = await res.json();
 
         if (res.ok && result.success) {
-          showSuccessModal(data.fileName, result.url || `http://localhost:3000/${data.fileName}`, isEditAction);
+          const liveUrl = result.url || `${window.location.origin}/${data.fileName}`;
+          showSuccessModal(data.fileName, liveUrl, isEditAction);
           loadPostsList();
           exitEditMode();
         } else {
-          fallbackDownload(data.fileName, fullHtml);
-          showToast('Server unavailable: Downloaded fallback HTML file to your device!', 'info');
+          showToast('❌ Không thể đăng bài: ' + (result?.message || 'Máy chủ trả về lỗi (' + res.status + ')! Vui lòng kiểm tra lại backend/Cloudflare Worker.'), 'error');
         }
       } catch (err) {
-        console.warn('API error, falling back to download:', err);
-        fallbackDownload(data.fileName, fullHtml);
-        showToast('Downloaded fallback .html file to device!', 'info');
+        console.warn('API error:', err);
+        showToast('❌ Không thể kết nối tới máy chủ (/api/publish). Vui lòng kiểm tra lại kết nối hoặc Cloudflare Worker!', 'error');
       } finally {
         btnPublish.disabled = false;
         if (window.isEditing) {
@@ -2233,14 +2244,14 @@ function showSuccessModal(fileName, liveUrl, isEdit = false) {
 
   if (modal) {
     if (isEdit) {
-      if (titleEl) titleEl.textContent = 'Updated Successfully! 🎉';
-      if (descEl) descEl.textContent = 'All changes have been saved to the post file and synchronized with the live website homepage.';
+      if (titleEl) titleEl.textContent = 'Cập nhật thành công! 🎉';
+      if (descEl) descEl.textContent = 'Tất cả thay đổi đã được lưu và cập nhật trực tiếp trên website.';
     } else {
-      if (titleEl) titleEl.textContent = 'Published Successfully! 🎉';
-      if (descEl) descEl.textContent = 'Your review article has been generated and linked directly on the live website homepage.';
+      if (titleEl) titleEl.textContent = 'Xuất bản thành công! 🎉';
+      if (descEl) descEl.textContent = 'Bài đánh giá mới của bạn đã được đăng trực tiếp lên website.';
     }
 
-    pathEl.textContent = 'Saved to: c:\\wedsite\\' + fileName;
+    pathEl.textContent = 'Đường dẫn trực tiếp: ' + liveUrl;
     viewBtn.href = liveUrl;
     modal.classList.remove('hidden');
     modal.classList.add('flex');
