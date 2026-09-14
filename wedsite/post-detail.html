@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
@@ -728,21 +728,45 @@
       let targetId = urlParams.get('id');
       let targetSlug = urlParams.get('slug');
 
+      // Also extract from window.location.pathname (e.g. /post-lilyvow.html -> post-lilyvow)
+      if (!targetId && !targetSlug) {
+        const pathPart = window.location.pathname.split('/').pop().replace(/\.html$/, '');
+        if (pathPart && pathPart !== 'post-detail') {
+          targetSlug = pathPart;
+        }
+      }
+
       try {
-        const res = await fetch('data/posts.json');
+        const res = await fetch('data/posts.json?t=' + Date.now());
         const raw = await res.json();
         const posts = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.value) ? raw.value : []);
 
         let post = null;
         if (targetId) {
-          post = posts.find(p => p.id === targetId);
-        } else if (targetSlug) {
-          post = posts.find(p => p.slug === targetSlug || p.slug === targetSlug + '.html');
+          post = posts.find(p => p.id === targetId || p.slug === targetId || p.slug === (targetId + '.html'));
+        }
+        if (!post && targetSlug) {
+          const cleanTarget = targetSlug.replace(/\.html$/, '');
+          post = posts.find(p => 
+            p.slug === targetSlug || 
+            p.slug === (cleanTarget + '.html') || 
+            p.slug === cleanTarget || 
+            p.id === cleanTarget || 
+            p.id === targetSlug ||
+            (p.slug && p.slug.replace(/\.html$/, '').replace(/^post-/, '') === cleanTarget.replace(/^post-/, '')) ||
+            (p.id && p.id.replace(/^post-/, '') === cleanTarget.replace(/^post-/, ''))
+          );
         }
 
-        // Fallback to first post if not found
-        if (!post && posts.length > 0) {
-          post = posts[0];
+        // Only fallback to first post if no target slug or ID was requested at all
+        if (!post) {
+          if (!targetId && !targetSlug && posts.length > 0) {
+            post = posts[0];
+          } else if (posts.length > 0) {
+            // If specific post was requested but not found, try finding by partial keyword
+            const kw = (targetSlug || targetId || '').replace(/^post-/, '').replace(/\.html$/, '').toLowerCase();
+            post = posts.find(p => (p.id && p.id.toLowerCase().includes(kw)) || (p.slug && p.slug.toLowerCase().includes(kw))) || posts[0];
+          }
         }
 
         if (!post) return;

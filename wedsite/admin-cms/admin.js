@@ -2988,10 +2988,24 @@ async function loadProductsList(force = false) {
 async function fetchProductsSilently(updateUiOnError = false) {
   const tbody = document.getElementById('products-table-body');
   try {
-    const res = await fetch('/api/products');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    window.allProducts = Array.isArray(data) ? data : [];
+    let data = null;
+    try {
+      const res = await fetch('/api/products?t=' + Date.now());
+      if (res.ok) data = await res.json();
+    } catch (apiErr) {
+      console.warn('API /api/products unavailable, attempting static fallback:', apiErr);
+    }
+
+    if (!data || !Array.isArray(data)) {
+      const fbRes = await fetch('/data/products.json?t=' + Date.now());
+      if (fbRes.ok) data = await fbRes.json();
+    }
+
+    if (!data || !Array.isArray(data)) {
+      throw new Error('Unable to connect to products API or fetch static catalog');
+    }
+
+    window.allProducts = data;
 
     const badge = document.getElementById('badge-total-prods');
     if (badge) badge.textContent = window.allProducts.length;
@@ -2999,7 +3013,12 @@ async function fetchProductsSilently(updateUiOnError = false) {
     filterAndRenderProducts();
   } catch (err) {
     if (updateUiOnError && tbody) {
-      tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-purple-400">Unable to connect to products API. Please ensure server.ps1 is active.</td></tr>';
+      tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-8 text-center text-purple-400">
+        <p class="mb-2">⚠️ ${escapeHtml(err.message)}</p>
+        <button type="button" onclick="loadProductsList(true)" class="px-3 py-1 rounded-lg bg-purple-900/80 hover:bg-purple-800 text-purple-200 hover:text-white text-xs font-bold border border-purple-700/60 cursor-pointer">
+          🔄 Retry Loading
+        </button>
+      </td></tr>`;
     }
   }
 }

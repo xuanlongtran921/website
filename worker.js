@@ -28,6 +28,7 @@ let inMemoryHtml = new Map();
 let inMemoryMessages = [];
 let inMemoryPinned = null;
 let inMemoryTicker = null;
+let inMemoryProducts = null;
 
 export default {
   async fetch(request, env, ctx) {
@@ -285,6 +286,149 @@ export default {
           'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
       });
+    }
+
+    // -------------------------------------------------------------
+    // 4.1. API: PRODUCTS (STORE CATALOG & MANAGEMENT)
+    // -------------------------------------------------------------
+    // GET /api/products & /data/products.json
+    if ((url.pathname === '/api/products' || url.pathname === '/data/products.json') && request.method === 'GET') {
+      let baseProducts = [];
+
+      // Fetch base products from static asset
+      if (env.ASSETS) {
+        try {
+          const assetReq = new Request(new URL('/data/products.json', request.url));
+          const assetRes = await env.ASSETS.fetch(assetReq);
+          if (assetRes.ok) {
+            const parsed = await assetRes.json();
+            baseProducts = Array.isArray(parsed) ? parsed : (parsed.value || []);
+          }
+        } catch (e) {}
+      }
+
+      // Merge custom/updated products from KV
+      let customProducts = [];
+      let deletedIds = new Set();
+      if (env.POSTS_KV) {
+        try {
+          const raw = await env.POSTS_KV.get('custom_products_list');
+          if (raw) customProducts = JSON.parse(raw);
+          const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
+          if (rawDeleted) deletedIds = new Set(JSON.parse(rawDeleted));
+        } catch (e) {}
+      } else {
+        customProducts = inMemoryProducts || [];
+      }
+
+      const customMap = new Map((customProducts || []).map(p => [p.id, p]));
+      let merged = [...(customProducts || [])];
+      for (const bp of baseProducts) {
+        if (!customMap.has(bp.id) && !deletedIds.has(bp.id)) {
+          merged.push(bp);
+        }
+      }
+
+      return new Response(JSON.stringify(merged, null, 2), {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      });
+    }
+
+    // POST /api/save-product (Add or update product)
+    if (url.pathname === '/api/save-product' && request.method === 'POST') {
+      try {
+        const productData = await request.json();
+        const prodId = productData.id || ('prod-' + crypto.randomUUID().slice(0, 8));
+        productData.id = prodId;
+
+        let customProducts = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('custom_products_list');
+            if (raw) customProducts = JSON.parse(raw);
+          } catch (e) {}
+        } else {
+          customProducts = inMemoryProducts || [];
+        }
+
+        // Remove from deleted list if it was previously deleted
+        if (env.POSTS_KV) {
+          try {
+            const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
+            if (rawDeleted) {
+              const dList = JSON.parse(rawDeleted).filter(id => id !== prodId);
+              await env.POSTS_KV.put('deleted_products_list', JSON.stringify(dList));
+            }
+          } catch (e) {}
+        }
+
+        const filtered = customProducts.filter(p => p.id !== prodId);
+        const updatedList = [productData, ...filtered];
+
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('custom_products_list', JSON.stringify(updatedList));
+        } else {
+          inMemoryProducts = updatedList;
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã lưu sản phẩm thành công!',
+          id: prodId,
+          product: productData
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi lưu sản phẩm: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // POST /api/delete-product
+    if (url.pathname === '/api/delete-product' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const prodId = body.id;
+
+        if (env.POSTS_KV) {
+          let customProducts = [];
+          try {
+            const raw = await env.POSTS_KV.get('custom_products_list');
+            if (raw) customProducts = JSON.parse(raw);
+          } catch (e) {}
+          const filtered = customProducts.filter(p => p.id !== prodId);
+          await env.POSTS_KV.put('custom_products_list', JSON.stringify(filtered));
+
+          let deletedList = [];
+          try {
+            const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
+            if (rawDeleted) deletedList = JSON.parse(rawDeleted);
+          } catch (e) {}
+          if (!deletedList.includes(prodId)) deletedList.push(prodId);
+          await env.POSTS_KV.put('deleted_products_list', JSON.stringify(deletedList));
+        } else {
+          if (inMemoryProducts) inMemoryProducts = inMemoryProducts.filter(p => p.id !== prodId);
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Đã xóa sản phẩm thành công!'
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi xóa sản phẩm: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
     }
 
     // -------------------------------------------------------------
@@ -1000,9 +1144,14 @@ export default {
         const assetRes = await env.ASSETS.fetch(request);
         if (assetRes.ok) return assetRes;
 
-        // Fallback to post-detail.html if post is dynamic
-        const detailReq = new Request(new URL('/post-detail.html' + url.search, request.url));
-        const detailRes = await env.ASSETS.fetch(detailReq);
+        // Fallback to post-detail.html with explicit slug param
+        const slugClean = cleanPath.replace(/\.html$/, '');
+        const detailUrl = new URL('/post-detail.html', request.url);
+        detailUrl.searchParams.set('slug', slugClean);
+        url.searchParams.forEach((val, key) => {
+          if (!detailUrl.searchParams.has(key)) detailUrl.searchParams.set(key, val);
+        });
+        const detailRes = await env.ASSETS.fetch(new Request(detailUrl, request));
         if (detailRes.ok) return detailRes;
       }
     }
