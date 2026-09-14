@@ -695,6 +695,7 @@ window.deletePost = async function(slug, title) {
     if (res.ok && result.success) {
       showToast(`🗑️ Review "${title}" deleted successfully!`);
       loadPostsList();
+      if (typeof loadProductsList === 'function') loadProductsList(true);
       if (window.isEditing && window.editingSlug === slug) {
         exitEditMode();
       }
@@ -1972,6 +1973,7 @@ function initPublishSystem() {
           const liveUrl = result.url || `${window.location.origin}/${data.fileName}`;
           showSuccessModal(data.fileName, liveUrl, isEditAction);
           loadPostsList();
+          if (typeof loadProductsList === 'function') loadProductsList(true);
           exitEditMode();
         } else {
           showToast('❌ Không thể đăng bài: ' + (result?.message || 'Máy chủ trả về lỗi (' + res.status + ')! Vui lòng kiểm tra lại backend/Cloudflare Worker.'), 'error');

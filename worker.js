@@ -44,6 +44,138 @@ function safeJsonParse(text, fallback = null) {
   }
 }
 
+function mapCategoryToKeyAndNames(category, categorySlug) {
+  let catKey = categorySlug || 'tech';
+  if (!categorySlug) {
+    const catLower = (category || '').toLowerCase();
+    if (/watch|horology|đồng hồ|dong ho|cơ khí|co khi|cổ điển|co dien|vintage|trang sức|trang suc|腕表|手表/.test(catLower)) {
+      catKey = 'watches';
+    } else if (/fashion|thời trang|thoi trang|lolita|gothic|đầm|dam|áo|ao|phụ kiện|phu kien|服饰|时装/.test(catLower)) {
+      catKey = 'fashion';
+    } else if (/auto|tuning|exhaust|manifold|xe|phụ tùng|phu tung|brakes|phanh|brembo|bullboost|racing|汽车/.test(catLower)) {
+      catKey = 'automotive';
+    } else if (/desk|setup|edc|bàn|ban|phím|phim|chuột|chuot|keychron|logitech|gaggia|cà phê|ca phe|coffee|桌面/.test(catLower)) {
+      catKey = 'desk-setup';
+    } else if (/gadget|camera|máy ảnh|may anh|pocket|thiết bị|thiet bi|数码/.test(catLower)) {
+      catKey = 'gadgets';
+    } else if (/guide|ebook|cẩm nang|cam nang|khóa học|khoa hoc|指南|教程/.test(catLower)) {
+      catKey = 'guides';
+    }
+  }
+
+  let catEn = 'Audio & Tech';
+  let catVi = 'Âm Thanh & Công Nghệ';
+  let catZh = '音频与科技数码';
+
+  if (catKey === 'watches') {
+    catEn = 'Watches & Horology'; catVi = 'Đồng Hồ Cơ & Trang Sức'; catZh = '机械腕表与珠宝';
+  } else if (catKey === 'fashion') {
+    catEn = 'Alt & Gothic Fashion'; catVi = 'Thời Trang Thiết Kế'; catZh = '小众暗黑女装';
+  } else if (catKey === 'automotive' || catKey === 'auto') {
+    catKey = 'automotive';
+    catEn = 'Auto Performance'; catVi = 'Phụ Tùng Xe Hơi'; catZh = '汽车改装零件';
+  } else if (catKey === 'desk-setup' || catKey === 'edc') {
+    catKey = 'desk-setup';
+    catEn = 'Desk Setup & EDC'; catVi = 'Bàn Làm Việc & EDC'; catZh = '桌面搭子与EDC';
+  } else if (catKey === 'gadgets') {
+    catEn = 'Smart Gadgets & Gear'; catVi = 'Thiết Bị Công Nghệ'; catZh = '智能数码潮品';
+  } else if (catKey === 'guides') {
+    catEn = 'Guides & Digital Assets'; catVi = 'Tài Nguyên & Cẩm Nang'; catZh = '电子书与知识资产';
+  }
+  return { catKey, catEn, catVi, catZh };
+}
+
+function parsePrices(rawVnd, rawUsd, rawOrigVnd, rawOrigUsd) {
+  let vnd = 0;
+  if (rawVnd) {
+    const clean = String(rawVnd).replace(/[^\d]/g, '');
+    if (clean) vnd = parseInt(clean, 10);
+  }
+  let usd = 0;
+  if (rawUsd) {
+    const clean = String(rawUsd).replace(/[^\d.]/g, '');
+    if (clean) usd = parseFloat(clean);
+  }
+  if (!vnd && usd) {
+    vnd = Math.round(usd * 25000);
+  } else if (!usd && vnd) {
+    usd = Math.round((vnd / 25000) * 100) / 100;
+  }
+  if (!vnd) vnd = 1990000;
+  if (!usd) usd = 79.0;
+
+  let origVnd = 0;
+  if (rawOrigVnd) {
+    const clean = String(rawOrigVnd).replace(/[^\d]/g, '');
+    if (clean) origVnd = parseInt(clean, 10);
+  }
+  if (!origVnd) origVnd = Math.round(vnd * 1.25);
+
+  let origUsd = 0;
+  if (rawOrigUsd) {
+    const clean = String(rawOrigUsd).replace(/[^\d.]/g, '');
+    if (clean) origUsd = parseFloat(clean);
+  }
+  if (!origUsd) origUsd = Math.round(usd * 1.25 * 100) / 100;
+
+  return { vnd, usd, origVnd, origUsd };
+}
+
+function createProductFromPostData(data, slugClean, fileName) {
+  const { catKey, catEn, catVi, catZh } = mapCategoryToKeyAndNames(data.category || data.categoryEn, data.categorySlug);
+  const { vnd, usd, origVnd, origUsd } = parsePrices(
+    data.vndPrice || data.priceVnd,
+    data.usdPrice || data.priceUsd,
+    data.originalPrice || data.priceOrig,
+    data.originalPriceUsd || data.priceOrigUsd
+  );
+
+  const brandName = data.brand || 'Verified Partner';
+  const prodId = 'prod-' + slugClean;
+
+  const prosList = Array.isArray(data.pros) ? data.pros : (data.pros ? String(data.pros).split('\n').filter(Boolean) : []);
+  const defaultFeatures = prosList.length > 0 ? prosList : ['100% Authentic Guaranteed', 'Full Brand Warranty'];
+
+  return {
+    id: prodId,
+    categoryKey: catKey,
+    shopName: brandName,
+    brand: brandName,
+    title: data.title,
+    titleEn: data.titleEn || data.title,
+    titleVi: data.titleVi || data.title,
+    titleZh: data.titleZh || data.title,
+    category: data.categoryEn || catEn,
+    categoryEn: data.categoryEn || catEn,
+    categoryVi: data.categoryVi || catVi,
+    categoryZh: data.categoryZh || catZh,
+    price: vnd,
+    priceUsd: usd,
+    originalPrice: origVnd,
+    originalPriceUsd: origUsd,
+    discountPercent: data.couponDiscount || '-15%',
+    badge: brandName,
+    badgeEn: brandName,
+    badgeVi: brandName,
+    badgeZh: brandName,
+    rating: parseFloat(data.rating) || 9.6,
+    salesCount: 168,
+    description: data.excerpt || data.intro || '',
+    descriptionEn: data.excerptEn || data.excerpt || '',
+    descriptionVi: data.excerptVi || data.excerpt || '',
+    descriptionZh: data.excerptZh || data.excerpt || '',
+    features: defaultFeatures,
+    featuresEn: data.prosEn || defaultFeatures,
+    featuresVi: data.prosVi || defaultFeatures,
+    featuresZh: data.prosZh || defaultFeatures,
+    image: data.image || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800',
+    affiliateUrl: data.affiliateLink || '#',
+    reviewUrl: fileName,
+    isPhysical: catKey !== 'guides',
+    updatedAt: new Date().toISOString()
+  };
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -171,7 +303,7 @@ export default {
           let customPosts = [];
           try {
             const raw = await env.POSTS_KV.get('custom_posts_list');
-            if (raw) customPosts = JSON.parse(raw);
+            if (raw) customPosts = safeJsonParse(raw, []);
           } catch (e) {
             customPosts = [];
           }
@@ -184,6 +316,31 @@ export default {
             await env.POSTS_KV.put('post_html:' + fileName, postHtmlContent);
             await env.POSTS_KV.put('post_html:' + slugClean, postHtmlContent);
           }
+
+          // Auto-sync store product to KV
+          try {
+            const newProdEntry = createProductFromPostData(data, slugClean, fileName);
+            let customProducts = [];
+            const rawProds = await env.POSTS_KV.get('custom_products_list');
+            if (rawProds) customProducts = safeJsonParse(rawProds, []);
+
+            // Remove from deleted list if present
+            const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
+            if (rawDeleted) {
+              const dList = safeJsonParse(rawDeleted, []).filter(id => id !== newProdEntry.id);
+              await env.POSTS_KV.put('deleted_products_list', JSON.stringify(dList));
+            }
+
+            const filteredProds = (customProducts || []).filter(p => 
+              p.id !== newProdEntry.id && 
+              p.reviewUrl !== fileName && 
+              !(data.affiliateLink && data.affiliateLink !== '#' && p.affiliateUrl === data.affiliateLink)
+            );
+            customProducts = [newProdEntry, ...filteredProds];
+            await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
+          } catch (pErr) {
+            console.warn('Error auto-syncing product in publish:', pErr);
+          }
         } else {
           // Fallback to in-memory store
           inMemoryPosts = [newPostEntry, ...inMemoryPosts.filter(p => p.slug !== fileName && p.id !== slugClean)];
@@ -191,6 +348,15 @@ export default {
             inMemoryHtml.set(fileName, postHtmlContent);
             inMemoryHtml.set(slugClean, postHtmlContent);
           }
+
+          try {
+            const newProdEntry = createProductFromPostData(data, slugClean, fileName);
+            inMemoryProducts = [newProdEntry, ...(inMemoryProducts || []).filter(p => 
+              p.id !== newProdEntry.id && 
+              p.reviewUrl !== fileName && 
+              !(data.affiliateLink && data.affiliateLink !== '#' && p.affiliateUrl === data.affiliateLink)
+            )];
+          } catch (pErr) {}
         }
 
         return new Response(JSON.stringify({
@@ -220,22 +386,35 @@ export default {
         const body = await request.json();
         const slug = (body.slug || '').replace(/\.html$/, '');
         const fileName = slug + '.html';
+        const prodId = 'prod-' + slug;
 
         if (env.POSTS_KV) {
           let customPosts = [];
           try {
             const raw = await env.POSTS_KV.get('custom_posts_list');
-            if (raw) customPosts = JSON.parse(raw);
+            if (raw) customPosts = safeJsonParse(raw, []);
           } catch (e) {}
 
           customPosts = customPosts.filter(p => p.slug !== fileName && p.id !== slug);
           await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
           await env.POSTS_KV.delete('post_html:' + fileName);
           await env.POSTS_KV.delete('post_html:' + slug);
+
+          try {
+            const rawProds = await env.POSTS_KV.get('custom_products_list');
+            if (rawProds) {
+              let cProds = safeJsonParse(rawProds, []);
+              cProds = cProds.filter(p => p.id !== prodId && p.reviewUrl !== fileName);
+              await env.POSTS_KV.put('custom_products_list', JSON.stringify(cProds));
+            }
+          } catch (e) {}
         } else {
           inMemoryPosts = inMemoryPosts.filter(p => p.slug !== fileName && p.id !== slug);
           inMemoryHtml.delete(fileName);
           inMemoryHtml.delete(slug);
+          if (inMemoryProducts) {
+            inMemoryProducts = inMemoryProducts.filter(p => p.id !== prodId && p.reviewUrl !== fileName);
+          }
         }
 
         return new Response(JSON.stringify({
@@ -276,7 +455,7 @@ export default {
       if (env.POSTS_KV) {
         try {
           const raw = await env.POSTS_KV.get('custom_posts_list');
-          if (raw) customPosts = JSON.parse(raw);
+          if (raw) customPosts = safeJsonParse(raw, []);
         } catch (e) {}
       } else {
         customPosts = inMemoryPosts;
@@ -329,9 +508,9 @@ export default {
       if (env.POSTS_KV) {
         try {
           const raw = await env.POSTS_KV.get('custom_products_list');
-          if (raw) customProducts = JSON.parse(raw);
+          if (raw) customProducts = safeJsonParse(raw, []);
           const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
-          if (rawDeleted) deletedIds = new Set(JSON.parse(rawDeleted));
+          if (rawDeleted) deletedIds = new Set(safeJsonParse(rawDeleted, []));
         } catch (e) {}
       } else {
         customProducts = inMemoryProducts || [];
@@ -343,6 +522,52 @@ export default {
         if (!customMap.has(bp.id) && !deletedIds.has(bp.id)) {
           merged.push(bp);
         }
+      }
+
+      // Auto-sync / Backfill: Ensure any published article in KV has a corresponding store product
+      try {
+        let allPublishedPosts = [];
+        if (env.POSTS_KV) {
+          const rawPosts = await env.POSTS_KV.get('custom_posts_list');
+          if (rawPosts) allPublishedPosts = safeJsonParse(rawPosts, []);
+        } else {
+          allPublishedPosts = inMemoryPosts || [];
+        }
+
+        let newAutoProds = [];
+        for (const post of allPublishedPosts) {
+          const postSlug = (post.slug || post.id || '').replace(/\.html$/, '');
+          const fileName = postSlug + '.html';
+          const prodId = 'prod-' + postSlug;
+
+          if (deletedIds.has(prodId)) continue;
+
+          // Check if product already exists in merged
+          const exists = merged.some(p => 
+            p.id === prodId || 
+            p.reviewUrl === fileName || 
+            p.reviewUrl === post.slug ||
+            (post.affiliateLink && post.affiliateLink !== '#' && p.affiliateUrl === post.affiliateLink)
+          );
+
+          if (!exists) {
+            const autoProd = createProductFromPostData(post, postSlug, fileName);
+            merged.unshift(autoProd);
+            newAutoProds.push(autoProd);
+          }
+        }
+
+        // Persist newly discovered products into custom_products_list so KV stays permanently synchronized
+        if (newAutoProds.length > 0) {
+          const updatedCustomList = [...newAutoProds, ...(customProducts || [])];
+          if (env.POSTS_KV) {
+            await env.POSTS_KV.put('custom_products_list', JSON.stringify(updatedCustomList));
+          } else {
+            inMemoryProducts = updatedCustomList;
+          }
+        }
+      } catch (syncErr) {
+        console.warn('Auto-sync products error:', syncErr);
       }
 
       return new Response(JSON.stringify(merged, null, 2), {

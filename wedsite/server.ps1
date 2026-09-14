@@ -1,4 +1,4 @@
-﻿param (
+param (
     [int]$Port = 3000,
     [int]$AdminPort = 3001,
     [string]$RootPath = "c:\wedsite",
@@ -1329,6 +1329,25 @@ while ($listener.IsListening) {
                 $filePathToDelete = Join-Path $RootPath $slug
                 if (Test-Path $filePathToDelete) {
                     Remove-Item -Path $filePathToDelete -Force -ErrorAction SilentlyContinue
+                }
+
+                # 4. Remove associated product from data/products.json
+                try {
+                    $productsJsonPath = Join-Path $RootPath "data\products.json"
+                    if (Test-Path $productsJsonPath) {
+                        $prodId = "prod-" + $slug.Replace(".html", "")
+                        $rawProdJson = [System.IO.File]::ReadAllText($productsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+                        $prodArray = @()
+                        foreach ($item in $rawProdJson) {
+                            if ($item.id -ne $prodId -and $item.reviewUrl -ne $slug) {
+                                $prodArray += $item
+                            }
+                        }
+                        $updatedProdJson = $prodArray | ConvertTo-Json -Depth 5
+                        [System.IO.File]::WriteAllText($productsJsonPath, $updatedProdJson, [System.Text.Encoding]::UTF8)
+                    }
+                } catch {
+                    Write-Host "Warning: Khong the xoa san pham tuong ung: $_" -ForegroundColor Yellow
                 }
 
                 $response.ContentType = "application/json; charset=utf-8"
