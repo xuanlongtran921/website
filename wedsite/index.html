@@ -1,0 +1,1637 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Picks Review - Tech Reviews, In-Depth Tests & Smart Shopping Guide</title>
+  <meta name="description" content="Smart Picks Review - Independent tech reviews, multi-store price comparisons, and smart curated shopping guides.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Be Vietnam Pro"', 'Outfit', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            purple: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+              950: '#2e1065',
+            },
+            slate: {
+              900: '#0e0720',
+              950: '#07040d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Styles (Purple Glow & Agency Aesthetic) -->
+    <!-- Google Fonts Preconnect & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
+
+  <!-- Multilingual i18n Script -->
+  <script src="js/i18n.js"></script>
+  <script src="js/article-i18n.js"></script>
+</head>
+<body class="bg-[#faf7ff] text-slate-900 dark:bg-[#090514] dark:text-purple-100 transition-colors duration-200 min-h-screen flex flex-col selection:bg-purple-500 selection:text-white">
+
+  <!-- Top Projects Ticker Bar: Cosmic Indigo / Lavender Gradient -->
+  <div class="bg-gradient-to-r from-[#14082c] via-[#240e47] to-[#120729] text-purple-200 text-xs py-1.5 px-3 sm:px-6 border-b border-purple-800/60 relative z-30 shadow-inner">
+    <div class="max-w-[1560px] mx-auto flex items-center justify-between gap-2 sm:gap-4">
+      
+      <!-- 1. Left Fixed Badge -->
+      <div class="flex-shrink-0 flex items-center pr-2.5 sm:pr-3 border-r border-purple-800/60 z-20">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-md shadow-pink-500/20 uppercase tracking-wider border border-pink-400/40 select-none">
+          <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+          <span class="whitespace-nowrap hidden sm:inline" data-i18n="top_bar_featured_badge">FEATURED PROJECTS</span>
+          <span class="whitespace-nowrap sm:hidden" data-i18n="top_bar_featured_badge_short">FEATURED</span>
+        </div>
+      </div>
+
+      <!-- 2. Self-Contained Marquee Window -->
+      <div class="flex-1 relative overflow-hidden min-w-0 cursor-pointer group py-0.5">
+        <div class="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-[#14082c] via-[#14082c]/80 to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[#120729] via-[#120729]/80 to-transparent z-10 pointer-events-none"></div>
+
+        <!-- Continuous Smooth Scrolling Track -->
+        <div class="top-bar-ticker-track animate-top-ticker items-center">
+          <!-- Populated dynamically with projects by app.js & i18n -->
+        </div>
+      </div>
+
+      <!-- 3. Right Controls -->
+      <div class="hidden md:flex items-center gap-2 text-xs font-semibold flex-shrink-0 pl-2.5 sm:pl-3 border-l border-purple-800/60 z-20">
+        <a href="sponsor.html" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-purple-900/60 hover:bg-pink-600 text-pink-200 hover:text-white border border-purple-700/60 hover:border-pink-500 transition-all font-bold text-[11px] whitespace-nowrap shadow-xs hover:shadow-pink-500/20">
+          <i data-lucide="award" class="w-3.5 h-3.5 text-pink-400 group-hover:text-white"></i>
+          <span data-i18n="sponsor_booking_link">Sponsorship Inquiries</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Header Navigation: Perfectly Proportioned Smart Picks Review Header -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0c071b]/90 backdrop-blur-xl border-b border-purple-200/60 dark:border-purple-900/50 transition-colors">
+    <div class="max-w-[1560px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-16 sm:h-20 py-2 flex items-center justify-between gap-1.5 sm:gap-3 xl:gap-5">
+      
+      <!-- Brand Logo: Smart Picks Review -->
+      <a href="index.html" class="flex-shrink-0 flex items-center gap-2 sm:gap-3.5 group min-w-0">
+        <img src="images/logo.png" alt="Smart Picks Logo" class="w-9 h-9 sm:w-12 sm:h-12 xl:w-14 xl:h-14 rounded-xl sm:rounded-2xl object-cover shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform flex-shrink-0">
+        <div class="flex flex-col justify-center min-w-0">
+          <div class="flex items-center gap-1 sm:gap-2 leading-none">
+            <span class="font-black text-xl sm:text-2xl lg:text-[2rem] xl:text-[2.2rem] tracking-tight text-slate-900 dark:text-white font-display">Smart<span class="text-gradient-purple">Picks</span></span>
+            <span class="font-black text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-xl bg-purple-100/90 dark:bg-purple-950/90 text-purple-700 dark:text-purple-300 uppercase tracking-wider border border-purple-300/60 dark:border-purple-700/60 shadow-xs">Review</span>
+          </div>
+          <span class="hidden 2xl:block text-[11px] font-extrabold tracking-[0.18em] text-purple-600 dark:text-purple-400 uppercase mt-1" data-i18n="header_subtitle">Curated Reviews & Buying Guides</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links: Clean pill spacing, strictly whitespace-nowrap -->
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-xs xl:text-sm font-semibold flex-shrink-0">
+        <a href="index.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl bg-purple-100/70 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 font-bold transition-colors" data-i18n="nav_home">Home</a>
+        <a href="post.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all flex items-center gap-1">
+          <span data-i18n="nav_reviews">Reviews & Guides</span>
+          <span class="bg-gradient-to-r from-pink-500 to-rose-500 text-white text-[9px] px-1.5 py-0.2 rounded-full font-extrabold shadow-xs">HOT</span>
+        </a>
+        <!-- Categories Mega Dropdown -->
+        <div class="relative group catalogues-dropdown-container" id="catalogues-menu-container">
+          <button type="button" id="catalogues-menu-btn" class="catalogues-menu-btn whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all flex items-center gap-1.5 cursor-pointer" aria-haspopup="true" aria-expanded="false">
+            <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-purple-500"></i>
+            <span data-i18n="nav_categories">Categories</span>
+            <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] px-1.5 py-0.5 rounded-full font-extrabold shadow-xs">14</span>
+            <i data-lucide="chevron-down" class="catalogues-chevron w-3 h-3 opacity-60 group-hover:rotate-180 group-[.is-open]:rotate-180 group-[.is-hovered]:rotate-180 transition-transform duration-200"></i>
+          </button>
+          
+          <!-- Dropdown Panel Wrapper (Top-full with pt-2 to bridge the 8px hover gap seamlessly) -->
+          <div id="catalogues-dropdown-panel" class="mega-dropdown-menu hidden group-hover:block group-[.is-open]:block group-[.is-hovered]:block absolute left-0 top-full pt-2 w-[540px] z-50">
+            <div class="bg-white dark:bg-[#120a28] rounded-3xl shadow-2xl border border-purple-200 dark:border-purple-800/80 p-4 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl">
+              <div class="grid grid-cols-2 gap-4 pb-3 border-b border-purple-100 dark:border-purple-900/60">
+                
+                <!-- Column 1: Physical Gear (9 Niches) -->
+                <div>
+                  <div class="flex items-center gap-1.5 px-2 py-1 mb-2 text-[11px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-wider">
+                    <i data-lucide="package" class="w-3.5 h-3.5"></i>
+                    <span data-i18n="nav_physical_gear">Physical Gear & Hardware (9)</span>
+                  </div>
+                  <div class="space-y-0.5 text-xs">
+                    <a href="shop.html?cat=fashion" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_fashion">👗 Alt & Gothic Fashion</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">3</span>
+                    </a>
+                    <a href="shop.html?cat=watches" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_watches">⌚ Watches & Horology</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">2</span>
+                    </a>
+                    <a href="shop.html?cat=automotive" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_auto">🏎️ Auto Performance</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">2</span>
+                    </a>
+                    <a href="shop.html?cat=tech" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_tech">🎧 Audio & Tech Gear</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">2</span>
+                    </a>
+                    <a href="shop.html?cat=desk-setup" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_desk">💻 Desk Setup & EDC</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">2</span>
+                    </a>
+                    <a href="shop.html?cat=cameras" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_cameras">📷 Cameras & Video</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">1</span>
+                    </a>
+                    <a href="shop.html?cat=coffee" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_coffee">☕ Coffee & Lifestyle</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">1</span>
+                    </a>
+                    <a href="shop.html?cat=gaming" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_gaming">🎮 Gaming & Gear</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">1</span>
+                    </a>
+                    <a href="shop.html?cat=smarthome" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                      <span class="font-medium group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors" data-i18n="shop_tab_smarthome">🏠 Smart Home</span>
+                      <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full">1</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Column 2: Digital Products (5 Niches) + Instant Delivery Card -->
+                <div class="flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center gap-1.5 px-2 py-1 mb-2 text-[11px] font-black text-pink-500 uppercase tracking-wider">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                      <span data-i18n="nav_digital_assets">Digital Products & Assets (5)</span>
+                    </div>
+                    <div class="space-y-0.5 text-xs">
+                      <a href="shop.html?cat=ebooks" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                        <span class="font-medium group-hover/item:text-pink-500 transition-colors" data-i18n="shop_tab_ebooks">📚 Ebooks & Playbooks</span>
+                        <span class="text-[10px] font-bold text-pink-500 bg-pink-100 dark:bg-pink-900/60 px-2 py-0.5 rounded-full">1</span>
+                      </a>
+                      <a href="shop.html?cat=presets" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                        <span class="font-medium group-hover/item:text-pink-500 transition-colors" data-i18n="shop_tab_presets">🎨 Lightroom Presets</span>
+                        <span class="text-[10px] font-bold text-pink-500 bg-pink-100 dark:bg-pink-900/60 px-2 py-0.5 rounded-full">1</span>
+                      </a>
+                      <a href="shop.html?cat=templates" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                        <span class="font-medium group-hover/item:text-pink-500 transition-colors" data-i18n="shop_tab_templates">📑 Notion Templates</span>
+                        <span class="text-[10px] font-bold text-pink-500 bg-pink-100 dark:bg-pink-900/60 px-2 py-0.5 rounded-full">1</span>
+                      </a>
+                      <a href="shop.html?cat=courses" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                        <span class="font-medium group-hover/item:text-pink-500 transition-colors" data-i18n="shop_tab_courses">🎓 Video Masterclasses</span>
+                        <span class="text-[10px] font-bold text-pink-500 bg-pink-100 dark:bg-pink-900/60 px-2 py-0.5 rounded-full">1</span>
+                      </a>
+                      <a href="shop.html?cat=saas" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
+                        <span class="font-medium group-hover/item:text-pink-500 transition-colors" data-i18n="shop_tab_saas">⚡ SaaS & AI Tools</span>
+                        <span class="text-[10px] font-bold text-pink-500 bg-pink-100 dark:bg-pink-900/60 px-2 py-0.5 rounded-full">1</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Instant Delivery Promo Card -->
+                  <div class="mt-3 p-3.5 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-pink-600 text-white shadow-md relative overflow-hidden group/card">
+                    <div class="flex items-center gap-1.5 font-bold text-xs text-white mb-1">
+                      <span class="text-sm">⚡</span>
+                      <span data-i18n="menu_instant_checkout_title">Instant Digital Delivery</span>
+                    </div>
+                    <p class="text-[10px] text-purple-100 leading-snug mb-2 font-medium" data-i18n="menu_instant_checkout_desc">
+                      Get immediate access with VietQR, PayPal, or Stripe.
+                    </p>
+                    <a href="shop.html?cat=digital" class="inline-flex items-center gap-1 text-[10px] font-bold text-white hover:text-pink-200 underline decoration-purple-300 underline-offset-2 transition-colors">
+                      <span data-i18n="menu_instant_checkout_btn">Explore 5 Digital Tools</span> &rarr;
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Bottom Action Row -->
+              <div class="pt-3 px-2 flex items-center justify-between text-xs font-bold">
+                <a href="shop.html" class="text-purple-600 dark:text-purple-400 hover:text-pink-500 flex items-center gap-1 transition-colors">
+                  <span data-i18n="view_full_shop">View Full Store (20 Items)</span> &rarr;
+                </a>
+                <a href="post.html" class="text-slate-500 dark:text-purple-300 hover:text-purple-600 flex items-center gap-1 transition-colors">
+                  <span data-i18n="view_all_posts">Browse All 20 Reviews</span> &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="shop.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all flex items-center gap-1">
+          <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-purple-500"></i>
+          <span data-i18n="nav_shop">Curated Store</span>
+        </a>
+        <a href="sponsor.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all" data-i18n="nav_sponsor">Sponsorships</a>
+      </nav>
+
+      <!-- Search Trigger in Header: Zoom Spotlight Modal on Click -->
+      <button 
+        type="button" 
+        class="search-trigger-btn flex-shrink-0 flex items-center justify-center sm:justify-start gap-2 p-2 sm:px-3 sm:py-2 xl:px-3.5 rounded-xl sm:rounded-2xl bg-purple-50/90 dark:bg-[#120a26] hover:bg-purple-100/90 dark:hover:bg-[#1a0f35] border border-purple-200/90 dark:border-purple-800/80 hover:border-purple-400 dark:hover:border-purple-500 text-xs font-semibold text-slate-700 dark:text-purple-200 transition-all shadow-xs hover:scale-[1.02] cursor-pointer group w-9 h-9 sm:w-36 md:w-40 lg:w-36 xl:w-48 2xl:w-60 text-left"
+        title="Search reviews & gear (⌘K)"
+      >
+        <i data-lucide="search" class="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-500 group-hover:scale-110 transition-transform flex-shrink-0"></i>
+        <span class="hidden sm:inline truncate text-slate-600 dark:text-purple-200/80 font-medium text-xs" data-i18n="search_placeholder_short">Search reviews...</span>
+        <kbd class="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[9px] font-extrabold text-purple-600 dark:text-purple-400 bg-white dark:bg-purple-950 border border-purple-200 dark:border-purple-800 rounded-md shadow-2xs ml-auto flex-shrink-0">⌘K</kbd>
+      </button>
+
+      <!-- Header Controls: Language Selector, Theme Toggle, CTA Button -->
+      <div class="flex-shrink-0 flex items-center gap-1.5 sm:gap-2">
+        
+        <!-- Currency Selector (USD $ / VND ₫) -->
+        <div class="hidden sm:block relative">
+          <button id="currency-dropdown-btn" class="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/80 dark:bg-purple-950/50 hover:bg-purple-100 text-xs font-bold text-slate-800 dark:text-purple-200 transition-all shadow-xs" title="Select currency">
+            <span id="current-currency-flag">🇺🇸</span>
+            <span id="current-currency-code">USD</span>
+            <span id="current-currency-symbol" class="text-purple-600 dark:text-purple-400 font-extrabold">($)</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 opacity-70"></i>
+          </button>
+
+          <!-- Currency Menu -->
+          <div id="currency-dropdown-menu" class="hidden absolute right-0 mt-2 w-36 bg-white dark:bg-[#120a26] rounded-2xl shadow-2xl border border-purple-200 dark:border-purple-800/80 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Currency</div>
+            <button class="currency-option w-full text-left px-3.5 py-2 text-xs flex items-center justify-between hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-currency="USD">
+              <span class="flex items-center gap-2"><span>🇺🇸</span> <span class="font-bold">USD</span></span>
+              <span class="text-purple-600 dark:text-purple-400 font-bold">$</span>
+            </button>
+            <button class="currency-option w-full text-left px-3.5 py-2 text-xs flex items-center justify-between hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-currency="VND">
+              <span class="flex items-center gap-2"><span>🇻🇳</span> <span class="font-bold">VND</span></span>
+              <span class="text-purple-600 dark:text-purple-400 font-bold">₫</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Multilingual Dropdown Selector (EN (US) - VI - ZH) -->
+        <div class="hidden sm:block relative">
+          <button id="lang-dropdown-btn" class="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/80 dark:bg-purple-950/50 hover:bg-purple-100 text-xs font-bold text-slate-800 dark:text-purple-200 transition-all shadow-xs" title="Select language">
+            <span id="current-lang-flag">🇺🇸</span>
+            <span id="current-lang-text">ENG</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 opacity-70"></i>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="lang-dropdown-menu" class="hidden absolute right-0 mt-2 w-44 bg-white dark:bg-[#120a26] rounded-2xl shadow-2xl border border-purple-200 dark:border-purple-800/80 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Language</div>
+            <button class="lang-option w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-lang="en">
+              <span class="text-base">🇺🇸</span>
+              <div>
+                <div class="font-semibold text-slate-800 dark:text-purple-100">English (US)</div>
+                <div class="text-[10px] text-slate-400">United States</div>
+              </div>
+            </button>
+            <button class="lang-option w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-lang="vi">
+              <span class="text-base">🇻🇳</span>
+              <div>
+                <div class="font-semibold text-slate-800 dark:text-purple-100">Tiếng Việt</div>
+                <div class="text-[10px] text-slate-400">Vietnamese</div>
+              </div>
+            </button>
+            <button class="lang-option w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-lang="zh">
+              <span class="text-base">🇨🇳</span>
+              <div>
+                <div class="font-semibold text-slate-800 dark:text-purple-100">简体中文</div>
+                <div class="text-[10px] text-slate-400">Chinese</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <button class="theme-toggle p-2 rounded-xl text-slate-600 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-950/60 transition-colors flex-shrink-0" aria-label="Toggle theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-300"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-purple-700"></i>
+        </button>
+
+        <!-- Mobile Menu Trigger -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl text-slate-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/40 flex-shrink-0" aria-label="Open mobile menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-purple-200 dark:border-purple-900/60 bg-white/95 dark:bg-[#0e0722]/95 backdrop-blur-xl px-4 py-4 space-y-3 shadow-2xl">
+      <!-- Mobile Search Trigger: Opens Zoomed Spotlight Search Modal -->
+      <div>
+        <button 
+          type="button" 
+          class="search-trigger-btn w-full flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-purple-50/90 dark:bg-[#150d2e] border border-purple-200/90 dark:border-purple-800 text-xs font-semibold text-slate-700 dark:text-purple-200 text-left cursor-pointer hover:border-purple-400 transition-all shadow-xs"
+        >
+          <i data-lucide="search" class="w-4 h-4 text-purple-500 flex-shrink-0"></i>
+          <span class="truncate" data-i18n="search_placeholder_short">Search articles, products...</span>
+          <kbd class="ml-auto px-2 py-0.5 text-[10px] font-extrabold bg-white dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-lg border border-purple-200 dark:border-purple-800 shadow-2xs">⌘K</kbd>
+        </button>
+      </div>
+
+      <!-- Mobile Quick Currency & Language Selector -->
+      <div class="p-3 rounded-2xl bg-purple-50/80 dark:bg-purple-950/40 border border-purple-200/80 dark:border-purple-900/50 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Currency</span>
+          <div class="flex items-center gap-1.5">
+            <button class="currency-option px-2.5 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-currency="USD">
+              🇺🇸 USD ($)
+            </button>
+            <button class="currency-option px-2.5 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-currency="VND">
+              🇻🇳 VND (₫)
+            </button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-purple-200/60 dark:border-purple-900/40">
+          <span class="text-[11px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Language</span>
+          <div class="flex items-center gap-1.5">
+            <button class="lang-option px-2 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-lang="en">
+              🇺🇸 ENG
+            </button>
+            <button class="lang-option px-2 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-lang="vi">
+              🇻🇳 VIE
+            </button>
+            <button class="lang-option px-2 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-lang="zh">
+              🇨🇳 CHN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <a href="index.html" class="block py-2 text-sm font-bold text-purple-600 dark:text-purple-400" data-i18n="nav_home">Home</a>
+      <a href="post.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_reviews">Reviews & Guides</a>
+      
+      <!-- Mobile Categories Accordion -->
+      <details class="group/mob py-1 border-y border-purple-100 dark:border-purple-900/40">
+        <summary class="flex items-center justify-between py-2 text-sm font-semibold text-slate-700 dark:text-purple-200 cursor-pointer list-none">
+          <span class="flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-4 h-4 text-purple-500"></i>
+            <span data-i18n="nav_categories">Categories</span>
+            <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] px-1.5 py-0.5 rounded-full font-extrabold">14</span>
+          </span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-purple-400 group-open/mob:rotate-180 transition-transform"></i>
+        </summary>
+        <div class="pl-3 pr-1 py-2 space-y-2 text-xs">
+          <div class="font-extrabold text-[10px] text-purple-500 uppercase" data-i18n="nav_physical_gear">Physical Gear (9)</div>
+          <div class="grid grid-cols-2 gap-1.5 pl-1">
+            <a href="shop.html?cat=fashion" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">👗 Alt Fashion (3)</a>
+            <a href="shop.html?cat=watches" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">⌚ Watches (2)</a>
+            <a href="shop.html?cat=automotive" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">🏎️ Auto (2)</a>
+            <a href="shop.html?cat=tech" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">🎧 Audio & Tech (2)</a>
+            <a href="shop.html?cat=desk-setup" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">💻 Desk Setup (2)</a>
+            <a href="shop.html?cat=cameras" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">📷 Cameras (1)</a>
+            <a href="shop.html?cat=coffee" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">☕ Coffee (1)</a>
+            <a href="shop.html?cat=gaming" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">🎮 Gaming (1)</a>
+            <a href="shop.html?cat=smarthome" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">🏠 Smart Home (1)</a>
+          </div>
+          <div class="font-extrabold text-[10px] text-pink-500 uppercase mt-2" data-i18n="nav_digital_assets">Digital Products (5)</div>
+          <div class="grid grid-cols-2 gap-1.5 pl-1">
+            <a href="shop.html?cat=ebooks" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">📚 Ebooks (1)</a>
+            <a href="shop.html?cat=presets" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">🎨 Presets (1)</a>
+            <a href="shop.html?cat=templates" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">📑 Notion OS (1)</a>
+            <a href="shop.html?cat=courses" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">🎓 Courses (1)</a>
+            <a href="shop.html?cat=saas" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">⚡ SaaS Tools (1)</a>
+          </div>
+        </div>
+      </details>
+      <a href="shop.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_shop">Curated Store</a>
+      <a href="sponsor.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_sponsor">Sponsorships</a>
+    </div>
+  </header>
+
+
+  <!-- HERO SECTION: Pinned Featured Project & Mockup Showcase -->
+  <section class="hero-glow-backdrop pt-6 pb-12 sm:pt-10 sm:pb-16 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- 3D Perspective Floating Mockup Section (Pinned Featured Project) -->
+      <div class="mockup-perspective pt-4 pb-6 max-w-6xl xl:max-w-7xl mx-auto relative px-2 sm:px-4">
+        
+        <!-- Left Floating Card: Positioned safely outside laptop without overlapping -->
+        <div class="hidden xl:block absolute -left-8 2xl:-left-16 top-24 w-52 2xl:w-60 bg-white/95 dark:bg-[#160d30]/95 backdrop-blur-xl p-3.5 2xl:p-4 rounded-2xl border border-purple-300 dark:border-purple-700/50 text-left shadow-2xl floating-card-left z-20 transition-all hover:scale-105 pointer-events-none xl:pointer-events-auto">
+          <div class="flex items-center gap-2 mb-2 text-xs font-bold text-purple-600 dark:text-purple-300 uppercase">
+            <i data-lucide="cpu" class="w-4 h-4 text-pink-500"></i> <span data-i18n="hero_card_left_badge">ADVANCED AI INTEGRATION</span>
+          </div>
+          <div class="space-y-1 text-[11px] text-slate-600 dark:text-purple-200/70">
+            <p data-i18n="hero_card_left_item1">• Automated CRO Funnels</p>
+            <p data-i18n="hero_card_left_item2">• Real-time Multi-store Comparison</p>
+            <p data-i18n="hero_card_left_item3">• 4.2% Tracked Affiliate CTR</p>
+          </div>
+          <div class="mt-3 pt-2 border-t border-purple-100 dark:border-purple-900/60 flex items-center justify-between text-[10px] font-bold text-emerald-500">
+            <span data-i18n="hero_card_left_roi">+300% ROI SURGE</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          </div>
+        </div>
+
+        <!-- Right Floating Card: Positioned safely outside laptop without overlapping -->
+        <div class="hidden xl:block absolute -right-8 2xl:-right-16 top-20 w-52 2xl:w-60 bg-white/95 dark:bg-[#160d30]/95 backdrop-blur-xl p-3.5 2xl:p-4 rounded-2xl border border-purple-300 dark:border-purple-700/50 text-left shadow-2xl floating-card-right z-20 transition-all hover:scale-105 pointer-events-none xl:pointer-events-auto">
+          <div class="flex items-center gap-2 mb-2 text-xs font-bold text-pink-600 dark:text-pink-300 uppercase">
+            <i data-lucide="trending-up" class="w-4 h-4 text-purple-400"></i> <span data-i18n="hero_card_right_badge">GLOBAL MARKET DEALS</span>
+          </div>
+          <div class="space-y-1 text-[11px] text-slate-600 dark:text-purple-200/70">
+            <p data-i18n="hero_card_right_item1">• Amazon Associates & Best Buy</p>
+            <p data-i18n="hero_card_right_item2">• Instant Cookie Tracking Sync</p>
+            <p data-i18n="hero_card_right_item3">• Exclusive Coupon: <strong class="text-purple-500 font-mono">SMART20</strong></p>
+          </div>
+          <div class="mt-3 pt-2 border-t border-purple-100 dark:border-purple-900/60 flex items-center justify-between text-[10px] font-bold text-purple-600 dark:text-purple-300">
+            <span data-i18n="hero_card_right_status">TOP 4 AFFILIATE PLATFORMS</span>
+            <i data-lucide="check-check" class="w-3.5 h-3.5 text-pink-500"></i>
+          </div>
+        </div>
+
+        <!-- Central Mockup Screen (Spacious Laptop Display) -->
+        <div id="hero-pinned-card" class="mockup-laptop-base bg-white dark:bg-[#120a28] rounded-3xl p-5 sm:p-7 border-2 border-purple-400/40 dark:border-purple-600/40 relative z-10 cosmic-card-glow max-w-4xl mx-auto text-left shadow-2xl">
+          
+          <!-- Mockup Browser Header Bar -->
+          <div class="flex items-center justify-between pb-4 border-b border-purple-100 dark:border-purple-900/60 flex-wrap gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <div class="flex items-center gap-1.5 mr-1">
+                <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+              </div>
+              <span id="hero-pinned-url-display" class="inline-flex items-center gap-1.5 text-xs font-black text-slate-800 dark:text-purple-200 tracking-wider uppercase">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-pink-500 flex-shrink-0"></i>
+                <span id="hero-pinned-brand-text">LilyVow Alt Fashion</span>
+              </span>
+              <span id="hero-pinned-badge" class="text-[9.5px] font-extrabold bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 px-2.5 py-0.5 rounded-full uppercase border border-purple-200 dark:border-purple-700/50">Lựa Chọn Biên Tập Viên</span>
+            </div>
+
+            <!-- Top 3 Switcher Tab Pills & Controls -->
+            <div class="flex items-center gap-1.5">
+              <div id="hero-spotlight-pills" class="flex items-center gap-1 bg-slate-100 dark:bg-[#190c3d] p-1 rounded-xl border border-purple-200 dark:border-purple-800/60 shadow-inner">
+                <button type="button" class="hero-pin-pill px-2.5 py-1 rounded-lg text-[11px] font-black transition-all flex items-center gap-1 bg-gradient-to-r from-amber-500 to-pink-500 text-white shadow-xs cursor-pointer" data-slot="0">
+                  <span>👑 Top 1</span>
+                </button>
+                <button type="button" class="hero-pin-pill px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 text-slate-600 dark:text-purple-300 hover:text-pink-500 dark:hover:text-white cursor-pointer" data-slot="1">
+                  <span>⚡ Top 2</span>
+                </button>
+                <button type="button" class="hero-pin-pill px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 text-slate-600 dark:text-purple-300 hover:text-pink-500 dark:hover:text-white cursor-pointer" data-slot="2">
+                  <span>🎧 Top 3</span>
+                </button>
+              </div>
+
+              <!-- Prev / Next Arrow Buttons -->
+              <div class="flex items-center gap-0.5">
+                <button type="button" id="hero-pin-prev-btn" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-[#190c3d] hover:bg-purple-100 dark:hover:bg-purple-800/60 border border-purple-200 dark:border-purple-800/60 text-slate-600 dark:text-purple-300 flex items-center justify-center text-xs font-black transition-colors cursor-pointer" title="Bài trước">
+                  ‹
+                </button>
+                <button type="button" id="hero-pin-next-btn" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-[#190c3d] hover:bg-purple-100 dark:hover:bg-purple-800/60 border border-purple-200 dark:border-purple-800/60 text-slate-600 dark:text-purple-300 flex items-center justify-center text-xs font-black transition-colors cursor-pointer" title="Bài tiếp theo">
+                  ›
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Details Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 my-6 items-center">
+            <div class="sm:col-span-5 relative group/hero-img rounded-2xl overflow-hidden shadow-lg border border-purple-200/60 dark:border-purple-800/60 bg-slate-100 dark:bg-[#180d38]">
+              <img id="hero-pinned-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="LilyVow" class="w-full h-48 sm:h-56 object-cover transition-transform duration-500 group-hover/hero-img:scale-105">
+              <span id="hero-pinned-rank-badge" class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-amber-400 border border-amber-400/40 shadow-md flex items-center gap-1">
+                <span>👑 TOP 1 SPOTLIGHT</span>
+              </span>
+            </div>
+            
+            <div class="sm:col-span-7 space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <span id="hero-pinned-tag" class="text-xs font-extrabold text-pink-500 uppercase tracking-wide">THỜI TRANG THIẾT KẾ GOTHIC & ALT</span>
+                <span class="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="award" class="w-3 h-3 text-amber-400"></i>
+                  <span>Verified 2026</span>
+                </span>
+              </div>
+
+              <h3 id="hero-pinned-title" class="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
+                <a id="hero-pinned-link" href="post-lilyvow.html" class="hover:text-pink-500 transition-colors">Đánh Giá LilyVow 2026: Thời Trang Lolita & Gothic Thiết Kế</a>
+              </h3>
+
+              <div class="flex items-baseline gap-3 flex-wrap">
+                <span id="hero-pinned-price" class="price-val text-2xl sm:text-3xl font-black text-rose-600 font-display" data-vnd="1.750.000₫" data-usd="$69.00">1.750.000₫</span>
+                <span id="hero-pinned-price-orig" class="strike-val text-xs sm:text-sm text-slate-400 line-through" data-vnd="2.250.000₫" data-usd="$89.00">2.250.000₫</span>
+                <span id="hero-pinned-discount" class="text-[11px] font-extrabold bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">Giảm 15% toàn đơn</span>
+              </div>
+
+              <!-- Action Row: Direct Order CTA + In-depth Review Link -->
+              <div class="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <a id="hero-pinned-aff-btn" href="https://lilyvow.com/?ref=smartpicks" target="_blank" rel="noopener noreferrer" class="flex-1 py-3 px-5 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 hover:shadow-pink-500/35 hover:scale-[1.01] transition-all group">
+                  <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                  <span class="tracking-wider uppercase">ORDER NOW (LINK ƯU ĐÃI)</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                </a>
+                <a id="hero-pinned-review-btn" href="post-lilyvow.html" class="px-4 py-3 rounded-xl border border-purple-200 dark:border-purple-700 hover:border-pink-500 text-slate-700 dark:text-purple-200 hover:text-pink-500 text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-purple-50/60 dark:bg-purple-950/40 whitespace-nowrap">
+                  <span>Xem Đánh Giá</span>
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Auto-Rotate Progress Bar -->
+          <div class="w-full bg-slate-100 dark:bg-purple-950/70 h-1.5 rounded-full overflow-hidden mt-2 relative">
+            <div id="hero-pinned-progress-bar" class="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-pink-500 w-0 rounded-full transition-all duration-300"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Trust Metrics -->
+      <div class="grid grid-cols-3 gap-4 pt-8 max-w-3xl mx-auto border-t border-purple-200/50 dark:border-purple-900/40">
+        <div>
+          <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display">120K+</span>
+          <p class="text-xs text-purple-600 dark:text-purple-400" data-i18n="metric_readers">Monthly Readers</p>
+        </div>
+        <div>
+          <span class="text-2xl sm:text-3xl font-black text-emerald-500 font-display">98%</span>
+          <p class="text-xs text-purple-600 dark:text-purple-400" data-i18n="metric_deals">Verified Deals</p>
+        </div>
+        <div>
+          <span class="text-2xl sm:text-3xl font-black text-pink-500 font-display">4.9 / 5</span>
+          <p class="text-xs text-purple-600 dark:text-purple-400" data-i18n="metric_rating">User Satisfaction</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FEATURED BLOG ARTICLES GRID -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-display" data-i18n="featured_posts_title">Featured Reviews & CRO Showcases</h2>
+        <p class="text-xs sm:text-sm text-purple-600 dark:text-purple-300/70 mt-1" data-i18n="featured_posts_sub">High-converting in-depth reviews with affiliate links, price comparisons, and sponsored spotlights</p>
+      </div>
+      <a href="post.html" class="text-xs sm:text-sm font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1">
+        <span data-i18n="view_all_posts">View All Articles</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Review: Mowrator S1 4WD Smart Remote Control Mower & Patrol Vehicle In-Depth Review (2026) -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col group">
+        <div class="relative h-52 w-full bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318] flex items-center justify-center p-3 overflow-hidden">
+          <img src="images/mowrator-s1-4wd-pro.jpg" alt="Mowrator S1 4WD Smart Remote Control Mower &amp; Patrol Vehicle In-Depth Review" class="max-h-48 w-auto max-w-full h-auto object-contain drop-shadow-md rounded-xl transition-transform duration-300 group-hover:scale-105">
+          <span class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">Robotics</span>
+          <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> 9.8
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>Sep 12, 2026</span>
+              <span>•</span>
+              <span>8 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-pink-500 transition-colors">
+              <a href="post-mowrator-s1-4wd-pentest-review.html">Mowrator S1 4WD Smart Remote Control Mower &amp; Patrol Vehicle In-Depth Review: All-Terrain Performance Tested (2026)</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3">
+              High-torque 4WD brushless all-wheel drive, long-range 2.4GHz remote controller, and heavy-duty slope climbing tackle steep 45-degree grades with precision.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3 text-xs">
+              <div>
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-rose-600 dark:text-rose-400 text-base ml-1 price-val font-display" data-vnd="37.475.000₫" data-usd="$1,499.00">$1,499.00</span>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-mowrator-s1-4wd-pentest-review.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://eu.mowrator.com/?ref=LONGXUANTRAN" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+      <!-- Review: supreme Review: Authentic Craftsmanship, Sizing &amp; Global Shipping Tested -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="supreme Review: Authentic Craftsmanship, Sizing &amp; Global Shipping Tested" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">Alt &amp; Gothic Fashion</span>
+          <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> 9.6
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>12/9/2026</span>
+              <span>•</span>
+              <span>8 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-pink-500 transition-colors">
+              <a href="post-supreme-review.html">supreme Review: Authentic Craftsmanship, Sizing &amp; Global Shipping Tested</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3">
+              Tired of flimsy fast-fashion clones? LilyVow connects international shoppers with authentic indie designer ateliers, featuring high-GSM jacquard fabrics and made-to-order custom sizing.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3 text-xs">
+              <div>
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-rose-600 dark:text-rose-400 text-base ml-1 price-val font-display" data-vnd="2.990.000đ" data-usd="$119.00">$119.00</span>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-supreme-review.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://www.supremebeauty.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+      
+      <!-- Review 1: LilyVow Alt Fashion -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="LilyVow Alt Fashion" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="art_lily_badge">Alt Fashion</span>
+          <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> 9.6
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>11/09/2026</span>
+              <span>•</span>
+              <span data-i18n="art_lily_read_time">7 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-pink-500 transition-colors">
+              <a href="post-lilyvow.html" data-i18n="art_lily_title">LilyVow Review 2026: Authentic Lolita & Gothic Alt Fashion Tested</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3" data-i18n="art_lily_desc">
+              Hands-on fabric teardown, custom sizing accuracy test ($25 alteration), and verified 15% discount code.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3 text-xs">
+              <div>
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-rose-600 dark:text-rose-400 text-base ml-1 price-val font-display" data-vnd="1.750.000đ" data-usd="$69.00">$69.00</span>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-lilyvow.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://lilyvow.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Review 2: BullBoost Performance Racing -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=700&q=80" alt="BullBoost Performance" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-amber-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="art_bull_badge">Auto Performance</span>
+          <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> 9.5
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>11/09/2026</span>
+              <span>•</span>
+              <span data-i18n="art_bull_read_time">9 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-amber-500 transition-colors">
+              <a href="post-bullboost.html" data-i18n="art_bull_title">BullBoost Performance Review: CNC Billet Intake Manifolds & Titanium Exhausts</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3" data-i18n="art_bull_desc">
+              Dyno flow-bench tested (+34 WHP gains), 75+ PSI boost threshold, and $50 promo code on orders over $400.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3 text-xs">
+              <div>
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-amber-600 dark:text-amber-400 text-base ml-1 price-val font-display" data-vnd="4.250.000đ" data-usd="$169.00">$169.00</span>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-bullboost.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://bullboostperformance.com/?ref=bwfxdiyt" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Review 3: Sea-Gull 1963 Chronograph -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1547996160-71dfabb1a7b1?auto=format&fit=crop&w=700&q=80" alt="Sea-Gull 1963" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="art_seagull_badge">Horology Review</span>
+          <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> 9.7
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>11/09/2026</span>
+              <span>•</span>
+              <span data-i18n="art_seagull_read_time">10 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-indigo-500 transition-colors">
+              <a href="post-seagull.html" data-i18n="art_seagull_title">Sea-Gull 1963 Chronograph Review: The Holy Grail of Value in Horology</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3" data-i18n="art_seagull_desc">
+              In-depth teardown of the historic ST1901 column-wheel movement, +4s/day daily accuracy, and $30 discount.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3 text-xs">
+              <div>
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-indigo-600 dark:text-indigo-400 text-base ml-1 price-val font-display" data-vnd="5.890.000đ" data-usd="$229.00">$229.00</span>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-seagull.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Review 4: Tech Review with Affiliate (Sony XM5) -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80" alt="Sony XM5" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="art1_badge">Tech Review</span>
+          <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> 9.4
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>10/09/2026</span>
+              <span>•</span>
+              <span data-i18n="art1_read_time">8 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-purple-500 transition-colors">
+              <a href="post-sony-wh-1000xm5.html" data-i18n="art1_title">Sony WH-1000XM5 Review: Is It Worth Upgrading from the XM4?</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3" data-i18n="art1_desc">
+              3-month hands-on test with Sony's flagship ANC headphones. Multi-store price comparison across Amazon & Shopee with exclusive $20 off coupon.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3 text-xs">
+              <div>
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-rose-600 dark:text-rose-400 text-base ml-1 price-val font-display" data-vnd="7.490.000đ" data-usd="$298.00">$298.00</span>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-sony-wh-1000xm5.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://amazon.com" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Review 5: Sponsored Post (Notion AI) -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=80" alt="Notion AI" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+            <i data-lucide="award" class="w-3 h-3"></i> <span data-i18n="sponsored_badge">Sponsored Post</span>
+          </span>
+          <span class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded shadow">
+            By Notion Inc.
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>08/09/2026</span>
+              <span>•</span>
+              <span data-i18n="art2_read_time">6 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-purple-500 transition-colors">
+              <a href="post.html" data-i18n="art2_title">[Sponsored] Notion AI Hands-On: How to 3X Your Freelancer Productivity</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3" data-i18n="art2_desc">
+              Partnered with Notion Inc. Discover how to automate project notes, craft winning client proposals, and claim 20% off annual plans.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-center justify-between mb-3 text-xs">
+              <div class="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
+                <span class="w-2 h-2 rounded-full bg-pink-500"></span>
+                <span data-i18n="verified_partner">Verified Partner</span>
+              </div>
+              <div class="text-xs">
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-rose-600 dark:text-rose-400 text-sm ml-1 price-val font-display" data-vnd="250.000đ/th" data-usd="$10.00/mo">$10.00/mo</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://affiliate.notion.so" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Review 6: Monetization Case Study -->
+      <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=700&q=80" alt="Affiliate Case Study" class="w-full h-48 object-cover">
+          <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="art3_badge">MMO Case Study</span>
+          <span class="absolute top-3 right-3 bg-purple-900/90 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded" data-i18n="art3_rev_tag">
+            +$1,000 / Mo
+          </span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+              <span>01/09/2026</span>
+              <span>•</span>
+              <span data-i18n="art3_read_time">15 min read</span>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-purple-500 transition-colors">
+              <a href="post.html" data-i18n="art3_title">Case Study: How I Earned My First $1,000 from an Affiliate Blog in 4 Months</a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3" data-i18n="art3_desc">
+              Full roadmap on choosing profitable micro-niches, setting up conversion funnels, negotiating direct merchant commissions, and banner ad optimization.
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-center justify-between mb-3 text-xs">
+              <span class="text-xs text-emerald-500 font-semibold flex items-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> <span data-i18n="pdf_included">PDF Guide Included</span>
+              </span>
+              <div class="text-xs">
+                <span class="text-slate-400" data-i18n="price_from_label">From:</span>
+                <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm ml-1 price-val font-display" data-vnd="0đ (Free)" data-usd="Free">Free</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://gumroad.com" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- DIGITAL PRODUCTS & PARTNER STORES MINI-STORE -->
+  <section id="section-curated-shop" class="bg-gradient-to-b from-purple-50/50 to-transparent dark:from-[#0d0720] dark:to-transparent py-16 border-y border-purple-200/50 dark:border-purple-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-6 sm:mb-8 gap-3 sm:gap-4">
+        <div class="w-full md:w-auto">
+          <div class="flex items-center justify-between md:justify-start gap-3 mb-2.5">
+            <div class="glow-pill-badge">
+              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+              <span data-i18n="digital_badge">Curated Shop</span>
+            </div>
+            <!-- Mobile compact View Store link aligned with badge -->
+            <a href="shop.html" class="inline-flex md:hidden items-center gap-1 text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-pink-500 transition-colors">
+              <span data-i18n="view_full_shop_mobile">Xem tất cả (22)</span> &rarr;
+            </a>
+          </div>
+          <h2 class="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white font-display tracking-tight" data-i18n="digital_shop_title">Curated Products & Essential Gear</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-300/70 mt-1" data-i18n="digital_shop_sub">Handpicked physical gear, tech accessories, and essentials tested for quality.</p>
+        </div>
+        <!-- Desktop View Store Button -->
+        <a href="shop.html" class="hidden md:inline-flex px-5 py-2.5 bg-white dark:bg-[#150d2e] text-purple-700 dark:text-purple-200 text-xs font-bold rounded-2xl border border-purple-300 dark:border-purple-700/60 hover:border-purple-500 shadow-sm transition-all items-center gap-1.5 whitespace-nowrap">
+          <span id="home-full-store-count" data-i18n="view_full_shop">View Full Store (20 Items)</span> &rarr;
+        </a>
+      </div>
+
+      <!-- Quick Category Filter Pills: Mobile Optimized with Smooth Touch Momentum & Gradient Fade Mask -->
+      <div class="relative w-full max-w-full mb-8">
+        <div id="home-category-pills" class="w-full max-w-full min-w-0 flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-1 -mx-1 scroll-smooth snap-x touch-pan-x sm:flex-wrap" style="-webkit-overflow-scrolling: touch;">
+          <a href="shop.html?cat=all" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-xs hover:bg-purple-700 transition-all whitespace-nowrap"><span data-i18n="shop_tab_all">🛍️ All Items</span> (<span id="home-count-all">20</span>)</a>
+          <a href="shop.html?cat=physical" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-[#120a26] text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_physical">📦 Physical Gear</span> (<span id="home-count-physical">15</span>)</a>
+          <a href="shop.html?cat=digital" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-[#120a26] text-pink-600 dark:text-pink-300 border border-pink-300 dark:border-pink-700 hover:border-pink-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_digital">⚡ Digital Downloads</span> (<span id="home-count-digital">5</span>)</a>
+          <a href="shop.html?cat=fashion" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_fashion">👗 Alt Fashion</span> (<span id="home-count-fashion">3</span>)</a>
+          <a href="shop.html?cat=watches" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_watches">⌚ Watches</span> (<span id="home-count-watches">2</span>)</a>
+          <a href="shop.html?cat=automotive" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_auto">🏎️ Auto Performance</span> (<span id="home-count-auto">2</span>)</a>
+          <a href="shop.html?cat=tech" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_tech">🎧 Audio & Tech</span> (<span id="home-count-tech">2</span>)</a>
+          <a href="shop.html?cat=desk-setup" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_desk">💻 Desk Setup & EDC</span> (<span id="home-count-desk">2</span>)</a>
+          <a href="shop.html?cat=cameras" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_cameras">📷 Cameras</span> (<span id="home-count-cameras">1</span>)</a>
+          <a href="shop.html?cat=coffee" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_coffee">☕ Coffee</span> (<span id="home-count-coffee">1</span>)</a>
+          <a href="shop.html?cat=gaming" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_gaming">🎮 Gaming</span> (<span id="home-count-gaming">1</span>)</a>
+          <a href="shop.html?cat=smarthome" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_smarthome">🏠 Smart Home</span> (<span id="home-count-smarthome">1</span>)</a>
+          <a href="shop.html?cat=ebooks" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_ebooks">📚 Ebooks</span> (<span id="home-count-ebooks">1</span>)</a>
+          <a href="shop.html?cat=presets" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_presets">🎨 Presets</span> (<span id="home-count-presets">1</span>)</a>
+          <a href="shop.html?cat=templates" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_templates">📑 Notion OS</span> (<span id="home-count-templates">1</span>)</a>
+          <a href="shop.html?cat=courses" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_courses">🎓 Courses</span> (<span id="home-count-courses">1</span>)</a>
+          <a href="shop.html?cat=saas" class="flex-shrink-0 snap-start px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-all whitespace-nowrap"><span data-i18n="shop_tab_saas">⚡ SaaS</span> (<span id="home-count-saas">1</span>)</a>
+        </div>
+        <!-- Right edge smooth fade mask on mobile to indicate horizontal swiping -->
+        <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-slate-50 dark:from-[#0d0720] to-transparent sm:hidden"></div>
+      </div>
+
+      <!-- 8 Featured Products Grid across 8 Different Partner Stores -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        
+        <!-- Product 1: Sea-Gull 1963 Chronograph -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase" data-i18n="prod_sg_badge">Historic Chrono</span>
+              <span class="bg-pink-100 dark:bg-pink-950 text-pink-600 dark:text-pink-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-21%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80" alt="Sea-Gull 1963" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=Sea-Gull+Watch+Official" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="Sea-Gull Watch Official">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> Sea-Gull Watch Official
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.7</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_sg_title">Sea-Gull 1963 38mm ST1901 Chronograph</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_sg_desc">Swiss Venus 175 heritage column-wheel calibre with exhibition crystal display back.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="5.490.000₫" data-usd="$219.00">$219.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="6.990.000₫" data-usd="$279.00">$279.00</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-seagull.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2: LilyVow Gothic Velvet OP -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-pink-500 uppercase" data-i18n="prod_lv_badge">Designer Alt Fashion</span>
+              <span class="bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-22%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" alt="LilyVow Gothic OP" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=LilyVow+Alt+Fashion" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="LilyVow Alt Fashion">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> LilyVow Alt Fashion
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.6</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_lv_title">LilyVow Victorian Velvet Gothic OP</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_lv_desc">380 GSM black velvet with double-tier Venise floral lace and steel-boned corset.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="1.750.000₫" data-usd="$69.00">$69.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="2.250.000₫" data-usd="$89.00">$89.00</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-lilyvow.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://lilyvow.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3: BullBoost CNC Billet Manifold -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-violet-500 uppercase" data-i18n="prod_bb_badge">Performance Tuning</span>
+              <span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-22%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80" alt="BullBoost Manifold" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=BullBoost+Performance" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="BullBoost Performance">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> BullBoost Performance
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.8</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_bb_title">BullBoost CNC Billet Intake Manifold</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_bb_desc">6061-T6 aerospace billet aluminum with internal velocity stacks for 900+ WHP.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="8.750.000₫" data-usd="$349.00">$349.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="11.200.000₫" data-usd="$449.00">$449.00</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-bullboost.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://bullboostperformance.com/?ref=bwfxdiyt" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4: Sony WH-1000XM5 -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-rose-500 uppercase" data-i18n="prod_sn_badge">Flagship ANC</span>
+              <span class="bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-16%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" alt="Sony XM5" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=Sony+Official+Store" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="Sony Official Store">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> Sony Official Store
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.8</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_sn_title">Sony WH-1000XM5 ANC Wireless Headphones</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_sn_desc">Industry-leading noise cancellation, 8 AI microphones, 30-hour battery life.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="7.990.000₫" data-usd="$349.99">$349.99</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="9.490.000₫" data-usd="$399.99">$399.99</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-sony-wh-1000xm5.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://www.sony.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 5: Keychron Q1 Pro Custom Keyboard -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-indigo-500 uppercase" data-i18n="prod_kc_badge">Desk Setup & EDC</span>
+              <span class="bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-17%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80" alt="Keychron Q1 Pro" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=Keychron+Official" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="Keychron Official">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> Keychron Official
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.8</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_kc_title">Keychron Q1 Pro Wireless Custom Mechanical Keyboard</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_kc_desc">CNC 6063 aluminum body, acoustic double-gasket design, wireless Bluetooth and QMK/VIA mapping.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="4.890.000₫" data-usd="$199.00">$199.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="5.800.000₫" data-usd="$239.00">$239.00</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-keychron-q1.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://keychron.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Product 6: supreme Atelier Dress -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-pink-500 uppercase" data-i18n="prod_sup_badge">Alt & Gothic Fashion</span>
+              <span class="bg-pink-100 dark:bg-pink-950 text-pink-600 dark:text-pink-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-20%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=80" alt="supreme Atelier" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=Supreme+Beauty+Atelier" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="Supreme Beauty Atelier">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> Supreme Beauty Atelier
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.6</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_sup_title">supreme Review: Authentic Craftsmanship, Sizing & Global Shipping Tested</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_sup_desc">Verified indie designer jacquard fabric with built-in steel-boning corset support and custom tailoring.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="2.990.000₫" data-usd="$119.00">$119.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="3.737.500₫" data-usd="$148.75">$148.75</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-supreme-review.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://supreme.com" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 7: Tissot PRX Powermatic 80 -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase" data-i18n="prod_tissot_badge">Swiss Automatic</span>
+              <span class="bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-15%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80" alt="Tissot PRX" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=Tissot+Official+Store" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="Tissot Official Store">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> Tissot Official Store
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.9</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_tissot_title">Tissot PRX Powermatic 80 Ice Blue Integrated Steel Sports Watch</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_tissot_desc">Iconic 1978 integrated bracelet design, Ice Blue waffle tapisserie dial, and 80-hour Nivachron reserve.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="18.500.000₫" data-usd="$725.00">$725.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="21.800.000₫" data-usd="$850.00">$850.00</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-tissot-prx.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://tissotwatches.com" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 8: Brembo GT 6-Piston Big Brake Kit -->
+        <div class="bg-white dark:bg-[#120a26] rounded-3xl p-5 border border-purple-200/80 dark:border-purple-800/60 shadow-sm flex flex-col justify-between card-hover">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-violet-500 uppercase" data-i18n="prod_brembo_badge">Auto Performance</span>
+              <span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">-12%</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl mb-3.5 bg-purple-50 dark:bg-purple-950/40 aspect-[16/11]">
+              <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80" alt="Brembo GT" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+              <a href="shop.html?shop=Brembo+Racing+Store" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-700 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-800 truncate" title="Brembo Racing Store">
+                <i data-lucide="store" class="w-3 h-3 text-pink-500"></i> Brembo Racing Store
+              </a>
+              <span class="text-[10px] font-black text-amber-400 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 9.9</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-2" data-i18n="prod_brembo_title">Brembo GT 6-Piston Billet Big Brake Kit 380mm Floating Rotors</h4>
+            <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2" data-i18n="prod_brembo_desc">Monobloc 6-piston aluminum calipers with two-piece 380mm curved-vane slotted floating rotors.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/60">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-lg font-black text-purple-600 dark:text-purple-400 price-val font-display" data-vnd="98.000.000₫" data-usd="$3850.00">$3850.00</span>
+              <span class="text-xs text-slate-400 line-through strike-val" data-vnd="112.000.000₫" data-usd="$4400.00">$4400.00</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="post-brembo-gt.html" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <span data-i18n="btn_read_review">Read Review</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+              <a href="https://brembo.com" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <span data-i18n="order_now">ORDER NOW</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Category Strip leading to shop.html -->
+      <div class="mt-10 p-5 sm:p-6 rounded-3xl bg-white/70 dark:bg-[#120a26]/70 backdrop-blur-md border border-purple-200/70 dark:border-purple-800/50 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-base font-extrabold text-slate-900 dark:text-white" data-i18n="shop_banner_title">14 Curated Categories & 20+ Verified Products</div>
+            <div class="text-xs text-slate-500 dark:text-purple-300/70 mt-0.5" data-i18n="shop_banner_sub">Hardware, Watches, Auto, Tech, Coffee, Gaming, Ebooks, Presets, Notion OS & AI Tools</div>
+          </div>
+        </div>
+        <a href="shop.html" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-extrabold rounded-xl shadow-md flex items-center gap-2 whitespace-nowrap transition-all flex-shrink-0 btn-shimmer">
+          <span data-i18n="shop_banner_btn">Explore Full Store (20 Curated Items)</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4 PILLARS OF MONETIZATION (Purple Glow Cards - Moved to Bottom of Page) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      
+      <!-- 1. Affiliate Marketing Engine -->
+      <div class="p-6 bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4 shadow-sm">
+            <i data-lucide="link" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-base" data-i18n="pillar_affiliate_title">Affiliate Marketing</h4>
+          <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 leading-relaxed" data-i18n="pillar_affiliate_desc">Instant Check Price CTA, real-time multi-store price comparisons across Amazon & Shopee, and exclusive vouchers.</p>
+        </div>
+        <a href="post.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 mt-4 hover:underline">
+          <span data-i18n="pillar_affiliate_action">Explore Modules</span> <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+
+      <!-- 2. Display Ads Optimization -->
+      <div class="p-6 bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-4 shadow-sm">
+            <i data-lucide="layout" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-base" data-i18n="pillar_ads_title">Display Advertising</h4>
+          <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 leading-relaxed" data-i18n="pillar_ads_desc">Header leaderboard, in-article display units, and sticky sidebar 300x600 optimized for AdSense & Mediavine.</p>
+        </div>
+        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-500 mt-4" data-i18n="pillar_ads_status">
+          IAB Ad Standard Compliant
+        </span>
+      </div>
+
+      <!-- 3. Sponsored Content & Partnerships -->
+      <div class="p-6 bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-pink-100 dark:bg-pink-950/80 text-pink-600 dark:text-pink-400 flex items-center justify-center mb-4 shadow-sm">
+            <i data-lucide="award" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-base" data-i18n="pillar_sponsor_title">Sponsored Content</h4>
+          <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 leading-relaxed" data-i18n="pillar_sponsor_desc">SEO-compliant sponsorship disclosures, partner spotlight badges, and high-converting media kit booking portal.</p>
+        </div>
+        <a href="sponsor.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-pink-600 dark:text-pink-400 mt-4 hover:underline">
+          <span data-i18n="pillar_sponsor_action">View Brand Rates</span> <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+
+      <!-- 4. Curated Gear & Merchandise -->
+      <div class="p-6 bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-950/80 text-violet-600 dark:text-violet-400 flex items-center justify-center mb-4 shadow-sm">
+            <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-base" data-i18n="pillar_digital_title">Curated Shop & Gear</h4>
+          <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 leading-relaxed" data-i18n="pillar_digital_desc">Mechanical horology, performance tuning, designer apparel, and desk EDC tested hands-on with exclusive coupon codes.</p>
+        </div>
+        <a href="shop.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 mt-4 hover:underline">
+          <span data-i18n="pillar_digital_action">Explore Store</span> <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GET IN TOUCH / CONTACT SECTION -->
+  <section class="py-16 bg-slate-50/70 dark:bg-[#06030f]/70 border-t border-purple-100/80 dark:border-purple-900/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="mb-8">
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display" data-i18n="contact_heading">Get in Touch</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-purple-300/70 mt-1" data-i18n="contact_subtitle">Questions, partnerships, or feedback — we'd love to hear from you.</p>
+      </div>
+
+      <!-- Main Card Grid -->
+      <div class="rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-purple-900/50 bg-white dark:bg-[#0e0720] grid grid-cols-1 lg:grid-cols-12">
+        
+        <!-- Left Column: Emerald Gradient Card -->
+        <div class="lg:col-span-5 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-8 sm:p-10 text-white flex flex-col justify-between relative overflow-hidden">
+          <!-- Background decorative circles -->
+          <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+          <div class="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-teal-900/30 blur-xl pointer-events-none"></div>
+
+          <div class="relative z-10 space-y-6">
+            <!-- Icon -->
+            <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 text-white shadow-inner">
+              <i data-lucide="life-buoy" class="w-6 h-6"></i>
+            </div>
+
+            <!-- Title & Desc -->
+            <div class="space-y-2">
+              <h3 class="text-2xl sm:text-3xl font-black leading-tight" data-i18n-html="contact_left_title">
+                We're here<br/>to help you save
+              </h3>
+              <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed font-light" data-i18n="contact_left_desc">
+                Our team reviews every message personally. Whether it's a coupon issue, partnership idea, or feedback — we've got you.
+              </p>
+            </div>
+
+            <!-- Highlights List -->
+            <div class="space-y-4 pt-2">
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="clock" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white" data-i18n="contact_bullet1_title">Reply within 24 hours</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet1_sub">Mon – Fri, 9am – 6pm PT</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white" data-i18n="contact_bullet2_title">Your info is safe</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet2_sub">We never share your details</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="message-square" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white" data-i18n="contact_bullet3_title">Partnership inquiries</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet3_sub">Open to store & brand partners</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white break-words">supportsmartpickshub@gmail.com</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet4_sub">Direct email always welcome</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Official Partner Badge with User Address -->
+          <div class="relative z-10 pt-6 mt-6 border-t border-emerald-500/40">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-white">
+                <i data-lucide="check" class="w-4 h-4"></i>
+              </div>
+              <div class="text-[11px]">
+                <p class="font-bold text-white tracking-wide" data-i18n="contact_partner_title">Official Marketing Partner</p>
+                <p class="text-emerald-100/90 leading-tight" data-i18n="contact_partner_note">SmartPicks Hub • 2205 Lorina Ave, Corcoran, CA 93212, USA</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Contact Form -->
+        <div class="lg:col-span-7 p-8 sm:p-10 bg-white dark:bg-[#0c061a] flex flex-col justify-between">
+          <div>
+            <div class="mb-6">
+              <h3 class="text-xl font-extrabold text-slate-900 dark:text-white" data-i18n="contact_form_title">Send us a message</h3>
+              <p class="text-xs text-slate-500 dark:text-purple-300/60 mt-1" data-i18n="contact_form_required">Fields marked * are required</p>
+            </div>
+
+            <form id="get-in-touch-form" class="space-y-4" onsubmit="handleContactSubmit(event)">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Name -->
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_name_label">
+                    Your Name <span class="text-slate-400 font-normal" data-i18n="contact_optional">(optional)</span>
+                  </label>
+                  <input type="text" id="contact-name" name="name" placeholder="Jane Smith" data-i18n-placeholder="contact_name_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                </div>
+
+                <!-- Email -->
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_email_label">
+                    Email Address <span class="text-rose-500">*</span>
+                  </label>
+                  <input type="email" id="contact-email" name="email" required placeholder="you@example.com" data-i18n-placeholder="contact_email_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                </div>
+              </div>
+
+              <!-- Subject -->
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_subject_label">
+                  Subject <span class="text-slate-400 font-normal" data-i18n="contact_optional">(optional)</span>
+                </label>
+                <input type="text" id="contact-subject" name="subject" placeholder="e.g. Partnership, coupon issue, feedback..." data-i18n-placeholder="contact_subject_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_message_label">
+                  Message <span class="text-rose-500">*</span>
+                </label>
+                <textarea id="contact-message" name="message" required rows="4" placeholder="Tell us how we can help..." data-i18n-placeholder="contact_message_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all resize-none"></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" id="contact-submit-btn" class="w-full py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all cursor-pointer">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span data-i18n="contact_submit_btn">Send Message</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="mt-4 pt-3 text-center border-t border-slate-100 dark:border-purple-900/30">
+            <p class="text-[11px] text-slate-400 dark:text-purple-300/50" data-i18n="contact_reply_guarantee">
+              We typically reply within 24 hours · Your info is never shared
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-white dark:bg-[#0a0515] border-t border-purple-200/50 dark:border-purple-900/40 mt-auto py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10">
+        
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <img src="images/logo.png" alt="Smart Picks Logo" class="w-8 h-8 rounded-xl object-cover shadow-md flex-shrink-0">
+            <span class="font-extrabold text-lg text-slate-900 dark:text-white font-display">Smart Picks Review</span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-purple-300/70 leading-relaxed" data-i18n="footer_desc">
+            Authoritative publication specializing in tech reviews, affiliate marketing frameworks, and conversion optimization for independent creators.
+          </p>
+          <!-- Social Media Channels -->
+          <div class="pt-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-purple-400 block mb-2" data-i18n="footer_social_title">Follow Us</span>
+            <div class="flex items-center gap-2.5">
+              <a href="https://www.facebook.com/smartpickshub04" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-[#1877F2] dark:bg-purple-950/60 dark:hover:bg-[#1877F2] border border-slate-200 dark:border-purple-800/50 flex items-center justify-center text-slate-600 dark:text-purple-300 hover:text-white dark:hover:text-white transition-all transform hover:-translate-y-0.5 shadow-sm group" title="Facebook: SmartPicks Hub" aria-label="Facebook">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/smartpickshub04/" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] dark:bg-purple-950/60 border border-slate-200 dark:border-purple-800/50 flex items-center justify-center text-slate-600 dark:text-purple-300 hover:text-white dark:hover:text-white transition-all transform hover:-translate-y-0.5 shadow-sm group" title="Instagram: @smartpickshub04" aria-label="Instagram">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a href="mailto:supportsmartpickshub@gmail.com" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-600 dark:bg-purple-950/60 dark:hover:bg-emerald-600 border border-slate-200 dark:border-purple-800/50 flex items-center justify-center text-slate-600 dark:text-purple-300 hover:text-white dark:hover:text-white transition-all transform hover:-translate-y-0.5 shadow-sm" title="Email: supportsmartpickshub@gmail.com" aria-label="Email">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_categories">Navigation</h4>
+          <ul class="space-y-2 text-xs text-slate-600 dark:text-purple-300/70">
+            <li><a href="index.html" class="hover:text-purple-500" data-i18n="nav_home">Home</a></li>
+            <li><a href="post.html" class="hover:text-purple-500" data-i18n="nav_reviews">Tech Reviews</a></li>
+            <li><a href="shop.html" class="hover:text-purple-500" data-i18n="nav_shop">Curated Store</a></li>
+            <li><a href="sponsor.html" class="hover:text-purple-500" data-i18n="nav_sponsor">Sponsorships</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_models">Revenue Models</h4>
+          <ul class="space-y-2 text-xs text-slate-600 dark:text-purple-300/70">
+            <li data-i18n="footer_model_affiliate">• Affiliate Marketing (Direct Merchant Partnerships)</li>
+            <li data-i18n="footer_model_ads">• IAB-Compliant Display Ad Networks</li>
+            <li data-i18n="footer_model_sponsor">• Sponsored Reviews & Exclusive Partnerships</li>
+            <li data-i18n="footer_model_digital">• Curated Products & Physical Gear Store</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_compliance">Compliance & Disclosure</h4>
+          <p class="text-[11px] text-slate-500 dark:text-purple-300/70 leading-relaxed" data-i18n="footer_compliance_text">
+            Fully compliant with FTC guidelines and Google Quality Rater standards for transparency, honest affiliate partnerships, and consumer protection.
+          </p>
+        </div>
+
+        <!-- Contact Column (Exact Match to User Reference) -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_contact_title">Contact</h4>
+          <p class="text-xs font-semibold text-slate-700 dark:text-purple-200 mb-1" data-i18n="footer_mailing_addr_label">Mailing Address:</p>
+          <p class="text-xs text-slate-600 dark:text-purple-300/70 leading-relaxed mb-3">
+            2205 Lorina Ave, Corcoran, CA 93212, USA
+          </p>
+          <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-purple-300/80 mb-4">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0"></i>
+            <a href="mailto:supportsmartpickshub@gmail.com" class="text-[11.5px] sm:text-xs hover:underline hover:text-emerald-600 dark:hover:text-emerald-400 break-words font-medium">supportsmartpickshub@gmail.com</a>
+          </div>
+          <div class="pt-3 border-t border-purple-100 dark:border-purple-900/40">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-purple-400 block mb-1.5" data-i18n="footer_partner_label">OFFICIAL MARKETING PARTNER</span>
+            <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-purple-950/40 border border-slate-200 dark:border-purple-800/40">
+              <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-800 dark:text-purple-100 leading-tight">SmartPicks Hub LLC</p>
+                <p class="text-[10px] text-slate-500 dark:text-purple-300/60 leading-tight" data-i18n="footer_partner_sub">SmartPicks Hub is a marketing division</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-purple-100 dark:border-purple-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <p data-i18n="footer_copyright">© 2026 Smart Picks Review. All rights reserved.</p>
+        <div class="flex gap-4">
+          <a href="#" class="hover:underline" data-i18n="footer_privacy">Privacy Policy</a>
+          <a href="#" class="hover:underline" data-i18n="footer_terms">Terms of Service</a>
+          <a href="sponsor.html" class="hover:underline" data-i18n="footer_partnerships">Brand Partnerships</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/app.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

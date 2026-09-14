@@ -1,0 +1,779 @@
+﻿param (
+    [int]$Port = 3000,
+    [int]$AdminPort = 3001,
+    [string]$RootPath = "c:\wedsite",
+    [string]$AdminPath = "c:\wedsite\admin-cms"
+)
+
+$mimeTypes = @{
+    ".html" = "text/html; charset=utf-8"
+    ".css"  = "text/css; charset=utf-8"
+    ".js"   = "application/javascript; charset=utf-8"
+    ".json" = "application/json; charset=utf-8"
+    ".png"  = "image/png"
+    ".jpg"  = "image/jpeg"
+    ".jpeg" = "image/jpeg"
+    ".gif"  = "image/gif"
+    ".svg"  = "image/svg+xml"
+    ".ico"  = "image/x-icon"
+    ".txt"  = "text/plain; charset=utf-8"
+}
+
+# Create and configure HttpListener for both Main Web & Admin CMS
+$listener = New-Object System.Net.HttpListener
+$mainPrefix = "http://localhost:$Port/"
+$adminPrefix = "http://localhost:$AdminPort/"
+
+$listener.Prefixes.Add($mainPrefix)
+$adminStarted = $false
+try {
+    $listener.Prefixes.Add($adminPrefix)
+    $adminStarted = $true
+} catch {
+    Write-Host "Khong the bind port $AdminPort, Admin CMS se truy cap qua http://localhost:$Port/admin-cms/" -ForegroundColor Yellow
+}
+
+try {
+    $listener.Start()
+} catch {
+    Write-Host "Loi khoi dong HttpListener: $_" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "==========================================================" -ForegroundColor Green
+Write-Host "  SMARTPICKS WEBSITES DANG HOAT DONG:" -ForegroundColor Cyan
+Write-Host "  1. WEBSITE CHINH:   http://localhost:$Port/" -ForegroundColor White
+if ($adminStarted) {
+    Write-Host "  2. ADMIN CMS STUDIO: http://localhost:$AdminPort/  (Web rieng dang bai)" -ForegroundColor Magenta
+} else {
+    Write-Host "  2. ADMIN CMS STUDIO: http://localhost:$Port/admin-cms/ (Web rieng dang bai)" -ForegroundColor Magenta
+}
+Write-Host "  Nhan Ctrl + C trong cua so nay de tat he thong." -ForegroundColor Yellow
+Write-Host "==========================================================" -ForegroundColor Green
+
+# Open browser to both sites
+try {
+    Start-Process "http://localhost:$Port/"
+    if ($adminStarted) {
+        Start-Process "http://localhost:$AdminPort/"
+    } else {
+        Start-Process "http://localhost:$Port/admin-cms/"
+    }
+} catch { }
+
+while ($listener.IsListening) {
+    try {
+        $context = $listener.GetContext()
+        $request = $context.Request
+        $response = $context.Response
+
+        $path = $request.Url.LocalPath
+        $reqPort = $request.Url.Port
+
+        # Determine target root based on port or path
+        $isForAdmin = ($reqPort -eq $AdminPort) -or ($path.StartsWith("/admin-cms"))
+
+        # Handle CORS
+        $response.AddHeader("Access-Control-Allow-Origin", "*")
+        $response.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE")
+        $response.AddHeader("Access-Control-Allow-Headers", "Content-Type")
+        $response.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate")
+        $response.AddHeader("Pragma", "no-cache")
+        $response.AddHeader("Expires", "0")
+
+        if ($request.HttpMethod -eq "OPTIONS") {
+            $response.StatusCode = 200
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: GET /api/posts - Get all posts for Admin CMS
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "GET" -and $path -eq "/api/posts") {
+            try {
+                $postsJsonPath = Join-Path $RootPath "data\posts.json"
+                $postsList = @()
+                if (Test-Path $postsJsonPath) {
+                    $jsonContent = [System.IO.File]::ReadAllText($postsJsonPath, [System.Text.Encoding]::UTF8)
+                    $rawParsed = $jsonContent | ConvertFrom-Json
+                    foreach ($item in $rawParsed) {
+                        if ($item.value) {
+                            foreach ($sub in $item.value) { $postsList += $sub }
+                        } else {
+                            $postsList += $item
+                        }
+                    }
+                }
+
+                # Also scan for post-*.html files on disk
+                $htmlFiles = Get-ChildItem -Path $RootPath -Filter "post-*.html" -File
+                $existingSlugs = @($postsList | ForEach-Object { if ($_.slug) { $_.slug } else { $_.id } })
+
+                foreach ($f in $htmlFiles) {
+                    $baseSlug = [System.IO.Path]::GetFileNameWithoutExtension($f.Name)
+                    if ($baseSlug -ne "post-template" -and $baseSlug -ne "post-detail" -and $baseSlug -ne "post-sony" -and -not ($existingSlugs -contains $baseSlug -or $existingSlugs -contains $f.Name)) {
+                        # Add missing disk post
+                        $title = $baseSlug.Replace("post-", "").Replace("-", " ")
+                        if ($baseSlug -eq "post-lilyvow") { $title = "LilyVow Alt Fashion Review" }
+                        if ($baseSlug -eq "post-bullboost") { $title = "BullBoost Performance Review" }
+                        if ($baseSlug -eq "post-seagull") { $title = "Sea-Gull 1963 Chronograph Review" }
+
+                        $postsList += [PSCustomObject]@{
+                            id = $baseSlug
+                            title = $title
+                            slug = $f.Name
+                            category = "Review"
+                            rating = 9.6
+                            date = $f.LastWriteTime.ToString("dd/MM/yyyy")
+                            image = "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80"
+                        }
+                    }
+                }
+
+                $resJson = $postsList | ConvertTo-Json -Depth 5
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
+                $response.ContentType = "application/json; charset=utf-8"
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi lay danh sach bai: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: POST /api/publish OR /api/save-post
+        # Writes post HTML, updates data/posts.json, and inserts card into index.html
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "POST" -and ($path -eq "/api/publish" -or $path -eq "/api/save-post")) {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $json = $body | ConvertFrom-Json
+
+                # 1. Determine file name
+                $fileName = $json.fileName
+                if ([string]::IsNullOrWhiteSpace($fileName)) {
+                    $slug = $json.slug
+                    if ([string]::IsNullOrWhiteSpace($slug)) { $slug = "post-review" }
+                    $fileName = "$slug.html"
+                }
+                if (-not $fileName.EndsWith(".html")) { $fileName += ".html" }
+                $fileName = [System.IO.Path]::GetFileName($fileName)
+                $savePath = Join-Path $RootPath $fileName
+
+                # 2. Write HTML file to c:\wedsite\
+                $contentToWrite = $json.contentHtml
+                if ([string]::IsNullOrWhiteSpace($contentToWrite)) {
+                    $contentToWrite = $json.content
+                }
+                [System.IO.File]::WriteAllText($savePath, $contentToWrite, [System.Text.Encoding]::UTF8)
+
+                # 3. Update data/posts.json
+                try {
+                    $postsJsonPath = Join-Path $RootPath "data\posts.json"
+                    $postsArray = @()
+                    if (Test-Path $postsJsonPath) {
+                        $rawPosts = [System.IO.File]::ReadAllText($postsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+                        foreach ($item in $rawPosts) {
+                            if ($item.value) {
+                                foreach ($sub in $item.value) { $postsArray += $sub }
+                            } else {
+                                $postsArray += $item
+                            }
+                        }
+                    }
+
+                    $newPostEntry = [PSCustomObject]@{
+                        id = $fileName.Replace(".html", "")
+                        title = $json.title
+                        slug = $fileName
+                        excerpt = $json.excerpt
+                        category = $json.category
+                        rating = $json.rating
+                        date = if ($json.date) { $json.date } else { (Get-Date).ToString("dd/MM/yyyy") }
+                        image = $json.image
+                        isFeatured = $true
+                        affiliateCount = 1
+                        brand = $json.brand
+                        btnText = $json.affiliateBtnText
+                        affiliateLink = $json.affiliateLink
+                        priceUsd = $json.usdPrice
+                        priceVnd = $json.vndPrice
+                        priceOrig = $json.originalPrice
+                        coupon = $json.couponCode
+                        couponDiscount = $json.couponDiscount
+                        couponExpiry = $json.couponExpiry
+                        pros = $json.pros
+                        cons = $json.cons
+                        intro = $json.intro
+                        body = $json.body
+                        verdict = $json.verdict
+                    }
+
+                    # Prepend if not exists, or update in place
+                    $existingIndex = -1
+                    for ($i = 0; $i -lt $postsArray.Count; $i++) {
+                        if ($postsArray[$i].slug -eq $fileName -or $postsArray[$i].id -eq $newPostEntry.id) {
+                            $existingIndex = $i
+                            break
+                        }
+                    }
+
+                    if ($existingIndex -ge 0) {
+                        $postsArray[$existingIndex] = $newPostEntry
+                    } else {
+                        $postsArray = @($newPostEntry) + @($postsArray)
+                    }
+
+                    $updatedJson = $postsArray | ConvertTo-Json -Depth 5
+                    [System.IO.File]::WriteAllText($postsJsonPath, $updatedJson, [System.Text.Encoding]::UTF8)
+                } catch {
+                    Write-Host "Warning: Khong the cap nhat posts.json: $_" -ForegroundColor Yellow
+                }
+
+                # 3b. Auto-sync or Update into data/products.json (Shop Affiliate Catalog)
+                try {
+                    $productsJsonPath = Join-Path $RootPath "data\products.json"
+                    $prodArray = @()
+                    if (Test-Path $productsJsonPath) {
+                        $rawProdJson = [System.IO.File]::ReadAllText($productsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+                        foreach ($item in $rawProdJson) {
+                            if ($item.value) {
+                                foreach ($sub in $item.value) { $prodArray += $sub }
+                            } else {
+                                $prodArray += $item
+                            }
+                        }
+                    }
+
+                    $prodId = "prod-" + $fileName.Replace(".html", "")
+
+                    # Determine categoryKey & localized category names
+                    $catKey = "tech"
+                    if ($json.categorySlug) {
+                        $catKey = $json.categorySlug
+                    } else {
+                        $catLower = ("" + $json.category).ToLower()
+                        if ($catLower -match "watch|horology|đồng hồ|dong ho|cơ khí|co khi|cổ điển|co dien|vintage|trang sức|trang suc|腕表|手表") { $catKey = "watches" }
+                        elseif ($catLower -match "fashion|thời trang|thoi trang|lolita|gothic|đầm|dam|áo|ao|phụ kiện|phu kien|服饰|时装") { $catKey = "fashion" }
+                        elseif ($catLower -match "auto|tuning|exhaust|manifold|xe|phụ tùng|phu tung|brakes|phanh|brembo|bullboost|racing|汽车") { $catKey = "automotive" }
+                        elseif ($catLower -match "desk|setup|edc|bàn|ban|phím|phim|chuột|chuot|keychron|logitech|gaggia|cà phê|ca phe|coffee|桌面") { $catKey = "desk-setup" }
+                        elseif ($catLower -match "gadget|camera|máy ảnh|may anh|pocket|thiết bị|thiet bi|数码") { $catKey = "gadgets" }
+                        elseif ($catLower -match "guide|ebook|cẩm nang|cam nang|khóa học|khoa hoc|指南|教程") { $catKey = "guides" }
+                    }
+
+                    $catEn = "Audio & Tech"
+                    $catVi = "Âm Thanh & Công Nghệ"
+                    $catZh = "音频与科技数码"
+                    if ($catKey -eq "watches") {
+                        $catEn = "Watches & Horology"; $catVi = "Đồng Hồ Cơ & Trang Sức"; $catZh = "机械腕表与珠宝"
+                    } elseif ($catKey -eq "fashion") {
+                        $catEn = "Alt & Gothic Fashion"; $catVi = "Thời Trang Thiết Kế"; $catZh = "小众暗黑女装"
+                    } elseif ($catKey -eq "automotive" -or $catKey -eq "auto") {
+                        $catKey = "automotive"
+                        $catEn = "Auto Performance"; $catVi = "Phụ Tùng Xe Hơi"; $catZh = "汽车改装零件"
+                    } elseif ($catKey -eq "desk-setup" -or $catKey -eq "edc") {
+                        $catKey = "desk-setup"
+                        $catEn = "Desk Setup & EDC"; $catVi = "Bàn Làm Việc & EDC"; $catZh = "桌面搭子与EDC"
+                    }
+
+                    # Parse numeric prices
+                    $priceNum = 0
+                    if ($json.vndPrice) {
+                        $rawVnd = [regex]::Replace($json.vndPrice, "[^\d]", "")
+                        if ($rawVnd) { [int64]::TryParse($rawVnd, [ref]$priceNum) | Out-Null }
+                    }
+                    $priceUsdNum = 0.0
+                    if ($json.usdPrice) {
+                        $rawUsd = [regex]::Replace($json.usdPrice, "[^\d\.]", "")
+                        if ($rawUsd) { [double]::TryParse($rawUsd, [ref]$priceUsdNum) | Out-Null }
+                    }
+
+                    $newProduct = [PSCustomObject]@{
+                        id = $prodId
+                        categoryKey = $catKey
+                        shopName = if ($json.brand) { $json.brand } else { "Verified Partner" }
+                        brand = if ($json.brand) { $json.brand } else { "Verified Partner" }
+                        title = $json.title
+                        titleEn = if ($json.titleEn) { $json.titleEn } else { $json.title }
+                        titleVi = if ($json.titleVi) { $json.titleVi } else { $json.title }
+                        titleZh = if ($json.titleZh) { $json.titleZh } else { $json.title }
+                        category = $catEn
+                        categoryEn = $catEn
+                        categoryVi = $catVi
+                        categoryZh = $catZh
+                        price = if ($priceNum -gt 0) { $priceNum } else { 1990000 }
+                        priceUsd = if ($priceUsdNum -gt 0) { $priceUsdNum } else { 79.0 }
+                        originalPrice = if ($priceNum -gt 0) { [math]::Round($priceNum * 1.25) } else { 2500000 }
+                        originalPriceUsd = if ($priceUsdNum -gt 0) { [math]::Round($priceUsdNum * 1.25, 2) } else { 99.0 }
+                        discountPercent = if ($json.couponDiscount) { $json.couponDiscount } else { "15%" }
+                        badge = if ($json.brand) { $json.brand } else { "Verified Partner" }
+                        badgeEn = if ($json.brand) { $json.brand } else { "Verified Partner" }
+                        badgeVi = if ($json.brand) { $json.brand } else { "Verified Partner" }
+                        badgeZh = if ($json.brand) { $json.brand } else { "Verified Partner" }
+                        rating = if ($json.rating) { [double]$json.rating } else { 9.6 }
+                        salesCount = 168
+                        description = $json.excerpt
+                        descriptionEn = if ($json.excerptEn) { $json.excerptEn } else { $json.excerpt }
+                        descriptionVi = if ($json.excerptVi) { $json.excerptVi } else { $json.excerpt }
+                        descriptionZh = if ($json.excerptZh) { $json.excerptZh } else { $json.excerpt }
+                        features = if ($json.pros -and $json.pros.Count -gt 0) { @($json.pros) } else { @("100% Authentic", "Standard Warranty") }
+                        featuresEn = if ($json.pros -and $json.pros.Count -gt 0) { @($json.pros) } else { @("100% Authentic Guaranteed", "Full Brand Warranty") }
+                        featuresVi = if ($json.pros -and $json.pros.Count -gt 0) { @($json.pros) } else { @("100% Authentic", "Standard Warranty") }
+                        featuresZh = if ($json.pros -and $json.pros.Count -gt 0) { @($json.pros) } else { @("100% Authentic", "Official Warranty") }
+                        image = $json.image
+                        affiliateUrl = $json.affiliateLink
+                        reviewUrl = $fileName
+                        isPhysical = $true
+                    }
+
+                    $prodExists = -1
+                    for ($pIdx = 0; $pIdx -lt $prodArray.Count; $pIdx++) {
+                        if ($prodArray[$pIdx].id -eq $prodId -or ($json.affiliateLink -and $prodArray[$pIdx].affiliateUrl -eq $json.affiliateLink) -or $prodArray[$pIdx].reviewUrl -eq $fileName) {
+                            $prodExists = $pIdx
+                            break
+                        }
+                    }
+                    if ($prodExists -ge 0) {
+                        $prodArray[$prodExists] = $newProduct
+                    } else {
+                        $prodArray = @($newProduct) + @($prodArray)
+                    }
+
+                    $updatedProdJson = $prodArray | ConvertTo-Json -Depth 5
+                    [System.IO.File]::WriteAllText($productsJsonPath, $updatedProdJson, [System.Text.Encoding]::UTF8)
+                } catch {
+                    Write-Host "Warning: Khong the cap nhat products.json: $_" -ForegroundColor Yellow
+                }
+
+                # 4. Auto-inject or Update Card into index.html
+                if (-not [string]::IsNullOrWhiteSpace($json.cardHtml)) {
+                    try {
+                        $indexPath = Join-Path $RootPath "index.html"
+                        if (Test-Path $indexPath) {
+                            $indexContent = [System.IO.File]::ReadAllText($indexPath, [System.Text.Encoding]::UTF8)
+                            $targetMarker = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">'
+                            
+                            if ($indexContent.Contains($fileName)) {
+                                # Card already exists: replace old article card with new card
+                                $escapedFile = [regex]::Escape($fileName)
+                                $cardPattern = '(?s)<article[^>]*>.*?' + $escapedFile + '.*?</article>'
+                                $indexContent = [regex]::Replace($indexContent, $cardPattern, $json.cardHtml)
+                                [System.IO.File]::WriteAllText($indexPath, $indexContent, [System.Text.Encoding]::UTF8)
+                            } elseif ($indexContent.Contains($targetMarker)) {
+                                # Prepend new card
+                                $replacement = "$targetMarker`r`n$($json.cardHtml)"
+                                $indexContent = $indexContent.Replace($targetMarker, $replacement)
+                                [System.IO.File]::WriteAllText($indexPath, $indexContent, [System.Text.Encoding]::UTF8)
+                            }
+                        }
+                    } catch {
+                        Write-Host "Warning: Khong the cap nhat index.html: $_" -ForegroundColor Yellow
+                    }
+                }
+
+                # 4b. Auto-pin to Hero Showcase if requested
+                if ($json.pinToHero -eq $true) {
+                    try {
+                        $pinnedPath = Join-Path $RootPath "data\pinned_project.json"
+                        $cleanAff = $json.affiliateLink
+                        if ($cleanAff -and -not ($cleanAff.StartsWith("http://") -or $cleanAff.StartsWith("https://"))) {
+                            $cleanAff = "https://" + $cleanAff
+                        }
+                        $pinnedObj = [PSCustomObject]@{
+                            id = $postSlug
+                            title = $json.title
+                            titleEn = $json.title
+                            titleVi = $json.title
+                            tag = if ($json.category) { "REVIEW " + $json.category.ToUpper() } else { "REVIEW FLAGSHIP" }
+                            tagEn = if ($json.category) { "REVIEW " + $json.category.ToUpper() } else { "REVIEW FLAGSHIP" }
+                            tagVi = if ($json.category) { "REVIEW " + $json.category.ToUpper() } else { "REVIEW FLAGSHIP" }
+                            badge = if ($json.brand) { $json.brand } else { "Editor's Choice" }
+                            badgeEn = if ($json.brand) { $json.brand } else { "Editor's Choice" }
+                            badgeVi = if ($json.brand) { $json.brand } else { "Editor's Choice" }
+                            urlDisplay = "https://smartpicksreview.com/reviews/" + $postSlug
+                            postUrl = $fileName
+                            affiliateUrl = $cleanAff
+                            image = $json.image
+                            priceVnd = if ($json.priceVnd) { $json.priceVnd } else { "1.990.000d" }
+                            priceUsd = if ($json.priceUsd) { $json.priceUsd } else { "$79.00" }
+                            priceOrigVnd = if ($json.priceOrig) { $json.priceOrig } else { "2.500.000d" }
+                            priceOrigUsd = if ($json.priceOrig) { $json.priceOrig } else { "$99.00" }
+                            discountPercent = if ($json.couponDiscount) { $json.couponDiscount } else { "-20%" }
+                        }
+                        $pinnedJson = $pinnedObj | ConvertTo-Json -Depth 5
+                        [System.IO.File]::WriteAllText($pinnedPath, $pinnedJson, [System.Text.Encoding]::UTF8)
+                    } catch {
+                        Write-Host "Warning: Khong the ghim len hero: $_" -ForegroundColor Yellow
+                    }
+                }
+
+                # 5. Return success JSON
+                $response.ContentType = "application/json; charset=utf-8"
+                $resObj = @{
+                    success = $true
+                    message = "Bai viet da duoc luu & cap nhat tren website chinh thanh cong!"
+                    fileName = $fileName
+                    url = "http://localhost:$Port/$fileName"
+                }
+                $resJson = $resObj | ConvertTo-Json
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi xuat ban: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: POST /api/delete-post
+        # Removes post from posts.json, removes card from index.html, deletes HTML file
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "POST" -and $path -eq "/api/delete-post") {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $json = $body | ConvertFrom-Json
+                $slug = $json.slug
+                if (-not $slug.EndsWith(".html")) { $slug += ".html" }
+                $slug = [System.IO.Path]::GetFileName($slug)
+
+                # 1. Remove from data/posts.json
+                $postsJsonPath = Join-Path $RootPath "data\posts.json"
+                if (Test-Path $postsJsonPath) {
+                    $postsArray = @([System.IO.File]::ReadAllText($postsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json)
+                    $filtered = @($postsArray | Where-Object { $_.slug -ne $slug -and $_.id -ne $slug.Replace(".html", "") })
+                    $updatedJson = $filtered | ConvertTo-Json -Depth 5
+                    [System.IO.File]::WriteAllText($postsJsonPath, $updatedJson, [System.Text.Encoding]::UTF8)
+                }
+
+                # 2. Remove card from index.html
+                $indexPath = Join-Path $RootPath "index.html"
+                if (Test-Path $indexPath) {
+                    $indexContent = [System.IO.File]::ReadAllText($indexPath, [System.Text.Encoding]::UTF8)
+                    if ($indexContent.Contains($slug)) {
+                        $escapedFile = [regex]::Escape($slug)
+                        $cardPattern = '(?s)<article[^>]*>.*?' + $escapedFile + '.*?</article>\s*'
+                        $indexContent = [regex]::Replace($indexContent, $cardPattern, "")
+                        [System.IO.File]::WriteAllText($indexPath, $indexContent, [System.Text.Encoding]::UTF8)
+                    }
+                }
+
+                # 3. Delete file if exists
+                $filePathToDelete = Join-Path $RootPath $slug
+                if (Test-Path $filePathToDelete) {
+                    Remove-Item -Path $filePathToDelete -Force -ErrorAction SilentlyContinue
+                }
+
+                $response.ContentType = "application/json; charset=utf-8"
+                $resObj = @{ success = $true; message = "Da xoa bai viet $slug thanh cong!" }
+                $resJson = $resObj | ConvertTo-Json
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi xoa bai viet: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: GET /api/products
+        # Returns all shop products from data/products.json
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "GET" -and $path -eq "/api/products") {
+            try {
+                $productsJsonPath = Join-Path $RootPath "data\products.json"
+                $productsContent = "[]"
+                if (Test-Path $productsJsonPath) {
+                    $productsContent = [System.IO.File]::ReadAllText($productsJsonPath, [System.Text.Encoding]::UTF8)
+                }
+                $response.ContentType = "application/json; charset=utf-8"
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($productsContent)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi lay danh sach san pham: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: POST /api/save-product
+        # Adds or updates an affiliate product in data/products.json
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "POST" -and $path -eq "/api/save-product") {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $json = $body | ConvertFrom-Json
+                $productsJsonPath = Join-Path $RootPath "data\products.json"
+
+                $prodArray = @()
+                if (Test-Path $productsJsonPath) {
+                    $rawSavedJson = [System.IO.File]::ReadAllText($productsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+                    foreach ($item in $rawSavedJson) {
+                        if ($item.value) {
+                            foreach ($sub in $item.value) { $prodArray += $sub }
+                        } else {
+                            $prodArray += $item
+                        }
+                    }
+                }
+
+                $prodId = $json.id
+                if ([string]::IsNullOrWhiteSpace($prodId)) {
+                    $prodId = "prod-" + [System.Guid]::NewGuid().ToString().Substring(0, 8)
+                }
+
+                # Ensure affiliateUrl has protocol
+                $affUrl = $json.affiliateUrl
+                if ($affUrl -and -not ($affUrl.StartsWith("http://") -or $affUrl.StartsWith("https://"))) {
+                    $affUrl = "https://" + $affUrl
+                }
+
+                $productObj = [PSCustomObject]@{
+                    id = $prodId
+                    categoryKey = if ($json.categoryKey) { $json.categoryKey } else { "tech" }
+                    title = $json.title
+                    titleEn = if ($json.titleEn) { $json.titleEn } else { $json.title }
+                    titleVi = if ($json.titleVi) { $json.titleVi } else { $json.title }
+                    titleZh = if ($json.titleZh) { $json.titleZh } else { $json.title }
+                    category = if ($json.category) { $json.category } else { "Audio & Tech" }
+                    categoryEn = if ($json.categoryEn) { $json.categoryEn } else { $json.category }
+                    categoryVi = if ($json.categoryVi) { $json.categoryVi } else { $json.category }
+                    categoryZh = if ($json.categoryZh) { $json.categoryZh } else { $json.category }
+                    price = if ($json.price) { [int64]$json.price } else { 1990000 }
+                    priceUsd = if ($json.priceUsd) { [double]$json.priceUsd } else { 79.0 }
+                    originalPrice = if ($json.originalPrice) { [int64]$json.originalPrice } else { [math]::Round(([int64]$json.price) * 1.25) }
+                    originalPriceUsd = if ($json.originalPriceUsd) { [double]$json.originalPriceUsd } else { [math]::Round(([double]$json.priceUsd) * 1.25, 2) }
+                    discountPercent = if ($json.discountPercent) { $json.discountPercent } else { "15%" }
+                    badge = if ($json.badge) { $json.badge } else { "Hot Pick" }
+                    badgeEn = if ($json.badgeEn) { $json.badgeEn } else { "Hot Pick" }
+                    badgeVi = if ($json.badgeVi) { $json.badgeVi } else { "Hot Pick" }
+                    badgeZh = if ($json.badgeZh) { $json.badgeZh } else { "Hot Pick" }
+                    rating = if ($json.rating) { [double]$json.rating } else { 4.9 }
+                    salesCount = if ($json.salesCount) { [int]$json.salesCount } else { 180 }
+                    description = $json.description
+                    descriptionEn = if ($json.descriptionEn) { $json.descriptionEn } else { $json.description }
+                    descriptionVi = if ($json.descriptionVi) { $json.descriptionVi } else { $json.description }
+                    descriptionZh = if ($json.descriptionZh) { $json.descriptionZh } else { $json.description }
+                    features = if ($json.features) { @($json.features) } else { @("100% Authentic", "Standard Warranty") }
+                    featuresEn = if ($json.featuresEn) { @($json.featuresEn) } else { @("100% Authentic", "Standard Warranty") }
+                    featuresVi = if ($json.featuresVi) { @($json.featuresVi) } else { @("100% Authentic", "Standard Warranty") }
+                    featuresZh = if ($json.featuresZh) { @($json.featuresZh) } else { @("100% Authentic", "Standard Warranty") }
+                    image = $json.image
+                    affiliateUrl = $affUrl
+                    isPhysical = $true
+                }
+
+                $existingIdx = -1
+                for ($k = 0; $k -lt $prodArray.Count; $k++) {
+                    if ($prodArray[$k].id -eq $prodId) {
+                        $existingIdx = $k
+                        break
+                    }
+                }
+
+                if ($existingIdx -ge 0) {
+                    $prodArray[$existingIdx] = $productObj
+                } else {
+                    $prodArray = @($productObj) + @($prodArray)
+                }
+
+                $updatedJson = $prodArray | ConvertTo-Json -Depth 5
+                [System.IO.File]::WriteAllText($productsJsonPath, $updatedJson, [System.Text.Encoding]::UTF8)
+
+                $response.ContentType = "application/json; charset=utf-8"
+                $resObj = @{ success = $true; message = "Da luu san pham affiliate thanh cong!"; id = $prodId }
+                $resJson = $resObj | ConvertTo-Json
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi luu san pham: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: POST /api/delete-product
+        # Removes a product from data/products.json
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "POST" -and $path -eq "/api/delete-product") {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $json = $body | ConvertFrom-Json
+                $prodId = $json.id
+
+                $productsJsonPath = Join-Path $RootPath "data\products.json"
+                if (Test-Path $productsJsonPath) {
+                    $prodArray = @([System.IO.File]::ReadAllText($productsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json)
+                    $filtered = @($prodArray | Where-Object { $_.id -ne $prodId })
+                    $updatedJson = $filtered | ConvertTo-Json -Depth 5
+                    [System.IO.File]::WriteAllText($productsJsonPath, $updatedJson, [System.Text.Encoding]::UTF8)
+                }
+
+                $response.ContentType = "application/json; charset=utf-8"
+                $resObj = @{ success = $true; message = "Da xoa san pham thanh cong!" }
+                $resJson = $resObj | ConvertTo-Json
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi xoa san pham: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: GET /api/pinned-project
+        # Returns current hero pinned project from data/pinned_project.json
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "GET" -and $path -eq "/api/pinned-project") {
+            try {
+                $pinnedJsonPath = Join-Path $RootPath "data\pinned_project.json"
+                $pinnedContent = "{}"
+                if (Test-Path $pinnedJsonPath) {
+                    $pinnedContent = [System.IO.File]::ReadAllText($pinnedJsonPath, [System.Text.Encoding]::UTF8)
+                }
+                $response.ContentType = "application/json; charset=utf-8"
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($pinnedContent)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi lay du an ghim: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # API: POST /api/pin-project
+        # Saves custom pinned hero project data and updates data/pinned_project.json
+        # -------------------------------------------------------------
+        if ($request.HttpMethod -eq "POST" -and $path -eq "/api/pin-project") {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $json = $body | ConvertFrom-Json
+                $pinnedJsonPath = Join-Path $RootPath "data\pinned_project.json"
+
+                $cleanAff = $json.affiliateUrl
+                if ($cleanAff -and -not ($cleanAff.StartsWith("http://") -or $cleanAff.StartsWith("https://"))) {
+                    $cleanAff = "https://" + $cleanAff
+                }
+
+                $pinnedObj = [PSCustomObject]@{
+                    id = if ($json.id) { $json.id } else { "hero-pinned-custom" }
+                    title = $json.title
+                    titleEn = if ($json.titleEn) { $json.titleEn } else { $json.title }
+                    titleVi = if ($json.titleVi) { $json.titleVi } else { $json.title }
+                    tag = if ($json.tag) { $json.tag } else { "REVIEW FLAGSHIP" }
+                    tagEn = if ($json.tagEn) { $json.tagEn } else { "FLAGSHIP REVIEW" }
+                    brand = if ($json.brand) { $json.brand } elseif ($json.urlDisplay -and -not $json.urlDisplay.StartsWith("http")) { $json.urlDisplay } else { "BullBoost Performance" }
+                    badge = if ($json.badge) { $json.badge } else { "Editor's Choice" }
+                    badgeEn = if ($json.badgeEn) { $json.badgeEn } else { "Editor's Choice" }
+                    badgeVi = if ($json.badgeVi) { $json.badgeVi } else { "Editor's Choice" }
+                    urlDisplay = if ($json.urlDisplay -and -not $json.urlDisplay.StartsWith("http")) { $json.urlDisplay } elseif ($json.brand) { $json.brand } else { "BullBoost Performance" }
+                    postUrl = if ($json.postUrl) { $json.postUrl } else { "post.html" }
+                    affiliateUrl = $cleanAff
+                    image = $json.image
+                    priceVnd = if ($json.priceVnd) { $json.priceVnd } else { "0d" }
+                    priceUsd = if ($json.priceUsd) { $json.priceUsd } else { "$0.00" }
+                    priceOrigVnd = if ($json.priceOrigVnd) { $json.priceOrigVnd } else { "" }
+                    priceOrigUsd = if ($json.priceOrigUsd) { $json.priceOrigUsd } else { "" }
+                    discountPercent = if ($json.discountPercent) { $json.discountPercent } else { "-20%" }
+                }
+
+                $pinnedJson = $pinnedObj | ConvertTo-Json -Depth 5
+                [System.IO.File]::WriteAllText($pinnedJsonPath, $pinnedJson, [System.Text.Encoding]::UTF8)
+
+                $response.ContentType = "application/json; charset=utf-8"
+                $resObj = @{ success = $true; message = "Da ghim du an len dau trang chu thanh cong!" }
+                $resJson = $resObj | ConvertTo-Json
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
+                $response.ContentLength64 = $resBytes.Length
+                $response.StatusCode = 200
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes("Loi ghim du an: $_")
+                $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $response.OutputStream.Close()
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # STATIC FILE SERVING
+        # -------------------------------------------------------------
+        $baseDir = $RootPath
+        $subPath = $path
+
+        if ($reqPort -eq $AdminPort) {
+            $baseDir = $AdminPath
+        } elseif ($path.StartsWith("/admin-cms")) {
+            $baseDir = $AdminPath
+            $subPath = $path.Substring(10) # strip /admin-cms
+        }
+
+        if ($subPath -eq "/" -or $subPath -eq "") { $subPath = "/index.html" }
+        $cleanSubPath = $subPath.TrimStart("/").Replace("/", [System.IO.Path]::DirectorySeparatorChar)
+        $filePath = Join-Path $baseDir $cleanSubPath
+
+        if (Test-Path $filePath -PathType Leaf) {
+            $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
+            $contentType = $mimeTypes[$ext]
+            if (-not $contentType) { $contentType = "application/octet-stream" }
+            $response.ContentType = $contentType
+
+            $bytes = [System.IO.File]::ReadAllBytes($filePath)
+            $response.ContentLength64 = $bytes.Length
+            if ($request.HttpMethod -ne "HEAD") {
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            }
+            $response.StatusCode = 200
+        } else {
+            $response.StatusCode = 404
+            $msg = [System.Text.Encoding]::UTF8.GetBytes("404 Not Found: $cleanSubPath")
+            $response.ContentType = "text/plain; charset=utf-8"
+            $response.ContentLength64 = $msg.Length
+            $response.OutputStream.Write($msg, 0, $msg.Length)
+        }
+        $response.OutputStream.Close()
+    } catch {
+        # Continue loop on client disconnect
+    }
+}

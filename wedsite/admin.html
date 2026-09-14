@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="1; url=http://localhost:3001/">
+  <script>
+    const targetUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://' + window.location.hostname + ':3001/'
+      : '/admin-cms/index.html';
+    
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 400);
+  </script>
+  <title>Redirecting to SmartPicks Creator Studio CMS...</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/custom.css">
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
+</head>
+<body class="bg-[#0c071b] text-purple-100 min-h-screen flex items-center justify-center font-sans p-4 relative overflow-hidden">
+  
+  <!-- Cosmic Glow Background -->
+  <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-md w-full bg-white/5 backdrop-blur-2xl border border-purple-500/30 rounded-3xl p-8 shadow-2xl text-center relative z-10">
+    <!-- Brand Logo -->
+    <img src="images/logo.png" alt="Smart Picks Logo" class="w-16 h-16 rounded-2xl mx-auto object-cover shadow-xl shadow-purple-500/40 mb-6 ring-4 ring-purple-400/20">
+
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-900/60 border border-purple-500/40 text-[11px] font-bold text-purple-300 uppercase tracking-wider mb-4">
+      <i data-lucide="shield-check" class="w-3.5 h-3.5 text-pink-400"></i> Admin CMS Portal
+    </div>
+
+    <h1 class="text-2xl font-black text-white tracking-tight font-display mb-2">
+      Creator Studio CMS
+    </h1>
+    <p class="text-xs text-purple-300/80 mb-6 leading-relaxed">
+      Redirecting you to the unified SmartPicks Administration Portal (Port 3001)...
+    </p>
+
+    <!-- Animated Loading Indicator -->
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <div class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-bounce"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-bounce [animation-delay:-0.15s]"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:-0.3s]"></div>
+    </div>
+
+    <div class="space-y-3">
+      <a id="direct-btn" href="http://localhost:3001/" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30 transition-all btn-shimmer">
+        <span>Launch Admin Studio Now</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+
+      <a href="index.html" class="w-full py-3 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 hover:text-white border border-purple-800/80 rounded-2xl text-xs font-semibold block transition-colors">
+        Return to Public Website
+      </a>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    const btn = document.getElementById('direct-btn');
+    if (btn && (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')) {
+      btn.href = '/admin-cms/index.html';
+    }
+  </script>
+</body>
+</html>

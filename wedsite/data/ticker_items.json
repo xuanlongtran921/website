@@ -1,0 +1,134 @@
+﻿[
+    {
+        "id":  "ticker-1aa04748",
+        "badge":  "REVIEW ROBOTICS \u0026 OUTDOOR TECH",
+        "badgeClass":  "bg-rose-500 text-white",
+        "icon":  "sparkles",
+        "text":  {
+                     "en":  "Mowrator S1 4WD Smart Remote Control Mower \u0026 Patrol Vehicle In-Depth Review: All-Terrain Performance Tested (2026)",
+                     "vi":  "Đánh Giá Chuyên Sâu Xe Cắt Cỏ \u0026 Xe Tuần Tra Điều Khiển Từ Xa 4WD Mowrator S1: Kiểm Thử Vận Hành Mọi Địa Hình (2026)",
+                     "zh":  "Mowrator S1 4WD Smart Remote Control Mower \u0026 Patrol Vehicle In-Depth Review: All-Terrain Performance Tested (2026)"
+                 },
+        "url":  "post-mowrator-s1-4wd-pentest-review.html"
+    },
+    {
+        "id":  "ticker-b30a5dd0",
+        "badge":  "REVIEW ROBOTICS \u0026 OUTDOOR TECH",
+        "badgeClass":  "bg-rose-500 text-white",
+        "icon":  "sparkles",
+        "text":  {
+                     "en":  "Mowrator S1 4WD Remote Slope Mower Pro Tested",
+                     "vi":  "Mowrator S1 4WD: Đánh Giá Chuyên Sâu Xe Cắt Cỏ Điều Khiển Từ Xa",
+                     "zh":  "Mowrator S1 4WD 全时四驱遥控斜坡割草车深度实测"
+                 },
+        "url":  "post-mowrator-pro-test.html"
+    },
+    {
+        "id":  "ticker-mowrator",
+        "badge":  "FLAGSHIP LAWN",
+        "badgeClass":  "bg-emerald-600 text-white",
+        "icon":  "zap",
+        "text":  {
+                     "en":  "Mowrator S1 4WD: World\u0027s First Remote Control Slope Mower ($500 Off with SMARTPICKS500)",
+                     "vi":  "Mowrator S1 4WD: Máy Cắt Cỏ Điều Khiển Từ Xa Leo Dốc 75% (Giảm $500 mã SMARTPICKS500)",
+                     "zh":  "Mowrator S1 4WD：全球首款四驱遥控斜坡割草机器人（立减 $500 优惠码 SMARTPICKS500）"
+                 },
+        "url":  "post-mowrator-s1-4wd.html"
+    },
+    {
+        "id":  "ticker-lilyvow",
+        "badge":  "ALT FASHION",
+        "badgeClass":  "bg-pink-600 text-white",
+        "icon":  "sparkles",
+        "text":  {
+                     "en":  "LilyVow: Sweet Lolita \u0026 Gothic Alt Dresses (15% Off code PETEONPURPOSE)",
+                     "vi":  "LilyVow: Thời Trang Gothic \u0026 Lolita Thiết Kế (Giảm 15% mã PETEONPURPOSE)",
+                     "zh":  "LilyVow：正品 Lolita 与独立暗黑哥特风服饰（专属码 PETEONPURPOSE 减 15%）"
+                 },
+        "url":  "post-lilyvow.html"
+    },
+    {
+        "id":  "ticker-bullboost",
+        "badge":  "MOTORSPORTS",
+        "badgeClass":  "bg-amber-600 text-white",
+        "icon":  "gauge",
+        "text":  {
+                     "en":  "BullBoost Performance: Titanium Exhausts \u0026 Billet Manifolds ($50 Off with bwfxdiyt)",
+                     "vi":  "BullBoost Performance: Pô Titanium \u0026 Cổ Hút Billet Siêu Xe (Giảm $50 mã bwfxdiyt)",
+                     "zh":  "BullBoost Performance：钛合金排气与 CNC 进气歧管（立减 $50 代码 bwfxdiyt）"
+                 },
+        "url":  "post-bullboost.html"
+    },
+    {
+        "id":  "ticker-seagull",
+        "badge":  "HOROLOGY",
+        "badgeClass":  "bg-indigo-600 text-white",
+        "icon":  "watch",
+        "text":  {
+                     "en":  "Sea-Gull 1963 Chronograph: ST1901 Column-Wheel Mechanical Icon ($30 Off Coupon)",
+                     "vi":  "Đồng Hồ Cơ Sea-Gull 1963: ST1901 Bánh Xe Cột Huyền Thoại (Giảm $30)",
+                     "zh":  "海鸥表 1963 计时码表：ST1901 导柱轮机械机芯（专属立减 $30）"
+                 },
+        "url":  "post-seagull.html"
+    },
+    {
+        "id":  "ticker-sony",
+        "badge":  "HOT REVIEW",
+        "badgeClass":  "bg-rose-500 text-white",
+        "icon":  "headphones",
+        "text":  {
+                     "en":  "Sony WH-1000XM5: Save $50 on Amazon \u0026 Shopee Mall with exclusive coupon",
+                     "vi":  "Sony WH-1000XM5: Chống ồn đỉnh cao, săn voucher giảm 1.5 triệu Shopee \u0026 Tiki",
+                     "zh":  "索尼 WH-1000XM5 深度评测：立省 $50，全网多平台实时比价与优惠券"
+                 },
+        "url":  "post-sony-wh-1000xm5.html"
+    },
+    {
+        "id":  "ticker-macbook",
+        "badge":  "CREATOR GEAR",
+        "badgeClass":  "bg-indigo-600 text-white",
+        "icon":  "laptop",
+        "text":  {
+                     "en":  "Apple M3 Pro MacBook Pro 16\": Real-world Creator Benchmarks \u0026 Verified Cashback",
+                     "vi":  "MacBook Pro 16\" M3 Pro: Đánh giá hiệu năng Creator \u0026 hoàn tiền độc quyền",
+                     "zh":  "苹果 M3 Pro MacBook Pro 16寸：专业跑分评测与官方返利通道"
+                 },
+        "url":  "post.html"
+    },
+    {
+        "id":  "ticker-affiliate-blueprint",
+        "badge":  "BEST SELLER",
+        "badgeClass":  "bg-pink-600 text-white",
+        "icon":  "file-text",
+        "text":  {
+                     "en":  "Affiliate Blog Blueprint: Zero to $1,000/Mo eBook Playbook ($7.99 • 428 sold)",
+                     "vi":  "Ebook Affiliate Pro: Cẩm nang kiếm 20 triệu/tháng ($7.99 • Bán chạy)",
+                     "zh":  "电子书：《从0到月入过万联盟博客变现全攻略》（$7.99 • 热销）"
+                 },
+        "url":  "shop.html"
+    },
+    {
+        "id":  "ticker-lightroom",
+        "badge":  "HOT TREND",
+        "badgeClass":  "bg-amber-500 text-white",
+        "icon":  "image",
+        "text":  {
+                     "en":  "25 Pro Lightroom Presets: Cinematic Tech Pack ($5.99 • 265 sold)",
+                     "vi":  "25 Preset Lightroom Master Tone: Cinematic Tech ($5.99 • 265 bộ)",
+                     "zh":  "25款精调Lightroom预设：科技影调大师包（$5.99 • 已售265套）"
+                 },
+        "url":  "shop.html"
+    },
+    {
+        "id":  "ticker-notion",
+        "badge":  "MUST HAVE",
+        "badgeClass":  "bg-emerald-600 text-white",
+        "icon":  "layout",
+        "text":  {
+                     "en":  "Notion Content Hub \u0026 Affiliate Revenue Tracker Template ($3.99 • 512 downloads)",
+                     "vi":  "Template Notion: Quản lý doanh thu Affiliate ($3.99 • 512 lượt tải)",
+                     "zh":  "Notion内容中枢与分销收益管理看板模板（$3.99 • 自动化核算）"
+                 },
+        "url":  "shop.html"
+    }
+]

@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartPicks Creator CMS Studio - Content Publishing & Affiliate Management</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fdf4ff',
+              100: '#fae8ff',
+              200: '#f5d0fe',
+              300: '#f0abfc',
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+              800: '#86198f',
+              900: '#701a75',
+              950: '#4a044e',
+            },
+            purple: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+              950: '#2e1065',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Preconnect & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
+</head>
+<body class="bg-[#0b061a] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-pink-500 selection:text-white">
+
+  <!-- ============================================================ -->
+  <!-- SECURE ADMIN LOGIN GATEWAY VIEW -->
+  <!-- ============================================================ -->
+  <div id="admin-login-view" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#070314] overflow-y-auto p-4 sm:p-6 transition-all duration-300">
+    <!-- Cosmic ambient background glow -->
+    <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-pink-500/15 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2"></div>
+    <div class="fixed top-1/2 right-1/3 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="w-full max-w-md relative z-10 my-auto">
+      <div class="bg-[#12072b]/95 backdrop-blur-xl border border-purple-700/50 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-purple-950/80 space-y-6">
+        
+        <!-- Header & Logo -->
+        <div class="text-center space-y-3">
+          <div class="relative inline-block">
+            <img src="images/logo.png" alt="SmartPicks Logo" class="w-16 h-16 rounded-2xl mx-auto shadow-xl shadow-pink-500/30 object-cover border border-purple-500/40">
+            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#12072b]"></span>
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-white tracking-tight flex items-center justify-center gap-1.5 font-display">
+              Smart<span class="text-pink-400">Picks</span>
+              <span class="text-xs font-black uppercase px-2 py-0.5 rounded-md bg-purple-900/90 text-purple-300 border border-purple-700/60">CMS Studio</span>
+            </h2>
+            <p class="text-xs text-purple-300/80 mt-1">Cổng Quản Trị Nội Dung & Vận Hành Hệ Thống</p>
+          </div>
+        </div>
+
+        <!-- Alert Error Message -->
+        <div id="login-error-alert" class="hidden p-3.5 rounded-2xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs font-semibold flex items-center gap-2.5 animate-shake">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+          <span id="login-error-text">Tài khoản hoặc mật khẩu không chính xác!</span>
+        </div>
+
+        <!-- Login Form -->
+        <form id="admin-login-form" class="space-y-4">
+          <!-- Email Input -->
+          <div class="space-y-1.5">
+            <label for="admin-login-email" class="block text-xs font-bold text-purple-200">
+              Tài khoản Email <span class="text-rose-400">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-purple-400">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+              </div>
+              <input id="admin-login-email" type="email" required autocomplete="username"
+                value="xuanlongtran921@gmail.com"
+                placeholder="xuanlongtran921@gmail.com"
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-medium placeholder-purple-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all">
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label for="admin-login-password" class="block text-xs font-bold text-purple-200">
+                Mật khẩu <span class="text-rose-400">*</span>
+              </label>
+              <button type="button" id="btn-quick-fill-creds" class="text-[10px] text-pink-400 hover:text-pink-300 font-bold underline transition-colors cursor-pointer" title="Điền mật khẩu mặc định">
+                Điền mật khẩu
+              </button>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-purple-400">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <input id="admin-login-password" type="password" required autocomplete="current-password"
+                placeholder="Nhập mật khẩu quản trị..."
+                class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-medium placeholder-purple-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all">
+              <button type="button" id="btn-toggle-password" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-purple-400 hover:text-white transition-colors cursor-pointer" title="Ẩn/hiện mật khẩu">
+                <i data-lucide="eye" class="w-4 h-4" id="icon-eye-password"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me Checkbox -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-purple-300">
+              <input type="checkbox" id="admin-remember-me" checked class="w-4 h-4 rounded bg-[#190c3d] border-purple-800 text-pink-500 focus:ring-pink-500 accent-pink-500">
+              <span class="text-[11px] font-semibold">Ghi nhớ đăng nhập</span>
+            </label>
+            <span class="text-[10px] font-mono text-purple-400/80 bg-purple-950 px-2 py-0.5 rounded border border-purple-900">v2.8 Auth</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="btn-submit-login" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white text-xs font-black tracking-wide border border-pink-400/40 shadow-xl shadow-pink-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-98">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span id="btn-login-text">ĐĂNG NHẬP ADMIN STUDIO</span>
+          </button>
+        </form>
+
+        <!-- Footer Help -->
+        <div class="pt-4 border-t border-purple-900/50 text-center text-[11px] text-purple-400/80">
+          <span>Website chính:</span>
+          <a href="http://localhost:3000" target="_blank" class="text-pink-400 hover:underline font-bold ml-1">localhost:3000</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP HEADER / CONNECTION BAR -->
+  <header class="sticky top-0 z-50 bg-[#12082b]/95 backdrop-blur-md border-b border-purple-900/60 px-4 sm:px-6 py-3 flex items-center justify-between shadow-xl">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <img src="images/logo.png" alt="Smart Picks Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-purple-500/30 flex-shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">
+              Smart<span class="text-pink-400">Picks</span>
+              <span class="text-xs font-black uppercase px-2 py-0.5 rounded-md bg-purple-900/90 text-purple-300 border border-purple-700/60">CMS Studio</span>
+            </h1>
+          </div>
+          <p class="text-[11px] text-purple-300/70 font-medium">Independent Content Publishing & Commercial Operations Studio</p>
+        </div>
+      </div>
+
+      <!-- Live Connection Pill -->
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Connected to Live Website:</span>
+        <a href="http://localhost:3000" target="_blank" class="underline hover:text-white flex items-center gap-1">
+          http://localhost:3000
+          <i data-lucide="external-link" class="w-3 h-3"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Action Controls & User Account -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Admin User Badge -->
+      <div id="admin-user-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-900/40 border border-purple-700/50 text-xs">
+        <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-[10px] font-black text-white shrink-0">
+          XL
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-white text-[11px] leading-tight" id="admin-display-email">xuanlongtran921@gmail.com</span>
+          <span class="text-[9px] text-pink-400 font-extrabold uppercase">Super Admin</span>
+        </div>
+      </div>
+
+      <a href="http://localhost:3000" target="_blank" class="px-3 py-1.5 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/60 transition-all flex items-center gap-1.5 shadow-sm">
+        <i data-lucide="globe" class="w-3.5 h-3.5 text-pink-400"></i>
+        <span class="hidden md:inline">View Live Website</span>
+      </a>
+
+      <button id="theme-toggle-btn" class="p-2 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-purple-300 transition-colors border border-purple-800" title="Toggle Light / Dark Mode">
+        <i data-lucide="sun" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Logout Button -->
+      <button id="btn-admin-logout" class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="Đăng xuất khỏi Admin Studio">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+        <span class="hidden sm:inline">Đăng xuất</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APPLICATION LAYOUT (Sidebar + Work Area) -->
+  <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+
+    <!-- LEFT NAVIGATION SIDEBAR -->
+    <aside class="w-full md:w-64 bg-[#0e0722] border-r border-purple-900/50 p-4 flex md:flex-col justify-between flex-shrink-0 gap-3">
+      <nav class="space-y-1.5 w-full">
+        <button class="nav-tab-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left" data-tab="tab-editor">
+          <i data-lucide="pen-tool" class="w-4 h-4 text-pink-400"></i>
+          <span>Create New Review</span>
+          <span class="ml-auto text-[9px] px-2 py-0.5 rounded bg-gradient-to-r from-pink-500/30 to-purple-500/30 text-pink-300 font-extrabold border border-pink-500/40">✨ AI GEN</span>
+        </button>
+
+        <button class="nav-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-purple-300/80 hover:bg-purple-900/30 hover:text-white transition-all text-left" data-tab="tab-posts">
+          <i data-lucide="layers" class="w-4 h-4 text-purple-400"></i>
+          <span>Published Articles</span>
+          <span id="badge-total-posts" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-purple-800 text-purple-200 font-extrabold">13</span>
+        </button>
+
+        <button class="nav-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-purple-300/80 hover:bg-purple-900/30 hover:text-white transition-all text-left" data-tab="tab-products">
+          <i data-lucide="shopping-bag" class="w-4 h-4 text-emerald-400"></i>
+          <span>Store Products (Shop)</span>
+          <span id="badge-total-prods" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-emerald-900/80 text-emerald-200 font-extrabold">13</span>
+        </button>
+
+        <button class="nav-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-purple-300/80 hover:bg-purple-900/30 hover:text-white transition-all text-left" data-tab="tab-hero-pin">
+          <i data-lucide="pin" class="w-4 h-4 text-pink-400"></i>
+          <span>Pinned Articles & Ticker</span>
+          <span class="ml-auto text-[9px] px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-extrabold border border-pink-500/30 uppercase">PIN</span>
+        </button>
+
+        <button class="nav-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-purple-300/80 hover:bg-purple-900/30 hover:text-white transition-all text-left" data-tab="tab-messages">
+          <i data-lucide="mail" class="w-4 h-4 text-emerald-400"></i>
+          <span>Customer Inquiries</span>
+          <span id="badge-total-messages" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-emerald-900/80 text-emerald-200 font-extrabold">3</span>
+        </button>
+
+        <button class="nav-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-purple-300/80 hover:bg-purple-900/30 hover:text-white transition-all text-left" data-tab="tab-guide">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+          <span>CRO & Affiliate Playbook</span>
+        </button>
+      </nav>
+
+      <!-- Bottom System Status Card -->
+      <div class="hidden md:block p-3.5 rounded-2xl bg-[#160b33] border border-purple-800/40 text-[11px] text-purple-300/80 space-y-2">
+        <div class="flex items-center gap-2 font-bold text-white">
+          <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-pink-400"></i>
+          <span>Website Directory:</span>
+        </div>
+        <p class="font-mono text-[10px] text-purple-400 bg-purple-950/80 p-1.5 rounded-lg truncate border border-purple-900">c:\wedsite</p>
+        <p class="text-[10px] text-purple-400/80">Articles automatically save to disk and sync with homepage & store catalog.</p>
+      </div>
+    </aside>
+
+    <!-- CONTENT WORKSPACE -->
+    <main class="flex-1 overflow-y-auto bg-[#090415] p-4 sm:p-6 lg:p-8">
+
+      <!-- ============================================================ -->
+      <!-- TAB 1: REVIEW AUTHORING & PUBLISHING STUDIO (POST CREATOR) -->
+      <!-- ============================================================ -->
+      <section id="tab-editor" class="tab-content block space-y-6">
+
+        <!-- Top Action Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-purple-900/50">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="edit-3" class="w-6 h-6 text-pink-400"></i>
+              Manual Review Authoring & Publishing Studio
+            </h2>
+            <p class="text-xs text-purple-300/70 mt-1">
+              Fill in the details below with real-time preview. Click <strong class="text-pink-400">"Publish Review"</strong> to instantly sync with the live website & store!
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <button id="btn-open-ai-generator" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white text-xs font-black border border-pink-400/50 flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/20 cursor-pointer">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+              <span>✨ AI Review Generator (US English)</span>
+            </button>
+            <button id="btn-fill-demo" type="button" class="px-3.5 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all">
+              <i data-lucide="wand-2" class="w-4 h-4 text-amber-300"></i>
+              <span>Fill Sample Template</span>
+            </button>
+            <button id="btn-reset-form" type="button" class="px-3.5 py-2 rounded-xl bg-purple-950 hover:bg-rose-950/60 text-purple-300 hover:text-rose-300 text-xs font-bold border border-purple-900 transition-all flex items-center gap-1.5">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>Reset Form</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- EDITING MODE BANNER -->
+        <div id="editing-banner" class="hidden p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-pink-500/20 to-purple-500/20 border-2 border-amber-400/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-black flex-shrink-0">
+              <i data-lucide="edit-3" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-amber-400 text-black">Currently Editing</span>
+                <h4 id="editing-banner-title" class="font-bold text-white text-sm">Article Title</h4>
+              </div>
+              <p class="text-[11px] text-amber-200/90 mt-0.5">You are editing an existing article. Click "SAVE & UPDATE" at the bottom to commit changes.</p>
+            </div>
+          </div>
+          <button id="btn-cancel-edit" type="button" class="px-3 py-1.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/60 transition-all flex items-center justify-center gap-1.5 flex-shrink-0">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            <span>Cancel & Create New</span>
+          </button>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- AI ARTICLE GENERATOR PANEL (US ENGLISH PRIORITY) -->
+        <!-- ============================================================ -->
+        <div id="ai-generator-panel" class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#170833] via-[#2a0e54] to-[#14062c] border-2 border-pink-500/50 shadow-2xl relative overflow-hidden space-y-4">
+          <!-- Ambient cosmic blur -->
+          <div class="absolute -right-10 -bottom-10 w-56 h-56 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -left-10 -top-10 w-56 h-56 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 space-y-4">
+            <!-- Header of AI Tool -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-purple-800/60">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-pink-500/30 flex-shrink-0 animate-pulse">
+                  <i data-lucide="sparkles" class="w-6 h-6 text-amber-200"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2 font-display">
+                      AI Review Article Assistant
+                    </h3>
+                    <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
+                      <i data-lucide="check-check" class="w-3 h-3"></i> US English Prioritized (Default)
+                    </span>
+                  </div>
+                  <p class="text-xs text-purple-200/80 mt-0.5">
+                    Enter product name or choose a 1-click preset. AI generates complete: Title, Slug, Excerpt, Scores, Pros/Cons, Comparison Matrix, and full international-grade review content!
+                  </p>
+                </div>
+              </div>
+
+              <!-- Language selector with English prioritized -->
+              <div class="flex items-center gap-2 bg-[#0e0520] px-3 py-1.5 rounded-xl border border-purple-800/80 flex-shrink-0">
+                <label for="ai-gen-lang" class="text-[11px] font-bold text-purple-300 flex items-center gap-1">
+                  <i data-lucide="globe" class="w-3.5 h-3.5 text-pink-400"></i> Language:
+                </label>
+                <select id="ai-gen-lang" class="bg-[#1c0a3d] text-xs font-bold text-amber-300 border border-purple-700/80 rounded-lg px-2.5 py-1 focus:outline-none focus:border-pink-500">
+                  <option value="en" selected>🇺🇸 English (US Default / Recommended)</option>
+                  <option value="vi">🇻🇳 Vietnamese (Tiếng Việt)</option>
+                  <option value="zh">🇨🇳 Chinese (简体中文)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Generator Controls Grid -->
+            <div class="space-y-3.5">
+              <!-- ROW 1: Product name, Niche/Category, Brand, Custom Price -->
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                <!-- Keyword Input -->
+                <div class="md:col-span-5">
+                  <label class="block text-xs font-bold text-purple-200 mb-1">
+                    Product Name / Focus Keyword <span class="text-pink-400">*</span>
+                  </label>
+                  <div class="relative">
+                    <input id="ai-input-keyword" type="text" placeholder="e.g. Mowrator S1 4WD, Sony XM5, Keychron Q1..." class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-white text-xs font-semibold focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all">
+                    <i data-lucide="search" class="w-4 h-4 text-purple-400 absolute left-3 top-3"></i>
+                  </div>
+                </div>
+
+                <!-- Niche Select -->
+                <div class="md:col-span-3">
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Category / Niche</label>
+                  <select id="ai-input-niche" class="w-full px-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-purple-200 text-xs font-semibold focus:border-pink-500 focus:outline-none">
+                    <optgroup label="📦 PHYSICAL GEAR & HARDWARE">
+                      <option value="tech_audio">🎧 Audio & Headphones (Audio & Tech)</option>
+                      <option value="tech_keyboard">⌨️ Mechanical Keyboards & Gear (Desk Setup & EDC)</option>
+                      <option value="auto">🏎️ RC, Robotics, Outdoor & Auto (Robotics & Auto)</option>
+                      <option value="watches">⌚ Mechanical Watches & Horology (Watches)</option>
+                      <option value="fashion">👗 Designer & Gothic Fashion (Alt & Gothic Fashion)</option>
+                      <option value="cameras">📷 Cameras & Creator Gear (Cameras & Video)</option>
+                      <option value="coffee">☕ Espresso & Barista Gear (Coffee & Lifestyle)</option>
+                      <option value="gaming">🎮 Gaming Laptops & Battlestations (Gaming & Gear)</option>
+                      <option value="smarthome">🏠 Smart Home, Matter & IoT (Smart Home)</option>
+                    </optgroup>
+                    <optgroup label="⚡ DIGITAL PRODUCTS & ASSETS">
+                      <option value="ebooks">📚 Ebooks & Playbooks (Digital Guides)</option>
+                      <option value="presets">🎨 Lightroom Presets & LUTs (Creative Assets)</option>
+                      <option value="templates">📑 Notion Templates & Workspace OS (Productivity)</option>
+                      <option value="courses">🎓 Video Workshops & Masterclasses (Video Courses)</option>
+                      <option value="saas">⚡ SaaS, AI Tools & Cloud Licenses (Software)</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <!-- Brand Input -->
+                <div class="md:col-span-2">
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Brand Name / Store</label>
+                  <input id="ai-input-brand" type="text" placeholder="e.g. Mowrator, Sony..." class="w-full px-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-white text-xs focus:border-pink-500 focus:outline-none">
+                </div>
+
+                <!-- Product Price Input (Direct User Override) -->
+                <div class="md:col-span-2">
+                  <div class="flex items-center justify-between mb-1">
+                    <label for="ai-input-price" class="block text-xs font-bold text-emerald-300 flex items-center gap-1">
+                      <i data-lucide="tag" class="w-3.5 h-3.5 text-emerald-400"></i>
+                      <span>Price ($ / ₫)</span>
+                    </label>
+                    <span id="ai-price-calc-hint" class="text-[10px] text-pink-300 font-mono font-bold" title="Auto-calculates exchange rate">Edit Price</span>
+                  </div>
+                  <div class="relative">
+                    <input id="ai-input-price" type="text" placeholder="e.g. $49.99 / 1tr2" class="w-full pl-7 pr-2 py-2.5 rounded-xl bg-[#110526] border-2 border-emerald-500/70 text-emerald-300 text-xs font-mono font-bold focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all shadow-inner" title="Enter your exact custom price in USD ($) or VND (₫). AI will prioritize this exact price!">
+                    <i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-400 absolute left-2 top-3"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ROW 2: Link Ref & Custom Product Image -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+                <!-- Link Ref / Affiliate URL -->
+                <div class="lg:col-span-5">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="block text-xs font-bold text-purple-200 flex items-center gap-1.5">
+                      <i data-lucide="link" class="w-3.5 h-3.5 text-pink-400"></i>
+                      <span>Your Direct Affiliate / Referral URL</span>
+                    </label>
+                    <span class="text-[10px] text-amber-300 font-bold">Attached to ORDER NOW button</span>
+                  </div>
+                  <div class="relative">
+                    <input id="ai-input-aff-link" type="url" placeholder="https://brand.com/?ref=YOUR_CODE (Paste your affiliate link)" class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-pink-300 text-xs font-mono focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all">
+                    <i data-lucide="zap" class="w-4 h-4 text-pink-400 absolute left-3 top-3"></i>
+                  </div>
+                </div>
+
+                <!-- Custom Image URL & Upload -->
+                <div class="lg:col-span-4">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="block text-xs font-bold text-purple-200 flex items-center gap-1.5">
+                      <i data-lucide="image" class="w-3.5 h-3.5 text-pink-400"></i>
+                      <span>Product Image (Custom URL / Upload)</span>
+                    </label>
+                    <span class="text-[10px] text-purple-300/80">Customize if AI image needs update</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <!-- Thumbnail Preview -->
+                    <div class="w-10 h-10 rounded-xl bg-[#110526] border border-purple-700/80 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
+                      <img id="ai-img-thumb" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=120&q=80" alt="Thumb" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- Input Image URL -->
+                    <input id="ai-input-image" type="url" placeholder="Paste image link or choose file from PC..." class="w-full px-3 py-2 rounded-xl bg-[#110526] border border-purple-700/80 text-white text-xs focus:border-pink-500 focus:outline-none">
+
+                    <!-- File Upload Input (Hidden + Label) -->
+                    <label for="ai-file-image" class="px-2.5 py-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/80 flex items-center gap-1 flex-shrink-0 cursor-pointer transition-all" title="Upload directly from computer">
+                      <i data-lucide="upload" class="w-3.5 h-3.5 text-amber-300"></i>
+                      <span class="hidden sm:inline text-[11px]">Upload</span>
+                    </label>
+                    <input type="file" id="ai-file-image" accept="image/*" class="hidden">
+
+                    <!-- Shuffle/Switch Image Button -->
+                    <button id="ai-btn-shuffle-img" type="button" class="p-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs border border-purple-700/80 flex-shrink-0 cursor-pointer transition-all" title="Switch to another verified high-res photo">
+                      <i data-lucide="shuffle" class="w-3.5 h-3.5 text-pink-400"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Generate Action Button -->
+                <div class="lg:col-span-3">
+                  <button id="btn-ai-generate" type="button" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-xs shadow-xl shadow-pink-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-95 h-[40px]">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+                    <span id="ai-btn-label">GENERATE ARTICLE WITH AI</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick 1-Click Chips -->
+            <div class="pt-2 flex flex-wrap items-center gap-2">
+              <span class="text-[11px] font-bold text-purple-300/80 flex items-center gap-1 w-full mb-1">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i> Quick 1-Click AI Presets (Physical & Digital):
+              </span>
+              <!-- Physical Presets -->
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-pink-900/60 hover:bg-pink-600 border border-pink-500/60 text-white font-bold transition-all cursor-pointer shadow-sm" data-niche="smarthome" data-keyword="Aqara Hub M3 Matter & Thread Smart Central" data-brand="Aqara Official" data-aff="https://aqara.com/us/hub-m3?ref=SMARTPMM15">
+                🏠 Aqara Hub M3 ($82.99)
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="tech_audio" data-keyword="Sony WH-1000XM5 Wireless ANC Headphones" data-brand="Sony Official" data-aff="https://store.sony.com/wh1000xm5?ref=SONYWH15">
+                🎧 Sony WH-1000XM5
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="tech_keyboard" data-keyword="Keychron Q1 Pro Custom QMK Keyboard" data-brand="Keychron" data-aff="https://keychron.com/products/keychron-q1-pro?ref=KEYPRO10">
+                ⌨️ Keychron Q1 Pro
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="watches" data-keyword="Sea-Gull 1963 Chronograph 38mm Mechanical Watch" data-brand="Sea-Gull Official" data-aff="https://seagull1963.com/product/st1901-38mm?ref=PETE1963">
+                ⌚ Sea-Gull 1963
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="fashion" data-keyword="LilyVow Celestial Starlight Lolita Dress" data-brand="LilyVow Official" data-aff="https://lilyvow.com/celestial-lolita-dress?ref=PURPOSE15">
+                👗 LilyVow Celestial
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="auto" data-keyword="BullBoost Billet CNC Intake Manifold K20" data-brand="BullBoost Performance" data-aff="https://bullboostperformance.com/k20-manifold?ref=BWFXDIYT50">
+                🏎️ BullBoost Billet K20
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="cameras" data-keyword="Sony Alpha 7 IV Full-Frame Camera" data-brand="Sony Official" data-aff="https://store.sony.com/alpha-a7iv?ref=ALPHA150">
+                📷 Sony Alpha 7 IV
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="coffee" data-keyword="Gaggia Classic Pro Espresso Machine" data-brand="Gaggia Milano" data-aff="https://gaggiadirect.com/classic-pro?ref=BARISTA50">
+                ☕ Gaggia Classic Pro
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="gaming" data-keyword="Razer Blade 16 Mini-LED Gaming Laptop" data-brand="Razer Official" data-aff="https://razer.com/gaming-laptops/razer-blade-16?ref=BLADE10">
+                🎮 Razer Blade 16
+              </button>
+              <!-- Digital Presets -->
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="ebooks" data-keyword="Affiliate Blog Blueprint 2026 Ebook Playbook" data-brand="SmartPicks Publishing" data-aff="https://smartpicks.gumroad.com/l/affiliate-blueprint?discount=BLUEPRINT20">
+                📚 Affiliate Blueprint Ebook
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="presets" data-keyword="25 Pro Lightroom Presets Cinematic Tech Pack" data-brand="CyberShutter Visuals" data-aff="https://cybershutter.store/tokyo-cyber-luts?coupon=NEO50">
+                🎨 Cinematic Presets Pack
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="templates" data-keyword="Ultimate Content Creator OS Notion Workspace" data-brand="NotionMasters Studio" data-aff="https://notionmasters.gumroad.com/l/creator-os?ref=NOTION30">
+                📑 Notion Content OS
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="courses" data-keyword="High-Ticket Affiliate & SEO Mastery Video Masterclass" data-brand="Affiliate Academy" data-aff="https://affiliateacademy.teachable.com/p/seo-masterclass?coupon=MASTERCLASS">
+                🎓 SEO & CRO Masterclass
+              </button>
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="saas" data-keyword="SmartPicks AI Studio Pro 1-Year Cloud License" data-brand="SmartPicks Cloud" data-aff="https://smartpicks.ai/pricing?discount=CLOUD50">
+                ⚡ SmartPicks AI Studio
+              </button>
+            </div>
+
+            <!-- Status Indicator -->
+            <div id="ai-status-msg" class="hidden p-3 rounded-xl bg-pink-950/60 border border-pink-500/40 text-xs text-pink-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-pink-400"></i>
+                <span id="ai-status-text">AI is analyzing technical specs and generating comprehensive US English review content...</span>
+              </div>
+              <span class="text-[10px] text-amber-300 font-mono font-bold bg-purple-900/80 px-2 py-0.5 rounded">SmartPicks AI v2.6</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Editor Grid: Form on Left, Live Preview on Right -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          
+          <!-- LEFT FORM (7 COLS) -->
+          <div class="xl:col-span-7 space-y-6">
+
+            <!-- 1. BASIC ARTICLE INFORMATION -->
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-lg">
+              <div class="flex items-center gap-2 text-pink-400 font-extrabold text-sm border-b border-purple-900/40 pb-2.5">
+                <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">1</span>
+                <span>Basic Article Information</span>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">
+                    Article Title (H1 Header) <span class="text-rose-400">*</span>
+                  </label>
+                  <input id="input-title" type="text" placeholder="e.g. Keychron Q1 Pro Review: Ultimate Wireless Custom Keyboard for Mac & Windows" class="w-full px-3.5 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-sm focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all font-semibold">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-purple-200 mb-1">
+                      File Name / URL Slug <span class="text-rose-400">*</span>
+                    </label>
+                    <div class="flex items-center">
+                      <input id="input-slug" type="text" placeholder="post-keychron-q1-pro" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-purple-200 text-xs font-mono focus:border-pink-500 focus:outline-none">
+                      <span class="ml-2 text-xs text-purple-400 font-mono">.html</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-purple-200 mb-1">Category / Vertical</label>
+                    <select id="input-category" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none">
+                      <optgroup label="📦 PHYSICAL GEAR & HARDWARE">
+                        <option value="Alt & Gothic Fashion" data-slug="fashion">👗 Alt & Gothic Fashion</option>
+                        <option value="Watches & Horology" data-slug="watches">⌚ Watches & Horology</option>
+                        <option value="Auto Performance" data-slug="auto">🏎️ Auto Performance & Racing</option>
+                        <option value="Audio & Tech" data-slug="tech">🎧 Audio & Tech Gear</option>
+                        <option value="Desk Setup & EDC" data-slug="edc">💻 Desk Setup & EDC</option>
+                        <option value="Cameras & Video" data-slug="cameras">📷 Cameras & Creator Gear</option>
+                        <option value="Espresso & Coffee" data-slug="coffee">☕ Espresso & Coffee Gear</option>
+                        <option value="Gaming Gear & Laptops" data-slug="gaming">🎮 Gaming Gear & Laptops</option>
+                        <option value="Smart Home" data-slug="smarthome">🏠 Smart Home & Automation</option>
+                      </optgroup>
+                      <optgroup label="⚡ DIGITAL PRODUCTS & ASSETS">
+                        <option value="Ebooks & Playbooks" data-slug="ebooks">📚 Ebooks & Strategy Playbooks</option>
+                        <option value="Presets & LUTs" data-slug="presets">🎨 Creative Presets & LUTs</option>
+                        <option value="Notion Templates" data-slug="templates">📑 Notion Templates & Productivity OS</option>
+                        <option value="Video Courses" data-slug="courses">🎓 Video Courses & Masterclasses</option>
+                        <option value="SaaS & AI Tools" data-slug="saas">⚡ SaaS, Cloud & AI Tools</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Short Excerpt / Meta Description</label>
+                  <textarea id="input-excerpt" rows="2" placeholder="Brief 1-2 sentence compelling summary of key highlights to drive clicks..." class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. AFFILIATE MONETIZATION & DIRECT ORDER CTA -->
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-lg">
+              <div class="flex items-center gap-2 text-pink-400 font-extrabold text-sm border-b border-purple-900/40 pb-2.5">
+                <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">2</span>
+                <span>Affiliate Monetization & Direct Order CTA</span>
+              </div>
+
+              <div class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-purple-200 mb-1">Brand Name / Partner Store</label>
+                    <input id="input-brand" type="text" placeholder="e.g. Keychron Official" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-purple-200 mb-1">Button CTA Text</label>
+                    <input id="input-btn-text" type="text" value="ORDER NOW" placeholder="ORDER NOW" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-black focus:border-pink-500 focus:outline-none">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">
+                    Direct Affiliate / Referral URL (With Tracking Tag) <span class="text-rose-400">*</span>
+                  </label>
+                  <input id="input-aff-url" type="url" placeholder="https://brand.com/?ref=YOUR_CODE" class="w-full px-3.5 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-pink-300 text-xs font-mono focus:border-pink-500 focus:outline-none">
+                  <div class="mt-2 p-2.5 rounded-xl bg-pink-950/40 border border-pink-500/30 text-[11px] text-pink-200 flex items-start gap-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-pink-400 flex-shrink-0 mt-0.5"></i>
+                    <span><strong>Direct Funnel Routing:</strong> When published to the live store, all <strong>ORDER NOW</strong> buttons jump directly to this affiliate URL in a new tab with your referral cookie active.</span>
+                  </div>
+                  <p id="aff-check-msg" class="text-[11px] text-purple-400/80 mt-1 flex items-center gap-1">
+                    <i data-lucide="info" class="w-3.5 h-3.5 text-pink-400"></i>
+                    Ensure your link contains your tracking parameters (e.g. <code class="text-pink-300">?ref=...</code> or <code class="text-pink-300">?aff=...</code>)
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. PRODUCT MEDIA & HERO IMAGE -->
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-lg">
+              <div class="flex items-center gap-2 text-pink-400 font-extrabold text-sm border-b border-purple-900/40 pb-2.5">
+                <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">3</span>
+                <span>Product Media & Hero Cover Image</span>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="block text-xs font-bold text-purple-200">Image URL or Local Upload</label>
+                    <label for="form-file-image" class="text-[11px] font-bold text-pink-400 hover:text-white cursor-pointer flex items-center gap-1 transition-all">
+                      <i data-lucide="upload" class="w-3.5 h-3.5 text-amber-300"></i>
+                      <span>📁 Upload image from PC</span>
+                    </label>
+                    <input type="file" id="form-file-image" accept="image/*" class="hidden">
+                  </div>
+                  <input id="input-image" type="url" placeholder="https://images.unsplash.com/... or paste custom image link" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none">
+                </div>
+
+                <div>
+                  <span class="block text-[11px] font-bold text-purple-300/80 mb-1.5">Or choose a verified high-resolution curated preset:</span>
+                  <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    <button type="button" class="btn-preset-img text-[10px] p-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/60 border border-purple-800/60 text-purple-200 transition-all text-center" data-img="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80">
+                      ⌨️ Keyboard
+                    </button>
+                    <button type="button" class="btn-preset-img text-[10px] p-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/60 border border-purple-800/60 text-purple-200 transition-all text-center" data-img="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80">
+                      🎧 Audio
+                    </button>
+                    <button type="button" class="btn-preset-img text-[10px] p-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/60 border border-purple-800/60 text-purple-200 transition-all text-center" data-img="https://images.unsplash.com/photo-1547996160-71dfabb1a7b1?auto=format&fit=crop&w=1000&q=80">
+                      ⌚ Watch
+                    </button>
+                    <button type="button" class="btn-preset-img text-[10px] p-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/60 border border-purple-800/60 text-purple-200 transition-all text-center" data-img="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1000&q=80">
+                      🏎️ Auto / Track
+                    </button>
+                    <button type="button" class="btn-preset-img text-[10px] p-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/60 border border-purple-800/60 text-purple-200 transition-all text-center" data-img="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80">
+                      👗 Fashion
+                    </button>
+                    <button type="button" class="btn-preset-img text-[10px] p-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/60 border border-purple-800/60 text-purple-200 transition-all text-center" data-img="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80">
+                      💻 Laptop & EDC
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. PRICING & EXCLUSIVE COUPON -->
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-lg relative">
+              <div class="flex items-center justify-between text-pink-400 font-extrabold text-sm border-b border-purple-900/40 pb-2.5 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">4</span>
+                  <span>Multi-Currency Pricing & Exclusive Coupons</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="btn-fetch-price-brand" type="button" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-xs flex items-center gap-1.5 shadow-md shadow-pink-500/20 transition-all cursor-pointer transform active:scale-95" title="Auto-fetch exact brand price & vouchers from provided link">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+                    <span id="btn-fetch-price-label">Auto-Fetch Price from Brand Link</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Auto-Sync Status Banner -->
+              <div id="price-fetch-status-bar" class="px-3 py-2 rounded-xl bg-purple-950/70 border border-purple-800/60 flex items-center justify-between text-xs text-purple-200 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span id="price-fetch-status-text" class="text-[11px] font-semibold text-purple-200">
+                    AI Auto-Sync: Prices are automatically extracted from your brand link & converted to VND.
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] text-purple-400 font-mono">
+                  <span>1 USD ≈ 25.000₫</span>
+                  <span class="px-1.5 py-0.5 rounded bg-purple-900/80 text-pink-300 border border-purple-700/60">Live Formula</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
+                    <span>Sale Price USD ($)</span>
+                    <span class="text-[10px] text-pink-400 font-normal">Brand Price</span>
+                  </label>
+                  <input id="input-price-usd" type="text" placeholder="$119.00" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-semibold focus:border-pink-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
+                    <span>Sale Price VND (₫)</span>
+                    <span class="text-[10px] text-emerald-400 font-normal">Auto-Calculated</span>
+                  </label>
+                  <input id="input-price-vnd" type="text" placeholder="2,990,000₫" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-semibold focus:border-pink-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
+                    <span>Original Price (Strikethrough)</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Pre-Discount</span>
+                  </label>
+                  <input id="input-price-orig" type="text" placeholder="$149.00" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-slate-400 text-xs focus:border-pink-500 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
+                    <span>Coupon Code (Voucher)</span>
+                    <span class="text-[10px] text-amber-400 font-normal">Brand Voucher</span>
+                  </label>
+                  <input id="input-coupon" type="text" placeholder="e.g. SMART20" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-amber-300 font-mono text-xs font-bold focus:border-pink-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Discount Amount</label>
+                  <input id="input-coupon-discount" type="text" placeholder="15% OFF Storewide" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Expiration Date</label>
+                  <input id="input-coupon-expiry" type="text" placeholder="Dec 31, 2026" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none">
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. RATINGS & PROS / CONS -->
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-lg">
+              <div class="flex items-center gap-2 text-pink-400 font-extrabold text-sm border-b border-purple-900/40 pb-2.5">
+                <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">5</span>
+                <span>Editorial Rating Score & Pros / Cons</span>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-xs font-bold text-purple-200">Overall Score (1.0 - 10.0)</label>
+                  <span id="label-rating" class="font-extrabold text-amber-400 text-sm">9.6 / 10 ⭐</span>
+                </div>
+                <input id="input-rating" type="range" min="5" max="10" step="0.1" value="9.6" class="w-full accent-pink-500 cursor-pointer">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-emerald-400 mb-1 flex items-center gap-1">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                    Pros (One point per line)
+                  </label>
+                  <textarea id="input-pros" rows="4" placeholder="Solid CNC aluminum chassis with heft&#10;Incredible, deep acoustic typing feel&#10;Tri-mode wireless & QMK/VIA key remapping" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-emerald-900/60 text-white text-xs focus:border-emerald-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-rose-400 mb-1 flex items-center gap-1">
+                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                    Cons (One point per line)
+                  </label>
+                  <textarea id="input-cons" rows="4" placeholder="Heavyweight body not intended for travel backpacks&#10;Stock keycaps are ABS profile" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-rose-900/60 text-white text-xs focus:border-rose-500 focus:outline-none"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. IN-DEPTH REVIEW CONTENT -->
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-lg">
+              <div class="flex items-center gap-2 text-pink-400 font-extrabold text-sm border-b border-purple-900/40 pb-2.5">
+                <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">6</span>
+                <span>In-Depth Review Article Content</span>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Introduction: Real-World Experience & Initial Impressions</label>
+                  <textarea id="input-content-intro" rows="3" placeholder="Share unboxing experience, physical feel, and why this product was chosen for review..." class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Body: Build Quality, Technical Benchmarks & Teardown</label>
+                  <textarea id="input-content-body" rows="4" placeholder="Detailed analysis of materials, acoustic resonance, competitor comparisons..." class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Verdict: Is It Worth Buying & Who Is It For?</label>
+                  <textarea id="input-content-verdict" rows="3" placeholder="Final purchasing conclusion and key buying advice before clicking order link..." class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- PIN ARTICLE SETTINGS (GHIM BÀI VIẾT) -->
+            <div class="p-5 rounded-2xl bg-[#160b35] border-2 border-purple-700/60 shadow-xl space-y-4">
+              <div class="flex items-center justify-between border-b border-purple-800/50 pb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-300 flex items-center justify-center font-bold border border-pink-500/40">
+                    <i data-lucide="pin" class="w-4 h-4 text-pink-400"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-extrabold text-white text-sm">Cài Đặt Ghim Bài Viết (Pin Article Settings)</h3>
+                    <p class="text-[11px] text-purple-300/70">Chọn vị trí hiển thị ưu tiên cao nhất trên website khi xuất bản</p>
+                  </div>
+                </div>
+                <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-pink-900/60 text-pink-300 border border-pink-700/60">
+                  TOP VISIBILITY
+                </span>
+              </div>
+
+              <!-- Option 1: Pin to Top Bar Ticker -->
+              <div class="p-3.5 rounded-xl bg-[#1a0c40] border border-pink-500/30 space-y-3">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-start gap-2.5">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-pink-400 mt-0.5 flex-shrink-0"></i>
+                    <div>
+                      <label for="input-pin-to-ticker" class="text-xs font-black text-white cursor-pointer flex items-center gap-2">
+                        <span>Ghim lên Thanh Chạy Đầu Trang (Top Projects Ticker Bar)</span>
+                        <span class="px-2 py-0.5 rounded bg-pink-500 text-white text-[9px] font-black">TOP TICKER</span>
+                      </label>
+                      <p class="text-[11px] text-purple-300/80 mt-0.5">
+                        Bài viết sẽ xuất hiện chạy liên tục trên thanh thông báo đầu trang của toàn bộ website (<code class="text-pink-300">index.html</code>, <code class="text-pink-300">post.html</code>, <code class="text-pink-300">shop.html</code>).
+                      </p>
+                    </div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                    <input type="checkbox" id="input-pin-to-ticker" class="sr-only peer">
+                    <div class="w-11 h-6 bg-[#12082b] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-500 peer-checked:to-purple-600 border border-purple-600"></div>
+                  </label>
+                </div>
+
+                <!-- Ticker Details (Badge, Color, Icon) -->
+                <div id="ticker-config-fields" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-purple-900/50">
+                  <div>
+                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Nhãn Ticker (Badge)</label>
+                    <input id="input-ticker-badge" type="text" value="HOT REVIEW" class="w-full px-3 py-1.5 rounded-lg bg-[#110729] border border-purple-800 text-xs text-white uppercase font-bold focus:outline-none focus:border-pink-500" placeholder="e.g. HOT REVIEW">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Màu Sắc Nhãn</label>
+                    <select id="input-ticker-badge-color" class="w-full px-3 py-1.5 rounded-lg bg-[#110729] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
+                      <option value="bg-rose-500 text-white" selected>🔴 Đỏ Nổi Bật (Rose Red)</option>
+                      <option value="bg-pink-600 text-white">🌸 Hồng Neon (Pink Neon)</option>
+                      <option value="bg-amber-600 text-white">🟠 Cam Hổ Phách (Amber Orange)</option>
+                      <option value="bg-emerald-600 text-white">🟢 Xanh Lá (Emerald Green)</option>
+                      <option value="bg-indigo-600 text-white">🟣 Tím Indigo (Indigo Purple)</option>
+                      <option value="bg-teal-600 text-white">🌊 Xanh Ngọc (Teal Cyan)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Icon Biểu Tượng</label>
+                    <select id="input-ticker-icon" class="w-full px-3 py-1.5 rounded-lg bg-[#110729] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
+                      <option value="sparkles" selected>✨ Sparkles</option>
+                      <option value="flame">🔥 Hot Flame</option>
+                      <option value="zap">⚡ Flash / Zap</option>
+                      <option value="star">⭐ Star Review</option>
+                      <option value="award">🏆 Award / Best</option>
+                      <option value="headphones">🎧 Headphones</option>
+                      <option value="laptop">💻 Laptop / Tech</option>
+                      <option value="watch">⌚ Watch / Horology</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Option 2: Pin to Homepage Hero Spotlight (Laptop Mockup) -->
+              <div class="p-3.5 rounded-xl bg-[#1a0c40] border border-amber-500/30 space-y-2">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-start gap-2.5">
+                    <i data-lucide="bookmark" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
+                    <div>
+                      <label for="input-pin-to-hero" class="text-xs font-black text-white cursor-pointer flex items-center gap-2">
+                        <span>Ghim làm Tiêu Điểm Trang Chủ (Homepage Hero Spotlight)</span>
+                        <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[9px] font-black">HERO PIN</span>
+                      </label>
+                      <p class="text-[11px] text-purple-300/80 mt-0.5">
+                        Bài viết sẽ xuất hiện trong khung Laptop Mockup tại vị trí trung tâm đầu trang chủ (<code class="text-pink-300">index.html</code>) với nút ORDER NOW trực tiếp.
+                      </p>
+                    </div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                    <input type="checkbox" id="input-pin-to-hero" class="sr-only peer">
+                    <div class="w-11 h-6 bg-[#12082b] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-amber-500 peer-checked:to-pink-500 border border-amber-400/50"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- ACTION BUTTONS: PUBLISH DIRECTLY TO MAIN WEBSITE -->
+            <div class="p-5 rounded-2xl bg-gradient-to-r from-[#1b0838] via-[#2a0b4d] to-[#1a0836] border-2 border-pink-500/50 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-black text-white text-base flex items-center gap-2">
+                    <i data-lucide="send" class="w-5 h-5 text-pink-400"></i>
+                    Publish Directly to Live Website & Store
+                  </h3>
+                  <p class="text-xs text-purple-300/80 mt-0.5">
+                    System automatically generates the <code class="text-pink-300 font-mono">post-[slug].html</code> file and inserts the card into the homepage (<code class="text-pink-300 font-mono">index.html</code>) & store catalog.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+                <button id="btn-publish-main" type="button" class="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-sm shadow-xl shadow-pink-500/30 flex items-center justify-center gap-2 transition-all cursor-pointer">
+                  <i data-lucide="rocket" class="w-4 h-4"></i>
+                  <span>🚀 PUBLISH REVIEW TO LIVE STORE</span>
+                </button>
+                <button id="btn-download-backup" type="button" class="py-3.5 px-4 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 font-bold text-xs border border-purple-700/60 flex items-center justify-center gap-1.5 transition-all" title="Download backup file">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                  <span>Download .html File</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT PREVIEW (5 COLS - STICKY) -->
+          <div class="xl:col-span-5 sticky top-4 space-y-4">
+            <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-4 shadow-xl space-y-3">
+              
+              <!-- Preview Toggle Bar -->
+              <div class="flex items-center justify-between border-b border-purple-900/40 pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  <h3 class="font-extrabold text-white text-xs uppercase tracking-wider">Real-Time Live Preview</h3>
+                </div>
+                <div class="flex items-center gap-1 bg-[#190c3d] p-1 rounded-xl border border-purple-800">
+                  <button id="btn-view-mode-post" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-pink-500 text-white transition-all">
+                    Full Review Page
+                  </button>
+                  <button id="btn-view-mode-card" class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-300 hover:text-white transition-all">
+                    Homepage Card
+                  </button>
+                </div>
+              </div>
+
+              <!-- VIEW 1: FULL POST PREVIEW -->
+              <div id="preview-full-post" class="space-y-4 max-h-[75vh] overflow-y-auto pr-1 custom-scrollbar">
+                
+                <!-- Breadcrumb -->
+                <div class="text-[11px] text-purple-300/70 flex items-center gap-1.5 font-semibold">
+                  <span>Home</span>
+                  <i data-lucide="chevron-right" class="w-3 h-3 text-purple-500"></i>
+                  <span id="prev-category" class="text-pink-400">Audio & Tech</span>
+                </div>
+
+                <!-- Title & Meta -->
+                <h2 id="prev-title" class="text-lg font-black text-white leading-snug">
+                  Keychron Q1 Pro Review: Ultimate Wireless Custom Keyboard for Mac & Windows
+                </h2>
+                <div class="flex items-center justify-between text-xs text-purple-300/70 pt-1">
+                  <div class="flex items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" class="w-6 h-6 rounded-full border border-pink-400/50">
+                    <span class="font-bold text-white">Editorial Staff</span>
+                    <span>• 8 min read</span>
+                  </div>
+                  <span id="prev-badge-rating" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-extrabold text-[11px] flex items-center gap-1">
+                    ⭐ <span id="prev-rating-val">9.6</span>/10
+                  </span>
+                </div>
+
+                <!-- Product Image Banner (Framed Showcase) -->
+                <div class="relative rounded-2xl overflow-hidden border border-purple-800 shadow-lg bg-gradient-to-b from-[#190a36] via-[#120526] to-[#0a0318] p-3 flex items-center justify-center min-h-[220px]">
+                  <img id="prev-img" src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80" class="max-h-56 w-auto max-w-full object-contain mx-auto rounded-xl drop-shadow-xl transition-all">
+                  <span id="prev-badge-category" class="absolute top-2.5 left-2.5 bg-pink-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md z-10">
+                    Audio & Tech
+                  </span>
+                </div>
+
+                <!-- Affiliate Conversion Callout Box -->
+                <div class="p-4 rounded-2xl bg-gradient-to-tr from-[#1b0838] to-[#250f47] border border-pink-500/40 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <span class="text-[10px] text-purple-400 font-bold uppercase tracking-wider">Exclusive Deal:</span>
+                      <div class="flex items-baseline gap-2">
+                        <span id="prev-price-usd" class="text-xl font-black text-white font-mono">$119.00</span>
+                        <span id="prev-price-vnd" class="text-xs font-bold text-pink-400 font-mono">(2,990,000₫)</span>
+                        <span id="prev-price-orig" class="text-xs text-slate-500 line-through font-mono">$149.00</span>
+                      </div>
+                    </div>
+                    <div id="prev-coupon-box" class="bg-amber-400/10 border border-amber-400/30 px-2.5 py-1 rounded-xl text-center">
+                      <span class="text-[9px] text-amber-300 font-bold block">COUPON CODE:</span>
+                      <span id="prev-coupon" class="text-xs font-black text-amber-300 font-mono">SMART20</span>
+                    </div>
+                  </div>
+
+                  <a id="prev-aff-btn" href="#" target="_blank" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-pink-500/25">
+                    <span id="prev-btn-text">ORDER NOW</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+
+                <!-- Pros & Cons Summary -->
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                  <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-800/40">
+                    <span class="font-bold text-emerald-400 flex items-center gap-1 mb-1.5">
+                      <i data-lucide="check" class="w-3 h-3"></i> Pros:
+                    </span>
+                    <ul id="prev-pros-list" class="space-y-1 text-emerald-200/80">
+                      <li>• Solid CNC aluminum chassis with heft</li>
+                      <li>• Crisp, satisfying acoustic typing feel</li>
+                    </ul>
+                  </div>
+                  <div class="p-3 rounded-xl bg-rose-950/40 border border-rose-800/40">
+                    <span class="font-bold text-rose-400 flex items-center gap-1 mb-1.5">
+                      <i data-lucide="x" class="w-3 h-3"></i> Cons:
+                    </span>
+                    <ul id="prev-cons-list" class="space-y-1 text-rose-200/80">
+                      <li>• Heavy body not intended for travel</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Excerpt / Content Preview -->
+                <div class="p-3.5 rounded-xl bg-[#170a36] border border-purple-900 text-xs text-purple-200/90 leading-relaxed space-y-2">
+                  <p id="prev-excerpt" class="font-semibold text-white">
+                    Article summary preview appears here...
+                  </p>
+                  <p id="prev-content-intro" class="text-purple-300/80">
+                    Hands-on experience and unboxing narrative...
+                  </p>
+                </div>
+
+              </div>
+
+              <!-- VIEW 2: HOMEPAGE CARD PREVIEW -->
+              <div id="preview-home-card" class="hidden space-y-3">
+                <div class="p-3 rounded-xl bg-purple-950/60 text-[11px] text-purple-300 font-bold text-center border border-purple-800">
+                  This card appears live on the Homepage & Store:
+                </div>
+
+                <!-- The Exact Card Replica -->
+                <article class="bg-[#120a26] rounded-3xl border border-purple-800/60 overflow-hidden shadow-xl flex flex-col">
+                  <div class="relative bg-gradient-to-b from-[#190a36] via-[#120526] to-[#0a0318] p-3 flex items-center justify-center min-h-[190px]">
+                    <img id="card-prev-img" src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80" class="max-h-44 w-auto max-w-full object-contain mx-auto rounded-xl drop-shadow-md">
+                    <span id="card-prev-badge" class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm z-10">
+                      Audio & Tech
+                    </span>
+                    <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 z-10">
+                      <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                      <span id="card-prev-rating">9.6</span>
+                    </span>
+                  </div>
+                  <div class="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1.5">
+                        <span id="card-prev-date">Today</span>
+                        <span>•</span>
+                        <span>8 min read</span>
+                      </div>
+                      <h3 id="card-prev-title" class="font-bold text-white text-sm line-clamp-2 hover:text-pink-400 transition-colors">
+                        Keychron Q1 Pro Review: Ultimate Wireless Custom Keyboard for Mac & Windows
+                      </h3>
+                      <p id="card-prev-excerpt" class="text-xs text-purple-300/70 mt-2 line-clamp-2">
+                        Comprehensive hands-on teardown of the wireless custom keyboard with hotswap switches and 15% discount.
+                      </p>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-purple-900/60">
+                      <div class="flex items-baseline justify-between mb-2 text-xs">
+                        <div>
+                          <span class="text-slate-400">From:</span>
+                          <span id="card-prev-price" class="font-bold text-rose-500 text-sm ml-1 font-mono">$119.00</span>
+                        </div>
+                        <span class="text-[10px] text-emerald-400 font-medium">✓ Verified Test</span>
+                      </div>
+                      <div class="grid grid-cols-2 gap-2">
+                        <span class="py-2 px-2 rounded-xl bg-purple-950/80 text-purple-300 text-xs font-bold flex items-center justify-center gap-1 border border-purple-800/60">
+                          Read Review <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                        </span>
+                        <span class="py-2 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 text-white text-xs font-extrabold flex items-center justify-center gap-1 shadow-md shadow-pink-500/20 whitespace-nowrap">
+                          ORDER NOW <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TAB 2: PUBLISHED ARTICLES MANAGER (POSTS MANAGEMENT) -->
+      <!-- ============================================================ -->
+      <section id="tab-posts" class="tab-content hidden space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-purple-900/50">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="layers" class="w-6 h-6 text-purple-400"></i>
+              Published Articles & Reviews Manager
+            </h2>
+            <p class="text-xs text-purple-300/70 mt-1">
+              All live reviews currently active on your website. Click any link to preview on the live storefront!
+            </p>
+          </div>
+          <button id="btn-refresh-posts" type="button" class="px-3.5 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>Refresh List</span>
+          </button>
+        </div>
+
+        <!-- Posts Table / Cards -->
+        <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#190c3d] text-purple-300 uppercase tracking-wider font-extrabold border-b border-purple-800">
+                <tr>
+                  <th class="px-5 py-3.5">Article / Product</th>
+                  <th class="px-4 py-3.5">Category</th>
+                  <th class="px-4 py-3.5">File Slug</th>
+                  <th class="px-4 py-3.5">Rating</th>
+                  <th class="px-5 py-3.5 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="posts-table-body" class="divide-y divide-purple-900/50">
+                <!-- Populated dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TAB 3: CURATED STORE PRODUCTS MANAGEMENT (SHOP) -->
+      <!-- ============================================================ -->
+      <section id="tab-products" class="tab-content hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-purple-900/50">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="shopping-bag" class="w-6 h-6 text-emerald-400"></i>
+              Curated Store Products Management (Shop)
+            </h2>
+            <p class="text-xs text-purple-300/70 mt-1">
+              All items featured on <code class="text-emerald-300">shop.html</code>. Each <strong class="text-amber-400">"ORDER NOW"</strong> button routes shoppers directly to your verified affiliate link.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-add-product" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md shadow-emerald-900/40 flex items-center gap-1.5 transition-all cursor-pointer">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ Add New Product</span>
+            </button>
+            <button id="btn-refresh-products" type="button" class="px-3.5 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1 relative">
+            <i data-lucide="search" class="w-4 h-4 text-purple-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input id="input-search-products" type="text" placeholder="Search products by title, category, or affiliate link..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#12082b] border border-purple-900/60 text-xs text-white placeholder-purple-400/60 focus:outline-none focus:border-emerald-500 transition-colors">
+          </div>
+          <select id="select-category-filter" class="px-3.5 py-2.5 rounded-xl bg-[#12082b] border border-purple-900/60 text-xs text-purple-200 focus:outline-none focus:border-emerald-500 transition-colors">
+            <option value="all">🌐 All Categories (20+ Items)</option>
+            <option value="domain_physical">📦 All Physical Gear (15 Items)</option>
+            <option value="domain_digital">⚡ All Digital Products (5 Items)</option>
+            <optgroup label="📦 PHYSICAL GEAR & HARDWARE">
+              <option value="Fashion">👗 Alt & Gothic Fashion</option>
+              <option value="Watches">⌚ Watches & Horology</option>
+              <option value="Auto">🏎️ Auto Performance & Racing</option>
+              <option value="Audio">🎧 Audio & Tech Gear</option>
+              <option value="Desk">💻 Desk Setup & EDC</option>
+              <option value="Cameras">📷 Cameras & Video Gear</option>
+              <option value="Coffee">☕ Espresso & Coffee</option>
+              <option value="Gaming">🎮 Gaming Gear & Laptops</option>
+              <option value="Smart Home">🏠 Smart Home & Automation</option>
+            </optgroup>
+            <optgroup label="⚡ DIGITAL PRODUCTS & ASSETS">
+              <option value="Ebook">📚 Ebooks & Strategy Guides</option>
+              <option value="Preset">🎨 Creative Presets & LUTs</option>
+              <option value="Template">📑 Notion Templates & OS</option>
+              <option value="Course">🎓 Video Courses & Workshops</option>
+              <option value="SaaS">⚡ SaaS & Cloud AI Tools</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Products Table -->
+        <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#190c3d] text-purple-300 uppercase tracking-wider font-extrabold border-b border-purple-800">
+                <tr>
+                  <th class="px-5 py-3.5">Product</th>
+                  <th class="px-4 py-3.5">Category</th>
+                  <th class="px-4 py-3.5">Price</th>
+                  <th class="px-4 py-3.5">Affiliate Link (ORDER NOW target)</th>
+                  <th class="px-5 py-3.5 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-table-body" class="divide-y divide-purple-900/50">
+                <!-- Populated dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TAB 4: PINNED ARTICLES & SPOTLIGHTS MANAGER -->
+      <!-- ============================================================ -->
+      <section id="tab-hero-pin" class="tab-content hidden space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-purple-900/50">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="pin" class="w-6 h-6 text-pink-400"></i>
+              <span>Pinned Articles & Spotlights Manager</span>
+            </h2>
+            <p class="text-xs text-purple-300/70 mt-1">
+              Quản lý cài đặt ghim bài viết hiển thị trên <strong class="text-pink-400">Thanh Chạy Đầu Trang (Top Bar Ticker)</strong> và <strong class="text-amber-400">Tiêu Điểm Trang Chủ (Hero Spotlight Mockup)</strong>.
+            </p>
+          </div>
+          <a href="http://localhost:3000/" target="_blank" class="px-3.5 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all">
+            <i data-lucide="external-link" class="w-4 h-4 text-pink-400"></i>
+            <span>View Live Website</span>
+          </a>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECTION 1: TOP BAR TICKER PIN MANAGER -->
+        <!-- ============================================================ -->
+        <div class="bg-[#12082b] rounded-2xl border-2 border-pink-500/40 p-5 space-y-5 shadow-2xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-purple-900/60">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white font-black shadow-lg shadow-pink-500/30">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                  <span>1. Ghim Bài Lên Thanh Chạy Đầu Trang (Top Projects Bar Ticker)</span>
+                  <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/40 font-mono">Continuous Marquee</span>
+                </h3>
+                <p class="text-xs text-purple-300/70">Dải banner tím chạy xoay vòng vô tận trên đầu của mọi trang (<code class="text-pink-300 font-mono">index.html</code>, <code class="text-pink-300 font-mono">post.html</code>, <code class="text-pink-300 font-mono">shop.html</code>)</p>
+              </div>
+            </div>
+            <button id="btn-refresh-ticker" type="button" class="px-3.5 py-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Làm mới danh sách</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <!-- Left: Add to Ticker Form -->
+            <form id="form-add-ticker-pin" class="lg:col-span-7 bg-[#160b35] rounded-xl border border-purple-800/60 p-4 space-y-4">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-black text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                  <span>Ghim Thêm Bài Viết Vào Thanh Chạy Đầu Trang</span>
+                </h4>
+              </div>
+
+              <!-- Quick Picker from published articles -->
+              <div>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Chọn nhanh từ bài viết đã đăng:</label>
+                <select id="select-quick-ticker-post" class="w-full px-3 py-2 rounded-xl bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500 cursor-pointer">
+                  <option value="">-- Chọn bài viết để tự động điền thông tin --</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Nhãn Ticker (Badge)</label>
+                  <input id="ticker-input-badge" type="text" value="HOT REVIEW" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white uppercase font-bold focus:outline-none focus:border-pink-500" placeholder="HOT REVIEW" required>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Màu Sắc Nhãn</label>
+                  <select id="ticker-input-badge-color" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
+                    <option value="bg-rose-500 text-white" selected>🔴 Đỏ Nổi Bật (Rose Red)</option>
+                    <option value="bg-pink-600 text-white">🌸 Hồng Neon (Pink Neon)</option>
+                    <option value="bg-amber-600 text-white">🟠 Cam Hổ Phách (Amber Orange)</option>
+                    <option value="bg-emerald-600 text-white">🟢 Xanh Lá (Emerald Green)</option>
+                    <option value="bg-indigo-600 text-white">🟣 Tím Indigo (Indigo Purple)</option>
+                    <option value="bg-teal-600 text-white">🌊 Xanh Ngọc (Teal Cyan)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Icon Biểu Tượng</label>
+                  <select id="ticker-input-icon" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
+                    <option value="sparkles" selected>✨ Sparkles</option>
+                    <option value="flame">🔥 Flame</option>
+                    <option value="zap">⚡ Zap</option>
+                    <option value="star">⭐ Star</option>
+                    <option value="award">🏆 Award</option>
+                    <option value="headphones">🎧 Headphones</option>
+                    <option value="laptop">💻 Laptop</option>
+                    <option value="watch">⌚ Watch</option>
+                    <option value="shield-check">🛡️ Shield</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Nội dung hiển thị Tiếng Anh (English Text) <span class="text-pink-400">*</span></label>
+                <input id="ticker-input-text-en" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500" placeholder="e.g. Mowrator S1 4WD: World's First Remote Control Slope Mower ($500 Off)" required>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Nội dung hiển thị Tiếng Việt (Vietnamese Text) <span class="text-pink-400">*</span></label>
+                <input id="ticker-input-text-vi" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500" placeholder="e.g. Mowrator S1 4WD: Máy Cắt Cỏ Điều Khiển Từ Xa (Giảm $500)" required>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Đường dẫn bài viết (Target URL) <span class="text-pink-400">*</span></label>
+                <input id="ticker-input-url" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-pink-300 font-mono focus:outline-none focus:border-pink-500" placeholder="post-mowrator-s1-4wd.html" required>
+              </div>
+
+              <div class="pt-2 flex justify-end">
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white text-xs font-black shadow-lg shadow-pink-500/25 flex items-center gap-2 cursor-pointer transition-all">
+                  <i data-lucide="pin" class="w-4 h-4"></i>
+                  <span>📌 GHIM LÊN THANH CHẠY ĐẦU TRANG</span>
+                </button>
+              </div>
+            </form>
+
+            <!-- Right: Currently Pinned Ticker Items Table -->
+            <div class="lg:col-span-5 bg-[#160b35] rounded-xl border border-purple-800/60 p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="list" class="w-4 h-4 text-pink-400"></i>
+                  <span>Các Mục Đang Ghim Trên Ticker</span>
+                </h4>
+                <span id="badge-ticker-count" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300">0 mục</span>
+              </div>
+
+              <div class="overflow-y-auto max-h-[380px] space-y-2 pr-1" id="ticker-items-list-container">
+                <div class="p-4 text-center text-purple-400 text-xs">
+                  <i data-lucide="loader-2" class="w-4 h-4 animate-spin mx-auto mb-1"></i>
+                  Đang tải danh sách bài ghim...
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECTION 2: HOMEPAGE HERO SPOTLIGHT PIN MANAGER (LAPTOP MOCKUP) -->
+        <!-- ============================================================ -->
+        <div class="border-t border-purple-900/60 pt-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                <i data-lucide="bookmark-check" class="w-5 h-5 text-amber-400"></i>
+                <span>2. Quản Lý Top 3 Sản Phẩm / Bài Viết Ghim Đầu Trang Chủ (Hero Spotlight)</span>
+              </h3>
+              <p class="text-xs text-purple-300/70 mt-0.5">
+                Quản lý 3 vị trí ghim hàng đầu hiển thị trên Laptop Mockup trang chủ. Bấm <strong class="text-amber-400">⬆️ Lên / ⬇️ Xuống</strong> để hoán đổi vị trí 1-click hoặc đổi bài trực tiếp.
+              </p>
+            </div>
+            <button type="button" onclick="loadHeroPinData()" class="px-3.5 py-1.5 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold flex items-center gap-1.5 border border-purple-700/60 transition-all cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Làm mới Top 3</span>
+            </button>
+          </div>
+
+          <!-- TOP 3 PINNED DECK -->
+          <div id="hero-top3-deck" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="col-span-3 text-center py-6 text-purple-400 text-xs">Đang tải cấu hình Top 3 ghim...</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          
+          <!-- LEFT FORM COLUMN (7 COLS) -->
+          <div class="xl:col-span-7 space-y-5">
+            
+            <!-- Quick Picker Box -->
+            <div class="p-4 rounded-2xl bg-[#160b35] border border-amber-500/40 space-y-2 shadow-lg">
+              <label class="block text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                <span>Quick Pick Article or Product to Pin:</span>
+              </label>
+              <select id="select-quick-hero-pin" class="w-full px-3.5 py-2.5 rounded-xl bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-amber-400 cursor-pointer">
+                <option value="">-- Choose an article or product to auto-fill details --</option>
+                <!-- Populated dynamically -->
+              </select>
+              <p class="text-[11px] text-purple-400/80">Select an item above to auto-populate title, media, pricing, and affiliate link.</p>
+            </div>
+
+            <!-- Detailed Edit Form -->
+            <form id="form-hero-pin" class="bg-[#12082b] rounded-2xl border border-purple-900/60 p-5 space-y-4 shadow-xl">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-purple-900/40 pb-3 gap-2">
+                <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                  <i data-lucide="edit-3" class="w-4 h-4 text-pink-400"></i>
+                  <span>Chỉnh Sửa Chi Tiết Slot</span>
+                </h3>
+                <div class="flex items-center gap-1 bg-[#0e0520] p-1 rounded-xl border border-purple-900/60">
+                  <button type="button" id="tab-edit-slot-0" onclick="switchSlotEditor(0)" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-gradient-to-r from-amber-500 to-pink-500 text-white shadow-xs">👑 Top 1</button>
+                  <button type="button" id="tab-edit-slot-1" onclick="switchSlotEditor(1)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-purple-300 hover:text-white">⚡ Top 2</button>
+                  <button type="button" id="tab-edit-slot-2" onclick="switchSlotEditor(2)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-purple-300 hover:text-white">🎧 Top 3</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-purple-200 mb-1">Project / Product Title <span class="text-pink-400">*</span></label>
+                <input id="hero-input-title" type="text" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-white focus:outline-none focus:border-amber-400" placeholder="e.g. Sony WH-1000XM5: Flagship ANC & Audiophile Sound">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Subheading Tag</label>
+                  <input id="hero-input-tag" type="text" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-pink-400 font-bold focus:outline-none focus:border-amber-400" placeholder="FLAGSHIP REVIEW">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Editorial Badge</label>
+                  <input id="hero-input-badge" type="text" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-purple-300 focus:outline-none focus:border-amber-400" placeholder="Editor's Choice">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-amber-300 mb-1 flex items-center gap-1.5">
+                  <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
+                  <span>Direct Affiliate Link (Target when visitors click ORDER NOW) <span class="text-pink-400">*</span></span>
+                </label>
+                <input id="hero-input-aff-url" type="url" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border-2 border-amber-500/70 text-xs text-amber-200 font-mono focus:outline-none focus:border-amber-400" placeholder="https://amazon.com/... or https://yourbrand.com/?ref=YOUR_CODE">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Article Review Path (Post Link)</label>
+                  <input id="hero-input-post-url" type="text" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-white font-mono focus:outline-none focus:border-amber-400" placeholder="post.html or post-sony.html">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Brand Name Display</label>
+                  <input id="hero-input-url-display" type="text" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-purple-300 font-bold focus:outline-none focus:border-amber-400" placeholder="e.g. Sony Official or BullBoost Performance">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-purple-200 mb-1">Hero Image URL <span class="text-pink-400">*</span></label>
+                <input id="hero-input-image" type="url" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-white focus:outline-none focus:border-amber-400" placeholder="https://images.unsplash.com/photo-...">
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Sale Price (USD)</label>
+                  <input id="hero-input-price-usd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-emerald-400 font-bold focus:outline-none focus:border-amber-400" placeholder="$298.00">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Sale Price (VND)</label>
+                  <input id="hero-input-price-vnd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-emerald-400 font-bold focus:outline-none focus:border-amber-400" placeholder="7,490,000₫">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Original Price (VND)</label>
+                  <input id="hero-input-orig-vnd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-purple-400 focus:outline-none focus:border-amber-400" placeholder="8,990,000₫">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-200 mb-1">Discount %</label>
+                  <input id="hero-input-discount" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-rose-400 font-bold focus:outline-none focus:border-amber-400" placeholder="-25%">
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-purple-900/60 flex items-center justify-between">
+                <button id="btn-reset-hero-pin" type="button" class="px-4 py-2.5 rounded-xl bg-purple-950 text-purple-300 hover:text-white text-xs font-bold transition-all cursor-pointer">
+                  Reset
+                </button>
+                <button type="submit" id="btn-submit-hero-pin" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-pink-500 to-purple-600 hover:from-amber-600 hover:to-purple-700 text-white text-xs font-black shadow-xl shadow-pink-500/25 flex items-center gap-2 transition-all cursor-pointer">
+                  <i data-lucide="bookmark" class="w-4 h-4 text-white"></i>
+                  <span id="btn-submit-hero-pin-text">📌 LƯU & GHIM VÀO TOP 1</span>
+                </button>
+              </div>
+            </form>
+
+          </div>
+
+          <!-- RIGHT PREVIEW COLUMN (5 COLS - STICKY) -->
+          <div class="xl:col-span-5 sticky top-20 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Homepage Hero Live Preview</span>
+              </span>
+              <span class="text-[10px] text-amber-300 font-extrabold bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-400/30">Laptop Mockup</span>
+            </div>
+
+            <!-- Mini Laptop Mockup Replica -->
+            <div class="bg-white dark:bg-[#120a28] rounded-3xl p-5 border-2 border-purple-400/40 dark:border-purple-600/40 text-left shadow-2xl relative space-y-4">
+              
+              <!-- Mockup Browser Header -->
+              <div class="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/60">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                  <span id="prev-hero-url" class="text-[11px] font-bold text-purple-700 dark:text-purple-300 ml-2 truncate max-w-[180px] flex items-center gap-1">
+                    <i data-lucide="shield-check" class="w-3 h-3 text-pink-500 flex-shrink-0"></i>
+                    <span id="prev-hero-brand-name">BullBoost Performance</span>
+                  </span>
+                </div>
+                <span id="prev-hero-badge" class="text-[9px] font-bold bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full uppercase">Editor's Choice</span>
+              </div>
+
+              <!-- Mockup Card Body -->
+              <div class="grid grid-cols-12 gap-4 items-center">
+                <div class="col-span-5 rounded-xl overflow-hidden shadow-md bg-slate-900">
+                  <img id="prev-hero-img" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80" alt="Preview" class="w-full h-32 object-cover">
+                </div>
+                <div class="col-span-7 space-y-1.5">
+                  <span id="prev-hero-tag" class="text-[10px] font-black text-pink-500 uppercase">FLAGSHIP REVIEW</span>
+                  <h4 id="prev-hero-title" class="text-xs font-black text-slate-900 dark:text-white line-clamp-2 leading-snug">Sony WH-1000XM5: Flagship ANC & Audiophile Sound</h4>
+                  <div class="flex items-baseline gap-2">
+                    <span id="prev-hero-price" class="text-sm font-black text-rose-600 font-mono">$298.00</span>
+                    <span id="prev-hero-orig" class="text-[10px] text-slate-400 line-through font-mono">$399.00</span>
+                    <span id="prev-hero-discount" class="text-[9px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-600 px-1.5 py-0.2 rounded">-25%</span>
+                  </div>
+                  <!-- Mockup CTA Button -->
+                  <div class="w-full py-2 px-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black rounded-xl text-[11px] flex items-center justify-between shadow-md mt-1">
+                    <span class="flex items-center gap-1 uppercase tracking-wider font-extrabold">
+                      <i data-lucide="shopping-bag" class="w-3 h-3"></i>
+                      <span>ORDER NOW</span>
+                    </span>
+                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-purple-950/60 border border-purple-800 text-[11px] text-purple-300/80 flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-amber-300 flex-shrink-0"></i>
+                <span>Shoppers clicking <strong>ORDER NOW</strong> on the homepage will immediately open your direct affiliate link.</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TAB 5: AFFILIATE CRO PLAYBOOK & MONETIZATION GUIDE -->
+      <!-- ============================================================ -->
+      <section id="tab-guide" class="tab-content hidden space-y-6">
+        <div class="pb-4 border-b border-purple-900/50">
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-6 h-6 text-amber-400"></i>
+            Affiliate Monetization & CRO Playbook
+          </h2>
+          <p class="text-xs text-purple-300/70 mt-1">
+            Actionable strategies to boost reader trust and drive affiliate conversion rates up by 300%.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-[#12082b] p-5 rounded-2xl border border-purple-900/60 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold">
+              1
+            </div>
+            <h3 class="font-bold text-white text-sm">Precise Referral Attribution</h3>
+            <p class="text-xs text-purple-300/70 leading-relaxed">
+              Always verify that your affiliate link contains valid tracking tags like <code class="text-pink-300">?tag=...</code>, <code class="text-pink-300">?ref=...</code>, or <code class="text-pink-300">?aff=...</code>. Our CMS validates attribution parameters to safeguard your revenue.
+            </p>
+          </div>
+
+          <div class="bg-[#12082b] p-5 rounded-2xl border border-purple-900/60 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+              2
+            </div>
+            <h3 class="font-bold text-white text-sm">Balanced & Honest Pros vs. Cons</h3>
+            <p class="text-xs text-purple-300/70 leading-relaxed">
+              Authentic editorial reviews always highlight 1-2 realistic drawbacks alongside key benefits. Readers perceive genuine expertise, raising CTA click-through rates by up to 2x.
+            </p>
+          </div>
+
+          <div class="bg-[#12082b] p-5 rounded-2xl border border-purple-900/60 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+              3
+            </div>
+            <h3 class="font-bold text-white text-sm">Exclusive Discount Coupon Codes</h3>
+            <p class="text-xs text-purple-300/70 leading-relaxed">
+              Always feature dedicated promo codes. When shoppers see a 1-click "Copy Code: SAVE15" button, perceived immediate savings triggers decisive purchase intent.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TAB 6: CUSTOMER INQUIRIES & EMAIL DISPATCH (HÒM THƯ LIÊN HỆ) -->
+      <!-- ============================================================ -->
+      <section id="tab-messages" class="tab-content hidden space-y-6">
+
+        <!-- Top Action Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-purple-900/50">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="mail" class="w-6 h-6 text-emerald-400"></i>
+              Customer Inquiries & Email Forwarding Center
+            </h2>
+            <p class="text-xs text-purple-300/70 mt-1">
+              All messages submitted through the "Get in Touch" contact form are stored here and automatically forwarded to your email.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button id="btn-refresh-messages" onclick="loadMessagesList()" class="px-3.5 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/60 transition-all flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-purple-300"></i>
+              <span>Refresh</span>
+            </button>
+            <button id="btn-send-test-email" onclick="sendTestEmail()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>Send Test Email</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Email & Delivery Status Banner -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-[#130b2c] to-[#12082b] border border-emerald-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-emerald-300 uppercase tracking-wide">Active Forwarding Email:</p>
+              <p class="text-base font-black text-white flex items-center gap-2">
+                <span id="display-target-email">supportsmartpickshub@gmail.com</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-900/80 text-emerald-300 font-bold border border-emerald-500/30">Active</span>
+              </p>
+              <p class="text-[11px] text-purple-300/70 mt-0.5">
+                Messages from visitors on website pages are delivered directly into this Gmail inbox.
+              </p>
+            </div>
+          </div>
+          <button onclick="toggleEmailConfigModal()" class="px-3.5 py-2 rounded-xl bg-purple-900/50 hover:bg-purple-800/80 text-purple-200 text-xs font-semibold border border-purple-700/50 transition-all flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="settings" class="w-3.5 h-3.5 text-pink-400"></i>
+            <span>Configure Email / SMTP</span>
+          </button>
+        </div>
+
+        <!-- Messages List Container -->
+        <div class="bg-[#12082b] rounded-2xl border border-purple-900/60 overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-purple-900/50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="inbox" class="w-4 h-4 text-purple-400"></i>
+              <h3 class="font-bold text-white text-sm">Inbox Messages</h3>
+              <span id="inbox-count-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-purple-800 text-purple-200 font-extrabold">0</span>
+            </div>
+            <span class="text-[11px] text-purple-400/80">Stored locally in data/messages.json</span>
+          </div>
+
+          <div id="messages-list" class="divide-y divide-purple-900/40">
+            <div class="p-8 text-center text-purple-400 text-xs">
+              <span class="animate-pulse">Loading messages...</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT AFFILIATE PRODUCT -->
+  <div id="modal-product-edit" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#150a33] border-2 border-emerald-500/60 rounded-3xl p-6 sm:p-7 max-w-xl w-full space-y-4 shadow-2xl shadow-emerald-500/20 animate-fade-in max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-purple-900">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="modal-product-title" class="font-black text-white text-base">Edit Affiliate Product</h3>
+            <p class="text-[11px] text-purple-300/70">Configure product attributes and direct affiliate destination URL triggered by ORDER NOW</p>
+          </div>
+        </div>
+        <button id="modal-product-btn-close" type="button" class="p-1 rounded-lg text-purple-400 hover:text-white hover:bg-purple-900 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-product-edit" class="space-y-4">
+        <input type="hidden" id="prod-form-id">
+        <input type="hidden" id="prod-form-is-new" value="false">
+
+        <div>
+          <label class="block text-xs font-bold text-purple-200 mb-1">Product Name <span class="text-pink-400">*</span></label>
+          <input id="prod-form-name" type="text" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="e.g. Keychron Q1 Pro Wireless Custom Mechanical Keyboard">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-purple-200 mb-1">Category <span class="text-pink-400">*</span></label>
+            <select id="prod-form-category" class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400">
+              <optgroup label="📦 PHYSICAL GEAR & HARDWARE">
+                <option value="Alt & Gothic Fashion">👗 Alt & Gothic Fashion</option>
+                <option value="Watches & Horology">⌚ Watches & Horology</option>
+                <option value="Auto Performance">🏎️ Auto Performance & Racing</option>
+                <option value="Audio & Tech">🎧 Audio & Tech Gear</option>
+                <option value="Desk Setup & EDC">💻 Desk Setup & EDC</option>
+                <option value="Cameras & Video">📷 Cameras & Creator Gear</option>
+                <option value="Espresso & Coffee">☕ Espresso & Coffee Gear</option>
+                <option value="Gaming Gear & Laptops">🎮 Gaming Gear & Laptops</option>
+                <option value="Smart Home">🏠 Smart Home & Automation</option>
+              </optgroup>
+              <optgroup label="⚡ DIGITAL PRODUCTS & ASSETS">
+                <option value="Ebooks & Playbooks">📚 Ebooks & Strategy Playbooks</option>
+                <option value="Presets & LUTs">🎨 Creative Presets & LUTs</option>
+                <option value="Notion Templates">📑 Notion Templates & Productivity OS</option>
+                <option value="Video Courses">🎓 Video Courses & Masterclasses</option>
+                <option value="SaaS & AI Tools">⚡ SaaS, Cloud & AI Tools</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-200 mb-1">Rating & Reviews</label>
+            <div class="flex gap-2">
+              <input id="prod-form-rating" type="number" step="0.1" min="1" max="5" value="4.9" class="w-24 px-3 py-2 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="4.9">
+              <input id="prod-form-reviews" type="number" value="128" class="flex-1 px-3 py-2 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="Review count (128)">
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-purple-200 mb-1">Sale Price ($ USD or VND) <span class="text-pink-400">*</span></label>
+            <input id="prod-form-price" type="number" step="0.01" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="199.99">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-200 mb-1">Original List Price ($ USD or VND)</label>
+            <input id="prod-form-original-price" type="number" step="0.01" class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="229.99">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5 text-amber-300 font-black">
+              <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
+              <span>Direct Affiliate URL (ORDER NOW destination)</span>
+              <span class="text-pink-400">*</span>
+            </span>
+          </label>
+          <input id="prod-form-aff-url" type="url" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border-2 border-amber-500/70 text-xs text-amber-200 font-mono focus:outline-none focus:border-amber-400" placeholder="https://amazon.com/dp/.../?tag=yoursite-20 or https://partner.com/item?ref=creator">
+          <p class="text-[11px] text-purple-300/70 mt-1">When visitors click the "ORDER NOW" button in the Store (shop.html) or Hero Banner, they are directly routed to this affiliate URL.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-purple-200 mb-1">Product Image URL</label>
+          <input id="prod-form-image" type="url" class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="https://images.unsplash.com/... or hosted web image">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-purple-200 mb-1">Short Description</label>
+          <textarea id="prod-form-desc" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-xs text-white focus:outline-none focus:border-emerald-400" placeholder="Highlight core advantages, key specs, warranty coverage..."></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-purple-900">
+          <button id="prod-form-btn-cancel" type="button" class="px-4 py-2.5 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-300 hover:text-white text-xs font-bold transition-all cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-900/40 flex items-center gap-1.5 transition-all cursor-pointer">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Save Product Details</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SUCCESS NOTIFICATION MODAL -->
+  <div id="modal-success" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#150a33] border-2 border-pink-500/60 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center space-y-5 shadow-2xl shadow-pink-500/20 animate-fade-in">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center mx-auto text-white shadow-lg shadow-pink-500/30">
+        <i data-lucide="check" class="w-8 h-8"></i>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xl font-black text-white">Published Successfully! 🎉</h3>
+        <p class="text-xs text-purple-300/80 leading-relaxed">
+          Your review article file has been generated and instantly synchronized with the live website homepage and store catalog.
+        </p>
+      </div>
+
+      <div class="p-3 bg-[#1c0d45] rounded-xl border border-purple-800 text-xs font-mono text-pink-300 truncate" id="modal-success-path">
+        post-review.html
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <a id="modal-btn-view-post" href="#" target="_blank" class="flex-1 py-3 px-4 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+          <span>View Published Review</span>
+        </a>
+        <a href="http://localhost:3000" target="_blank" class="py-3 px-4 rounded-xl bg-purple-900/80 hover:bg-purple-800 text-purple-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-purple-700/60 transition-all">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span>Open Homepage</span>
+        </a>
+      </div>
+
+      <button id="modal-btn-close" type="button" class="text-xs text-purple-400 hover:text-white font-semibold transition-colors">
+        Close Notice
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: EMAIL CONFIGURATION -->
+  <div id="modal-email-config" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#150a33] border-2 border-emerald-500/60 rounded-3xl p-6 sm:p-7 max-w-lg w-full space-y-4 shadow-2xl shadow-emerald-500/20 animate-fade-in">
+      <div class="flex items-center justify-between pb-3 border-b border-purple-900">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-white text-base">Email Forwarding & SMTP Settings</h3>
+            <p class="text-[11px] text-purple-300/70">Manage recipient address and optional direct SMTP dispatch</p>
+          </div>
+        </div>
+        <button onclick="toggleEmailConfigModal()" class="text-purple-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-email-config" onsubmit="saveEmailConfig(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-purple-200 mb-1">Target Recipient Email Address</label>
+          <input type="email" id="cfg-target-email" required class="w-full px-3.5 py-2.5 rounded-xl bg-[#1c0d45] border border-purple-800 text-white font-medium focus:border-emerald-500 outline-none" value="supportsmartpickshub@gmail.com" />
+          <p class="text-[10px] text-purple-400 mt-1">All contact messages from visitors will be forwarded to this address.</p>
+        </div>
+
+        <div class="pt-3 border-t border-purple-900/60">
+          <div class="flex items-center justify-between mb-2">
+            <label class="font-bold text-purple-200 flex items-center gap-2">
+              <input type="checkbox" id="cfg-smtp-enabled" class="rounded border-purple-700 text-emerald-600 focus:ring-emerald-500" />
+              <span>Enable Direct Gmail SMTP Dispatch (Optional)</span>
+            </label>
+          </div>
+          <p class="text-[10px] text-purple-400 mb-3">Leave disabled to use automated cloud forwarding, or enable if you have a Google App Password (16-char code).</p>
+
+          <div id="smtp-fields" class="space-y-3 pl-4 border-l-2 border-purple-800/60">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-purple-300 mb-1">SMTP Host</label>
+                <input type="text" id="cfg-smtp-host" class="w-full px-3 py-2 rounded-lg bg-[#1c0d45] border border-purple-800 text-white" value="smtp.gmail.com" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-purple-300 mb-1">Port</label>
+                <input type="number" id="cfg-smtp-port" class="w-full px-3 py-2 rounded-lg bg-[#1c0d45] border border-purple-800 text-white" value="587" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-300 mb-1">Gmail Account (User)</label>
+              <input type="email" id="cfg-smtp-user" class="w-full px-3 py-2 rounded-lg bg-[#1c0d45] border border-purple-800 text-white" value="supportsmartpickshub@gmail.com" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-300 mb-1">Gmail App Password (16 characters)</label>
+              <input type="password" id="cfg-smtp-pass" placeholder="•••• •••• •••• •••• (Leave blank to keep existing)" class="w-full px-3 py-2 rounded-lg bg-[#1c0d45] border border-purple-800 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 flex gap-3">
+          <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Save Email Settings</span>
+          </button>
+          <button type="button" onclick="toggleEmailConfigModal()" class="py-2.5 px-4 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-300 text-xs font-semibold transition-all cursor-pointer">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CHOOSE HERO SPOTLIGHT PIN SLOT -->
+  <div id="modal-pin-slot" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#12082b] border-2 border-amber-500/60 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-xl">
+        📌
+      </div>
+      <div>
+        <h3 class="text-base font-extrabold text-white">Chọn Vị Trí Ghim Tiêu Điểm Trang Chủ</h3>
+        <p id="modal-pin-slot-item-name" class="text-xs text-purple-300 mt-1 font-semibold truncate">Tên bài viết</p>
+      </div>
+      <div class="space-y-2 pt-2">
+        <button type="button" onclick="confirmPinSlot(0)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-black flex items-center justify-between shadow-lg shadow-amber-500/20 transition-all cursor-pointer">
+          <span class="flex items-center gap-2"><span>👑 VỊ TRÍ 1 (TOP 1 CHÍNH)</span></span>
+          <span class="text-[10px] bg-amber-800/60 px-2 py-0.5 rounded-full uppercase font-mono">Flagship</span>
+        </button>
+        <button type="button" onclick="confirmPinSlot(1)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-xs font-black flex items-center justify-between shadow-lg shadow-purple-600/20 transition-all cursor-pointer">
+          <span class="flex items-center gap-2"><span>⚡ VỊ TRÍ 2 (TOP 2)</span></span>
+          <span class="text-[10px] bg-purple-900/60 px-2 py-0.5 rounded-full uppercase font-mono">Secondary</span>
+        </button>
+        <button type="button" onclick="confirmPinSlot(2)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white text-xs font-black flex items-center justify-between shadow-lg shadow-pink-600/20 transition-all cursor-pointer">
+          <span class="flex items-center gap-2"><span>🎧 VỊ TRÍ 3 (TOP 3)</span></span>
+          <span class="text-[10px] bg-pink-900/60 px-2 py-0.5 rounded-full uppercase font-mono">Tertiary</span>
+        </button>
+      </div>
+      <div class="pt-2">
+        <button type="button" onclick="closePinSlotModal()" class="w-full py-2.5 rounded-xl bg-purple-950 hover:bg-purple-900 text-purple-300 text-xs font-bold transition-all cursor-pointer">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 pointer-events-none space-y-2"></div>
+
+  <!-- Script logic -->
+  <script src="admin.js"></script>
+</body>
+</html>

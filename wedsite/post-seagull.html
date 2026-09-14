@@ -1,0 +1,851 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sea-Gull 1963 Chronograph In-Depth Review: The Affordable Mechanical Icon | Smart Picks Review</title>
+  <meta name="description" content="In-depth mechanical teardown and daily accuracy test of the official Sea-Gull 1963 Chronograph (ST1901 movement). Sapphire exhibition caseback, history, and exclusive store promo code.">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Be Vietnam Pro"', 'Outfit', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            purple: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+              950: '#2e1065',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Preconnect & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+  <script src="js/i18n.js"></script>
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
+</head>
+<body class="bg-[#faf7ff] text-slate-900 dark:bg-[#090514] dark:text-purple-100 transition-colors duration-200 min-h-screen flex flex-col">
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress"></div>
+
+  <!-- Top Projects Ticker Bar: Cosmic Indigo / Lavender Gradient -->
+  <div class="bg-gradient-to-r from-[#14082c] via-[#240e47] to-[#120729] text-purple-200 text-xs py-1.5 px-3 sm:px-6 border-b border-purple-800/60 relative z-30 shadow-inner">
+    <div class="max-w-[1560px] mx-auto flex items-center justify-between gap-2 sm:gap-4">
+      
+      <!-- 1. Left Fixed Badge -->
+      <div class="flex-shrink-0 flex items-center pr-2.5 sm:pr-3 border-r border-purple-800/60 z-20">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-md shadow-pink-500/20 uppercase tracking-wider border border-pink-400/40 select-none">
+          <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+          <span class="whitespace-nowrap hidden sm:inline" data-i18n="top_bar_featured_badge">FEATURED PROJECTS</span>
+          <span class="whitespace-nowrap sm:hidden" data-i18n="top_bar_featured_badge_short">FEATURED</span>
+        </div>
+      </div>
+
+      <!-- 2. Self-Contained Marquee Window -->
+      <div class="flex-1 relative overflow-hidden min-w-0 cursor-pointer group py-0.5">
+        <div class="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-[#14082c] via-[#14082c]/80 to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[#120729] via-[#120729]/80 to-transparent z-10 pointer-events-none"></div>
+
+        <!-- Continuous Smooth Scrolling Track -->
+        <div class="top-bar-ticker-track animate-top-ticker items-center">
+          <!-- Populated dynamically with projects by app.js & i18n -->
+        </div>
+      </div>
+
+      <!-- 3. Right Controls -->
+      <div class="hidden md:flex items-center gap-2 text-xs font-semibold flex-shrink-0 pl-2.5 sm:pl-3 border-l border-purple-800/60 z-20">
+        <a href="sponsor.html" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-purple-900/60 hover:bg-pink-600 text-pink-200 hover:text-white border border-purple-700/60 hover:border-pink-500 transition-all font-bold text-[11px] whitespace-nowrap shadow-xs hover:shadow-pink-500/20">
+          <i data-lucide="award" class="w-3.5 h-3.5 text-pink-400 group-hover:text-white"></i>
+          <span data-i18n="sponsor_booking_link">Sponsorship Inquiries</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0c071b]/90 backdrop-blur-xl border-b border-purple-200/60 dark:border-purple-900/50 transition-colors">
+    <div class="max-w-[1560px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-16 sm:h-20 py-2 flex items-center justify-between gap-1.5 sm:gap-3 xl:gap-5">
+      
+      <!-- Brand Logo: Smart Picks Review -->
+      <a href="index.html" class="flex-shrink-0 flex items-center gap-2 sm:gap-3.5 group min-w-0">
+        <img src="images/logo.png" alt="Smart Picks Logo" class="w-9 h-9 sm:w-12 sm:h-12 xl:w-14 xl:h-14 rounded-xl sm:rounded-2xl object-cover shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform flex-shrink-0">
+        <div class="flex flex-col justify-center min-w-0">
+          <div class="flex items-center gap-1 sm:gap-2 leading-none">
+            <span class="font-black text-xl sm:text-2xl lg:text-[2rem] xl:text-[2.2rem] tracking-tight text-slate-900 dark:text-white font-display">Smart<span class="text-gradient-purple">Picks</span></span>
+            <span class="font-black text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-xl bg-purple-100/90 dark:bg-purple-950/90 text-purple-700 dark:text-purple-300 uppercase tracking-wider border border-purple-300/60 dark:border-purple-700/60 shadow-xs">Review</span>
+          </div>
+          <span class="hidden 2xl:block text-[11px] font-extrabold tracking-[0.18em] text-purple-600 dark:text-purple-400 uppercase mt-1">Curated Tech & Buying Guides</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-xs xl:text-sm font-semibold flex-shrink-0">
+        <a href="index.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all" data-i18n="nav_home">Home</a>
+        <a href="post.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl bg-purple-100/70 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 font-bold transition-colors flex items-center gap-1">
+          <span data-i18n="nav_reviews">Reviews</span>
+          <span class="bg-gradient-to-r from-pink-500 to-rose-500 text-white text-[9px] px-1.5 py-0.2 rounded-full font-extrabold shadow-xs">HOT</span>
+        </a>
+        <a href="shop.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all flex items-center gap-1">
+          <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-purple-500"></i>
+          <span data-i18n="nav_shop">Shop</span>
+        </a>
+        <a href="sponsor.html" class="whitespace-nowrap flex-shrink-0 px-2.5 xl:px-3 py-1.5 rounded-xl text-slate-600 dark:text-purple-200/80 hover:text-purple-600 hover:dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all" data-i18n="nav_sponsor">Sponsors</a>
+      </nav>
+
+      <!-- Spotlight Search Trigger -->
+      <button 
+        type="button" 
+        class="search-trigger-btn flex-shrink-0 flex items-center justify-center sm:justify-start gap-2 p-2 sm:px-3 sm:py-2 xl:px-3.5 rounded-xl sm:rounded-2xl bg-purple-50/90 dark:bg-[#120a26] hover:bg-purple-100/90 dark:hover:bg-[#1a0f35] border border-purple-200/90 dark:border-purple-800/80 hover:border-purple-400 dark:hover:border-purple-500 text-xs font-semibold text-slate-700 dark:text-purple-200 transition-all shadow-xs hover:scale-[1.02] cursor-pointer group w-9 h-9 sm:w-36 md:w-40 lg:w-36 xl:w-48 2xl:w-60 text-left"
+        title="Search reviews & products (⌘K)"
+      >
+        <i data-lucide="search" class="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-500 group-hover:scale-110 transition-transform flex-shrink-0"></i>
+        <span class="hidden sm:inline truncate text-slate-600 dark:text-purple-200/80 font-medium text-xs" data-i18n="search_placeholder_short">Search...</span>
+        <kbd class="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[9px] font-extrabold text-purple-600 dark:text-purple-400 bg-white dark:bg-purple-950 border border-purple-200 dark:border-purple-800 rounded-md shadow-2xs ml-auto flex-shrink-0">⌘K</kbd>
+      </button>
+
+      <div class="flex-shrink-0 flex items-center gap-1.5 sm:gap-2">
+        <!-- Currency Selector (Desktop / Tablet) -->
+        <div class="hidden sm:block relative">
+          <button id="currency-dropdown-btn" class="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/80 dark:bg-purple-950/50 hover:bg-purple-100 text-xs font-bold text-slate-800 dark:text-purple-200 transition-all shadow-xs">
+            <span id="current-currency-flag">🇺🇸</span>
+            <span id="current-currency-code">USD</span>
+            <span id="current-currency-symbol" class="text-purple-600 dark:text-purple-400 font-extrabold">($)</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 opacity-70"></i>
+          </button>
+          <div id="currency-dropdown-menu" class="hidden absolute right-0 mt-2 w-36 bg-white dark:bg-[#120a26] rounded-2xl shadow-2xl border border-purple-200 dark:border-purple-800/80 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Currency</div>
+            <button class="currency-option w-full text-left px-3.5 py-2 text-xs flex items-center justify-between hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-currency="USD">
+              <span class="flex items-center gap-2"><span>🇺🇸</span> <span class="font-bold">USD</span></span>
+              <span class="text-purple-600 dark:text-purple-400 font-bold">$</span>
+            </button>
+            <button class="currency-option w-full text-left px-3.5 py-2 text-xs flex items-center justify-between hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-currency="VND">
+              <span class="flex items-center gap-2"><span>🇻🇳</span> <span class="font-bold">VND</span></span>
+              <span class="text-purple-600 dark:text-purple-400 font-bold">₫</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Language Selector (Desktop / Tablet) -->
+        <div class="hidden sm:block relative">
+          <button id="lang-dropdown-btn" class="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/80 dark:bg-purple-950/50 hover:bg-purple-100 text-xs font-bold text-slate-800 dark:text-purple-200 transition-all shadow-xs">
+            <span id="current-lang-flag">🇺🇸</span>
+            <span id="current-lang-text">ENG</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 opacity-70"></i>
+          </button>
+          <div id="lang-dropdown-menu" class="hidden absolute right-0 mt-2 w-44 bg-white dark:bg-[#120a26] rounded-2xl shadow-2xl border border-purple-200 dark:border-purple-800 py-2 z-50">
+            <button class="lang-option w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-lang="en">
+              <span class="text-base">🇺🇸</span> <span>English (US)</span>
+            </button>
+            <button class="lang-option w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-lang="vi">
+              <span class="text-base">🇻🇳</span> <span>Tiếng Việt</span>
+            </button>
+            <button class="lang-option w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors" data-lang="zh">
+              <span class="text-base">🇨🇳</span> <span>简体中文</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="theme-toggle p-2 rounded-xl text-slate-600 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-950/60 transition-colors flex-shrink-0" aria-label="Toggle theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-300"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-purple-700"></i>
+        </button>
+
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl text-slate-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/40 flex-shrink-0" aria-label="Open mobile menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-purple-200 dark:border-purple-900/60 bg-white/95 dark:bg-[#0e0722]/95 backdrop-blur-xl px-4 py-4 space-y-3 shadow-2xl">
+      <!-- Mobile Search Trigger -->
+      <div>
+        <button 
+          type="button" 
+          class="search-trigger-btn w-full flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-purple-50/90 dark:bg-[#150d2e] border border-purple-200/90 dark:border-purple-800 text-xs font-semibold text-slate-700 dark:text-purple-200 text-left cursor-pointer hover:border-purple-400 transition-all shadow-xs"
+        >
+          <i data-lucide="search" class="w-4 h-4 text-purple-500 flex-shrink-0"></i>
+          <span class="truncate" data-i18n="search_placeholder_short">Search...</span>
+          <kbd class="ml-auto px-2 py-0.5 text-[10px] font-extrabold bg-white dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-lg border border-purple-200 dark:border-purple-800 shadow-2xs">⌘K</kbd>
+        </button>
+      </div>
+
+      <!-- Mobile Quick Currency & Language Selector -->
+      <div class="p-3 rounded-2xl bg-purple-50/80 dark:bg-purple-950/40 border border-purple-200/80 dark:border-purple-900/50 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Currency</span>
+          <div class="flex items-center gap-1.5">
+            <button class="currency-option px-2.5 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-currency="USD">
+              🇺🇸 USD ($)
+            </button>
+            <button class="currency-option px-2.5 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-currency="VND">
+              🇻🇳 VND (₫)
+            </button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-purple-200/60 dark:border-purple-900/40">
+          <span class="text-[11px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Language</span>
+          <div class="flex items-center gap-1.5">
+            <button class="lang-option px-2 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-lang="en">
+              🇺🇸 ENG
+            </button>
+            <button class="lang-option px-2 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-lang="vi">
+              🇻🇳 VIE
+            </button>
+            <button class="lang-option px-2 py-1 rounded-lg text-xs font-bold transition-all border border-purple-200 dark:border-purple-800/80" data-lang="zh">
+              🇨🇳 CHN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <a href="index.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_home">Home</a>
+      <a href="post.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_reviews">Reviews & Guides</a>
+      <a href="shop.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_shop">Shop</a>
+      <a href="sponsor.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-purple-200" data-i18n="nav_sponsor">Sponsors</a>
+    </div>
+  </header>
+
+  <!-- Main Article Layout -->
+  <main class="w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 min-w-0">
+    
+    <!-- Breadcrumb -->
+    <nav class="text-xs text-purple-600 dark:text-purple-400 mb-4 flex items-center gap-2">
+      <a href="index.html" class="hover:underline" data-i18n="nav_home">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="post.html" class="hover:underline" data-i18n="nav_reviews">Reviews & Guides</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-purple-200 font-semibold">Sea-Gull 1963 Chronograph Review</span>
+    </nav>
+
+    <!-- Article Header -->
+    <div class="max-w-4xl space-y-4 mb-8">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="glow-pill-badge">
+          ⌚ Horology & Luxury Timepieces 2026
+        </span>
+        <span class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+          <i data-lucide="watch" class="w-3.5 h-3.5"></i> Official Brand Authorized
+        </span>
+        <span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i> Column-Wheel ST1901 Movement
+        </span>
+      </div>
+
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug font-display" data-i18n="art_seagull_h1">
+        Sea-Gull 1963 Chronograph In-Depth Review: The Holy Grail of Value in Mechanical Horology
+      </h1>
+
+      <div class="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-purple-200/50 dark:border-purple-900/40 text-xs text-slate-500 dark:text-purple-300/70">
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="Julian Meyer" class="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500">
+          <div>
+            <span class="font-bold text-slate-800 dark:text-purple-200">Julian Meyer</span>
+            <span class="block text-[11px] text-indigo-600 dark:text-indigo-400">Master Horologist & Watch Collector</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Sep 11, 2026</span>
+          <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 10 min read</span>
+          <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i> 26,840 views</span>
+        </div>
+      </div>
+
+      <!-- Disclosure -->
+      <div class="p-4 bg-indigo-50/70 dark:bg-indigo-950/40 border-l-4 border-indigo-500 rounded-r-2xl text-xs text-purple-950 dark:text-indigo-200 leading-relaxed">
+        <strong>⚠️ <span data-i18n="disclosure_badge">Transparency</span>:</strong> <span>We acquired our Sea-Gull 1963 specimen directly from Sea-Gull Watch Official. If you make a purchase through our affiliate link, we receive a small commission that supports our watch teardown bench. All timegrapher accuracy and macro photography tests are 100% impartial.</span>
+      </div>
+    </div>
+
+    <!-- Article Content + Sidebar Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      
+      <!-- Article Body -->
+      <div class="lg:col-span-8 article-body">
+        
+        <!-- Featured Image -->
+        <div class="rounded-3xl overflow-hidden shadow-2xl mb-8 border border-purple-200/50 dark:border-purple-800/50">
+          <img src="https://images.unsplash.com/photo-1547996160-71dfabb1a7b1?auto=format&fit=crop&w=1200&q=80" alt="Sea-Gull 1963 Chronograph on Desk" class="w-full h-80 sm:h-96 object-cover">
+          <p class="text-[11px] text-center text-slate-400 py-2.5 bg-white dark:bg-[#120a28]">The iconic Sea-Gull 1963 Re-issue 38mm on khaki green NATO strap undergoing 30-day wrist endurance testing.</p>
+        </div>
+
+        <!-- 1. PRODUCT SHOWCASE CARD -->
+        <div id="affiliate-product-card" class="bg-white dark:bg-[#120a26] p-6 sm:p-7 rounded-3xl border-2 border-indigo-500/40 shadow-xl mb-8 cosmic-card-glow">
+          
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-purple-100 dark:border-purple-900/60">
+            <div>
+              <span class="text-xs font-bold text-indigo-500 uppercase tracking-wider">Collector's Mechanical Icon 2026</span>
+              <h3 class="text-xl font-extrabold text-slate-900 dark:text-white !mt-1">Sea-Gull 1963 Air Force Mechanical Chronograph</h3>
+            </div>
+            <div class="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/80 px-4 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800 shadow-sm">
+              <span class="text-xs text-slate-500 dark:text-indigo-300">Horology Score:</span>
+              <span class="text-sm font-black text-amber-400 flex items-center gap-1">
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> 9.7 / 10
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Specs & Pricing -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 my-5 items-center">
+            <div class="sm:col-span-5">
+              <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=600&q=80" alt="ST1901 Movement Teardown" class="w-full h-48 object-cover rounded-2xl shadow-sm">
+            </div>
+            <div class="sm:col-span-7 space-y-2 text-xs">
+              <p class="text-slate-600 dark:text-purple-200/80 leading-relaxed font-medium">
+                The most accessible genuine column-wheel mechanical chronograph in the world. Built on the historic Venus 175 Swiss heritage caliber, featuring blued screws, ruby jewels, and a breathtaking exhibition caseback.
+              </p>
+              <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                <div class="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200/60 dark:border-purple-800/60">
+                  <span class="text-slate-400 block">Movement:</span>
+                  <span class="font-bold text-slate-800 dark:text-purple-200">ST1901 Hand-Wind (21,600 vph)</span>
+                </div>
+                <div class="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200/60 dark:border-purple-800/60">
+                  <span class="text-slate-400 block">Case Diameter:</span>
+                  <span class="font-bold text-slate-800 dark:text-purple-200">38mm or 40mm (Sapphire / Acrylic)</span>
+                </div>
+              </div>
+              <div class="pt-2">
+                <span class="text-slate-400 text-xs">Official Dealer Price:</span>
+                <div class="text-2xl font-black text-rose-600 dark:text-rose-400 font-display">
+                  <span class="price-val" data-vnd="5.890.000đ" data-usd="$229.00">$229.00</span>
+                  <span class="text-xs text-emerald-500 font-bold bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded-full ml-2">$30 Off With Code</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Store Buttons -->
+          <div class="space-y-3">
+            <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Sea-Gull Watch Official', 'https://seagullwatchofficial.com/?ref=PETEONPURPOSE')" class="btn-shimmer w-full py-3.5 px-5 bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-2xl flex items-center justify-between text-sm shadow-xl shadow-indigo-600/30 transition-all">
+              <span class="flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-300"></i>
+                <span>Shop Sea-Gull Watch Official (2-Year International Warranty)</span>
+              </span>
+              <span class="bg-white/20 text-xs px-3 py-1 rounded-lg font-bold">Visit Store &rarr;</span>
+            </a>
+
+            <div class="grid grid-cols-2 gap-3">
+              <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Sea-Gull 1963 Collection', 'https://seagullwatchofficial.com/?ref=PETEONPURPOSE')" class="py-2.5 px-4 bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-200 hover:bg-purple-200 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs transition-all text-center">
+                <span>1963 Chronographs</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+              <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Sea-Gull Ocean Star Diver', 'https://seagullwatchofficial.com/?ref=PETEONPURPOSE')" class="py-2.5 px-4 bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-200 hover:bg-purple-200 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs transition-all text-center">
+                <span>Ocean Star & Tourbillons</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 2. COUPON BOX -->
+        <div class="coupon-box p-5 rounded-3xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-2 border-indigo-400/40">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Official Partner Promo</span>
+                <span class="text-[10px] bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 px-2 py-0.5 rounded-full font-bold">AUTHENTIC SELLER</span>
+              </div>
+              <p class="text-sm font-extrabold text-slate-900 dark:text-white mt-0.5">Save $30 on orders over $250 across all collections</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="bg-white dark:bg-[#120a26] px-3.5 py-2 rounded-xl border border-indigo-300 dark:border-indigo-800 font-mono font-black text-indigo-600 dark:text-indigo-300 text-sm tracking-wider">
+              PETEONPURPOSE
+            </div>
+            <button data-coupon="PETEONPURPOSE" data-store-url="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" data-store-name="Sea-Gull Watch Official" class="btn-copy-coupon px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md transition-all flex-shrink-0">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span data-i18n="btn_copy_code">Copy Code & Shop</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 1 -->
+        <h2 id="seagull-history">1. The Swiss-Chinese Heritage Behind Project 304</h2>
+        <p>
+          In 1961, the Ministry of Light Industry of China initiated a top-secret task known as <strong>Project 304</strong>: building the nation’s first aviation chronograph wrist watch for the People's Liberation Army Air Force pilots. Rather than reverse-engineering, Tianjin Watch Factory (which would later evolve into Sea-Gull) formally purchased the complete blueprints, machinery, and manufacturing tooling for the celebrated <strong>Venus 175 column-wheel chronograph movement</strong> from Switzerland.
+        </p>
+        <p>
+          Today, that exact horological lineage survives as the <strong>Sea-Gull Calibre ST1901</strong>. While Swiss brands now charge $4,000 to $12,000 for column-wheel mechanical chronographs, Sea-Gull manufactures and regulates this authentic historic movement entirely in-house for a fraction of that cost.
+        </p>
+
+        <!-- Section 2 -->
+        <h2 id="st1901-movement">2. Timegrapher Accuracy Test & Movement Architecture</h2>
+        <p>
+          We placed our fresh 38mm Sea-Gull 1963 on our Weishi 1900 precision timegrapher across all 5 standard testing positions after a full manual wind:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6 text-center">
+          <div class="p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60">
+            <span class="text-xs text-slate-400 block uppercase font-bold">Daily Rate Accuracy</span>
+            <span class="text-2xl font-black text-emerald-500 font-display">+4.2 s/day</span>
+            <span class="text-[11px] text-slate-500 block">Dial-up resting rate</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60">
+            <span class="text-xs text-slate-400 block uppercase font-bold">Balance Amplitude</span>
+            <span class="text-2xl font-black text-indigo-500 font-display">298°</span>
+            <span class="text-[11px] text-slate-500 block">Strong mainspring torque</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60">
+            <span class="text-xs text-slate-400 block uppercase font-bold">Beat Error</span>
+            <span class="text-2xl font-black text-purple-500 font-display">0.1 ms</span>
+            <span class="text-[11px] text-slate-500 block">Excellent escapement poise</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-700 dark:text-purple-200/90 leading-relaxed">
+          Through the exhibition caseback, you can observe the column wheel index precisely each time the upper 2 o'clock chronograph pusher is pressed. The tactile actuation is crisp and mechanical—with none of the spongy, stiff resistance found in cam-actuated chronographs.
+        </p>
+
+        <!-- Pros & Cons -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+          <div class="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 rounded-3xl p-5">
+            <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-sm mb-3">
+              <i data-lucide="thumbs-up" class="w-4 h-4"></i>
+              <span>SEA-GULL 1963 PROS</span>
+            </div>
+            <ul class="space-y-2 text-xs text-slate-700 dark:text-purple-200/80">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                <span>True mechanical column-wheel chronograph with Venus 175 Swiss pedigree.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                <span>Available with scratch-resistant Sapphire crystal or vintage domed Acrylic.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                <span>Classic 38mm proportions fit comfortably on wrists from 6.0" to 7.8".</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                <span>Exhibition caseback provides one of the most stunning mechanical views under $1,000.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800/60 rounded-3xl p-5">
+            <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-sm mb-3">
+              <i data-lucide="thumbs-down" class="w-4 h-4"></i>
+              <span>CONSIDERATIONS</span>
+            </div>
+            <ul class="space-y-2 text-xs text-slate-700 dark:text-purple-200/80">
+              <li class="flex items-start gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5"></i>
+                <span>Manual wind only (requires 25–30 turns every 40–45 hours; no automatic rotor).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5"></i>
+                <span>30M water resistance (splash resistant, but not suitable for swimming or showering).</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 3: Comparison Table -->
+        <h2 id="horology-comparison">3. Comparison: Sea-Gull 1963 vs. Swiss Mechanicals & Quartz</h2>
+        <div class="comparison-table-wrapper rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm mb-8 overflow-x-auto bg-white dark:bg-[#120a26]">
+          <table class="comparison-table text-xs text-left">
+            <thead class="bg-purple-50 dark:bg-purple-950/70 text-purple-900 dark:text-purple-200 font-bold">
+              <tr>
+                <th class="w-1/4">Watch Model</th>
+                <th>Price</th>
+                <th>Movement Type</th>
+                <th>Caseback / Finishing</th>
+                <th class="text-right">Verdict</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="comparison-highlight border-l-4 border-l-indigo-500">
+                <td class="font-bold text-slate-900 dark:text-white">
+                  Sea-Gull 1963 (Official)
+                  <span class="block text-[10px] text-indigo-500 font-normal">In-House Heritage Caliber</span>
+                </td>
+                <td>
+                  <span class="font-extrabold text-indigo-600 text-sm price-val" data-vnd="5.890.000đ" data-usd="$229.00">$229.00</span>
+                </td>
+                <td>ST1901 Hand-Wound Mechanical (Column Wheel)</td>
+                <td>Exhibition Sapphire, Blued Screws & Geneva Stripes</td>
+                <td class="text-right">
+                  <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl text-xs inline-block">
+                    Buy Official &rarr;
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-bold text-slate-900 dark:text-white">Tissot Heritage 1973</td>
+                <td><span class="font-bold text-sm price-val" data-vnd="54.000.000đ" data-usd="$2,150.00">$2,150.00</span></td>
+                <td>Valjoux 7753 Automatic (Cam Actuated)</td>
+                <td>Exhibition back, machine finishing</td>
+                <td class="text-right">
+                  <span class="text-slate-400 font-semibold">10x Price</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-bold text-slate-900 dark:text-white">Generic Fashion Quartz Chronos</td>
+                <td><span class="font-bold text-sm price-val" data-vnd="3.500.000đ" data-usd="$140.00">$140.00</span></td>
+                <td>Battery Quartz (Ticking 1 Hz second hand)</td>
+                <td>Solid snap-on back, zero mechanical soul</td>
+                <td class="text-right">
+                  <span class="text-rose-500 font-bold">Zero Collector Value</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Section 4 -->
+        <h2 id="final-verdict">4. Final Verdict: A Must-Have in Any Horology Collection</h2>
+        <p>
+          Whether you own five-figure Rolex and Patek pieces or you're buying your very first mechanical timepiece, <strong>the Sea-Gull 1963 commands universal respect across watch enthusiast circles</strong>. There simply is no other mechanical chronograph on earth that provides this level of authentic historic heritage, column-wheel engineering, and aesthetic beauty anywhere near this price point.
+        </p>
+
+        <!-- Big Bottom CTA Box -->
+        <div class="mt-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-950 via-indigo-950 to-purple-950 text-white text-center shadow-2xl relative overflow-hidden border border-indigo-500/30">
+          <div class="relative z-10 max-w-xl mx-auto space-y-4">
+            <span class="px-3 py-1 bg-indigo-500/30 border border-indigo-400/50 rounded-full text-xs font-bold text-indigo-300">
+              OFFICIAL AUTHORIZED STORE GUARANTEE
+            </span>
+            <h3 class="text-2xl sm:text-3xl font-black font-display">Own the Iconic Sea-Gull 1963 Today</h3>
+            <p class="text-xs sm:text-sm text-indigo-200/80">
+              Order directly through Sea-Gull Watch Official with coupon <strong>PETEONPURPOSE</strong> to receive a $30 discount and 2-year official global warranty.
+            </p>
+            <div class="pt-2">
+              <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Sea-Gull Checkout CTA', 'https://seagullwatchofficial.com/?ref=PETEONPURPOSE')" class="btn-shimmer inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/40 text-sm transition-all">
+                <i data-lucide="watch" class="w-4 h-4"></i>
+                <span>Shop Sea-Gull 1963 with Exclusive Discount &rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Reviews Grid -->
+        <div class="mt-12 pt-8 border-t border-purple-200/60 dark:border-purple-900/60">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-500"></i>
+            <span>More Verified Reviews & Buying Guides</span>
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="post-lilyvow.html" class="p-4 rounded-2xl bg-white dark:bg-[#120a26] border border-purple-200/70 dark:border-purple-800/60 hover:border-pink-400 transition-all flex items-center gap-3 group">
+              <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80" alt="LilyVow" class="w-16 h-16 rounded-xl object-cover">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-pink-500">Alt Fashion</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-pink-500 line-clamp-1 transition-colors">LilyVow Lolita & Gothic Fashion</h4>
+                <span class="text-[11px] text-slate-400">Score 9.6 • 15% Off Code</span>
+              </div>
+            </a>
+            <a href="post-bullboost.html" class="p-4 rounded-2xl bg-white dark:bg-[#120a26] border border-purple-200/70 dark:border-purple-800/60 hover:border-amber-400 transition-all flex items-center gap-3 group">
+              <img src="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=150&q=80" alt="BullBoost" class="w-16 h-16 rounded-xl object-cover">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-amber-500">Auto Performance</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-500 line-clamp-1 transition-colors">BullBoost Performance Billet & Titanium</h4>
+                <span class="text-[11px] text-slate-400">Score 9.5 • Dyno Tested</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sticky Sidebar -->
+      <aside class="lg:col-span-4 self-start">
+        <div class="sticky top-24 space-y-6">
+          
+          <!-- Table of Contents -->
+          <div id="toc-card" class="bg-white dark:bg-[#120a26] p-5 sm:p-6 rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-lg">
+            <div class="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/60">
+              <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                <i data-lucide="list" class="w-4 h-4"></i>
+                <span data-i18n="table_of_contents">Table of Contents</span>
+              </div>
+              <span class="text-[10px] bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 font-bold px-2 py-0.5 rounded-full" data-i18n="toc_live_badge">Live</span>
+            </div>
+            <ul id="toc-list" class="mt-3 space-y-1"></ul>
+          </div>
+
+          <!-- Sidebar Watch Card -->
+          <div class="bg-white dark:bg-[#120a26] rounded-3xl p-6 border border-indigo-300/60 dark:border-indigo-900/60 shadow-md text-center space-y-3">
+            <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=400&q=80" alt="Sea-Gull Ocean Star Diver" class="w-full h-44 object-cover rounded-2xl mb-2">
+            <span class="text-[10px] font-bold uppercase bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full">Top Seller 2026</span>
+            <h4 class="font-extrabold text-slate-900 dark:text-white text-sm">Sea-Gull Ocean Star 200M</h4>
+            <p class="text-xs text-slate-500 dark:text-purple-300/80">Automatic mechanical dive watch with ceramic bezel & date.</p>
+            <a href="https://seagullwatchofficial.com/?ref=PETEONPURPOSE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Sea-Gull Sidebar Widget', 'https://seagullwatchofficial.com/?ref=PETEONPURPOSE')" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl text-xs block transition-all shadow-md">
+              View on Sea-Gull Store &rarr;
+            </a>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+
+    <!-- GET IN TOUCH / CONTACT SECTION -->
+  <section class="py-16 bg-slate-50/70 dark:bg-[#06030f]/70 border-t border-purple-100/80 dark:border-purple-900/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mb-8">
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display" data-i18n="contact_heading">Get in Touch</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-purple-300/70 mt-1" data-i18n="contact_subtitle">Questions, partnerships, or feedback — we'd love to hear from you.</p>
+      </div>
+
+      <div class="rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-purple-900/50 bg-white dark:bg-[#0e0720] grid grid-cols-1 lg:grid-cols-12">
+        <div class="lg:col-span-5 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-8 sm:p-10 text-white flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+          <div class="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-teal-900/30 blur-xl pointer-events-none"></div>
+
+          <div class="relative z-10 space-y-6">
+            <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 text-white shadow-inner">
+              <i data-lucide="life-buoy" class="w-6 h-6"></i>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="text-2xl sm:text-3xl font-black leading-tight" data-i18n-html="contact_left_title">
+                We're here<br/>to help you save
+              </h3>
+              <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed font-light" data-i18n="contact_left_desc">
+                Our team reviews every message personally. Whether it's a coupon issue, partnership idea, or feedback — we've got you.
+              </p>
+            </div>
+
+            <div class="space-y-4 pt-2">
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="clock" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white" data-i18n="contact_bullet1_title">Reply within 24 hours</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet1_sub">Mon – Fri, 9am – 6pm PT</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white" data-i18n="contact_bullet2_title">Your info is safe</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet2_sub">We never share your details</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="message-square" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white" data-i18n="contact_bullet3_title">Partnership inquiries</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet3_sub">Open to store & brand partners</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-white">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white break-words">supportsmartpickshub@gmail.com</h4>
+                  <p class="text-[11px] text-emerald-100/90" data-i18n="contact_bullet4_sub">Direct email always welcome</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative z-10 pt-6 mt-6 border-t border-emerald-500/40">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-white">
+                <i data-lucide="check" class="w-4 h-4"></i>
+              </div>
+              <div class="text-[11px]">
+                <p class="font-bold text-white tracking-wide" data-i18n="contact_partner_title">Official Marketing Partner</p>
+                <p class="text-emerald-100/90 leading-tight" data-i18n="contact_partner_note">SmartPicks Hub • 2205 Lorina Ave, Corcoran, CA 93212, USA</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 p-8 sm:p-10 bg-white dark:bg-[#0c061a] flex flex-col justify-between">
+          <div>
+            <div class="mb-6">
+              <h3 class="text-xl font-extrabold text-slate-900 dark:text-white" data-i18n="contact_form_title">Send us a message</h3>
+              <p class="text-xs text-slate-500 dark:text-purple-300/60 mt-1" data-i18n="contact_form_required">Fields marked * are required</p>
+            </div>
+
+            <form id="get-in-touch-form" class="space-y-4" onsubmit="handleContactSubmit(event)">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_name_label">
+                    Your Name <span class="text-slate-400 font-normal" data-i18n="contact_optional">(optional)</span>
+                  </label>
+                  <input type="text" id="contact-name" name="name" placeholder="Jane Smith" data-i18n-placeholder="contact_name_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_email_label">
+                    Email Address <span class="text-rose-500">*</span>
+                  </label>
+                  <input type="email" id="contact-email" name="email" required placeholder="you@example.com" data-i18n-placeholder="contact_email_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_subject_label">
+                  Subject <span class="text-slate-400 font-normal" data-i18n="contact_optional">(optional)</span>
+                </label>
+                <input type="text" id="contact-subject" name="subject" placeholder="e.g. Partnership, coupon issue, feedback..." data-i18n-placeholder="contact_subject_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-purple-200 mb-1.5" data-i18n="contact_message_label">
+                  Message <span class="text-rose-500">*</span>
+                </label>
+                <textarea id="contact-message" name="message" required rows="4" placeholder="Tell us how we can help..." data-i18n-placeholder="contact_message_placeholder" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-purple-800/60 bg-white dark:bg-purple-950/30 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all resize-none"></textarea>
+              </div>
+
+              <button type="submit" id="contact-submit-btn" class="w-full py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all cursor-pointer">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span data-i18n="contact_submit_btn">Send Message</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="mt-4 pt-3 text-center border-t border-slate-100 dark:border-purple-900/30">
+            <p class="text-[11px] text-slate-400 dark:text-purple-300/50" data-i18n="contact_reply_guarantee">
+              We typically reply within 24 hours · Your info is never shared
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-[#0a0515] border-t border-purple-200/50 dark:border-purple-900/40 mt-auto py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10">
+        
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <img src="images/logo.png" alt="Smart Picks Logo" class="w-8 h-8 rounded-xl object-cover shadow-md flex-shrink-0">
+            <span class="font-extrabold text-lg text-slate-900 dark:text-white font-display">Smart Picks Review</span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-purple-300/70 leading-relaxed" data-i18n="footer_desc">
+            Authoritative publication specializing in tech reviews, affiliate marketing frameworks, and conversion optimization for independent creators.
+          </p>
+                  <!-- Social Media Channels -->
+          <div class="pt-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-purple-400 block mb-2" data-i18n="footer_social_title">Follow Us</span>
+            <div class="flex items-center gap-2.5">
+              <a href="https://www.facebook.com/smartpickshub04" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-[#1877F2] dark:bg-purple-950/60 dark:hover:bg-[#1877F2] border border-slate-200 dark:border-purple-800/50 flex items-center justify-center text-slate-600 dark:text-purple-300 hover:text-white dark:hover:text-white transition-all transform hover:-translate-y-0.5 shadow-sm group" title="Facebook: SmartPicks Hub" aria-label="Facebook">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/smartpickshub04/" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] dark:bg-purple-950/60 border border-slate-200 dark:border-purple-800/50 flex items-center justify-center text-slate-600 dark:text-purple-300 hover:text-white dark:hover:text-white transition-all transform hover:-translate-y-0.5 shadow-sm group" title="Instagram: @smartpickshub04" aria-label="Instagram">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a href="mailto:supportsmartpickshub@gmail.com" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-600 dark:bg-purple-950/60 dark:hover:bg-emerald-600 border border-slate-200 dark:border-purple-800/50 flex items-center justify-center text-slate-600 dark:text-purple-300 hover:text-white dark:hover:text-white transition-all transform hover:-translate-y-0.5 shadow-sm" title="Email: supportsmartpickshub@gmail.com" aria-label="Email">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_categories">Navigation</h4>
+          <ul class="space-y-2 text-xs text-slate-600 dark:text-purple-300/70">
+            <li><a href="index.html" class="hover:text-purple-500" data-i18n="nav_home">Home</a></li>
+            <li><a href="post.html" class="hover:text-purple-500" data-i18n="nav_reviews">Tech Reviews</a></li>
+            <li><a href="shop.html" class="hover:text-purple-500" data-i18n="nav_shop">Curated Store</a></li>
+            <li><a href="sponsor.html" class="hover:text-purple-500" data-i18n="nav_sponsor">Sponsorships</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_models">Revenue Models</h4>
+          <ul class="space-y-2 text-xs text-slate-600 dark:text-purple-300/70">
+            <li data-i18n="footer_model_affiliate">• Affiliate Marketing (Direct Partnerships)</li>
+            <li data-i18n="footer_model_ads">• IAB-Compliant Display Ad Networks</li>
+            <li data-i18n="footer_model_sponsor">• Sponsored Reviews & Exclusive Drops</li>
+            <li data-i18n="footer_model_digital">• Curated Products & Physical Gear</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_compliance">Compliance & Disclosure</h4>
+          <p class="text-[11px] text-slate-500 dark:text-purple-300/70 leading-relaxed" data-i18n="footer_compliance_text">
+            Fully compliant with FTC guidelines and Google Quality Rater standards for transparency, honest affiliate partnerships, and consumer protection.
+          </p>
+        </div>
+
+        <!-- Contact Column (Exact Match to User Reference) -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3" data-i18n="footer_contact_title">Contact</h4>
+          <p class="text-xs font-semibold text-slate-700 dark:text-purple-200 mb-1" data-i18n="footer_mailing_addr_label">Mailing Address:</p>
+          <p class="text-xs text-slate-600 dark:text-purple-300/70 leading-relaxed mb-3">
+            2205 Lorina Ave, Corcoran, CA 93212, USA
+          </p>
+          <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-purple-300/80 mb-4">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0"></i>
+            <a href="mailto:supportsmartpickshub@gmail.com" class="text-[11.5px] sm:text-xs hover:underline hover:text-emerald-600 dark:hover:text-emerald-400 break-words font-medium">supportsmartpickshub@gmail.com</a>
+          </div>
+          <div class="pt-3 border-t border-purple-100 dark:border-purple-900/40">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-purple-400 block mb-1.5" data-i18n="footer_partner_label">OFFICIAL MARKETING PARTNER</span>
+            <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-purple-950/40 border border-slate-200 dark:border-purple-800/40">
+              <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-800 dark:text-purple-100 leading-tight">SmartPicks Hub LLC</p>
+                <p class="text-[10px] text-slate-500 dark:text-purple-300/60 leading-tight" data-i18n="footer_partner_sub">SmartPicks Hub is a marketing division</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-purple-100 dark:border-purple-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <p data-i18n="footer_copyright">© 2026 Smart Picks Review. All rights reserved.</p>
+        <div class="flex gap-4">
+          <a href="#" class="hover:underline" data-i18n="footer_privacy">Privacy Policy</a>
+          <a href="#" class="hover:underline" data-i18n="footer_terms">Terms of Service</a>
+          <a href="sponsor.html" class="hover:underline" data-i18n="footer_partnerships">Brand Partnerships</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <div id="toast"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/post.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

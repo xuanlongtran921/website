@@ -1,0 +1,1435 @@
+// Main JavaScript for Monetization Blog
+document.addEventListener('DOMContentLoaded', () => {
+  initPageTransitions();
+  initTheme();
+  initMobileMenu();
+  initCataloguesDropdown();
+  initNewsletter();
+  initAdToggle();
+  initSearch();
+  initTopBarTicker();
+  initHeroPinnedProject();
+  initIndexCategoryPills();
+  lucide.createIcons();
+});
+
+// Theme Management (Light / Dark mode)
+function initTheme() {
+  const themeToggleButtons = document.querySelectorAll('.theme-toggle');
+  const storedTheme = localStorage.getItem('blog_theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+
+  themeToggleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('blog_theme', isDark ? 'dark' : 'light');
+      const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+      showToast(isDark ? (lang === 'vi' ? 'Đã bật Chế độ Tối' : 'Dark mode enabled') : (lang === 'vi' ? 'Đã bật Chế độ Sáng' : 'Light mode enabled'));
+    });
+  });
+}
+
+// Mobile Menu
+function initMobileMenu() {
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (!menuBtn || !mobileMenu) return;
+
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+}
+
+// Catalogues Mega Dropdown (Continuous hover bridge, click-to-pin, escape-to-close)
+function initCataloguesDropdown() {
+  const containers = document.querySelectorAll('.catalogues-dropdown-container');
+  if (!containers.length) return;
+
+  containers.forEach(container => {
+    const btn = container.querySelector('.catalogues-menu-btn');
+    const panel = container.querySelector('.mega-dropdown-menu');
+    if (!btn || !panel) return;
+
+    let hoverTimeout = null;
+
+    // Toggle on button click (allows users to pin open or close)
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isPinned = container.classList.contains('is-open');
+
+      // Close other dropdowns if open
+      const langMenu = document.getElementById('lang-dropdown-menu');
+      const currMenu = document.getElementById('currency-dropdown-menu');
+      if (langMenu) langMenu.classList.add('hidden');
+      if (currMenu) currMenu.classList.add('hidden');
+
+      if (isPinned) {
+        container.classList.remove('is-open');
+        container.classList.remove('is-hovered');
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        container.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    // Graceful hover enter
+    container.addEventListener('mouseenter', () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      container.classList.add('is-hovered');
+    });
+
+    // Graceful hover leave: 250ms buffer so accidental slip doesn't close the menu
+    container.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(() => {
+        container.classList.remove('is-hovered');
+      }, 250);
+    });
+
+    // Close when clicking an anchor inside the panel
+    panel.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        container.classList.remove('is-open');
+        container.classList.remove('is-hovered');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  });
+
+  // Close catalogues menu when language or currency triggers are clicked
+  ['lang-dropdown-btn', 'currency-dropdown-btn'].forEach(id => {
+    const trigger = document.getElementById(id);
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        containers.forEach(c => {
+          c.classList.remove('is-open');
+          c.classList.remove('is-hovered');
+          const b = c.querySelector('.catalogues-menu-btn');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+  });
+
+  // Global click outside to close pinned dropdown
+  document.addEventListener('click', (e) => {
+    containers.forEach(container => {
+      if (!container.contains(e.target)) {
+        container.classList.remove('is-open');
+        const btn = container.querySelector('.catalogues-menu-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  // ESC key to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      containers.forEach(container => {
+        if (container.classList.contains('is-open')) {
+          container.classList.remove('is-open');
+          container.classList.remove('is-hovered');
+          const btn = container.querySelector('.catalogues-menu-btn');
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'false');
+            btn.focus();
+          }
+        }
+      });
+    }
+  });
+}
+
+// Global Toast System
+window.showToast = function(message, type = 'success') {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
+
+  const iconName = type === 'success' ? 'check-circle' : type === 'info' ? 'info' : 'alert-circle';
+  const bgColor = 'bg-[#150d2e] text-white border border-purple-500/50 shadow-[0_10px_40px_-10px_rgba(168,85,247,0.5)]';
+
+  toast.className = `fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl transition-all duration-300 ${bgColor}`;
+  toast.innerHTML = `
+    <i data-lucide="${iconName}" class="w-5 h-5 flex-shrink-0 text-pink-400"></i>
+    <span class="text-sm font-semibold leading-tight">${message}</span>
+  `;
+
+  lucide.createIcons();
+  toast.classList.add('show');
+
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3500);
+};
+
+// Clipboard Copy Helper
+window.copyToClipboard = function(text, successMsg = 'Copied to clipboard!') {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(successMsg);
+    }).catch(() => fallbackCopy(text, successMsg));
+  } else {
+    fallbackCopy(text, successMsg);
+  }
+};
+
+function fallbackCopy(text, successMsg) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-999999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    showToast(successMsg);
+  } catch (err) {
+    showToast('Could not copy automatically, please copy manually.', 'info');
+  }
+  document.body.removeChild(textArea);
+}
+
+// Newsletter Subscription
+function initNewsletter() {
+  const forms = document.querySelectorAll('.newsletter-form');
+  forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailInput = form.querySelector('input[type="email"]');
+      if (emailInput && emailInput.value) {
+        const email = emailInput.value;
+        const subscribers = JSON.parse(localStorage.getItem('blog_subscribers') || '[]');
+        subscribers.push({ email, time: new Date().toISOString() });
+        localStorage.setItem('blog_subscribers', JSON.stringify(subscribers));
+        
+        emailInput.value = '';
+        showToast('🎉 Successfully subscribed! Check your inbox for the free guide.');
+      }
+    });
+  });
+}
+
+// Toggle Display Ads Demo Mode (Shows AdSense demo placements or dims them)
+function initAdToggle() {
+  const toggleBtn = document.getElementById('toggle-ad-mode');
+  if (!toggleBtn) return;
+
+  let showMockup = true;
+  toggleBtn.addEventListener('click', () => {
+    showMockup = !showMockup;
+    const adContainers = document.querySelectorAll('.ad-slot-container');
+    adContainers.forEach(ad => {
+      if (showMockup) {
+        ad.classList.remove('opacity-40');
+        toggleBtn.innerHTML = `<i data-lucide="eye-off" class="w-4 h-4"></i> Hide Demo Ad Slots`;
+      } else {
+        ad.classList.add('opacity-40');
+        toggleBtn.innerHTML = `<i data-lucide="eye" class="w-4 h-4"></i> Show Demo Ad Slots`;
+      }
+    });
+    lucide.createIcons();
+    showToast(showMockup ? 'Displaying AdSense demo ad units' : 'Ad units dimmed');
+  });
+}
+
+// Affiliate Link Click Simulator
+window.handleAffiliateClick = function(storeName, targetUrl) {
+  showToast(`⚡ Redirecting to verified partner store at ${storeName}...`);
+  // Lưu số liệu click để tính conversion rate nội bộ
+  const clicks = JSON.parse(localStorage.getItem('affiliate_clicks') || '{}');
+  clicks[storeName] = (clicks[storeName] || 0) + 1;
+  localStorage.setItem('affiliate_clicks', JSON.stringify(clicks));
+
+  setTimeout(() => {
+    window.open(targetUrl || '#', '_blank', 'noopener,noreferrer');
+  }, 400);
+};
+
+// Top Bar Projects Continuous Marquee Ticker ("Chạy Xoay Vòng")
+function initTopBarTicker() {
+  const tickerProjects = [
+    {
+      badge: 'ALT FASHION',
+      badgeClass: 'bg-pink-600 text-white',
+      icon: 'sparkles',
+      text: {
+        en: 'LilyVow: Sweet Lolita & Gothic Alt Dresses (15% Off code PETEONPURPOSE)',
+        vi: 'LilyVow: Thời Trang Gothic & Lolita Thiết Kế (Giảm 15% mã PETEONPURPOSE)',
+        zh: 'LilyVow：正品 Lolita 与独立暗黑哥特风服饰（专属码 PETEONPURPOSE 减 15%）'
+      },
+      url: 'post-lilyvow.html'
+    },
+    {
+      badge: 'MOTORSPORTS',
+      badgeClass: 'bg-amber-600 text-white',
+      icon: 'gauge',
+      text: {
+        en: 'BullBoost Performance: Titanium Exhausts & Billet Manifolds ($50 Off with bwfxdiyt)',
+        vi: 'BullBoost Performance: Pô Titanium & Cổ Hút Billet Siêu Xe (Giảm $50 mã bwfxdiyt)',
+        zh: 'BullBoost Performance：钛合金排气与 CNC 进气歧管（立减 $50 代码 bwfxdiyt）'
+      },
+      url: 'post-bullboost.html'
+    },
+    {
+      badge: 'HOROLOGY',
+      badgeClass: 'bg-indigo-600 text-white',
+      icon: 'watch',
+      text: {
+        en: 'Sea-Gull 1963 Chronograph: ST1901 Column-Wheel Mechanical Icon ($30 Off Coupon)',
+        vi: 'Đồng Hồ Cơ Sea-Gull 1963: ST1901 Bánh Xe Cột Huyền Thoại (Giảm $30)',
+        zh: '海鸥表 1963 计时码表：ST1901 导柱轮机械机芯（专属立减 $30）'
+      },
+      url: 'post-seagull.html'
+    },
+    {
+      badge: 'HOT REVIEW',
+      badgeClass: 'bg-rose-500 text-white',
+      icon: 'headphones',
+      text: {
+        en: 'Sony WH-1000XM5: Save $50 on Amazon & Shopee Mall with exclusive coupon',
+        vi: 'Sony WH-1000XM5: Chống ồn đỉnh cao, săn voucher giảm 1.5 triệu Shopee & Tiki',
+        zh: '索尼 WH-1000XM5 深度评测：立省 $50，全网多平台实时比价与优惠券'
+      },
+      url: 'post.html'
+    },
+    {
+      badge: 'CREATOR GEAR',
+      badgeClass: 'bg-indigo-600 text-white',
+      icon: 'laptop',
+      text: {
+        en: 'Apple M3 Pro MacBook Pro 16": Real-world Creator Benchmarks & Verified Cashback',
+        vi: 'MacBook Pro 16" M3 Pro: Đánh giá hiệu năng Creator & hoàn tiền độc quyền',
+        zh: '苹果 M3 Pro MacBook Pro 16寸：专业跑分评测与官方返利通道'
+      },
+      url: 'post.html'
+    },
+    {
+      badge: 'BEST SELLER',
+      badgeClass: 'bg-pink-600 text-white',
+      icon: 'file-text',
+      text: {
+        en: 'Affiliate Blog Blueprint: Zero to $1,000/Mo eBook Playbook ($7.99 • 428 sold)',
+        vi: 'Ebook Affiliate Pro: Cẩm nang kiếm 20 triệu/tháng ($7.99 • Bán chạy)',
+        zh: '电子书：《从0到月入过万联盟博客变现全攻略》（$7.99 • 热销）'
+      },
+      url: 'shop.html'
+    },
+    {
+      badge: 'HOT TREND',
+      badgeClass: 'bg-amber-500 text-white',
+      icon: 'image',
+      text: {
+        en: '25 Pro Lightroom Presets: Cinematic Tech Pack ($5.99 • 265 sold)',
+        vi: '25 Preset Lightroom Master Tone: Cinematic Tech ($5.99 • 265 bộ)',
+        zh: '25款精调Lightroom预设：科技影调大师包（$5.99 • 已售265套）'
+      },
+      url: 'shop.html'
+    },
+    {
+      badge: 'MUST HAVE',
+      badgeClass: 'bg-emerald-600 text-white',
+      icon: 'layout',
+      text: {
+        en: 'Notion Content Hub & Affiliate Revenue Tracker Template ($3.99 • 512 downloads)',
+        vi: 'Template Notion: Quản lý doanh thu Affiliate ($3.99 • 512 lượt tải)',
+        zh: 'Notion内容中枢与分销收益管理看板模板（$3.99 • 自动化核算）'
+      },
+      url: 'shop.html'
+    },
+    {
+      badge: 'WORKSHOP',
+      badgeClass: 'bg-violet-600 text-white',
+      icon: 'video',
+      text: {
+        en: 'Video Workshop: High-Converting CTAs & Comparison Table Psychology ($9.99)',
+        vi: 'Video Workshop: Tối ưu tỷ lệ chuyển đổi CTA & tâm lý mua hàng ($9.99)',
+        zh: '实操视频课：高转化率CTA按钮与多维比价矩阵（$9.99）'
+      },
+      url: 'shop.html'
+    },
+    {
+      badge: 'MEDIA KIT',
+      badgeClass: 'bg-purple-600 text-white',
+      icon: 'award',
+      text: {
+        en: 'Official Brand Media Kit 2026: Sponsored Articles, Reviews & Takeovers',
+        vi: 'Báo Giá Truyền Thông & Media Kit Nhãn Hàng 2026 (Booking ngay)',
+        zh: '品牌赞助合作与官方刊例报价单 2026：头部榜单与单品测评'
+      },
+      url: 'sponsor.html'
+    },
+    {
+      badge: 'VERIFIED',
+      badgeClass: 'bg-teal-600 text-white',
+      icon: 'shield-check',
+      text: {
+        en: 'Editorial Transparency: Articles contain rigorously verified affiliate links',
+        vi: 'Minh Bạch Biên Tập: Bài viết chứa link tiếp thị liên kết đã kiểm duyệt 100%',
+        zh: '透明披露：本站文章包含严格实测的分销返佣链接'
+      },
+      url: 'index.html'
+    }
+  ];
+
+  function renderMarquees() {
+    const marquees = document.querySelectorAll('.top-bar-ticker-track');
+    if (!marquees.length) return;
+
+    const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+
+    const setHtml = tickerProjects.map(item => {
+      const displayText = (item.text && item.text[lang]) ? item.text[lang] : (item.text.en || item.text.vi);
+      return `
+        <a href="${item.url}" class="ticker-item inline-flex items-center gap-2.5 px-3.5 py-1 rounded-xl hover:bg-purple-900/40 text-purple-100 hover:text-white transition-all group flex-shrink-0" title="${displayText}">
+          <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${item.badgeClass} shadow-xs tracking-wider flex-shrink-0 flex items-center gap-1">
+            <i data-lucide="${item.icon}" class="w-3 h-3"></i>
+            <span>${item.badge}</span>
+          </span>
+          <span class="text-xs font-semibold text-purple-200 group-hover:text-pink-300 transition-colors whitespace-nowrap">${displayText}</span>
+          <span class="text-pink-500/50 font-black text-xs ml-4 select-none">✦</span>
+        </a>
+      `;
+    }).join('');
+
+    marquees.forEach(m => {
+      m.innerHTML = setHtml + setHtml;
+    });
+
+    lucide.createIcons();
+  }
+
+  renderMarquees();
+  window.addEventListener('languageChanged', renderMarquees);
+}
+
+// Global Spotlight Search Engine (Zoomed Command Palette with Hot Suggestions & Instant Live Autocomplete)
+function initSearch() {
+  const searchCatalog = [
+    {
+      type: 'Review',
+      badge: 'ALT FASHION',
+      badgeClass: 'bg-pink-600 text-white',
+      priceUSD: 'From $69.00',
+      priceVND: 'Từ 1.750.000₫',
+      icon: 'sparkles',
+      title: 'LilyVow Review: Sweet Lolita, Gothic & Alt Dresses Tested',
+      titleVi: 'Đánh Giá LilyVow: Đầm Lolita & Thời Trang Gothic Thiết Kế',
+      titleZh: 'LilyVow 深度评测：正品 Lolita 与独立暗黑哥特风服饰定制',
+      desc: 'Fabric teardown, custom sizing accuracy, worldwide shipping, and exclusive 15% discount code.',
+      descVi: 'Kiểm tra chất lượng vải may, may đo theo số đo riêng, ship quốc tế và mã giảm 15% độc quyền.',
+      descZh: '实测面料做工质感、量体定制精准度、全球直邮与专属15%独家折扣码。',
+      url: 'post-lilyvow.html',
+      keywords: ['lilyvow', 'lolita', 'gothic', 'dress', 'fashion', 'thời trang', 'đầm', 'váy', 'peteonpurpose', '服饰', '哥特']
+    },
+    {
+      type: 'Review',
+      badge: 'MOTORSPORTS',
+      badgeClass: 'bg-amber-600 text-white',
+      priceUSD: 'From $169.00',
+      priceVND: 'Từ 4.250.000₫',
+      icon: 'gauge',
+      title: 'BullBoost Performance Review: Billet Manifolds & Titanium Exhausts',
+      titleVi: 'Đánh Giá BullBoost Performance: Cổ Hút Billet & Pô Titanium Siêu Xe',
+      titleZh: 'BullBoost Performance 深度评测：CNC 进气歧管与钛合金排气',
+      desc: 'Dyno tested +34 WHP, 75+ PSI boost rating, and exclusive $50 discount code on orders over $400.',
+      descVi: 'Test công suất dyno +34 WHP, chịu áp turbo 75+ PSI và mã giảm giá $50 cho đơn từ $400.',
+      descZh: '马力机实测提升 34 轮上马力，承受 75+ PSI 增压极限，满 $400 立减 $50 优惠码。',
+      url: 'post-bullboost.html',
+      keywords: ['bullboost', 'performance', 'manifold', 'titanium', 'exhaust', 'exhausts', 'racing', 'pô', 'cổ hút', 'đua xe', 'bwfxdiyt', '改装', '排气']
+    },
+    {
+      type: 'Review',
+      badge: 'HOROLOGY',
+      badgeClass: 'bg-indigo-600 text-white',
+      priceUSD: 'From $229.00',
+      priceVND: 'Từ 5.890.000₫',
+      icon: 'watch',
+      title: 'Sea-Gull 1963 Chronograph Review: The ST1901 Mechanical Icon',
+      titleVi: 'Đánh Giá Đồng Hồ Cơ Sea-Gull 1963: Biểu Tượng Bấm Giờ ST1901',
+      titleZh: '海鸥表 1963 计时码表深度评测：传承 ST1901 机械国表之光',
+      desc: 'Mechanical column-wheel chronograph with Swiss Venus 175 heritage, exhibition caseback & $30 promo.',
+      descVi: 'Cỗ máy cơ khí bấm giờ bánh xe cột ST1901 chuẩn Thụy Sĩ, đáy lộ cơ tuyệt đẹp kèm mã giảm $30.',
+      descZh: '传承瑞士 Venus 175 导柱轮手动机械机芯，蓝宝石背透与专属立减 $30 优惠。',
+      url: 'post-seagull.html',
+      keywords: ['seagull', 'sea-gull', '1963', 'watch', 'chronograph', 'st1901', 'đồng hồ', 'cơ khí', 'lộ đáy', 'peteonpurpose', '海鸥表', '手表', '机械表']
+    },
+    {
+      type: 'Review',
+      badge: 'HOT DEAL',
+      badgeClass: 'bg-rose-500 text-white',
+      icon: 'headphones',
+      title: 'Sony WH-1000XM5 Review: Flagship Noise-Canceling Headphones',
+      titleVi: 'Đánh Giá Sony WH-1000XM5: Đỉnh Cao Chống Ồn 2026',
+      titleZh: '索尼 WH-1000XM5 深度评测：降噪机皇体验',
+      desc: 'Real-time multi-store price comparison across Amazon, Shopee & Best Buy with exclusive voucher discounts.',
+      descVi: 'So sánh giá đa sàn Amazon, Shopee & Best Buy với mã voucher giảm giá độc quyền.',
+      descZh: '全网多平台实时比价与专属独家折扣码。',
+      url: 'post.html',
+      keywords: ['sony', 'wh1000xm5', 'headphones', 'anc', 'tai nghe', 'chống ồn', '降噪', '耳机']
+    },
+    {
+      type: 'Review',
+      badge: 'TRENDING',
+      badgeClass: 'bg-purple-600 text-white',
+      icon: 'laptop',
+      title: 'Apple M3 Pro MacBook Pro 16-inch: The Ultimate Creator Workhorse',
+      titleVi: 'Đánh Giá MacBook Pro 16-inch M3 Pro: Cỗ Máy Dành Cho Creator',
+      titleZh: '苹果 M3 Pro MacBook Pro 16寸深度评测与比价',
+      desc: 'Performance benchmarks, battery endurance analysis, and verified retailer cashback links.',
+      descVi: 'Đánh giá benchmark hiệu năng, thời lượng pin thực tế và link hoàn tiền chính hãng.',
+      descZh: '专业跑分基准、续航深度实测与官方返佣通道。',
+      url: 'post.html',
+      keywords: ['apple', 'macbook', 'm3 pro', 'laptop', 'creator', 'máy tính', '苹果', '笔记本']
+    },
+    {
+      type: 'Guide',
+      badge: 'FEATURED',
+      badgeClass: 'bg-indigo-600 text-white',
+      icon: 'book-open',
+      title: 'The 2026 Affiliate Site Monetization Blueprint',
+      titleVi: 'Chiến Lược Kiếm Tiền Affiliate Blog Toàn Diện 2026',
+      titleZh: '2026 联盟营销博客变现全攻略指南',
+      desc: 'How to architect high-CRO review pages, negotiate private tier commissions, and maximize RPM.',
+      descVi: 'Cách xây dựng trang review tỷ lệ chuyển đổi cao, đàm phán hoa hồng riêng và tối ưu RPM.',
+      descZh: '打造高转化率测评页面、洽谈独家阶梯佣金与最大化广告RPM收益。',
+      url: 'post.html',
+      keywords: ['affiliate', 'blueprint', 'monetization', 'seo', 'cro', 'tiếp thị liên kết', 'kiếm tiền', '联盟营销', '变现']
+    },
+    {
+      type: 'Digital Store',
+      badge: 'BEST SELLER',
+      badgeClass: 'bg-pink-600 text-white',
+      priceUSD: '$7.99',
+      priceVND: '199.000₫',
+      icon: 'file-text',
+      title: 'Affiliate Blog Blueprint: Zero to $1,000/Mo (eBook)',
+      titleVi: 'Ebook: Cẩm Nang Affiliate Blog Từ Số 0 Lên 20 Triệu/Tháng',
+      titleZh: '电子书：《从0到月入过万的联盟博客变现全攻略》',
+      desc: '250+ page actionable playbook on high-margin niche selection and on-page SEO frameworks.',
+      descVi: 'Sách cẩm nang 250+ trang hướng dẫn chọn ngách lợi nhuận cao và cấu trúc SEO tối ưu.',
+      descZh: '250+页实操手册，深度剖析高利润利基市场选择与站内SEO变现框架。',
+      url: 'shop.html',
+      keywords: ['ebook', 'blueprint', 'pdf', 'book', 'sách', 'cẩm nang', '电子书', '教程']
+    },
+    {
+      type: 'Digital Store',
+      badge: 'HOT TREND',
+      badgeClass: 'bg-amber-500 text-white',
+      priceUSD: '$5.99',
+      priceVND: '149.000₫',
+      icon: 'image',
+      title: '25 Pro Lightroom Presets: Cinematic Tech Pack',
+      titleVi: 'Bộ 25 Preset Lightroom Master Tone: Cinematic Tech',
+      titleZh: '25款精调Lightroom预设：科技影调大师包',
+      desc: 'Custom-tuned XMP & DNG profiles for aesthetic tech gadget reviews and desk setups.',
+      descVi: 'Profile màu XMP & DNG tối ưu chụp ảnh sản phẩm công nghệ và góc làm việc.',
+      descZh: '专为数码测评与桌面博主定制调校的 XMP & DNG 电影感滤镜包。',
+      url: 'shop.html',
+      keywords: ['lightroom', 'preset', 'photo', 'cinematic', 'ảnh', 'màu', '预设', '滤镜']
+    },
+    {
+      type: 'Digital Store',
+      badge: 'MUST HAVE',
+      badgeClass: 'bg-emerald-600 text-white',
+      priceUSD: '$3.99',
+      priceVND: '99.000₫',
+      icon: 'layout',
+      title: 'Notion Content Hub & Affiliate Revenue Tracker',
+      titleVi: 'Template Notion: Content Hub & Quản Lý Doanh Thu Affiliate',
+      titleZh: 'Notion内容中枢与分销收益管理看板',
+      desc: 'Unified editorial pipeline, multi-network affiliate link vault, and automated monthly payout tracker.',
+      descVi: 'Hệ thống quản lý bài viết, kho link affiliate và bảng tự động tính dòng tiền hoa hồng.',
+      descZh: '内容选题排期、多平台分销外链库与自动化月度收益核算看板。',
+      url: 'shop.html',
+      keywords: ['notion', 'template', 'hub', 'tracker', 'bảng biểu', 'quản lý', '模板', '看板']
+    },
+    {
+      type: 'Digital Store',
+      badge: 'WORKSHOP',
+      badgeClass: 'bg-violet-600 text-white',
+      priceUSD: '$9.99',
+      priceVND: '249.000₫',
+      icon: 'video',
+      title: 'Video Workshop: High-Converting CTAs & Comparison Tables',
+      titleVi: 'Khóa Học Video: Tối Ưu Tỷ Lệ Chuyển Đổi CTA & Bảng So Sánh',
+      titleZh: '视频课：高转化率CTA按钮与多维比价矩阵实操课',
+      desc: '12 hands-on masterclass videos on consumer buyer psychology and high-converting button layouts.',
+      descVi: '12 video thực chiến về tâm lý học người mua và cách bố trí nút kêu gọi hành động.',
+      descZh: '12节实战进阶视频，拆解买家消费心理学与超高点击转化CTA布局方案。',
+      url: 'shop.html',
+      keywords: ['video', 'course', 'workshop', 'khóa học', 'video', '课程', '视频']
+    },
+    {
+      type: 'Media Kit',
+      badge: 'PARTNERSHIP',
+      badgeClass: 'bg-indigo-500 text-white',
+      icon: 'award',
+      title: 'Official Media Kit & Brand Sponsorship Rates',
+      titleVi: 'Báo Giá Tài Trợ Truyền Thông & Media Kit Nhãn Hàng',
+      titleZh: '品牌赞助与官方刊例报价单',
+      desc: 'Partner with Smart Picks Review: Top-list product features, dedicated reviews, and full-site brand takeovers.',
+      descVi: 'Hợp tác cùng Smart Picks Review: Đưa sản phẩm vào top-list, bài review chuyên sâu và bảo trợ thương hiệu.',
+      descZh: '携手 Smart Picks Review：入选精选榜单、定制深度单品测评与全站独家品牌曝光。',
+      url: 'sponsor.html',
+      keywords: ['sponsor', 'media kit', 'advertising', 'báo giá', 'tài trợ', 'quảng cáo', '赞助', '刊例', '广告']
+    }
+  ];
+
+  // Inject Spotlight Search Modal into DOM if not exists
+  function ensureSpotlightModal() {
+    let modal = document.getElementById('spotlight-search-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'spotlight-search-modal';
+    modal.className = 'hidden fixed inset-0 z-[99999] overflow-y-auto';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+
+    modal.innerHTML = `
+      <!-- Backdrop with blur -->
+      <div id="spotlight-backdrop" class="fixed inset-0 bg-slate-950/75 dark:bg-black/85 backdrop-blur-md transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+
+      <!-- Centered Modal Container -->
+      <div class="min-h-screen px-3 sm:px-4 pt-10 sm:pt-16 pb-12 flex items-start justify-center">
+        <!-- Modal Card: Zooms out from scale-95 to scale-100 -->
+        <div id="spotlight-card" class="relative w-full max-w-2xl bg-white dark:bg-[#120a26] rounded-3xl shadow-[0_25px_80px_rgba(147,51,234,0.45)] border-2 border-purple-300/90 dark:border-purple-600/90 overflow-hidden transform transition-all duration-300 scale-95 opacity-0">
+          
+          <!-- Top Search Bar: Large & Glowing (64px) -->
+          <div class="relative flex items-center px-4 sm:px-6 h-16 sm:h-20 border-b border-purple-100 dark:border-purple-900/60 bg-gradient-to-r from-purple-50/70 via-white to-pink-50/50 dark:from-[#160d33] dark:via-[#120a26] dark:to-[#1a0f35]">
+            <i data-lucide="search" class="w-6 h-6 text-purple-600 dark:text-purple-400 flex-shrink-0 mr-3.5 transition-transform"></i>
+            <input 
+              type="text" 
+              id="spotlight-search-input" 
+              placeholder="Search reviews, guides, digital products..." 
+              autocomplete="off" 
+              class="w-full text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-purple-400/60 bg-transparent border-none outline-none ring-0 focus:ring-0"
+            >
+            <div class="flex items-center gap-2 flex-shrink-0 ml-2">
+              <button id="spotlight-clear-btn" class="hidden p-1.5 rounded-full hover:bg-purple-100 dark:hover:bg-purple-900/60 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors" title="Clear">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+              <button id="spotlight-close-btn" class="px-2.5 py-1.5 rounded-xl text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-100/90 hover:bg-purple-200 dark:bg-purple-950 dark:hover:bg-purple-900 border border-purple-200 dark:border-purple-800 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs" title="Close (ESC)">
+                <span class="text-[10px] font-mono font-black">ESC</span>
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Content Container -->
+          <div id="spotlight-content" class="max-h-[62vh] sm:max-h-[68vh] overflow-y-auto p-4 sm:p-5 space-y-4"></div>
+
+          <!-- Footer Navigation Bar -->
+          <div class="px-4 sm:px-5 py-2.5 sm:py-3 border-t border-purple-100 dark:border-purple-900/60 bg-purple-50/60 dark:bg-[#0e0720] flex items-center justify-between text-xs text-slate-500 dark:text-purple-300/70">
+            <div class="flex items-center gap-2.5 sm:gap-4 text-[11px] flex-wrap">
+              <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-purple-950 font-mono text-[10px] border border-purple-200 dark:border-purple-800 font-bold shadow-xs">↵</kbd> Select</span>
+              <span class="hidden sm:flex items-center gap-1.5"><kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-purple-950 font-mono text-[10px] border border-purple-200 dark:border-purple-800 font-bold shadow-xs">↑↓</kbd> Navigate</span>
+              <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-purple-950 font-mono text-[10px] border border-purple-200 dark:border-purple-800 font-bold shadow-xs">ESC</kbd> Close</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-1.5 text-[11px] font-bold text-purple-600 dark:text-purple-400">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Smart Picks Instant Search</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  const modal = ensureSpotlightModal();
+  const backdrop = modal.querySelector('#spotlight-backdrop');
+  const card = modal.querySelector('#spotlight-card');
+  const input = modal.querySelector('#spotlight-search-input');
+  const clearBtn = modal.querySelector('#spotlight-clear-btn');
+  const closeBtn = modal.querySelector('#spotlight-close-btn');
+  const content = modal.querySelector('#spotlight-content');
+
+  let activeResultIndex = -1;
+
+  // Open Spotlight Modal with Zoom-in Animation
+  function openSpotlight(initialQuery = '') {
+    const currentLang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+    const placeholders = {
+      en: 'Search reviews, guides, digital products, deals...',
+      vi: 'Tìm kiếm bài viết, cẩm nang, sản phẩm số, deal hot...',
+      zh: '搜索评测文章、实操指南、数字资产、热门折扣...'
+    };
+    input.placeholder = placeholders[currentLang] || placeholders.en;
+
+    modal.classList.remove('hidden');
+    // Force layout reflow before triggering transition
+    void modal.offsetHeight;
+
+    backdrop.classList.remove('opacity-0');
+    backdrop.classList.add('opacity-100');
+
+    card.classList.remove('scale-95', 'opacity-0');
+    card.classList.add('scale-100', 'opacity-100');
+
+    document.body.style.overflow = 'hidden';
+
+    input.value = initialQuery || '';
+    input.focus();
+    input.select();
+
+    if (initialQuery.trim()) {
+      renderResults(initialQuery.trim());
+    } else {
+      renderHotSuggestions();
+    }
+  }
+
+  // Close Spotlight Modal with Zoom-out Animation
+  function closeSpotlight() {
+    backdrop.classList.remove('opacity-100');
+    backdrop.classList.add('opacity-0');
+
+    card.classList.remove('scale-100', 'opacity-100');
+    card.classList.add('scale-95', 'opacity-0');
+
+    document.body.style.overflow = '';
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      activeResultIndex = -1;
+    }, 220);
+  }
+
+  // Render Hot Suggestions (Default state when input is empty)
+  function renderHotSuggestions() {
+    const currentLang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+    const currentCurrency = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
+
+    const trendingLabel = currentLang === 'vi' ? 'Tìm kiếm phổ biến' : (currentLang === 'zh' ? '热门搜索词' : 'Trending Searches');
+    const hotArticlesLabel = currentLang === 'vi' ? 'Bài Viết Đang Hot Nhất' : (currentLang === 'zh' ? '最热门评测与指南' : 'Trending Reviews & Guides');
+    const hotProductsLabel = currentLang === 'vi' ? 'Sản Phẩm Bán Chạy Nhất' : (currentLang === 'zh' ? '热销榜数字产品' : 'Best-Selling Products');
+
+    const hotArticles = [
+      {
+        badge: 'HOT DEAL',
+        badgeClass: 'bg-rose-500 text-white',
+        icon: 'headphones',
+        title: (currentLang === 'vi') ? 'Sony WH-1000XM5: Đỉnh Cao Chống Ồn & So Sánh Giá' : ((currentLang === 'zh') ? '索尼 WH-1000XM5 降噪耳机深度评测' : 'Sony WH-1000XM5 Review: Flagship ANC Headphones'),
+        sub: (currentLang === 'vi') ? 'Giá tốt nhất từ 7.490.000₫ • Kèm mã giảm $50' : ((currentLang === 'zh') ? '实时比价与专属优惠券' : 'Real-time price comparison across Amazon & Shopee • Save $50'),
+        url: 'post.html'
+      },
+      {
+        badge: 'TRENDING',
+        badgeClass: 'bg-purple-600 text-white',
+        icon: 'laptop',
+        title: (currentLang === 'vi') ? 'MacBook Pro M3 Pro: Cỗ Máy Dành Cho Creator' : ((currentLang === 'zh') ? '苹果 M3 Pro MacBook Pro 16寸深度评测' : 'Apple M3 Pro MacBook Pro: Creator Workhorse Breakdown'),
+        sub: (currentLang === 'vi') ? 'Đánh giá hiệu năng thực tế & thời lượng pin' : ((currentLang === 'zh') ? '实测性能跑分与省电表现' : 'Real-world benchmarks, video editing tests & verified cashback'),
+        url: 'post.html'
+      },
+      {
+        badge: 'FEATURED',
+        badgeClass: 'bg-indigo-600 text-white',
+        icon: 'book-open',
+        title: (currentLang === 'vi') ? 'Cẩm Nang Kiếm Tiền Affiliate Blog 2026' : ((currentLang === 'zh') ? '2026 联盟营销博客变现全攻略' : 'The 2026 Affiliate Site Monetization Blueprint'),
+        sub: (currentLang === 'vi') ? 'Chiến lược tối ưu CRO & hoa hồng cao cấp' : ((currentLang === 'zh') ? '从0到稳定变现的架构思维' : 'Turn traffic into recurring revenue with proven CRO layouts'),
+        url: 'post.html'
+      }
+    ];
+
+    const hotProducts = [
+      {
+        badge: 'BEST SELLER',
+        badgeClass: 'bg-pink-600 text-white',
+        price: currentCurrency === 'VND' ? '199.000₫' : '$7.99',
+        icon: 'file-text',
+        title: (currentLang === 'vi') ? 'Ebook: Cẩm Nang Affiliate Blog Từ Số 0 (250 trang)' : ((currentLang === 'zh') ? '电子书：《从0到月入过万联盟博客攻略》' : 'Affiliate Blog Blueprint eBook (250+ pages)'),
+        sub: (currentLang === 'vi') ? 'Đã bán 428 bản • Tặng kèm 30 checklist CRO' : ((currentLang === 'zh') ? '已售出 428 份 • 赠30步转化清单' : '428 copies sold • Includes 30-step CRO checklist'),
+        url: 'shop.html'
+      },
+      {
+        badge: 'HOT TREND',
+        badgeClass: 'bg-amber-500 text-white',
+        price: currentCurrency === 'VND' ? '149.000₫' : '$5.99',
+        icon: 'image',
+        title: (currentLang === 'vi') ? 'Bộ 25 Preset Lightroom: Cinematic Tech Minimal' : ((currentLang === 'zh') ? '25款精调Lightroom预设：科技影调大师包' : '25 Pro Lightroom Presets: Cinematic Tech Pack'),
+        sub: (currentLang === 'vi') ? 'Đã bán 265 bộ • Tối ưu ảnh chụp đồ công nghệ' : ((currentLang === 'zh') ? '已售出 265 套 • 专为数码桌面调优' : '265 packs sold • Custom XMP & DNG for tech reviews'),
+        url: 'shop.html'
+      },
+      {
+        badge: 'MUST HAVE',
+        badgeClass: 'bg-emerald-600 text-white',
+        price: currentCurrency === 'VND' ? '99.000₫' : '$3.99',
+        icon: 'layout',
+        title: (currentLang === 'vi') ? 'Template Notion: Quản Lý Doanh Thu Affiliate' : ((currentLang === 'zh') ? 'Notion内容中枢与分销收益看板' : 'Notion Content Hub & Affiliate Revenue Tracker'),
+        sub: (currentLang === 'vi') ? 'Đã tải 512 lượt • Tự động tính ROI & dòng tiền' : ((currentLang === 'zh') ? '已下载 512 次 • 自动化收益看板' : '512 downloads • Multi-network commission forecast formulas'),
+        url: 'shop.html'
+      }
+    ];
+
+    const tags = [
+      'Sony WH-1000XM5',
+      'LilyVow Lolita',
+      'BullBoost Performance',
+      'Sea-Gull 1963',
+      'Bàn Phím Cơ CNC',
+      'Góc Làm Việc',
+      'Đồng Hồ Cơ'
+    ];
+
+    content.innerHTML = `
+      <div class="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+        <!-- Quick Trending Search Tags -->
+        <div class="pb-3 border-b border-purple-100 dark:border-purple-900/50">
+          <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-2.5">
+            <i data-lucide="flame" class="w-3.5 h-3.5 text-rose-500 fill-rose-500"></i>
+            <span>${trendingLabel}</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            ${tags.map(t => `<button type="button" class="search-tag-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-100/80 hover:bg-purple-200 dark:bg-purple-950/90 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 transition-all flex items-center gap-1.5 hover:scale-105 shadow-xs cursor-pointer"><i data-lucide="search" class="w-3 h-3 opacity-60"></i>${t}</button>`).join('')}
+          </div>
+        </div>
+
+        <!-- Hot Reviews & Guides -->
+        <div>
+          <div class="px-1 mb-2 flex items-center justify-between text-[11px] font-extrabold text-slate-400 dark:text-purple-300/60 uppercase tracking-wider">
+            <span class="flex items-center gap-1.5 text-slate-800 dark:text-purple-200 font-black"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500 fill-amber-500"></i> ${hotArticlesLabel}</span>
+            <span class="text-[10px] text-purple-500 font-bold bg-purple-100 dark:bg-purple-950 px-2 py-0.5 rounded-full">Editorial Pick</span>
+          </div>
+          <div class="space-y-1.5">
+            ${hotArticles.map((a, idx) => `
+              <a href="${a.url}" class="search-item flex items-center gap-3.5 p-3 hover:bg-purple-50/90 dark:hover:bg-purple-900/40 rounded-2xl transition-all group border border-transparent hover:border-purple-200 dark:hover:border-purple-800" data-index="${idx}">
+                <div class="w-11 h-11 rounded-2xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="${a.icon}" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${a.badgeClass} shadow-xs">${a.badge}</span>
+                    <h4 class="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors truncate">${a.title}</h4>
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-purple-300/70 truncate mt-0.5">${a.sub}</p>
+                </div>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></i>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Hot Digital Products -->
+        <div class="pt-3 border-t border-purple-100 dark:border-purple-900/50">
+          <div class="px-1 mb-2 flex items-center justify-between text-[11px] font-extrabold text-slate-400 dark:text-purple-300/60 uppercase tracking-wider">
+            <span class="flex items-center gap-1.5 text-slate-800 dark:text-purple-200 font-black"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-500 fill-pink-500"></i> ${hotProductsLabel}</span>
+            <span class="text-[10px] text-pink-500 font-bold bg-pink-100 dark:bg-pink-950 px-2 py-0.5 rounded-full">Instant Download</span>
+          </div>
+          <div class="space-y-1.5">
+            ${hotProducts.map((p, idx) => `
+              <a href="${p.url}" class="search-item flex items-center gap-3.5 p-3 hover:bg-purple-50/90 dark:hover:bg-purple-900/40 rounded-2xl transition-all group border border-transparent hover:border-purple-200 dark:hover:border-purple-800" data-index="${idx + 3}">
+                <div class="w-11 h-11 rounded-2xl bg-pink-100 dark:bg-pink-950 text-pink-600 dark:text-pink-300 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="${p.icon}" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${p.badgeClass} shadow-xs">${p.badge}</span>
+                    <h4 class="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors truncate">${p.title}</h4>
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-purple-300/70 truncate mt-0.5">${p.sub}</p>
+                </div>
+                <span class="text-xs sm:text-sm font-black text-purple-600 dark:text-purple-400 font-display flex-shrink-0 bg-purple-100/80 dark:bg-purple-950/90 px-2.5 py-1 rounded-xl border border-purple-200/60 dark:border-purple-800/60">${p.price}</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    clearBtn.classList.add('hidden');
+    lucide.createIcons();
+
+    // Wire trending tag buttons
+    content.querySelectorAll('.search-tag-btn').forEach(tagBtn => {
+      tagBtn.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const tagText = tagBtn.textContent.trim();
+        input.value = tagText;
+        renderResults(tagText);
+        input.focus();
+      });
+    });
+
+    activeResultIndex = -1;
+  }
+
+  // Highlight matched substrings
+  function highlightMatch(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return text.replace(regex, '<mark class="bg-purple-200 dark:bg-purple-800 text-purple-900 dark:text-purple-100 font-black px-1 rounded">$1</mark>');
+  }
+
+  // Render Search Results on Typing
+  function renderResults(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      renderHotSuggestions();
+      return;
+    }
+
+    clearBtn.classList.remove('hidden');
+
+    const currentLang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+    const currentCurrency = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
+
+    const matches = searchCatalog.filter(item => {
+      const titleMatch = item.title.toLowerCase().includes(q) ||
+        (item.titleVi && item.titleVi.toLowerCase().includes(q)) ||
+        (item.titleZh && item.titleZh.toLowerCase().includes(q));
+      const descMatch = (item.desc && item.desc.toLowerCase().includes(q)) ||
+        (item.descVi && item.descVi.toLowerCase().includes(q)) ||
+        (item.descZh && item.descZh.toLowerCase().includes(q));
+      const typeMatch = item.type.toLowerCase().includes(q);
+      const keywordMatch = item.keywords && item.keywords.some(k => k.toLowerCase().includes(q));
+      return titleMatch || descMatch || typeMatch || keywordMatch;
+    });
+
+    if (matches.length === 0) {
+      const emptyTitle = currentLang === 'vi' 
+        ? `Không tìm thấy kết quả phù hợp cho "${query}"`
+        : (currentLang === 'zh' ? `未找到关于 "${query}" 的相关内容` : `No results found for "${query}"`);
+      const emptyHint = currentLang === 'vi'
+        ? 'Hãy thử tìm kiếm với các từ khóa: "Sony", "MacBook", "Blueprint", "Preset" hoặc "Notion".'
+        : (currentLang === 'zh' ? '请尝试搜索关键词："Sony", "MacBook", "Blueprint", "Preset" 或 "Notion"。' : 'Try searching for keywords like "Sony", "MacBook", "Blueprint", "Preset", or "Notion".');
+
+      content.innerHTML = `
+        <div class="px-6 py-12 text-center text-xs text-slate-500 dark:text-purple-300/70 animate-in fade-in zoom-in-95 duration-200">
+          <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-purple-100 dark:bg-purple-950/80 text-purple-500 flex items-center justify-center shadow-inner">
+            <i data-lucide="search-x" class="w-7 h-7"></i>
+          </div>
+          <h3 class="font-extrabold text-base text-slate-800 dark:text-white">${emptyTitle}</h3>
+          <p class="text-xs text-slate-400 dark:text-purple-400/70 mt-1 max-w-sm mx-auto">${emptyHint}</p>
+          <div class="mt-4 flex flex-wrap justify-center gap-2">
+            ${['Sony', 'MacBook', 'Blueprint', 'Lightroom', 'Notion'].map(kw => `
+              <button type="button" class="quick-suggest-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 hover:scale-105 transition-all">${kw}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      content.querySelectorAll('.quick-suggest-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          input.value = btn.textContent.trim();
+          renderResults(input.value);
+          input.focus();
+        });
+      });
+    } else {
+      const resultCountText = currentLang === 'vi'
+        ? `Tìm thấy ${matches.length} kết quả`
+        : (currentLang === 'zh' ? `找到 ${matches.length} 条匹配内容` : `${matches.length} results found`);
+
+      content.innerHTML = `
+        <div class="space-y-1.5 animate-in fade-in zoom-in-95 duration-150">
+          <div class="px-3 py-1 text-[11px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider flex items-center justify-between">
+            <span>${resultCountText}</span>
+            <span class="text-[10px] text-slate-400 font-medium">Click to open or use ↑↓</span>
+          </div>
+          <div class="space-y-1">
+            ${matches.map((item, idx) => {
+              const displayTitle = (currentLang === 'vi' && item.titleVi) ? item.titleVi : ((currentLang === 'zh' && item.titleZh) ? item.titleZh : item.title);
+              const displayDesc = (currentLang === 'vi' && item.descVi) ? item.descVi : ((currentLang === 'zh' && item.descZh) ? item.descZh : item.desc);
+              const priceTag = item.priceUSD ? (currentCurrency === 'VND' ? item.priceVND : item.priceUSD) : '';
+
+              return `
+                <a href="${item.url}" class="search-item flex items-center gap-3.5 p-3 hover:bg-purple-50/90 dark:hover:bg-purple-900/40 rounded-2xl transition-all group border border-transparent hover:border-purple-200 dark:hover:border-purple-800" data-index="${idx}">
+                  <div class="w-11 h-11 rounded-2xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-xs">
+                    <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${item.badgeClass} shadow-xs">${item.badge || item.type}</span>
+                      <h4 class="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors truncate">${highlightMatch(displayTitle, query)}</h4>
+                    </div>
+                    <p class="text-[11px] text-slate-500 dark:text-purple-300/70 line-clamp-1">${highlightMatch(displayDesc, query)}</p>
+                  </div>
+                  ${priceTag ? `<span class="text-xs font-black text-purple-600 dark:text-purple-400 font-display flex-shrink-0 bg-purple-100/80 dark:bg-purple-950/90 px-2 py-0.5 rounded-lg border border-purple-200/50 dark:border-purple-800/50">${priceTag}</span>` : ''}
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></i>
+                </a>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    lucide.createIcons();
+    activeResultIndex = -1;
+  }
+
+  // Update active item highlight for keyboard navigation
+  function updateActiveResult() {
+    const items = content.querySelectorAll('.search-item');
+    items.forEach((it, i) => {
+      if (i === activeResultIndex) {
+        it.classList.add('ring-2', 'ring-purple-500', 'bg-purple-100/70', 'dark:bg-purple-900/60');
+        it.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        it.classList.remove('ring-2', 'ring-purple-500', 'bg-purple-100/70', 'dark:bg-purple-900/60');
+      }
+    });
+  }
+
+  // Event Listeners for Modal Controls
+  input.addEventListener('input', (e) => {
+    renderResults(e.target.value);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = content.querySelectorAll('.search-item');
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeSpotlight();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (items.length > 0) {
+        activeResultIndex = (activeResultIndex + 1) % items.length;
+        updateActiveResult();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (items.length > 0) {
+        activeResultIndex = (activeResultIndex - 1 + items.length) % items.length;
+        updateActiveResult();
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (activeResultIndex >= 0 && items[activeResultIndex]) {
+        window.location.href = items[activeResultIndex].getAttribute('href');
+      } else if (items.length > 0) {
+        window.location.href = items[0].getAttribute('href');
+      }
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    renderHotSuggestions();
+    input.focus();
+  });
+
+  closeBtn.addEventListener('click', closeSpotlight);
+  backdrop.addEventListener('click', closeSpotlight);
+
+  // Wire all Search Trigger buttons on the page
+  function attachSearchTriggers() {
+    document.querySelectorAll('.search-trigger-btn, #site-search-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openSpotlight();
+      });
+    });
+
+    // Support legacy input triggers if present
+    const desktopInput = document.getElementById('site-search-input');
+    if (desktopInput) {
+      desktopInput.addEventListener('focus', () => openSpotlight(desktopInput.value));
+      desktopInput.addEventListener('click', () => openSpotlight(desktopInput.value));
+    }
+
+    const mobileInput = document.getElementById('mobile-search-input');
+    if (mobileInput) {
+      mobileInput.addEventListener('focus', () => openSpotlight(mobileInput.value));
+      mobileInput.addEventListener('click', () => openSpotlight(mobileInput.value));
+    }
+  }
+
+  attachSearchTriggers();
+
+  // Global Keyboard Shortcuts (Ctrl+K, Cmd+K, Slash)
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (modal.classList.contains('hidden')) {
+        openSpotlight();
+      } else {
+        closeSpotlight();
+      }
+    } else if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      openSpotlight();
+    } else if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      closeSpotlight();
+    }
+  });
+
+  // Re-render hot suggestions when currency or language changes
+  window.addEventListener('currencyChanged', () => {
+    if (!modal.classList.contains('hidden')) {
+      if (input.value.trim()) renderResults(input.value.trim());
+      else renderHotSuggestions();
+    }
+  });
+
+  window.addEventListener('languageChanged', () => {
+    if (!modal.classList.contains('hidden')) {
+      if (input.value.trim()) renderResults(input.value.trim());
+      else renderHotSuggestions();
+    }
+  });
+
+  // Expose global methods
+  window.openSpotlight = openSpotlight;
+  window.closeSpotlight = closeSpotlight;
+}
+
+// -------------------------------------------------------------
+// Dynamic Hero Pinned Project Showcase (Real-time sync from CMS)
+// -------------------------------------------------------------
+function initHeroPinnedProject() {
+  const heroCard = document.getElementById('hero-pinned-card');
+  if (!heroCard) return;
+
+  async function loadPinnedProject() {
+    try {
+      const res = await fetch('data/pinned_project.json?t=' + Date.now());
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data || !data.title) return;
+
+      const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+      const curr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('blog_currency') || 'USD');
+
+      const elUrlDisplay = document.getElementById('hero-pinned-url-display');
+      const brandName = data.brand || (data.urlDisplay && !data.urlDisplay.startsWith('http') ? data.urlDisplay : (data.badge || 'BullBoost Performance'));
+      if (elUrlDisplay) {
+        elUrlDisplay.innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5 text-pink-500 flex-shrink-0"></i><span class="font-black uppercase tracking-wider">${brandName}</span>`;
+      }
+
+      const elBadge = document.getElementById('hero-pinned-badge');
+      if (elBadge) {
+        let badgeVal = (lang === 'vi' ? (data.badgeVi || data.badge) : (data.badgeEn || data.badge)) || "Editor's Choice";
+        if (badgeVal.toLowerCase() === brandName.toLowerCase()) {
+          badgeVal = (lang === 'vi') ? "Lựa Chọn Biên Tập Viên" : ((lang === 'zh') ? "编辑推荐" : "Editor's Choice");
+        }
+        elBadge.textContent = badgeVal;
+      }
+
+      const elTag = document.getElementById('hero-pinned-tag');
+      if (elTag) elTag.textContent = (lang === 'vi' ? (data.tagVi || data.tag) : (data.tagEn || data.tag)) || "REVIEW FLAGSHIP";
+
+      const elTitle = document.getElementById('hero-pinned-title');
+      const titleText = (lang === 'vi' ? (data.titleVi || data.title) : (data.titleEn || data.title));
+      if (elTitle) {
+        const link = elTitle.querySelector('a');
+        if (link) {
+          link.textContent = titleText;
+          link.href = data.postUrl || '#';
+        } else {
+          elTitle.textContent = titleText;
+        }
+      }
+
+      const elImg = document.getElementById('hero-pinned-img');
+      if (elImg && data.image) {
+        elImg.src = data.image;
+        elImg.alt = titleText;
+      }
+
+      const elPrice = document.getElementById('hero-pinned-price');
+      if (elPrice) {
+        if (data.priceVnd) elPrice.setAttribute('data-vnd', data.priceVnd);
+        if (data.priceUsd) elPrice.setAttribute('data-usd', data.priceUsd);
+        elPrice.textContent = (curr === 'USD' && data.priceUsd) ? data.priceUsd : (data.priceVnd || data.price);
+      }
+
+      const elPriceOrig = document.getElementById('hero-pinned-price-orig');
+      if (elPriceOrig) {
+        if (data.priceOrigVnd) elPriceOrig.setAttribute('data-vnd', data.priceOrigVnd);
+        if (data.priceOrigUsd) elPriceOrig.setAttribute('data-usd', data.priceOrigUsd);
+        elPriceOrig.textContent = (curr === 'USD' && data.priceOrigUsd) ? data.priceOrigUsd : (data.priceOrigVnd || data.originalPrice || '');
+      }
+
+      const elDiscount = document.getElementById('hero-pinned-discount');
+      if (elDiscount) {
+        elDiscount.textContent = data.discountPercent || '-25%';
+      }
+
+      const elAffBtn = document.getElementById('hero-pinned-aff-btn');
+      if (elAffBtn && data.affiliateUrl) {
+        elAffBtn.href = data.affiliateUrl;
+      }
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    } catch (e) {
+      // Keep static HTML fallback gracefully
+    }
+  }
+
+  loadPinnedProject();
+
+  window.addEventListener('currencyChanged', loadPinnedProject);
+  window.addEventListener('languageChanged', loadPinnedProject);
+}
+
+// -------------------------------------------------------------
+// Ultra-Smooth Page Transitions & Hover Prefetching Engine
+// -------------------------------------------------------------
+function initPageTransitions() {
+  // 1. Ensure Top Slim Neon Progress Bar
+  let bar = document.getElementById('page-transition-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'page-transition-bar';
+    document.body.appendChild(bar);
+  }
+
+  // Smoothly complete page entrance
+  const completeTransition = () => {
+    document.body.classList.remove('page-is-exiting');
+    if (bar) {
+      bar.classList.add('animating');
+      bar.style.width = '100%';
+      setTimeout(() => {
+        bar.style.opacity = '0';
+        setTimeout(() => {
+          bar.classList.remove('animating');
+          bar.style.width = '0%';
+          bar.style.opacity = '';
+        }, 220);
+      }, 150);
+    }
+  };
+
+  completeTransition();
+
+  // Handle browser Back/Forward (bfcache restore)
+  window.addEventListener('pageshow', () => {
+    document.body.classList.remove('page-is-exiting');
+    if (bar) {
+      bar.classList.remove('animating');
+      bar.style.width = '0%';
+      bar.style.opacity = '0';
+    }
+  });
+
+  // Track prefetched URLs to avoid redundant requests
+  const prefetchedUrls = new Set();
+  function prefetchUrl(url) {
+    if (!url || prefetchedUrls.has(url)) return;
+    prefetchedUrls.add(url);
+    try {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
+      document.head.appendChild(link);
+    } catch (e) {
+      // Graceful fallback
+    }
+  }
+
+  // Helper to determine if an anchor is an internal navigable HTML page
+  function isInternalNavigableLink(a) {
+    if (!a || !a.href) return false;
+    if (a.target && a.target !== '_self' && a.target !== '') return false;
+    if (a.hasAttribute('download')) return false;
+
+    // Check scheme
+    const rawHref = a.getAttribute('href');
+    if (!rawHref || rawHref.startsWith('#') || rawHref.startsWith('javascript:') || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) {
+      return false;
+    }
+
+    try {
+      const url = new URL(a.href, window.location.origin);
+      // Must be same origin
+      if (url.origin !== window.location.origin) return false;
+      // If exact same page and same query with only a hash change, let normal smooth scroll handle it
+      if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Smart Hover / Touch Preload
+  document.addEventListener('pointerover', (e) => {
+    const a = e.target.closest('a');
+    if (isInternalNavigableLink(a)) {
+      prefetchUrl(a.href);
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchstart', (e) => {
+    const a = e.target.closest('a');
+    if (isInternalNavigableLink(a)) {
+      prefetchUrl(a.href);
+    }
+  }, { passive: true });
+
+  // Intercept Clicks for Butter-Smooth Transition
+  document.addEventListener('click', (e) => {
+    // Ignore modified clicks (Ctrl, Cmd, Shift, Alt, middle-click)
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+    const a = e.target.closest('a');
+    if (!isInternalNavigableLink(a)) return;
+
+    const targetUrl = a.href;
+
+    // If current URL is exactly the target URL, avoid redundant transition
+    if (targetUrl === window.location.href) return;
+
+    e.preventDefault();
+
+    // Start progress bar animation immediately
+    if (bar) {
+      bar.classList.add('animating');
+      bar.style.opacity = '1';
+      bar.style.width = '75%';
+    }
+
+    // Trigger smooth fade out
+    document.body.classList.add('page-is-exiting');
+
+    // Smooth navigation after 90ms (quick & ultra responsive)
+    setTimeout(() => {
+      if (bar) bar.style.width = '95%';
+      window.location.href = targetUrl;
+    }, 90);
+
+    // Fail-safe: if navigation is stalled or cancelled, restore UI after 3.5s
+    setTimeout(() => {
+      document.body.classList.remove('page-is-exiting');
+      if (bar) {
+        bar.style.opacity = '0';
+        bar.style.width = '0%';
+      }
+    }, 3500);
+  });
+}
+
+// Dynamic Home Category Pills Count Sync
+function initIndexCategoryPills() {
+  const container = document.getElementById('home-category-pills');
+  if (!container) return;
+
+  fetch('data/products.json?t=' + Date.now())
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(raw => {
+      let products = [];
+      if (Array.isArray(raw)) {
+        raw.forEach(item => {
+          if (item && Array.isArray(item.value)) products.push(...item.value);
+          else if (item && (item.id || item.title)) products.push(item);
+        });
+      } else if (raw && Array.isArray(raw.value)) {
+        products = raw.value;
+      }
+      if (!products.length) return;
+
+      const counts = {
+        all: products.length,
+        physical: 0,
+        digital: 0,
+        fashion: 0,
+        watches: 0,
+        automotive: 0,
+        tech: 0,
+        'desk-setup': 0,
+        cameras: 0,
+        coffee: 0,
+        gaming: 0,
+        smarthome: 0,
+        ebooks: 0,
+        presets: 0,
+        templates: 0,
+        courses: 0,
+        saas: 0
+      };
+
+      products.forEach(p => {
+        if (p.isPhysical !== false) counts.physical++;
+        else counts.digital++;
+
+        const cat = (p.categoryKey || '').toLowerCase();
+        if (cat === 'fashion') counts.fashion++;
+        else if (cat === 'watches' || cat === 'watch') counts.watches++;
+        else if (cat === 'automotive' || cat === 'auto') counts.automotive++;
+        else if (cat === 'tech' || cat === 'audio') counts.tech++;
+        else if (cat === 'desk-setup' || cat === 'desk' || cat === 'edc') counts['desk-setup']++;
+        else if (cat === 'cameras' || cat === 'camera') counts.cameras++;
+        else if (cat === 'coffee') counts.coffee++;
+        else if (cat === 'gaming') counts.gaming++;
+        else if (cat === 'smarthome') counts.smarthome++;
+        else if (cat === 'ebooks' || cat === 'ebook') counts.ebooks++;
+        else if (cat === 'presets' || cat === 'preset') counts.presets++;
+        else if (cat === 'templates' || cat === 'template') counts.templates++;
+        else if (cat === 'courses' || cat === 'course') counts.courses++;
+        else if (cat === 'saas' || cat === 'ai') counts.saas++;
+        else {
+          const txt = ((p.category || '') + ' ' + (p.categoryEn || '') + ' ' + (p.categoryVi || '')).toLowerCase();
+          if (txt.includes('fashion') || txt.includes('thời trang') || txt.includes('gothic') || txt.includes('lolita')) counts.fashion++;
+          else if (txt.includes('watch') || txt.includes('đồng hồ')) counts.watches++;
+          else if (txt.includes('auto') || txt.includes('xe') || txt.includes('phụ tùng')) counts.automotive++;
+          else if (txt.includes('camera') || txt.includes('máy ảnh')) counts.cameras++;
+          else if (txt.includes('coffee') || txt.includes('cà phê')) counts.coffee++;
+          else if (txt.includes('gaming')) counts.gaming++;
+          else if (txt.includes('smart') || txt.includes('thông minh')) counts.smarthome++;
+          else if (txt.includes('desk') || txt.includes('bàn') || txt.includes('edc')) counts['desk-setup']++;
+          else counts.tech++;
+        }
+      });
+
+      const updateCountEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+
+      updateCountEl('home-count-all', counts.all);
+      updateCountEl('home-count-physical', counts.physical);
+      updateCountEl('home-count-digital', counts.digital);
+      updateCountEl('home-count-fashion', counts.fashion);
+      updateCountEl('home-count-watches', counts.watches);
+      updateCountEl('home-count-auto', counts.automotive);
+      updateCountEl('home-count-tech', counts.tech);
+      updateCountEl('home-count-desk', counts['desk-setup']);
+      updateCountEl('home-count-cameras', counts.cameras);
+      updateCountEl('home-count-coffee', counts.coffee);
+      updateCountEl('home-count-gaming', counts.gaming);
+      updateCountEl('home-count-smarthome', counts.smarthome);
+      updateCountEl('home-count-ebooks', counts.ebooks);
+      updateCountEl('home-count-presets', counts.presets);
+      updateCountEl('home-count-templates', counts.templates);
+      updateCountEl('home-count-courses', counts.courses);
+      updateCountEl('home-count-saas', counts.saas);
+
+      const fullStoreBtn = document.getElementById('home-full-store-count');
+      if (fullStoreBtn) {
+        const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+        if (lang === 'vi') fullStoreBtn.textContent = `Xem Toàn Bộ ${counts.all} Sản Phẩm & Cửa Hàng`;
+        else if (lang === 'en') fullStoreBtn.textContent = `View Full Store (${counts.all} Items)`;
+        else if (lang === 'zh') fullStoreBtn.textContent = `查看全部 ${counts.all} 款严选好物`;
+      }
+    })
+    .catch(err => console.debug('Home category pills dynamic sync skipped:', err));
+}
