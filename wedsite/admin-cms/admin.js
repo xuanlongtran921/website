@@ -25,6 +25,29 @@ function refreshIcons(container) {
 // -------------------------------------------------------------
 // 0. AUTHENTICATION & ACCESS CONTROL SYSTEM
 // -------------------------------------------------------------
+const AUTH_ACCOUNTS = [
+  {
+    email: 'xuanlongtran921@gmail.com',
+    password: '1532004Long@',
+    name: 'Xuan Long',
+    role: 'Super Admin',
+    initials: 'XL'
+  },
+  {
+    email: 'hocamtuqlhm@gmail.com',
+    password: 'camtu123@',
+    name: 'Hồ Cẩm Tú',
+    role: 'Admin',
+    initials: 'CT'
+  },
+  {
+    email: 'minhthanhcenter@gmail.com',
+    password: 'thanh123@',
+    name: 'Minh Thành',
+    role: 'Admin',
+    initials: 'MT'
+  }
+];
 const AUTH_EMAIL = 'xuanlongtran921@gmail.com';
 const AUTH_PASS = '1532004Long@';
 const AUTH_STORAGE_KEY = 'sp_admin_session_token';
@@ -60,12 +83,26 @@ function initAdminAuth() {
   // Quick fill demo/default credentials
   if (btnQuickFill) {
     btnQuickFill.addEventListener('click', () => {
-      if (emailInput) emailInput.value = AUTH_EMAIL;
-      if (passInput) passInput.value = AUTH_PASS;
+      const curEmail = (emailInput ? emailInput.value : '').trim().toLowerCase();
+      const matched = AUTH_ACCOUNTS.find(acc => acc.email.toLowerCase() === curEmail) || AUTH_ACCOUNTS[0];
+      if (emailInput) emailInput.value = matched.email;
+      if (passInput) passInput.value = matched.password;
       if (errorAlert) errorAlert.classList.add('hidden');
       if (passInput) passInput.focus();
     });
   }
+
+  // Quick Account Switcher buttons
+  document.querySelectorAll('.btn-select-account').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetEmail = btn.getAttribute('data-email');
+      const targetPass = btn.getAttribute('data-pass');
+      if (emailInput && targetEmail) emailInput.value = targetEmail;
+      if (passInput && targetPass) passInput.value = targetPass;
+      if (errorAlert) errorAlert.classList.add('hidden');
+      if (passInput) passInput.focus();
+    });
+  });
 
   // Check saved session
   const savedToken = localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
@@ -124,8 +161,18 @@ function initAdminAuth() {
         }
 
         // Direct client verification fallback
-        if (!authSuccess && email.toLowerCase() === AUTH_EMAIL.toLowerCase() && password === AUTH_PASS) {
+        const matchedClientUser = AUTH_ACCOUNTS.find(
+          acc => acc.email.toLowerCase() === email.toLowerCase() && acc.password === password
+        );
+        if (!authSuccess && matchedClientUser) {
           authSuccess = true;
+          token = 'sp_admin_' + Date.now();
+          userData = {
+            email: matchedClientUser.email,
+            name: matchedClientUser.name,
+            role: matchedClientUser.role,
+            initials: matchedClientUser.initials
+          };
         }
 
         if (authSuccess) {
@@ -149,8 +196,8 @@ function initAdminAuth() {
                 loginView.style.opacity = '1';
               }, 250);
             }
-            updateAdminDisplayUser();
-            showToast('Chào mừng trở lại Xuan Long! Đăng nhập thành công.');
+            updateAdminDisplayUser(userData);
+            showToast(`Chào mừng trở lại ${userData.name || 'Admin'}! Đăng nhập thành công.`);
             refreshIcons();
           }, 300);
         } else {
@@ -206,11 +253,27 @@ function initAdminAuth() {
     });
   }
 
-  function updateAdminDisplayUser() {
+  function updateAdminDisplayUser(user) {
     const userBadge = document.getElementById('admin-user-badge');
     const displayEmail = document.getElementById('admin-display-email');
+    const displayInitials = document.getElementById('admin-display-initials');
+    const displayRole = document.getElementById('admin-display-role');
+
+    let curUser = user;
+    if (!curUser) {
+      try {
+        const raw = localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY);
+        if (raw) curUser = JSON.parse(raw);
+      } catch (e) {}
+    }
+    if (!curUser) {
+      curUser = AUTH_ACCOUNTS[0];
+    }
+
     if (userBadge) userBadge.classList.remove('hidden');
-    if (displayEmail) displayEmail.textContent = AUTH_EMAIL;
+    if (displayEmail) displayEmail.textContent = curUser.email || AUTH_EMAIL;
+    if (displayInitials) displayInitials.textContent = curUser.initials || 'AD';
+    if (displayRole) displayRole.textContent = curUser.role || 'Admin';
   }
 }
 

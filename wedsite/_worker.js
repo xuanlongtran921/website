@@ -13,6 +13,29 @@
  * =========================================================================
  */
 
+const ADMIN_ACCOUNTS = [
+  {
+    email: 'xuanlongtran921@gmail.com',
+    password: '1532004Long@',
+    name: 'Xuan Long',
+    role: 'Super Admin',
+    initials: 'XL'
+  },
+  {
+    email: 'hocamtuqlhm@gmail.com',
+    password: 'camtu123@',
+    name: 'Hồ Cẩm Tú',
+    role: 'Admin',
+    initials: 'CT'
+  },
+  {
+    email: 'minhthanhcenter@gmail.com',
+    password: 'thanh123@',
+    name: 'Minh Thành',
+    role: 'Admin',
+    initials: 'MT'
+  }
+];
 const ADMIN_EMAIL = 'xuanlongtran921@gmail.com';
 const ADMIN_PASS = '1532004Long@';
 
@@ -45,15 +68,20 @@ export default {
         const email = (body.email || '').trim().toLowerCase();
         const password = body.password || '';
 
-        if (email === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASS) {
+        const matchedUser = ADMIN_ACCOUNTS.find(
+          acc => acc.email.toLowerCase() === email && acc.password === password
+        );
+
+        if (matchedUser) {
           const token = 'cf_admin_' + crypto.randomUUID().replace(/-/g, '');
           return new Response(JSON.stringify({
             success: true,
             token: token,
             user: {
-              email: ADMIN_EMAIL,
-              name: 'Xuan Long',
-              role: 'Super Admin'
+              email: matchedUser.email,
+              name: matchedUser.name,
+              role: matchedUser.role,
+              initials: matchedUser.initials
             },
             message: 'Đăng nhập thành công!'
           }), {
@@ -77,7 +105,11 @@ export default {
     }
 
     if (url.pathname === '/api/admin/verify' && request.method === 'POST') {
-      return new Response(JSON.stringify({ success: true, valid: true, email: ADMIN_EMAIL }), {
+      return new Response(JSON.stringify({
+        success: true,
+        valid: true,
+        accounts: ADMIN_ACCOUNTS.map(a => ({ email: a.email, name: a.name, role: a.role }))
+      }), {
         headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
       });
     }

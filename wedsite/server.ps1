@@ -1,10 +1,33 @@
-param (
+﻿param (
     [int]$Port = 3000,
     [int]$AdminPort = 3001,
     [string]$RootPath = "c:\wedsite",
     [string]$AdminPath = "c:\wedsite\admin-cms"
 )
 
+$AdminAccounts = @(
+    @{
+        email = "xuanlongtran921@gmail.com"
+        password = "1532004Long@"
+        name = "Xuan Long"
+        role = "Super Admin"
+        initials = "XL"
+    },
+    @{
+        email = "hocamtuqlhm@gmail.com"
+        password = "camtu123@"
+        name = "Ho Cam Tu"
+        role = "Admin"
+        initials = "CT"
+    },
+    @{
+        email = "minhthanhcenter@gmail.com"
+        password = "thanh123@"
+        name = "Minh Thanh"
+        role = "Admin"
+        initials = "MT"
+    }
+)
 $AdminAuthUser = "xuanlongtran921@gmail.com"
 $AdminAuthPass = "1532004Long@"
 $global:AdminActiveSessions = @{}
@@ -754,10 +777,21 @@ while ($listener.IsListening) {
                 $inputEmail = if ($json.email) { $json.email.ToString().Trim().ToLower() } else { "" }
                 $inputPass = if ($json.password) { $json.password.ToString() } else { "" }
 
-                if ($inputEmail -eq $AdminAuthUser.ToLower() -and $inputPass -eq $AdminAuthPass) {
+                $matchedAccount = $null
+                foreach ($acc in $AdminAccounts) {
+                    if ($acc.email.ToLower() -eq $inputEmail -and $acc.password -eq $inputPass) {
+                        $matchedAccount = $acc
+                        break
+                    }
+                }
+
+                if ($matchedAccount) {
                     $token = "sp_admin_" + [System.Guid]::NewGuid().ToString("N")
                     $global:AdminActiveSessions[$token] = @{
-                        email = $AdminAuthUser
+                        email = $matchedAccount.email
+                        name = $matchedAccount.name
+                        role = $matchedAccount.role
+                        initials = $matchedAccount.initials
                         loginTime = (Get-Date).ToString("o")
                     }
 
@@ -765,17 +799,18 @@ while ($listener.IsListening) {
                         success = $true
                         token = $token
                         user = [PSCustomObject]@{
-                            email = $AdminAuthUser
-                            name = "Xuan Long"
-                            role = "Super Admin"
+                            email = $matchedAccount.email
+                            name = $matchedAccount.name
+                            role = $matchedAccount.role
+                            initials = $matchedAccount.initials
                         }
-                        message = "ÄÄƒng nháº­p thÃ nh cÃ´ng!"
+                        message = "Đăng nhập thành công!"
                     }
                     $response.StatusCode = 200
                 } else {
                     $resObj = [PSCustomObject]@{
                         success = $false
-                        message = "TÃ i khoáº£n hoáº·c máº­t kháº©u khÃ´ng chÃ­nh xÃ¡c!"
+                        message = "Tài khoản hoặc mật khẩu không chính xác!"
                     }
                     $response.StatusCode = 401
                 }
@@ -786,7 +821,7 @@ while ($listener.IsListening) {
                 $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
             } catch {
                 $response.StatusCode = 500
-                $errObj = [PSCustomObject]@{ success = $false; message = "Lá»—i xá»­ lÃ½ Ä‘Äƒng nháº­p: $_" }
+                $errObj = [PSCustomObject]@{ success = $false; message = "Lỗi xử lý đăng nhập: $_" }
                 $errBytes = [System.Text.Encoding]::UTF8.GetBytes(($errObj | ConvertTo-Json))
                 $response.ContentType = "application/json; charset=utf-8"
                 $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
@@ -815,13 +850,15 @@ while ($listener.IsListening) {
                 }
 
                 $isValid = ($token -and $global:AdminActiveSessions.ContainsKey($token))
+                $sessionUser = if ($isValid) { $global:AdminActiveSessions[$token] } else { $null }
                 $resObj = [PSCustomObject]@{
                     success = $isValid
                     user = if ($isValid) {
                         [PSCustomObject]@{
-                            email = $AdminAuthUser
-                            name = "Xuan Long"
-                            role = "Super Admin"
+                            email = $sessionUser.email
+                            name = $sessionUser.name
+                            role = $sessionUser.role
+                            initials = $sessionUser.initials
                         }
                     } else { $null }
                 }
