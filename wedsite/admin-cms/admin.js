@@ -277,11 +277,18 @@ function initAdminAuth() {
   }
 }
 
-const PRIMARY_DOMAIN = 'https://smartpicksreview.online';
+const PRIMARY_DOMAIN = 'https://www.smartpicksreview.online';
 
 function getLiveBaseUrl() {
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  return isLocal ? 'http://localhost:3000' : PRIMARY_DOMAIN;
+  if (isLocal) return 'http://localhost:3000';
+  if (window.location.hostname.includes('smartpicksreview.online')) {
+    return 'https://www.smartpicksreview.online';
+  }
+  if (window.location.origin && window.location.origin.startsWith('http')) {
+    return window.location.origin;
+  }
+  return PRIMARY_DOMAIN;
 }
 
 function initDynamicOriginLinks() {

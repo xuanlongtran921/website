@@ -203,6 +203,13 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Redirect apex domain smartpicksreview.online to www.smartpicksreview.online
+    if (url.hostname === 'smartpicksreview.online') {
+      const targetUrl = new URL(request.url);
+      targetUrl.hostname = 'www.smartpicksreview.online';
+      return Response.redirect(targetUrl.toString(), 301);
+    }
+
     // Handle CORS Preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
@@ -1411,7 +1418,7 @@ export default {
         const email = (body.email || '').trim();
         const subject = (body.subject || '').trim() || 'Yêu cầu tư vấn / Hợp tác';
         const message = (body.message || '').trim();
-        const sourceUrl = (body.sourceUrl || '').trim() || 'https://smartpicksreview.online';
+        const sourceUrl = (body.sourceUrl || '').trim() || 'https://www.smartpicksreview.online';
 
         if (!email || !message) {
           return new Response(JSON.stringify({
@@ -1666,9 +1673,9 @@ export default {
           name: 'SmartPicks Test System',
           email: targetEmail,
           subject: 'Kiểm tra kết nối gửi/nhận email - Smart Picks Review',
-          message: `Xin chào! Đây là email thử nghiệm gửi từ hệ thống website Smart Picks Review (https://smartpicksreview.online) nhằm kiểm tra kết nối chuyển tiếp thư đến ${targetEmail}. Nếu bạn nhận được thư này, hệ thống nhận email đang hoạt động rất tốt!`,
+          message: `Xin chào! Đây là email thử nghiệm gửi từ hệ thống website Smart Picks Review (https://www.smartpicksreview.online) nhằm kiểm tra kết nối chuyển tiếp thư đến ${targetEmail}. Nếu bạn nhận được thư này, hệ thống nhận email đang hoạt động rất tốt!`,
           createdAt: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
-          sourceUrl: 'https://smartpicksreview.online/admin-cms/'
+          sourceUrl: 'https://www.smartpicksreview.online/admin-cms/'
         };
 
         // Lưu tin nhắn thử nghiệm vào KV để hiện ngay trong Inbox Admin

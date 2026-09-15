@@ -54,6 +54,13 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Redirect apex domain smartpicksreview.online to www.smartpicksreview.online
+    if (url.hostname === 'smartpicksreview.online') {
+      const targetUrl = new URL(request.url);
+      targetUrl.hostname = 'www.smartpicksreview.online';
+      return Response.redirect(targetUrl.toString(), 301);
+    }
+
     // Handle CORS Preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
