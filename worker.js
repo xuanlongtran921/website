@@ -423,36 +423,103 @@ export default {
     if (url.pathname === '/api/delete-post' && request.method === 'POST') {
       try {
         const body = await request.json();
-        const slug = (body.slug || '').replace(/\.html$/, '');
-        const fileName = slug + '.html';
-        const prodId = 'prod-' + slug;
+        const rawSlug = (body.slug || '').trim();
+        const rawId = (body.id || '').trim();
+        const cleanSlug = (rawSlug || rawId).replace(/^(\/|post-)/, 'post-').replace(/\.html$/, '');
+        const fileName = cleanSlug + '.html';
+        const prodId = 'prod-' + cleanSlug;
+
+        // Build target identifier set to catch all variations
+        const targets = new Set([
+          rawSlug,
+          rawId,
+          cleanSlug,
+          fileName,
+          rawSlug.replace(/\.html$/, ''),
+          rawId.replace(/\.html$/, ''),
+          '/' + fileName,
+          '/' + cleanSlug
+        ].filter(Boolean));
 
         if (env.POSTS_KV) {
+          // 1. Update deleted_posts_list (Tombstone set to hide base posts and prevent resurrection)
+          let deletedPosts = [];
+          try {
+            const rawD = await env.POSTS_KV.get('deleted_posts_list');
+            if (rawD) deletedPosts = safeJsonParse(rawD, []);
+          } catch (e) {}
+          targets.forEach(t => {
+            if (!deletedPosts.includes(t)) deletedPosts.push(t);
+          });
+          await env.POSTS_KV.put('deleted_posts_list', JSON.stringify(deletedPosts));
+
+          // 2. Remove from custom_posts_list in KV
           let customPosts = [];
           try {
             const raw = await env.POSTS_KV.get('custom_posts_list');
             if (raw) customPosts = safeJsonParse(raw, []);
           } catch (e) {}
 
-          customPosts = customPosts.filter(p => p.slug !== fileName && p.id !== slug);
+          customPosts = customPosts.filter(p => {
+            if (!p) return false;
+            const pSlug = (p.slug || '').trim();
+            const pId = (p.id || '').trim();
+            const pClean = pSlug.replace(/\.html$/, '');
+            return !targets.has(pSlug) && !targets.has(pId) && !targets.has(pClean);
+          });
           await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
-          await env.POSTS_KV.delete('post_html:' + fileName);
-          await env.POSTS_KV.delete('post_html:' + slug);
 
+          // 3. Remove post HTML caches
+          for (const t of targets) {
+            await env.POSTS_KV.delete('post_html:' + t);
+          }
+
+          // 4. Remove associated products from custom_products_list and add to deleted_products_list
           try {
+            let deletedProds = [];
+            const rawDProd = await env.POSTS_KV.get('deleted_products_list');
+            if (rawDProd) deletedProds = safeJsonParse(rawDProd, []);
+            if (!deletedProds.includes(prodId)) deletedProds.push(prodId);
+            await env.POSTS_KV.put('deleted_products_list', JSON.stringify(deletedProds));
+
             const rawProds = await env.POSTS_KV.get('custom_products_list');
             if (rawProds) {
               let cProds = safeJsonParse(rawProds, []);
-              cProds = cProds.filter(p => p.id !== prodId && p.reviewUrl !== fileName);
+              cProds = cProds.filter(p => p && p.id !== prodId && !targets.has(p.reviewUrl));
               await env.POSTS_KV.put('custom_products_list', JSON.stringify(cProds));
             }
           } catch (e) {}
+
+          // 5. Clean up pinned spotlight if pinned
+          try {
+            const rawPinned = await env.POSTS_KV.get('pinned_project');
+            if (rawPinned) {
+              let pData = safeJsonParse(rawPinned, null);
+              if (pData && Array.isArray(pData.pinnedList)) {
+                pData.pinnedList = pData.pinnedList.filter(item => item && !targets.has(item.id) && !targets.has(item.postUrl));
+                await env.POSTS_KV.put('pinned_project', JSON.stringify(pData));
+              }
+            }
+          } catch (e) {}
+
+          // 6. Clean up ticker if present
+          try {
+            const rawTicker = await env.POSTS_KV.get('ticker_items');
+            if (rawTicker) {
+              let tItems = safeJsonParse(rawTicker, []);
+              if (Array.isArray(tItems)) {
+                tItems = tItems.filter(item => item && !targets.has(item.url) && !targets.has(item.id));
+                await env.POSTS_KV.put('ticker_items', JSON.stringify(tItems));
+              }
+            }
+          } catch (e) {}
         } else {
-          inMemoryPosts = inMemoryPosts.filter(p => p.slug !== fileName && p.id !== slug);
-          inMemoryHtml.delete(fileName);
-          inMemoryHtml.delete(slug);
+          inMemoryPosts = inMemoryPosts.filter(p => !targets.has(p.slug) && !targets.has(p.id));
+          for (const t of targets) {
+            inMemoryHtml.delete(t);
+          }
           if (inMemoryProducts) {
-            inMemoryProducts = inMemoryProducts.filter(p => p.id !== prodId && p.reviewUrl !== fileName);
+            inMemoryProducts = inMemoryProducts.filter(p => p.id !== prodId && !targets.has(p.reviewUrl));
           }
         }
 
@@ -500,19 +567,37 @@ export default {
         customPosts = inMemoryPosts;
       }
 
-      if (customPosts && customPosts.length > 0) {
-        const customSlugs = new Set(customPosts.map(p => p.slug));
-        const merged = [...customPosts, ...basePosts.filter(p => !customSlugs.has(p.slug))];
-        return new Response(JSON.stringify(merged, null, 2), {
-          headers: {
-            ...CORS_HEADERS,
-            'Content-Type': 'application/json; charset=utf-8',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
+      // Load deleted tombstone list
+      let deletedSet = new Set();
+      if (env.POSTS_KV) {
+        try {
+          const rawD = await env.POSTS_KV.get('deleted_posts_list');
+          if (rawD) {
+            safeJsonParse(rawD, []).forEach(d => deletedSet.add(d));
           }
-        });
+        } catch (e) {}
       }
 
-      return new Response(JSON.stringify(basePosts, null, 2), {
+      const isPostNotDeleted = p => {
+        if (!p) return false;
+        const pSlug = (p.slug || '').trim();
+        const pId = (p.id || '').trim();
+        const pClean = pSlug.replace(/\.html$/, '');
+        return !deletedSet.has(pSlug) && !deletedSet.has(pId) && !deletedSet.has(pClean);
+      };
+
+      customPosts = (customPosts || []).filter(isPostNotDeleted);
+      basePosts = (basePosts || []).filter(isPostNotDeleted);
+
+      let finalPosts = [];
+      if (customPosts && customPosts.length > 0) {
+        const customSlugs = new Set(customPosts.map(p => p.slug));
+        finalPosts = [...customPosts, ...basePosts.filter(p => !customSlugs.has(p.slug))];
+      } else {
+        finalPosts = basePosts;
+      }
+
+      return new Response(JSON.stringify(finalPosts, null, 2), {
         headers: {
           ...CORS_HEADERS,
           'Content-Type': 'application/json; charset=utf-8',

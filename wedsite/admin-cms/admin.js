@@ -756,31 +756,81 @@ function exitEditMode() {
   showToast('Exited edit mode. Ready to compose a new review!');
 }
 
-window.deletePost = async function(slug, title) {
-  if (!confirm(`Are you sure you want to delete "${title}" from the live website?\nThis action will delete the review page file and remove its card from the homepage.`)) {
+window.deletePost = async function(slug, title, postId, rowElement, btnElement) {
+  const displayTitle = title || slug || 'bài viết này';
+  if (!confirm(`Bạn có chắc chắn muốn xóa bài viết "${displayTitle}" khỏi website?\nThao tác này sẽ gỡ bỏ hoàn toàn bài viết và sản phẩm liên quan khỏi website.`)) {
     return;
+  }
+
+  // Show loading indicator on button
+  if (btnElement) {
+    btnElement.disabled = true;
+    btnElement.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>';
+    refreshIcons(btnElement);
   }
 
   try {
     const res = await fetch('/api/delete-post', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug: slug })
+      body: JSON.stringify({ slug: slug, id: postId || slug })
     });
 
     const result = await res.json();
     if (res.ok && result.success) {
-      showToast(`🗑️ Review "${title}" deleted successfully!`);
-      loadPostsList();
+      showToast(`🗑️ Đã xóa bài viết "${displayTitle}" khỏi website thành công!`);
+
+      // Optimistically remove row from DOM with animation
+      if (rowElement) {
+        rowElement.style.transition = 'all 0.3s ease';
+        rowElement.style.opacity = '0';
+        rowElement.style.transform = 'translateX(20px)';
+        setTimeout(() => {
+          if (rowElement.parentNode) rowElement.parentNode.removeChild(rowElement);
+          const badgeTotal = document.getElementById('badge-total-posts');
+          if (badgeTotal) {
+            const currentTotal = parseInt(badgeTotal.textContent || '0', 10);
+            badgeTotal.textContent = Math.max(0, currentTotal - 1);
+          }
+        }, 300);
+      }
+
+      // Filter local cache immediately
+      const cleanSlug = (slug || '').replace(/\.html$/, '');
+      const fileName = cleanSlug + '.html';
+      if (window.allPosts && Array.isArray(window.allPosts)) {
+        window.allPosts = window.allPosts.filter(p => {
+          if (!p) return false;
+          const pSlug = (p.slug || '').replace(/\.html$/, '');
+          const pId = p.id || '';
+          return pSlug !== cleanSlug && p.slug !== fileName && pId !== cleanSlug && pId !== (postId || '');
+        });
+      }
+
+      // Silent sync from server with cache-busting
+      setTimeout(() => {
+        fetchPostsSilently();
+      }, 500);
+
       if (typeof loadProductsList === 'function') loadProductsList(true);
-      if (window.isEditing && window.editingSlug === slug) {
+      if (window.isEditing && (window.editingSlug === slug || window.editingSlug === cleanSlug)) {
         exitEditMode();
       }
     } else {
-      showToast('Error deleting review: ' + (result.message || 'Unknown error'), 'error');
+      if (btnElement) {
+        btnElement.disabled = false;
+        btnElement.innerHTML = '<i data-lucide="trash-2" class="w-3.5 h-3.5"></i>';
+        refreshIcons(btnElement);
+      }
+      showToast('Lỗi khi xóa bài: ' + (result.message || 'Không thể xóa'), 'error');
     }
   } catch (err) {
-    showToast('Could not connect to server to delete review!', 'error');
+    if (btnElement) {
+      btnElement.disabled = false;
+      btnElement.innerHTML = '<i data-lucide="trash-2" class="w-3.5 h-3.5"></i>';
+      refreshIcons(btnElement);
+    }
+    showToast('Lỗi kết nối máy chủ để xóa bài: ' + err.message, 'error');
   }
 };
 
@@ -2943,8 +2993,8 @@ function renderPostsTable(posts) {
             <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
             <span>Live</span>
           </a>
-          <button onclick="deletePost('${escapeHtml(fileUrl)}', '${escapeHtml(p.title)}')" class="p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-600 text-rose-400 hover:text-white transition-all border border-rose-900/60 cursor-pointer" title="Delete article">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <button type="button" class="btn-delete-post p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-600 text-rose-400 hover:text-white transition-all border border-rose-900/60 cursor-pointer shadow-xs" data-slug="${escapeHtml(fileUrl)}" data-id="${escapeHtml(postId)}" data-title="${escapeHtml(p.title)}" title="Xóa bài viết">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5 pointer-events-none"></i>
           </button>
       </td>
     `;
@@ -2953,6 +3003,18 @@ function renderPostsTable(posts) {
 
   tbody.appendChild(frag);
   refreshIcons(tbody);
+
+  // Bind safe delete button handlers
+  tbody.querySelectorAll('.btn-delete-post').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const slug = btn.getAttribute('data-slug');
+      const id = btn.getAttribute('data-id');
+      const title = btn.getAttribute('data-title');
+      const row = btn.closest('tr');
+      window.deletePost(slug, title, id, row, btn);
+    });
+  });
 }
 
 async function loadPostsList(force = false) {
@@ -2979,7 +3041,7 @@ async function loadPostsList(force = false) {
 async function fetchPostsSilently(updateUiOnError = false) {
   const tbody = document.getElementById('posts-table-body');
   try {
-    const res = await fetch('/api/posts');
+    const res = await fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' });
     const rawData = await res.json();
 
     let posts = [];
@@ -2990,12 +3052,14 @@ async function fetchPostsSilently(updateUiOnError = false) {
       });
     }
 
+    window.allPosts = posts;
     if (posts.length > 0) {
-      window.allPosts = posts;
       if (typeof populateQuickTickerSelect === 'function') populateQuickTickerSelect();
       renderPostsTable(posts);
-    } else if (updateUiOnError && tbody) {
-      tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-purple-400">No articles in registry yet. Compose and publish your first review above!</td></tr>';
+    } else if (tbody) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-purple-400">Chưa có bài viết nào trong hệ thống hoặc tất cả đã được xóa. Hãy soạn và đăng bài viết mới ở trên!</td></tr>';
+      const badgeTotal = document.getElementById('badge-total-posts');
+      if (badgeTotal) badgeTotal.textContent = '0';
     }
   } catch (err) {
     if (updateUiOnError && tbody) {
@@ -3211,8 +3275,8 @@ function renderProductsTable(products) {
             <i data-lucide="shopping-bag" class="w-3 h-3"></i>
             <span>Store</span>
           </a>
-          <button onclick="deleteProduct('${escapeHtml(p.id)}', '${escapeHtml(title)}')" class="p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-600 text-rose-400 hover:text-white transition-all border border-rose-900/60 cursor-pointer" title="Delete product">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <button type="button" class="btn-delete-prod p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-600 text-rose-400 hover:text-white transition-all border border-rose-900/60 cursor-pointer shadow-xs" data-id="${escapeHtml(p.id)}" data-title="${escapeHtml(title)}" title="Xóa sản phẩm">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5 pointer-events-none"></i>
           </button>
         </div>
       </td>
@@ -3222,6 +3286,17 @@ function renderProductsTable(products) {
 
   tbody.appendChild(frag);
   refreshIcons(tbody);
+
+  // Bind safe delete button handlers
+  tbody.querySelectorAll('.btn-delete-prod').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const title = btn.getAttribute('data-title');
+      const row = btn.closest('tr');
+      window.deleteProduct(id, title, btn, row);
+    });
+  });
 }
 
 function openAddProductModal() {
@@ -3364,9 +3439,16 @@ async function handleProductFormSubmit(e) {
   }
 }
 
-window.deleteProduct = async function(productId, title) {
-  if (!confirm(`Are you sure you want to delete "${title}" from the store catalog?`)) {
+window.deleteProduct = async function(productId, title, btnElement, rowElement) {
+  const displayTitle = title || productId || 'sản phẩm này';
+  if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${displayTitle}" khỏi danh mục cửa hàng?\nThao tác này sẽ gỡ bỏ sản phẩm khỏi trang Shop và website.`)) {
     return;
+  }
+
+  if (btnElement) {
+    btnElement.disabled = true;
+    btnElement.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>';
+    refreshIcons(btnElement);
   }
 
   try {
@@ -3377,10 +3459,27 @@ window.deleteProduct = async function(productId, title) {
     });
 
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    showToast('Product removed from store catalog!');
-    await loadProductsList();
+    showToast(`🗑️ Đã xóa sản phẩm "${displayTitle}" khỏi danh mục cửa hàng thành công!`);
+
+    if (rowElement) {
+      rowElement.style.transition = 'all 0.3s ease';
+      rowElement.style.opacity = '0';
+      rowElement.style.transform = 'translateX(20px)';
+      setTimeout(() => {
+        if (rowElement.parentNode) rowElement.parentNode.removeChild(rowElement);
+      }, 300);
+    }
+
+    setTimeout(() => {
+      loadProductsList(true);
+    }, 400);
   } catch (err) {
-    showToast('Error deleting product: ' + err.message, 'error');
+    if (btnElement) {
+      btnElement.disabled = false;
+      btnElement.innerHTML = '<i data-lucide="trash-2" class="w-3.5 h-3.5"></i>';
+      refreshIcons(btnElement);
+    }
+    showToast('Lỗi khi xóa sản phẩm: ' + err.message, 'error');
   }
 };
 

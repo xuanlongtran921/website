@@ -1,4 +1,4 @@
-﻿param (
+param (
     [int]$Port = 3000,
     [int]$AdminPort = 3001,
     [string]$RootPath = "c:\wedsite",
@@ -1337,15 +1337,20 @@ while ($listener.IsListening) {
                 $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
                 $body = $reader.ReadToEnd()
                 $json = $body | ConvertFrom-Json
-                $slug = $json.slug
-                if (-not $slug.EndsWith(".html")) { $slug += ".html" }
-                $slug = [System.IO.Path]::GetFileName($slug)
+                $rawSlug = if ($json.slug) { [string]$json.slug } else { [string]$json.id }
+                if (-not $rawSlug) { throw "Thiếu thông tin slug hoặc id bài viết cần xóa" }
+                $cleanSlug = $rawSlug.Trim().TrimStart('/').Replace(".html", "")
+                $slug = $cleanSlug + ".html"
+                $prodId = "prod-" + $cleanSlug
 
                 # 1. Remove from data/posts.json
                 $postsJsonPath = Join-Path $RootPath "data\posts.json"
                 if (Test-Path $postsJsonPath) {
                     $postsArray = @([System.IO.File]::ReadAllText($postsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json)
-                    $filtered = @($postsArray | Where-Object { $_.slug -ne $slug -and $_.id -ne $slug.Replace(".html", "") })
+                    $filtered = @($postsArray | Where-Object { 
+                        $_.slug -ne $slug -and $_.slug -ne "/$slug" -and $_.slug -ne $cleanSlug -and
+                        $_.id -ne $cleanSlug -and $_.id -ne $slug
+                    })
                     $updatedJson = $filtered | ConvertTo-Json -Depth 5
                     [System.IO.File]::WriteAllText($postsJsonPath, $updatedJson, [System.Text.Encoding]::UTF8)
                 }
@@ -1354,7 +1359,7 @@ while ($listener.IsListening) {
                 $indexPath = Join-Path $RootPath "index.html"
                 if (Test-Path $indexPath) {
                     $indexContent = [System.IO.File]::ReadAllText($indexPath, [System.Text.Encoding]::UTF8)
-                    if ($indexContent.Contains($slug)) {
+                    if ($indexContent.Contains($slug) -or $indexContent.Contains($cleanSlug)) {
                         $escapedFile = [regex]::Escape($slug)
                         $cardPattern = '(?s)<article[^>]*>.*?' + $escapedFile + '.*?</article>\s*'
                         $indexContent = [regex]::Replace($indexContent, $cardPattern, "")
@@ -1372,11 +1377,10 @@ while ($listener.IsListening) {
                 try {
                     $productsJsonPath = Join-Path $RootPath "data\products.json"
                     if (Test-Path $productsJsonPath) {
-                        $prodId = "prod-" + $slug.Replace(".html", "")
                         $rawProdJson = [System.IO.File]::ReadAllText($productsJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
                         $prodArray = @()
                         foreach ($item in $rawProdJson) {
-                            if ($item.id -ne $prodId -and $item.reviewUrl -ne $slug) {
+                            if ($item.id -ne $prodId -and $item.reviewUrl -ne $slug -and $item.reviewUrl -ne "/$slug") {
                                 $prodArray += $item
                             }
                         }
@@ -1387,8 +1391,25 @@ while ($listener.IsListening) {
                     Write-Host "Warning: Khong the xoa san pham tuong ung: $_" -ForegroundColor Yellow
                 }
 
+                # 5. Clean up pinned hero project if pinned
+                try {
+                    $pinnedJsonPath = Join-Path $RootPath "data\pinned_project.json"
+                    if (Test-Path $pinnedJsonPath) {
+                        $pData = [System.IO.File]::ReadAllText($pinnedJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+                        if ($pData.pinnedList) {
+                            $newPinnedList = @($pData.pinnedList | Where-Object { 
+                                $_.id -ne $cleanSlug -and $_.id -ne $slug -and 
+                                $_.postUrl -ne $slug -and $_.postUrl -ne "/$slug" 
+                            })
+                            $pData.pinnedList = $newPinnedList
+                            $updatedPin = $pData | ConvertTo-Json -Depth 10
+                            [System.IO.File]::WriteAllText($pinnedJsonPath, $updatedPin, [System.Text.UTF8Encoding]::new($false))
+                        }
+                    }
+                } catch {}
+
                 $response.ContentType = "application/json; charset=utf-8"
-                $resObj = @{ success = $true; message = "Da xoa bai viet $slug thanh cong!" }
+                $resObj = @{ success = $true; message = "Đã xóa bài viết $slug thành công!" }
                 $resJson = $resObj | ConvertTo-Json
                 $resBytes = [System.Text.Encoding]::UTF8.GetBytes($resJson)
                 $response.ContentLength64 = $resBytes.Length
