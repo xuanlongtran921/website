@@ -1925,6 +1925,11 @@ function initHeroPinnedProject() {
       elImg.style.opacity = '0.35';
       elImg.src = data.image;
       elImg.alt = titleText;
+      // Ensure image fits completely inside the pinned frame without being cropped
+      elImg.className = 'w-full h-full object-contain transition-transform duration-500 group-hover/hero-img:scale-105';
+      if (elImg.parentElement) {
+        elImg.parentElement.className = 'sm:col-span-5 relative group/hero-img rounded-2xl overflow-hidden shadow-lg border border-purple-200/60 dark:border-purple-800/60 bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#190c38] dark:via-[#13072b] dark:to-[#0d041e] h-56 sm:h-64 flex items-center justify-center p-3 sm:p-4';
+      }
       setTimeout(() => { elImg.style.opacity = '1'; }, 150);
     }
 

@@ -827,9 +827,9 @@
     const category = getPostField(spotlight, 'category');
     const excerpt = getPostField(spotlight, 'excerpt');
 
-    const isPackshot = spotlight.image && (spotlight.image.startsWith('data:') || spotlight.imageFit === 'contain');
-    const spotImgFit = isPackshot ? 'w-full h-full object-contain p-3' : 'w-full h-full object-cover';
-    const spotBg = isPackshot ? 'bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318]' : 'bg-purple-950/40';
+    const isPackshot = true;
+    const spotImgFit = 'w-full h-full object-contain p-3.5 transition-transform duration-500 group-hover:scale-105';
+    const spotBg = 'bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318]';
 
     container.innerHTML = `
       <div class="bg-gradient-to-r from-purple-950 via-[#1a0f35] to-indigo-950 text-white rounded-3xl p-5 sm:p-7 lg:p-8 border border-purple-500/40 shadow-xl relative overflow-hidden">

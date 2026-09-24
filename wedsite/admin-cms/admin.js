@@ -3709,8 +3709,8 @@ function renderHeroTop3Deck() {
 
           <!-- Thumbnail & Info -->
           <div class="flex gap-3 items-center mb-3">
-            <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-900 shrink-0 border border-purple-800 shadow-md">
-              <img src="${escapeHtml(imgDisp)}" alt="Thumbnail" class="w-full h-full object-cover">
+            <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-900 shrink-0 border border-purple-800 shadow-md flex items-center justify-center p-1.5">
+              <img src="${escapeHtml(imgDisp)}" alt="Thumbnail" class="w-full h-full object-contain">
             </div>
             <div class="min-w-0 flex-1 space-y-1">
               <span class="text-[10px] font-bold text-pink-400 uppercase tracking-wider block truncate">${escapeHtml(tagDisp)}</span>
@@ -3846,6 +3846,7 @@ window.assignPostToSlot = async function(slotIndex, selectValue) {
         postUrl: cleanSlug,
         affiliateUrl: post.affiliateLink || '#',
         image: post.image || '',
+        imageFit: 'contain',
         priceUsd: post.usdPrice || post.priceUsd || (post.price ? '$' + post.price : '$0.00'),
         priceVnd: post.vndPrice || post.priceVnd || (post.priceVnd ? post.priceVnd : '0₫'),
         priceOrigUsd: post.priceOrig || post.originalPriceUsd || '',
@@ -4088,7 +4089,10 @@ function updateHeroLivePreview() {
   if (elTitle && elTitle.textContent !== title) elTitle.textContent = title;
 
   const elImg = document.getElementById('prev-hero-img');
-  if (elImg && elImg.getAttribute('src') !== image) elImg.src = image;
+  if (elImg) {
+    if (elImg.getAttribute('src') !== image) elImg.src = image;
+    elImg.className = 'w-full h-full object-contain';
+  }
 
   const elPrice = document.getElementById('prev-hero-price');
   const finalPrice = priceUsd || priceVnd;

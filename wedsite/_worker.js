@@ -1448,6 +1448,7 @@ export default {
             postUrl: json.postUrl || 'post.html',
             affiliateUrl: cleanAff,
             image: json.image || '',
+            imageFit: json.imageFit || 'contain',
             priceVnd: json.priceVnd || '0₫',
             priceUsd: json.priceUsd || '$0.00',
             priceOrigVnd: json.priceOrigVnd || '',
