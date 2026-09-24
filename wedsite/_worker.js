@@ -1345,6 +1345,8 @@ export default {
           discountPercent: '17% OFF All-Terrain 4WD Series',
           pinnedList: []
         };
+      }
+
       // Auto-synchronize and sanitize prices in pinnedData
       if (pinnedData && Array.isArray(pinnedData.pinnedList)) {
         let pinnedChanged = false;
