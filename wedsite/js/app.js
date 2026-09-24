@@ -1811,6 +1811,199 @@ function initSearch() {
 // -------------------------------------------------------------
 // Dynamic Hero Pinned Project Showcase (Real-time sync from CMS - Top 3)
 // -------------------------------------------------------------
+const HERO_PINNED_PROS_CONS = {
+  // Top 1: MATEIN Fishing Sling Bag
+  'post-matein-fishing-sling-bag-with-phone-pouch-review': {
+    vi: {
+      prosBadge: 'ƯU ĐIỂM NỔI BẬT',
+      pros: [
+        '• Vải Oxford chống nước & khóa SBS bền bỉ',
+        '• Túi điện thoại cảm ứng & đai cần câu tiện lợi',
+        '• Tặng kèm 2 hộp đựng mồi câu kháng nước'
+      ],
+      prosFooter: 'KHUYÊN DÙNG: 9.8/10 ⭐',
+      consBadge: 'NHƯỢC ĐIỂM CẦN LƯU Ý',
+      cons: [
+        '• Trọng lượng khá nặng khi chứa full phụ kiện',
+        '• Túi điện thoại tối ưu nhất màn dưới 6.8 inch',
+        '• Phiên bản màu đặc biệt dễ cháy hàng'
+      ],
+      consFooter: 'MINH BẠCH 100% 🛡️'
+    },
+    en: {
+      prosBadge: 'VERIFIED PROS',
+      pros: [
+        '• Water-resistant Oxford fabric & SBS zippers',
+        '• Touchscreen phone pocket & rod straps',
+        '• Includes 2 heavy-duty tackle utility boxes'
+      ],
+      prosFooter: 'TOP RATED: 9.8/10 ⭐',
+      consBadge: 'CONS & LIMITATIONS',
+      cons: [
+        '• Can feel heavy when fully packed for treks',
+        '• Phone pouch fits best screens up to 6.8"',
+        '• Limited edition colors sell out quickly'
+      ],
+      consFooter: '100% UNBIASED 🛡️'
+    },
+    zh: {
+      prosBadge: '核心优势与亮点',
+      pros: [
+        '• 高密度防泼水牛津布与SBS顺滑拉链',
+        '• 触屏独立手机袋与多功能钓竿固定带',
+        '• 标配赠送2个加厚耐摔多格路亚饵盒'
+      ],
+      prosFooter: '实测高分: 9.8/10 ⭐',
+      consBadge: '不足与注意事项',
+      cons: [
+        '• 满载装备长时间长途徒步会有一定负重感',
+        '• 触屏手机袋更适合6.8英寸以下机型',
+        '• 专属个性配色库存补充周期较长'
+      ],
+      consFooter: '100% 中立客观 🛡️'
+    }
+  },
+  // Top 2: Cashmere Bell Sleeve Sweaters
+  'post-cashmere-cinched-waist-boat-neck-bell-sleeve-sweaters-review': {
+    vi: {
+      prosBadge: 'ƯU ĐIỂM NỔI BẬT',
+      pros: [
+        '• Len Cashmere siêu mềm mịn, giữ ấm nhẹ tênh',
+        '• Thiết kế tay loe & cổ thuyền tôn dáng quyến rũ',
+        '• Dễ phối đồ dự tiệc, công sở và dạo phố mùa đông'
+      ],
+      prosFooter: 'THỜI TRANG CAO CẤP: 9.7/10 ⭐',
+      consBadge: 'NHƯỢC ĐIỂM CẦN LƯU Ý',
+      cons: [
+        '• Cần giặt tay hoặc giặt khô để giữ độ bền sợi len',
+        '• Số lượng nhập khẩu có hạn theo từng size',
+        '• Giá thành cao hơn các loại len sợi nhân tạo'
+      ],
+      consFooter: 'MINH BẠCH 100% 🛡️'
+    },
+    en: {
+      prosBadge: 'VERIFIED PROS',
+      pros: [
+        '• Ultra-soft pure cashmere, lightweight warmth',
+        '• Flattering cinched waist & bell sleeve cut',
+        '• Versatile styling from office to evening wear'
+      ],
+      prosFooter: 'TOP RATED: 9.7/10 ⭐',
+      consBadge: 'CONS & LIMITATIONS',
+      cons: [
+        '• Requires hand washing or delicate dry cleaning',
+        '• Limited seasonal stock across popular sizes',
+        '• Premium pricing compared to synthetic knits'
+      ],
+      consFooter: '100% UNBIASED 🛡️'
+    },
+    zh: {
+      prosBadge: '核心优势与亮点',
+      pros: [
+        '• 奢华羊绒亲肤细腻，轻盈保暖不扎肉',
+        '• 一字船领与微喇叭袖型，优雅修身显瘦',
+        '• 轻松驾驭通勤职场与精致晚宴多种场合'
+      ],
+      prosFooter: '实测高分: 9.7/10 ⭐',
+      consBadge: '不足与注意事项',
+      cons: [
+        '• 建议手洗或专业干洗以长久保持版型',
+        '• 热门尺码季节性现货供应较为紧张',
+        '• 天然羊绒售价高于普通混纺针织衫'
+      ],
+      consFooter: '100% 中立客观 🛡️'
+    }
+  },
+  // Top 3: Benchtop Vacuum Drying Oven
+  'post-benchtop-vacuum-drying-oven-review': {
+    vi: {
+      prosBadge: 'ƯU ĐIỂM NỔI BẬT',
+      pros: [
+        '• Gia nhiệt 4 chiều chân không đồng đều, chính xác',
+        '• Buồng inox 304 nguyên khối chống ăn mòn hóa chất',
+        '• Độ kín khí tuyệt đối, tiết kiệm điện năng tới 40%'
+      ],
+      prosFooter: 'CHUẨN PHÒNG LAB: 9.9/10 ⭐',
+      consBadge: 'NHƯỢC ĐIỂM CẦN LƯU Ý',
+      cons: [
+        '• Kích thước khá nặng (~45kg), cần vị trí cố định',
+        '• Cần kết nối bơm chân không ngoài phù hợp',
+        '• Đòi hỏi người vận hành nắm kỹ quy trình an toàn'
+      ],
+      consFooter: 'MINH BẠCH 100% 🛡️'
+    },
+    en: {
+      prosBadge: 'VERIFIED PROS',
+      pros: [
+        '• 4-sided jacketed heating for precision drying',
+        '• Corrosion-resistant 304 stainless steel chamber',
+        '• Superior seal integrity saves up to 40% power'
+      ],
+      prosFooter: 'LAB GRADE: 9.9/10 ⭐',
+      consBadge: 'CONS & LIMITATIONS',
+      cons: [
+        '• Heavy benchtop footprint (~45kg shipping weight)',
+        '• Requires compatible external vacuum pump',
+        '• Strict operating protocols for vacuum seals'
+      ],
+      consFooter: '100% UNBIASED 🛡️'
+    },
+    zh: {
+      prosBadge: '核心优势与亮点',
+      pros: [
+        '• 四面环绕式恒温加热，真空干燥温控极精准',
+        '• 304全不锈钢一体成型内胆，耐酸碱强腐蚀',
+        '• 极佳高真空密封性能，能效节电达 40%'
+      ],
+      prosFooter: '实验室级认证: 9.9/10 ⭐',
+      consBadge: '不足与注意事项',
+      cons: [
+        '• 机身自重约45kg，需稳固承重实验台安装',
+        '• 需配合适功率的外部真空泵协同工作',
+        '• 操作人员需严格遵循真空泄压安全规范'
+      ],
+      consFooter: '100% 中立客观 🛡️'
+    }
+  }
+};
+
+function updateHeroFloatingProsCons(data, lang) {
+  if (!data) return;
+  const curLang = lang || (typeof window.getCurrentLanguage === 'function' ? window.getCurrentLanguage() : 'vi');
+  const custom = HERO_PINNED_PROS_CONS[data.id] || (data.pros && data.cons ? {
+    [curLang]: {
+      prosBadge: (curLang === 'vi' ? 'ƯU ĐIỂM NỔI BẬT' : (curLang === 'zh' ? '核心优势与亮点' : 'VERIFIED PROS')),
+      pros: Array.isArray(data.pros) ? data.pros : [data.pros],
+      prosFooter: (curLang === 'vi' ? 'KHUYÊN DÙNG: 9.8/10 ⭐' : (curLang === 'zh' ? '实测高分: 9.8/10 ⭐' : 'TOP RATED: 9.8/10 ⭐')),
+      consBadge: (curLang === 'vi' ? 'NHƯỢC ĐIỂM CẦN LƯU Ý' : (curLang === 'zh' ? '不足与注意事项' : 'CONS & LIMITATIONS')),
+      cons: Array.isArray(data.cons) ? data.cons : [data.cons],
+      consFooter: (curLang === 'vi' ? 'MINH BẠCH 100% 🛡️' : (curLang === 'zh' ? '100% 中立客观 🛡️' : '100% UNBIASED 🛡️'))
+    }
+  } : null);
+
+  const info = (custom && custom[curLang]) ? custom[curLang] : (custom && custom.vi ? custom.vi : null);
+
+  // Left card (Pros)
+  const elProsBadge = document.getElementById('hero-pros-badge-text');
+  if (elProsBadge && info && info.prosBadge) elProsBadge.textContent = info.prosBadge;
+  const elProsList = document.getElementById('hero-pros-list');
+  if (elProsList && info && info.pros) {
+    elProsList.innerHTML = info.pros.map((p, idx) => `<p id="hero-pros-item-${idx+1}">${escapeHtml(p)}</p>`).join('');
+  }
+  const elProsFooter = document.getElementById('hero-pros-footer-text');
+  if (elProsFooter && info && info.prosFooter) elProsFooter.textContent = info.prosFooter;
+
+  // Right card (Cons)
+  const elConsBadge = document.getElementById('hero-cons-badge-text');
+  if (elConsBadge && info && info.consBadge) elConsBadge.textContent = info.consBadge;
+  const elConsList = document.getElementById('hero-cons-list');
+  if (elConsList && info && info.cons) {
+    elConsList.innerHTML = info.cons.map((c, idx) => `<p id="hero-cons-item-${idx+1}">${escapeHtml(c)}</p>`).join('');
+  }
+  const elConsFooter = document.getElementById('hero-cons-footer-text');
+  if (elConsFooter && info && info.consFooter) elConsFooter.textContent = info.consFooter;
+}
+
 function initHeroPinnedProject() {
   const heroCard = document.getElementById('hero-pinned-card');
   if (!heroCard) return;
@@ -2022,6 +2215,9 @@ function initHeroPinnedProject() {
       const labelSpan = elReviewBtn.querySelector('span');
       if (labelSpan) labelSpan.textContent = reviewLabel;
     }
+
+    // Dynamically update Left (Pros) and Right (Cons) floating cards
+    updateHeroFloatingProsCons(data, lang);
 
     if (window.lucide) {
       lucide.createIcons();
