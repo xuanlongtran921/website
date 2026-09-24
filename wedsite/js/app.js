@@ -1939,18 +1939,62 @@ function initHeroPinnedProject() {
       }, 140);
     }
 
+    // Format and sanitize Sale Price
+    let safeUsd = String(data.priceUsd || '').trim();
+    if (safeUsd && !safeUsd.startsWith('$')) {
+      const num = parseFloat(safeUsd.replace(/[^0-9.]/g, ''));
+      if (!isNaN(num) && num > 0) safeUsd = '$' + num.toFixed(2);
+    }
+    if (!safeUsd) safeUsd = '$79.00';
+    const numSaleUsd = parseFloat(safeUsd.replace(/[^0-9.]/g, '')) || 79;
+
+    let safeVnd = String(data.priceVnd || data.price || '').trim();
+    if (!safeVnd || !safeVnd.includes('₫')) {
+      safeVnd = (Math.round(numSaleUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+    }
+
+    // Format and sanitize Strikethrough Original Price
+    let safeOrigUsd = '';
+    let safeOrigVnd = '';
+    const rawOrig = String(data.priceOrigUsd || data.priceOrig || data.originalPrice || '').trim();
+
+    if (rawOrig && !/min|read|\/|date/i.test(rawOrig)) {
+      let numOrig = parseFloat(rawOrig.replace(/[^0-9.]/g, ''));
+      // If typo like 10004 instead of 100.04
+      if (numOrig && numOrig > numSaleUsd * 5) {
+        if (numOrig / 100 >= numSaleUsd && numOrig / 100 <= numSaleUsd * 2.5) {
+          numOrig = Math.round((numOrig / 100) * 100) / 100;
+        } else {
+          numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+        }
+      }
+      if (numOrig && numOrig >= numSaleUsd) {
+        safeOrigUsd = '$' + numOrig.toFixed(2);
+        safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+      }
+    }
+
+    if (!safeOrigUsd) {
+      const numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+      safeOrigUsd = '$' + numOrig.toFixed(2);
+      safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+    }
+
+    const priceDisplay = (curr === 'USD') ? safeUsd : safeVnd;
+    const origDisplay = (curr === 'USD') ? safeOrigUsd : safeOrigVnd;
+
     const elPrice = document.getElementById('hero-pinned-price');
     if (elPrice) {
-      if (data.priceVnd) elPrice.setAttribute('data-vnd', data.priceVnd);
-      if (data.priceUsd) elPrice.setAttribute('data-usd', data.priceUsd);
-      elPrice.textContent = (curr === 'USD' && data.priceUsd) ? data.priceUsd : (data.priceVnd || data.price);
+      elPrice.setAttribute('data-vnd', safeVnd);
+      elPrice.setAttribute('data-usd', safeUsd);
+      elPrice.textContent = priceDisplay;
     }
 
     const elPriceOrig = document.getElementById('hero-pinned-price-orig');
     if (elPriceOrig) {
-      if (data.priceOrigVnd) elPriceOrig.setAttribute('data-vnd', data.priceOrigVnd);
-      if (data.priceOrigUsd) elPriceOrig.setAttribute('data-usd', data.priceOrigUsd);
-      elPriceOrig.textContent = (curr === 'USD' && data.priceOrigUsd) ? data.priceOrigUsd : (data.priceOrigVnd || data.originalPrice || '');
+      elPriceOrig.setAttribute('data-vnd', safeOrigVnd);
+      elPriceOrig.setAttribute('data-usd', safeOrigUsd);
+      elPriceOrig.textContent = origDisplay;
     }
 
     const elDiscount = document.getElementById('hero-pinned-discount');

@@ -523,11 +523,60 @@ export default {
           await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
         }
 
+        // 3. Repair pinned_project
+        let repairedPinnedCount = 0;
+        let currentPinned = null;
+        if (env.POSTS_KV) {
+          try {
+            const rawPinned = await env.POSTS_KV.get('pinned_project');
+            if (rawPinned) currentPinned = safeJsonParse(rawPinned, null);
+          } catch (e) {}
+        } else {
+          currentPinned = inMemoryPinned;
+        }
+
+        if (currentPinned && Array.isArray(currentPinned.pinnedList)) {
+          const postMap = new Map((customPosts || []).map(p => [p.id, p]));
+          currentPinned.pinnedList = currentPinned.pinnedList.map(item => {
+            if (!item) return item;
+            let modified = false;
+            const post = postMap.get(item.id);
+            if (post) {
+              if (item.priceUsd !== post.priceUsd) { item.priceUsd = post.priceUsd; modified = true; }
+              if (item.priceOrigUsd !== post.priceOrig) { item.priceOrigUsd = post.priceOrig; modified = true; }
+              if (item.priceVnd !== post.priceVnd) { item.priceVnd = post.priceVnd; modified = true; }
+              const origVndNum = Math.round((parseFloat(String(post.priceOrig).replace(/[^0-9.]/g, '')) || 0) * 25000 / 1000) * 1000;
+              const expectedOrigVnd = origVndNum ? origVndNum.toLocaleString('vi-VN').replace(/,/g, '.') + '₫' : '';
+              if (expectedOrigVnd && item.priceOrigVnd !== expectedOrigVnd) { item.priceOrigVnd = expectedOrigVnd; modified = true; }
+            } else {
+              const res = sanitizePostPrice({ priceUsd: item.priceUsd, priceOrig: item.priceOrigUsd, priceVnd: item.priceVnd });
+              if (res.modified) {
+                item.priceUsd = res.item.priceUsd;
+                item.priceOrigUsd = res.item.priceOrig;
+                item.priceVnd = res.item.priceVnd;
+                modified = true;
+              }
+            }
+            if (modified) repairedPinnedCount++;
+            return item;
+          });
+
+          if (repairedPinnedCount > 0) {
+            if (env.POSTS_KV) {
+              await env.POSTS_KV.put('pinned_project', JSON.stringify(currentPinned));
+            } else {
+              inMemoryPinned = currentPinned;
+            }
+          }
+        }
+
         return new Response(JSON.stringify({
           success: true,
-          message: `Đã kiểm tra và sửa giá thành công! Đã sửa ${repairedPostsCount} bài viết và ${repairedProdsCount} sản phẩm.`,
+          message: `Đã kiểm tra và sửa giá thành công! Đã sửa ${repairedPostsCount} bài viết, ${repairedProdsCount} sản phẩm, và ${repairedPinnedCount} mục Hero Slider.`,
           repairedPostsCount,
           repairedProdsCount,
+          repairedPinnedCount,
+          pinnedListSummary: currentPinned?.pinnedList?.map(item => ({ id: item.id, priceUsd: item.priceUsd, priceOrigUsd: item.priceOrigUsd, priceVnd: item.priceVnd })),
           customPostsSummary: customPosts.map(p => ({ id: p.id, priceUsd: p.priceUsd, priceOrig: p.priceOrig, priceVnd: p.priceVnd })),
           customProductsSummary: customProducts.map(p => ({ id: p.id, price: p.price, priceUsd: p.priceUsd, originalPrice: p.originalPrice, originalPriceUsd: p.originalPriceUsd }))
         }, null, 2), {
@@ -1296,6 +1345,47 @@ export default {
           discountPercent: '17% OFF All-Terrain 4WD Series',
           pinnedList: []
         };
+      // Auto-synchronize and sanitize prices in pinnedData
+      if (pinnedData && Array.isArray(pinnedData.pinnedList)) {
+        let pinnedChanged = false;
+        let customPosts = [];
+        if (env.POSTS_KV) {
+          try {
+            const rawPosts = await env.POSTS_KV.get('custom_posts_list');
+            if (rawPosts) customPosts = safeJsonParse(rawPosts, []);
+          } catch (e) {}
+        }
+        const postMap = new Map((customPosts || []).map(p => [p.id, p]));
+
+        pinnedData.pinnedList = pinnedData.pinnedList.map(item => {
+          if (!item) return item;
+          let modified = false;
+          const post = postMap.get(item.id);
+          if (post) {
+            if (item.priceUsd !== post.priceUsd) { item.priceUsd = post.priceUsd; modified = true; }
+            if (item.priceOrigUsd !== post.priceOrig) { item.priceOrigUsd = post.priceOrig; modified = true; }
+            if (item.priceVnd !== post.priceVnd) { item.priceVnd = post.priceVnd; modified = true; }
+            const origVndNum = Math.round((parseFloat(String(post.priceOrig).replace(/[^0-9.]/g, '')) || 0) * 25000 / 1000) * 1000;
+            const expectedOrigVnd = origVndNum ? origVndNum.toLocaleString('vi-VN').replace(/,/g, '.') + '₫' : '';
+            if (expectedOrigVnd && item.priceOrigVnd !== expectedOrigVnd) { item.priceOrigVnd = expectedOrigVnd; modified = true; }
+          } else {
+            const res = sanitizePostPrice({ priceUsd: item.priceUsd, priceOrig: item.priceOrigUsd, priceVnd: item.priceVnd });
+            if (res.modified) {
+              item.priceUsd = res.item.priceUsd;
+              item.priceOrigUsd = res.item.priceOrig;
+              item.priceVnd = res.item.priceVnd;
+              modified = true;
+            }
+          }
+          if (modified) pinnedChanged = true;
+          return item;
+        });
+
+        if (pinnedChanged && env.POSTS_KV) {
+          try {
+            await env.POSTS_KV.put('pinned_project', JSON.stringify(pinnedData));
+          } catch (e) {}
+        }
       }
 
       return new Response(JSON.stringify(pinnedData, null, 2), {
