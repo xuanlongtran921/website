@@ -1811,6 +1811,16 @@ function initSearch() {
 // -------------------------------------------------------------
 // Dynamic Hero Pinned Project Showcase (Real-time sync from CMS - Top 3)
 // -------------------------------------------------------------
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const HERO_PINNED_PROS_CONS = {
   // Top 1: MATEIN Fishing Sling Bag
   'post-matein-fishing-sling-bag-with-phone-pouch-review': {
@@ -1964,44 +1974,220 @@ const HERO_PINNED_PROS_CONS = {
       ],
       consFooter: '100% 中立客观 🛡️'
     }
+  },
+  // Mowrator S1
+  'post-mowrator-s1-4wd-pentest-review': {
+    vi: {
+      prosBadge: 'ƯU ĐIỂM NỔI BẬT',
+      pros: [
+        '• Hệ dẫn động 4WD leo dốc 38° vượt địa hình mạnh mẽ',
+        '• Điều khiển từ xa 300m tích hợp truyền hình FPV',
+        '• Lưỡi cắt hợp kim thép tôi tiết kiệm 70% công sức'
+      ],
+      prosFooter: 'KHUYÊN DÙNG: 9.8/10 ⭐',
+      consBadge: 'NHƯỢC ĐIỂM CẦN LƯU Ý',
+      cons: [
+        '• Giá đầu tư ban đầu cao hơn máy cắt cỏ thủ công',
+        '• Trọng lượng máy khá nặng (~38kg)',
+        '• Cần sạc đầy pin trước khi vận hành diện tích lớn'
+      ],
+      consFooter: 'MINH BẠCH 100% 🛡️'
+    },
+    en: {
+      prosBadge: 'VERIFIED PROS',
+      pros: [
+        '• Powerful 4WD tackles steep 38° inclines effortlessly',
+        '• 300m range remote control with integrated FPV camera',
+        '• Hardened alloy steel blades save up to 70% labor'
+      ],
+      prosFooter: 'TOP RATED: 9.8/10 ⭐',
+      consBadge: 'CONS & LIMITATIONS',
+      cons: [
+        '• Higher initial investment than manual push mowers',
+        '• Substantial unit weight (~38kg) requires loading ramp',
+        '• Requires dedicated battery planning for large acreages'
+      ],
+      consFooter: '100% UNBIASED 🛡️'
+    },
+    zh: {
+      prosBadge: '核心优势与亮点',
+      pros: [
+        '• 全时四驱系统强悍征服38°陡峭斜坡',
+        '• 300米超远距离航模级遥控与FPV图传',
+        '• 淬火合金锰钢刀盘省去70%人工劳力'
+      ],
+      prosFooter: '实测高分: 9.8/10 ⭐',
+      consBadge: '不足与注意事项',
+      cons: [
+        '• 设备初始购置成本高于传统手推剪草机',
+        '• 机身自重约38kg装车搬运需两人协同',
+        '• 超大作业面积需提前备足备用动力电池'
+      ],
+      consFooter: '100% 中立客观 🛡️'
+    }
+  },
+  // LilyVow
+  'post-lilyvow': {
+    vi: {
+      prosBadge: 'ƯU ĐIỂM NỔI BẬT',
+      pros: [
+        '• Vải nhung 380 GSM và ren Venise thủ công',
+        '• Khung nẹp eo thép định hình dáng Gothic chuẩn',
+        '• Dịch vụ đo may riêng với chi phí cực kỳ hợp lý'
+      ],
+      prosFooter: 'THỜI TRANG CAO CẤP: 9.7/10 ⭐',
+      consBadge: 'NHƯỢC ĐIỂM CẦN LƯU Ý',
+      cons: [
+        '• Thời gian may và vận chuyển từ 10 - 14 ngày',
+        '• Cần bảo quản và giặt hấp để giữ form nẹp',
+        '• Nhiều chi tiết phối cần thời gian khi mặc'
+      ],
+      consFooter: 'MINH BẠCH 100% 🛡️'
+    },
+    en: {
+      prosBadge: 'VERIFIED PROS',
+      pros: [
+        '• 380 GSM heavy velvet with handcrafted Venise lace',
+        '• Steel-boned corset structure flatters silhouette',
+        '• Affordable bespoke custom sizing available'
+      ],
+      prosFooter: 'TOP RATED: 9.7/10 ⭐',
+      consBadge: 'CONS & LIMITATIONS',
+      cons: [
+        '• Custom tailoring & shipping takes 10-14 days',
+        '• Requires dry clean or delicate steam care',
+        '• Intricate layered styling takes time to wear'
+      ],
+      consFooter: '100% UNBIASED 🛡️'
+    },
+    zh: {
+      prosBadge: '核心优势与亮点',
+      pros: [
+        '• 380克重天鹅绒配手工威尼斯刺绣蕾丝',
+        '• 内置高强度合金鱼骨重塑沙漏身材曲线',
+        '• 提供高性价比量身定制改衣专属服务'
+      ],
+      prosFooter: '实测高分: 9.7/10 ⭐',
+      consBadge: '不足与注意事项',
+      cons: [
+        '• 高级定制与海外直邮周期需10至14天',
+        '• 建议专业干洗及挂烫以呵护金属骨架',
+        '• 层次丰富多件式配件穿脱耗费一定时间'
+      ],
+      consFooter: '100% 中立客观 🛡️'
+    }
+  },
+  // Sony WH-1000XM5
+  'post-sony-wh-1000xm5': {
+    vi: {
+      prosBadge: 'ƯU ĐIỂM NỔI BẬT',
+      pros: [
+        '• Đỉnh cao chống ồn chủ động ANC với 8 micro AI',
+        '• Chất âm LDAC Hi-Res chi tiết, âm trường rộng',
+        '• Pin 30 giờ và đệm tai siêu êm ái cả ngày'
+      ],
+      prosFooter: 'FLAGSHIP AUDIO: 9.9/10 ⭐',
+      consBadge: 'NHƯỢC ĐIỂM CẦN LƯU Ý',
+      cons: [
+        '• Không gấp gọn được như thế hệ XM4 tiền nhiệm',
+        '• Đệm tai có thể ấm khi dùng ngoài trời nắng',
+        '• Mức giá phân khúc flagship cao cấp'
+      ],
+      consFooter: 'MINH BẠCH 100% 🛡️'
+    },
+    en: {
+      prosBadge: 'VERIFIED PROS',
+      pros: [
+        '• Best-in-class ANC with 8 AI-driven microphones',
+        '• Hi-Res LDAC audio clarity with wide soundstage',
+        '• 30-hour battery life & featherlight ear cushions'
+      ],
+      prosFooter: 'FLAGSHIP AUDIO: 9.9/10 ⭐',
+      consBadge: 'CONS & LIMITATIONS',
+      cons: [
+        '• Non-folding headband unlike predecessor XM4',
+        '• Ear pads can feel warm in hot humid weather',
+        '• Premium flagship investment price point'
+      ],
+      consFooter: '100% UNBIASED 🛡️'
+    },
+    zh: {
+      prosBadge: '核心优势与亮点',
+      pros: [
+        '• 8颗麦克风AI智能算法打造业界顶尖主动降噪',
+        '• 索尼自研LDAC高解析无损音质与开阔声场',
+        '• 30小时超长续航与柔软亲肤极适头戴耳罩'
+      ],
+      prosFooter: '旗舰音频标杆: 9.9/10 ⭐',
+      consBadge: '不足与注意事项',
+      cons: [
+        '• 一体式头梁无法折叠收纳如前代XM4便携',
+        '• 极热户外环境下蛋白皮耳罩透气性稍显不足',
+        '• 旗舰级定价定位对预算有一定门槛'
+      ],
+      consFooter: '100% 中立客观 🛡️'
+    }
   }
 };
 
 function updateHeroFloatingProsCons(data, lang) {
   if (!data) return;
   const curLang = lang || (typeof window.getCurrentLanguage === 'function' ? window.getCurrentLanguage() : 'vi');
-  const custom = HERO_PINNED_PROS_CONS[data.id] || (data.pros && data.cons ? {
-    [curLang]: {
-      prosBadge: (curLang === 'vi' ? 'ƯU ĐIỂM NỔI BẬT' : (curLang === 'zh' ? '核心优势与亮点' : 'VERIFIED PROS')),
-      pros: Array.isArray(data.pros) ? data.pros : [data.pros],
-      prosFooter: (curLang === 'vi' ? 'KHUYÊN DÙNG: 9.8/10 ⭐' : (curLang === 'zh' ? '实测高分: 9.8/10 ⭐' : 'TOP RATED: 9.8/10 ⭐')),
-      consBadge: (curLang === 'vi' ? 'NHƯỢC ĐIỂM CẦN LƯU Ý' : (curLang === 'zh' ? '不足与注意事项' : 'CONS & LIMITATIONS')),
-      cons: Array.isArray(data.cons) ? data.cons : [data.cons],
-      consFooter: (curLang === 'vi' ? 'MINH BẠCH 100% 🛡️' : (curLang === 'zh' ? '100% 中立客观 🛡️' : '100% UNBIASED 🛡️'))
-    }
-  } : null);
 
-  const info = (custom && custom[curLang]) ? custom[curLang] : (custom && custom.vi ? custom.vi : null);
+  const idKey = (data.id || '').toLowerCase();
+  const slugKey = (data.postUrl || '').replace('.html', '').replace(/^\/+/, '').toLowerCase();
+
+  let custom = HERO_PINNED_PROS_CONS[data.id] ||
+               HERO_PINNED_PROS_CONS[idKey] ||
+               HERO_PINNED_PROS_CONS[data.postUrl] ||
+               HERO_PINNED_PROS_CONS[slugKey];
+
+  if (!custom && data.pros && data.cons) {
+    const prosArr = Array.isArray(data.pros) ? data.pros : [data.pros];
+    const consArr = Array.isArray(data.cons) ? data.cons : [data.cons];
+    custom = {
+      [curLang]: {
+        prosBadge: (curLang === 'vi' ? 'ƯU ĐIỂM NỔI BẬT' : (curLang === 'zh' ? '核心优势与亮点' : 'VERIFIED PROS')),
+        pros: prosArr.slice(0, 3).map(p => {
+          const s = String(p).trim();
+          return s.startsWith('•') ? s : '• ' + s;
+        }),
+        prosFooter: (curLang === 'vi' ? 'KHUYÊN DÙNG: 9.8/10 ⭐' : (curLang === 'zh' ? '实测高分: 9.8/10 ⭐' : 'TOP RATED: 9.8/10 ⭐')),
+        consBadge: (curLang === 'vi' ? 'NHƯỢC ĐIỂM CẦN LƯU Ý' : (curLang === 'zh' ? '不足与注意事项' : 'CONS & LIMITATIONS')),
+        cons: consArr.slice(0, 3).map(c => {
+          const s = String(c).trim();
+          return s.startsWith('•') ? s : '• ' + s;
+        }),
+        consFooter: (curLang === 'vi' ? 'MINH BẠCH 100% 🛡️' : (curLang === 'zh' ? '100% 中立客观 🛡️' : '100% UNBIASED 🛡️'))
+      }
+    };
+  }
+
+  const info = (custom && custom[curLang]) ? custom[curLang] :
+               (custom && custom.vi ? custom.vi :
+               (custom && custom.en ? custom.en : null));
+
+  if (!info) return;
 
   // Left card (Pros)
   const elProsBadge = document.getElementById('hero-pros-badge-text');
-  if (elProsBadge && info && info.prosBadge) elProsBadge.textContent = info.prosBadge;
+  if (elProsBadge && info.prosBadge) elProsBadge.textContent = info.prosBadge;
   const elProsList = document.getElementById('hero-pros-list');
-  if (elProsList && info && info.pros) {
+  if (elProsList && info.pros) {
     elProsList.innerHTML = info.pros.map((p, idx) => `<p id="hero-pros-item-${idx+1}">${escapeHtml(p)}</p>`).join('');
   }
   const elProsFooter = document.getElementById('hero-pros-footer-text');
-  if (elProsFooter && info && info.prosFooter) elProsFooter.textContent = info.prosFooter;
+  if (elProsFooter && info.prosFooter) elProsFooter.textContent = info.prosFooter;
 
   // Right card (Cons)
   const elConsBadge = document.getElementById('hero-cons-badge-text');
-  if (elConsBadge && info && info.consBadge) elConsBadge.textContent = info.consBadge;
+  if (elConsBadge && info.consBadge) elConsBadge.textContent = info.consBadge;
   const elConsList = document.getElementById('hero-cons-list');
-  if (elConsList && info && info.cons) {
+  if (elConsList && info.cons) {
     elConsList.innerHTML = info.cons.map((c, idx) => `<p id="hero-cons-item-${idx+1}">${escapeHtml(c)}</p>`).join('');
   }
   const elConsFooter = document.getElementById('hero-cons-footer-text');
-  if (elConsFooter && info && info.consFooter) elConsFooter.textContent = info.consFooter;
+  if (elConsFooter && info.consFooter) elConsFooter.textContent = info.consFooter;
 }
 
 function initHeroPinnedProject() {
@@ -2012,44 +2198,37 @@ function initHeroPinnedProject() {
   window.heroActivePinnedSlot = 0;
   let heroRotateTimer = null;
   let isHovered = false;
-  let progressStartTime = 0;
-  let progressRaf = null;
-  const ROTATION_DURATION = 4000; // Tầm 4 giây qua bài 1 lần theo yêu cầu
-
-  function updateProgressBar() {
-    const pBar = document.getElementById('hero-pinned-progress-bar');
-    if (!pBar) return;
-
-    if (isHovered) {
-      return;
-    }
-
-    const elapsed = Date.now() - progressStartTime;
-    const pct = Math.min(100, Math.max(0, (elapsed / ROTATION_DURATION) * 100));
-    pBar.style.width = pct + '%';
-
-    if (elapsed < ROTATION_DURATION) {
-      progressRaf = requestAnimationFrame(updateProgressBar);
-    }
-  }
+  let isTransitioning = false;
+  const ROTATION_DURATION = 6500; // 6.5s per slide for comfortable reading
 
   function resetProgressBar() {
-    if (progressRaf) {
-      cancelAnimationFrame(progressRaf);
-      progressRaf = null;
-    }
     const pBar = document.getElementById('hero-pinned-progress-bar');
-    if (pBar) {
-      pBar.style.transition = 'none';
-      pBar.style.width = '0%';
-      void pBar.offsetWidth; // force reflow
-      pBar.style.transition = 'width 0.1s linear';
+    if (!pBar) return;
+    pBar.style.transition = 'none';
+    pBar.style.width = '0%';
+    void pBar.offsetWidth; // flush layout
+    if (!isHovered) {
+      pBar.style.transition = `width ${ROTATION_DURATION}ms linear`;
+      pBar.style.width = '100%';
     }
-    progressStartTime = Date.now();
-    progressRaf = requestAnimationFrame(updateProgressBar);
   }
 
-  function renderHeroPinnedSlide(index) {
+  function pauseProgressBar() {
+    const pBar = document.getElementById('hero-pinned-progress-bar');
+    if (!pBar) return;
+    const computedWidth = window.getComputedStyle(pBar).width;
+    pBar.style.transition = 'none';
+    pBar.style.width = computedWidth;
+  }
+
+  function resumeProgressBar() {
+    const pBar = document.getElementById('hero-pinned-progress-bar');
+    if (!pBar) return;
+    pBar.style.transition = `width ${ROTATION_DURATION}ms linear`;
+    pBar.style.width = '100%';
+  }
+
+  function renderHeroPinnedSlide(index, immediate = false) {
     const list = window.heroPinnedList || [];
     if (list.length === 0) return;
     const data = list[index] || list[0];
@@ -2061,169 +2240,192 @@ function initHeroPinnedProject() {
     const pills = document.querySelectorAll('#hero-spotlight-pills .hero-pin-pill');
     pills.forEach((p, idx) => {
       if (idx === index) {
-        p.className = 'hero-pin-pill px-2.5 py-1 rounded-lg text-[11px] font-black transition-all flex items-center gap-1 bg-gradient-to-r from-amber-500 to-pink-500 text-white shadow-xs cursor-pointer';
+        p.className = 'hero-pin-pill px-2.5 py-1 rounded-lg text-[11px] font-black transition-all flex items-center gap-1 bg-gradient-to-r from-amber-500 to-pink-500 text-white shadow-xs cursor-pointer scale-105';
       } else {
         p.className = 'hero-pin-pill px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 text-slate-600 dark:text-purple-300 hover:text-pink-500 dark:hover:text-white cursor-pointer';
       }
     });
 
-    const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
-    const curr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('blog_currency') || 'USD');
-
-    // Rank Badge on Image Corner
-    const elRankBadge = document.getElementById('hero-pinned-rank-badge');
-    if (elRankBadge) {
-      const rankLabels = {
-        0: { vi: '👑 TOP 1 TIÊU ĐIỂM', en: '👑 TOP 1 SPOTLIGHT', zh: '👑 TOP 1 精选头条' },
-        1: { vi: '⚡ TOP 2 XU HƯỚNG', en: '⚡ TOP 2 TRENDING', zh: '⚡ TOP 2 潮流爆款' },
-        2: { vi: '🎧 TOP 3 BÁN CHẠY', en: '🎧 TOP 3 BEST CHOICE', zh: '🎧 TOP 3 热门甄选' }
-      };
-      const rankInfo = rankLabels[index] || rankLabels[0];
-      elRankBadge.innerHTML = `<span>${rankInfo[lang] || rankInfo.vi}</span>`;
-    }
-
-    const elUrlDisplay = document.getElementById('hero-pinned-url-display');
-    const brandName = data.brand || (data.urlDisplay && !data.urlDisplay.startsWith('http') ? data.urlDisplay : (data.badge || 'SmartPicks Flagship'));
-    if (elUrlDisplay) {
-      elUrlDisplay.innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5 text-pink-500 flex-shrink-0"></i><span class="font-black uppercase tracking-wider">${brandName}</span>`;
-    }
-
-    const elBadge = document.getElementById('hero-pinned-badge');
-    if (elBadge) {
-      let badgeVal = (lang === 'vi' ? (data.badgeVi || data.badge) : (lang === 'zh' ? (data.badgeZh || data.badge) : (data.badgeEn || data.badge))) || "Editor's Choice";
-      if (badgeVal.toLowerCase() === brandName.toLowerCase()) {
-        badgeVal = (lang === 'vi') ? "Lựa Chọn Biên Tập Viên" : ((lang === 'zh') ? "编辑推荐" : "Editor's Choice");
-      }
-      elBadge.textContent = badgeVal;
-    }
-
-    const elTag = document.getElementById('hero-pinned-tag');
-    if (elTag) elTag.textContent = (lang === 'vi' ? (data.tagVi || data.tag) : (lang === 'zh' ? (data.tagZh || data.tag) : (data.tagEn || data.tag))) || "REVIEW FLAGSHIP";
-
-    const elTitle = document.getElementById('hero-pinned-title');
-    const titleText = (lang === 'vi' ? (data.titleVi || data.title) : (lang === 'zh' ? (data.titleZh || data.title) : (data.titleEn || data.title)));
-    if (elTitle) {
-      const link = elTitle.querySelector('a');
-      if (link) {
-        link.textContent = titleText;
-        link.href = data.postUrl || '#';
-      } else {
-        elTitle.textContent = titleText;
-      }
-    }
-
     const elImg = document.getElementById('hero-pinned-img');
-    if (elImg && data.image) {
-      elImg.style.transition = 'opacity 0.22s ease-in-out';
-      elImg.style.opacity = '0.35';
-      elImg.src = data.image;
-      elImg.alt = titleText;
-      // Ensure image fits completely inside the pinned frame without being cropped
-      elImg.className = 'w-full h-full object-contain transition-transform duration-500 group-hover/hero-img:scale-105';
-      if (elImg.parentElement) {
-        elImg.parentElement.className = 'sm:col-span-5 relative group/hero-img rounded-2xl overflow-hidden shadow-lg border border-purple-200/60 dark:border-purple-800/60 bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#190c38] dark:via-[#13072b] dark:to-[#0d041e] h-56 sm:h-64 flex items-center justify-center p-3 sm:p-4';
+    const elDetails = document.getElementById('hero-pinned-details') || document.querySelector('#hero-pinned-card .sm\\:col-span-7');
+    const elProsList = document.getElementById('hero-pros-list');
+    const elConsList = document.getElementById('hero-cons-list');
+    const elProsFooter = document.getElementById('hero-pros-footer-text');
+    const elConsFooter = document.getElementById('hero-cons-footer-text');
+    const animEls = [elImg, elDetails, elProsList, elConsList, elProsFooter, elConsFooter].filter(Boolean);
+
+    function applyData() {
+      const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+      const curr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('blog_currency') || 'USD');
+
+      // Rank Badge on Image Corner
+      const elRankBadge = document.getElementById('hero-pinned-rank-badge');
+      if (elRankBadge) {
+        const rankLabels = {
+          0: { vi: '👑 TOP 1 TIÊU ĐIỂM', en: '👑 TOP 1 SPOTLIGHT', zh: '👑 TOP 1 精选头条' },
+          1: { vi: '⚡ TOP 2 XU HƯỚNG', en: '⚡ TOP 2 TRENDING', zh: '⚡ TOP 2 潮流爆款' },
+          2: { vi: '🎧 TOP 3 BÁN CHẠY', en: '🎧 TOP 3 BEST CHOICE', zh: '🎧 TOP 3 热门甄选' }
+        };
+        const rankInfo = rankLabels[index] || rankLabels[0];
+        elRankBadge.innerHTML = `<span>${rankInfo[lang] || rankInfo.vi}</span>`;
       }
-      setTimeout(() => { elImg.style.opacity = '1'; }, 150);
-    }
 
-    const elDetails = document.querySelector('#hero-pinned-card .sm\\:col-span-7');
-    if (elDetails) {
-      elDetails.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-      elDetails.style.opacity = '0.4';
-      elDetails.style.transform = 'translateY(2px)';
-      setTimeout(() => {
-        elDetails.style.opacity = '1';
-        elDetails.style.transform = 'translateY(0)';
-      }, 140);
-    }
-
-    // Format and sanitize Sale Price
-    let safeUsd = String(data.priceUsd || '').trim();
-    if (safeUsd && !safeUsd.startsWith('$')) {
-      const num = parseFloat(safeUsd.replace(/[^0-9.]/g, ''));
-      if (!isNaN(num) && num > 0) safeUsd = '$' + num.toFixed(2);
-    }
-    if (!safeUsd) safeUsd = '$79.00';
-    const numSaleUsd = parseFloat(safeUsd.replace(/[^0-9.]/g, '')) || 79;
-
-    let safeVnd = String(data.priceVnd || data.price || '').trim();
-    if (!safeVnd || !safeVnd.includes('₫')) {
-      safeVnd = (Math.round(numSaleUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
-    }
-
-    // Format and sanitize Strikethrough Original Price
-    let safeOrigUsd = '';
-    let safeOrigVnd = '';
-    const rawOrig = String(data.priceOrigUsd || data.priceOrig || data.originalPrice || '').trim();
-
-    if (rawOrig && !/min|read|\/|date/i.test(rawOrig)) {
-      let numOrig = parseFloat(rawOrig.replace(/[^0-9.]/g, ''));
-      // If typo like 10004 instead of 100.04
-      if (numOrig && numOrig > numSaleUsd * 5) {
-        if (numOrig / 100 >= numSaleUsd && numOrig / 100 <= numSaleUsd * 2.5) {
-          numOrig = Math.round((numOrig / 100) * 100) / 100;
-        } else {
-          numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+      // Brand name & shield
+      const brandName = data.brand || (data.urlDisplay && !data.urlDisplay.startsWith('http') ? data.urlDisplay : (data.badge || 'SmartPicks Flagship'));
+      const elBrandSpan = document.getElementById('hero-pinned-brand-text');
+      if (elBrandSpan) {
+        elBrandSpan.textContent = brandName;
+      } else {
+        const elUrlDisplay = document.getElementById('hero-pinned-url-display');
+        if (elUrlDisplay) {
+          elUrlDisplay.innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5 text-pink-500 flex-shrink-0"></i><span id="hero-pinned-brand-text" class="font-black uppercase tracking-wider">${escapeHtml(brandName)}</span>`;
         }
       }
-      if (numOrig && numOrig >= numSaleUsd) {
+
+      // Badge
+      const elBadge = document.getElementById('hero-pinned-badge');
+      if (elBadge) {
+        let badgeVal = (lang === 'vi' ? (data.badgeVi || data.badge) : (lang === 'zh' ? (data.badgeZh || data.badge) : (data.badgeEn || data.badge))) || "Editor's Choice";
+        if (badgeVal.toLowerCase() === brandName.toLowerCase()) {
+          badgeVal = (lang === 'vi') ? "Lựa Chọn Biên Tập Viên" : ((lang === 'zh') ? "编辑推荐" : "Editor's Choice");
+        }
+        elBadge.textContent = badgeVal;
+      }
+
+      // Tag
+      const elTag = document.getElementById('hero-pinned-tag');
+      if (elTag) elTag.textContent = (lang === 'vi' ? (data.tagVi || data.tag) : (lang === 'zh' ? (data.tagZh || data.tag) : (data.tagEn || data.tag))) || "REVIEW FLAGSHIP";
+
+      // Title
+      const titleText = (lang === 'vi' ? (data.titleVi || data.title) : (lang === 'zh' ? (data.titleZh || data.title) : (data.titleEn || data.title)));
+      const elTitle = document.getElementById('hero-pinned-title');
+      if (elTitle) {
+        const link = elTitle.querySelector('a');
+        if (link) {
+          link.textContent = titleText;
+          link.href = data.postUrl || '#';
+        } else {
+          elTitle.textContent = titleText;
+        }
+      }
+
+      // Image
+      if (elImg && data.image) {
+        elImg.src = data.image;
+        elImg.alt = titleText;
+        elImg.className = 'w-full h-full object-contain transition-transform duration-500 group-hover/hero-img:scale-105';
+      }
+
+      // Price Formatting
+      let safeUsd = String(data.priceUsd || '').trim();
+      if (safeUsd && !safeUsd.startsWith('$')) {
+        const num = parseFloat(safeUsd.replace(/[^0-9.]/g, ''));
+        if (!isNaN(num) && num > 0) safeUsd = '$' + num.toFixed(2);
+      }
+      if (!safeUsd) safeUsd = '$79.00';
+      const numSaleUsd = parseFloat(safeUsd.replace(/[^0-9.]/g, '')) || 79;
+
+      let safeVnd = String(data.priceVnd || data.price || '').trim();
+      if (!safeVnd || !safeVnd.includes('₫')) {
+        safeVnd = (Math.round(numSaleUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+      }
+
+      let safeOrigUsd = '';
+      let safeOrigVnd = '';
+      const rawOrig = String(data.priceOrigUsd || data.priceOrig || data.originalPrice || '').trim();
+      if (rawOrig && !/min|read|\/|date/i.test(rawOrig)) {
+        let numOrig = parseFloat(rawOrig.replace(/[^0-9.]/g, ''));
+        if (numOrig && numOrig > numSaleUsd * 5) {
+          if (numOrig / 100 >= numSaleUsd && numOrig / 100 <= numSaleUsd * 2.5) {
+            numOrig = Math.round((numOrig / 100) * 100) / 100;
+          } else {
+            numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+          }
+        }
+        if (numOrig && numOrig >= numSaleUsd) {
+          safeOrigUsd = '$' + numOrig.toFixed(2);
+          safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+        }
+      }
+      if (!safeOrigUsd) {
+        const numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
         safeOrigUsd = '$' + numOrig.toFixed(2);
         safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
       }
+
+      const priceDisplay = (curr === 'USD') ? safeUsd : safeVnd;
+      const origDisplay = (curr === 'USD') ? safeOrigUsd : safeOrigVnd;
+
+      const elPrice = document.getElementById('hero-pinned-price');
+      if (elPrice) {
+        elPrice.setAttribute('data-vnd', safeVnd);
+        elPrice.setAttribute('data-usd', safeUsd);
+        elPrice.textContent = priceDisplay;
+      }
+
+      const elPriceOrig = document.getElementById('hero-pinned-price-orig');
+      if (elPriceOrig) {
+        elPriceOrig.setAttribute('data-vnd', safeOrigVnd);
+        elPriceOrig.setAttribute('data-usd', safeOrigUsd);
+        elPriceOrig.textContent = origDisplay;
+      }
+
+      const elDiscount = document.getElementById('hero-pinned-discount');
+      if (elDiscount) {
+        elDiscount.textContent = data.discountPercent || '-25%';
+      }
+
+      const elAffBtn = document.getElementById('hero-pinned-aff-btn');
+      if (elAffBtn) {
+        if (data.affiliateUrl) elAffBtn.href = data.affiliateUrl;
+        const orderLabel = (lang === 'vi') ? 'ORDER NOW (LINK ƯU ĐÃI)' : ((lang === 'zh') ? '立即购买 (专属优惠)' : 'ORDER NOW (DIRECT DEAL)');
+        const labelSpan = elAffBtn.querySelector('span');
+        if (labelSpan) labelSpan.textContent = orderLabel;
+      }
+
+      const elReviewBtn = document.getElementById('hero-pinned-review-btn');
+      if (elReviewBtn) {
+        elReviewBtn.href = data.postUrl || '#';
+        const reviewLabel = (lang === 'vi') ? 'Xem Đánh Giá' : ((lang === 'zh') ? '查看评测' : 'Read Review');
+        const labelSpan = elReviewBtn.querySelector('span');
+        if (labelSpan) labelSpan.textContent = reviewLabel;
+      }
+
+      // Synchronously update Left (Pros) and Right (Cons) floating cards
+      updateHeroFloatingProsCons(data, lang);
     }
 
-    if (!safeOrigUsd) {
-      const numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
-      safeOrigUsd = '$' + numOrig.toFixed(2);
-      safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+    if (immediate) {
+      applyData();
+      return;
     }
 
-    const priceDisplay = (curr === 'USD') ? safeUsd : safeVnd;
-    const origDisplay = (curr === 'USD') ? safeOrigUsd : safeOrigVnd;
+    // Buttery Smooth Crossfade across all hero elements together
+    if (isTransitioning) return;
+    isTransitioning = true;
 
-    const elPrice = document.getElementById('hero-pinned-price');
-    if (elPrice) {
-      elPrice.setAttribute('data-vnd', safeVnd);
-      elPrice.setAttribute('data-usd', safeUsd);
-      elPrice.textContent = priceDisplay;
-    }
+    animEls.forEach(el => {
+      el.style.transition = 'opacity 0.22s ease-out, transform 0.22s ease-out';
+      el.style.opacity = '0.18';
+      el.style.transform = 'scale(0.985)';
+    });
 
-    const elPriceOrig = document.getElementById('hero-pinned-price-orig');
-    if (elPriceOrig) {
-      elPriceOrig.setAttribute('data-vnd', safeOrigVnd);
-      elPriceOrig.setAttribute('data-usd', safeOrigUsd);
-      elPriceOrig.textContent = origDisplay;
-    }
+    setTimeout(() => {
+      applyData();
 
-    const elDiscount = document.getElementById('hero-pinned-discount');
-    if (elDiscount) {
-      elDiscount.textContent = data.discountPercent || '-25%';
-    }
+      // Smooth bloom fade back in
+      animEls.forEach(el => {
+        el.style.transition = 'opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1)';
+        el.style.opacity = '1';
+        el.style.transform = 'scale(1)';
+      });
 
-    const elAffBtn = document.getElementById('hero-pinned-aff-btn');
-    if (elAffBtn) {
-      if (data.affiliateUrl) elAffBtn.href = data.affiliateUrl;
-      const orderLabel = (lang === 'vi') ? 'ORDER NOW (LINK ƯU ĐÃI)' : ((lang === 'zh') ? '立即购买 (专属优惠)' : 'ORDER NOW (DIRECT DEAL)');
-      const labelSpan = elAffBtn.querySelector('span');
-      if (labelSpan) labelSpan.textContent = orderLabel;
-    }
+      resetProgressBar();
 
-    const elReviewBtn = document.getElementById('hero-pinned-review-btn');
-    if (elReviewBtn) {
-      elReviewBtn.href = data.postUrl || '#';
-      const reviewLabel = (lang === 'vi') ? 'Xem Đánh Giá' : ((lang === 'zh') ? '查看评测' : 'Read Review');
-      const labelSpan = elReviewBtn.querySelector('span');
-      if (labelSpan) labelSpan.textContent = reviewLabel;
-    }
-
-    // Dynamically update Left (Pros) and Right (Cons) floating cards
-    updateHeroFloatingProsCons(data, lang);
-
-    if (window.lucide) {
-      lucide.createIcons();
-    }
-
-    resetProgressBar();
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 320);
+    }, 220);
   }
 
   function startRotation() {
@@ -2241,10 +2443,6 @@ function initHeroPinnedProject() {
     if (heroRotateTimer) {
       clearInterval(heroRotateTimer);
       heroRotateTimer = null;
-    }
-    if (progressRaf) {
-      cancelAnimationFrame(progressRaf);
-      progressRaf = null;
     }
   }
 
@@ -2275,7 +2473,7 @@ function initHeroPinnedProject() {
         window.heroPinnedList = [data];
       }
 
-      renderHeroPinnedSlide(window.heroActivePinnedSlot || 0);
+      renderHeroPinnedSlide(window.heroActivePinnedSlot || 0, true);
 
       // Bind Pill Clicks
       const pills = document.querySelectorAll('#hero-spotlight-pills .hero-pin-pill');
@@ -2283,8 +2481,10 @@ function initHeroPinnedProject() {
         p.onclick = (e) => {
           e.preventDefault();
           const slot = parseInt(p.getAttribute('data-slot'), 10) || 0;
-          renderHeroPinnedSlide(slot);
-          startRotation();
+          if (slot !== window.heroActivePinnedSlot) {
+            renderHeroPinnedSlide(slot);
+            startRotation();
+          }
         };
       });
 
@@ -2301,19 +2501,30 @@ function initHeroPinnedProject() {
     }
   }
 
-  heroCard.addEventListener('mouseenter', () => { 
-    isHovered = true; 
-    stopRotation();
-  });
-  heroCard.addEventListener('mouseleave', () => { 
-    isHovered = false; 
-    startRotation();
+  // Hover Pause across hero card and both floating cards
+  const hoverContainers = [
+    heroCard,
+    document.querySelector('.mockup-perspective'),
+    document.getElementById('hero-floating-pros-card'),
+    document.getElementById('hero-floating-cons-card')
+  ].filter(Boolean);
+
+  hoverContainers.forEach(container => {
+    container.addEventListener('mouseenter', () => { 
+      isHovered = true; 
+      stopRotation();
+      pauseProgressBar();
+    });
+    container.addEventListener('mouseleave', () => { 
+      isHovered = false; 
+      startRotation();
+    });
   });
 
   loadPinnedProject();
 
-  window.addEventListener('currencyChanged', () => renderHeroPinnedSlide(window.heroActivePinnedSlot || 0));
-  window.addEventListener('languageChanged', () => renderHeroPinnedSlide(window.heroActivePinnedSlot || 0));
+  window.addEventListener('currencyChanged', () => renderHeroPinnedSlide(window.heroActivePinnedSlot || 0, true));
+  window.addEventListener('languageChanged', () => renderHeroPinnedSlide(window.heroActivePinnedSlot || 0, true));
 }
 
 // -------------------------------------------------------------
