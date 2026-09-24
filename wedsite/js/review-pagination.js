@@ -933,9 +933,14 @@
    * Handle Currency Changes
    */
   function onCurrencyChanged(e) {
-    const isVND = e.detail.currency === 'VND';
+    const isVND = e.detail && e.detail.currency === 'VND';
     const priceEls = document.querySelectorAll('#reviews-grid .price-val, #spotlight-review-container .price-val');
     priceEls.forEach(el => {
+      const v = isVND ? el.getAttribute('data-vnd') : el.getAttribute('data-usd');
+      if (v) el.innerText = v;
+    });
+    const strikeEls = document.querySelectorAll('#reviews-grid .strike-val, #spotlight-review-container .strike-val');
+    strikeEls.forEach(el => {
       const v = isVND ? el.getAttribute('data-vnd') : el.getAttribute('data-usd');
       if (v) el.innerText = v;
     });
