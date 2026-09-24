@@ -556,7 +556,51 @@
       const category = getPostField(post, 'category');
       const excerpt = getPostField(post, 'excerpt');
       const btnText = getPostField(post, 'btnText');
-      const priceDisplay = isVND ? (post.priceVnd || 'Liên hệ') : (post.priceUsd || '$69.00');
+
+      // 1. Format Sale USD Price safely
+      let safeUsd = String(post.priceUsd || '').trim();
+      if (safeUsd && !safeUsd.startsWith('$')) {
+        const num = parseFloat(safeUsd.replace(/[^0-9.]/g, ''));
+        if (!isNaN(num) && num > 0) safeUsd = '$' + num.toFixed(2);
+      }
+      if (!safeUsd) safeUsd = '$69.00';
+
+      // 2. Format Sale VND Price safely
+      let safeVnd = String(post.priceVnd || '').trim();
+      const numSaleUsd = parseFloat(safeUsd.replace(/[^0-9.]/g, '')) || 69;
+      if (!safeVnd || safeVnd === 'Liên hệ' || !safeVnd.includes('₫')) {
+        safeVnd = (Math.round(numSaleUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+      }
+
+      // 3. Format Strikethrough Original Price safely (reject corrupt dates/min read & fix 100x errors)
+      let safeOrigUsd = '';
+      let safeOrigVnd = '';
+      const rawOrig = String(post.priceOrig || post.originalPrice || '').trim();
+
+      if (rawOrig && !/min|read|\/|date/i.test(rawOrig)) {
+        let numOrig = parseFloat(rawOrig.replace(/[^0-9.]/g, ''));
+        // If typo like 10004 instead of 100.04
+        if (numOrig && numOrig > numSaleUsd * 5) {
+          if (numOrig / 100 >= numSaleUsd && numOrig / 100 <= numSaleUsd * 2.5) {
+            numOrig = Math.round((numOrig / 100) * 100) / 100;
+          } else {
+            numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+          }
+        }
+        if (numOrig && numOrig >= numSaleUsd) {
+          safeOrigUsd = '$' + numOrig.toFixed(2);
+          safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+        }
+      }
+
+      if (!safeOrigUsd) {
+        const numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+        safeOrigUsd = '$' + numOrig.toFixed(2);
+        safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+      }
+
+      const priceDisplay = isVND ? safeVnd : safeUsd;
+      const origDisplay = isVND ? safeOrigVnd : safeOrigUsd;
       const detailUrl = getPostDetailUrl(post);
       const affLink = post.affiliateLink || '#';
       const rating = post.rating || 9.6;
@@ -627,13 +671,11 @@
             <div class="pt-3.5 border-t border-purple-100 dark:border-purple-900/50 flex items-baseline justify-between mb-3.5">
               <div>
                 <span class="text-[10px] text-slate-400 uppercase font-bold block">${dict.priceLabel}</span>
-                <span class="text-lg sm:text-xl font-black text-purple-600 dark:text-purple-400 price-val font-display" data-usd="${post.priceUsd || '$69.00'}" data-vnd="${post.priceVnd || '1.750.000₫'}">
+                <span class="text-lg sm:text-xl font-black text-purple-600 dark:text-purple-400 price-val font-display" data-usd="${safeUsd}" data-vnd="${safeVnd}">
                   ${priceDisplay}
                 </span>
               </div>
-              ${post.priceOrig ? `
-                <span class="text-xs text-slate-400 line-through strike-val">${post.priceOrig}</span>
-              ` : ''}
+              <span class="text-xs text-slate-400 line-through strike-val" data-usd="${safeOrigUsd}" data-vnd="${safeOrigVnd}">${origDisplay}</span>
             </div>
 
             <!-- Action Buttons Grid: Read Review & Direct Affiliate Order Now -->
@@ -766,7 +808,20 @@
     const spotlight = allReviews.find(r => r.isFeatured) || allReviews[0];
     const activeCurr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
     const isVND = activeCurr === 'VND';
-    const priceDisplay = isVND ? (spotlight.priceVnd || '1.750.000₫') : (spotlight.priceUsd || '$69.00');
+    let safeSpotUsd = String(spotlight.priceUsd || '').trim();
+    if (safeSpotUsd && !safeSpotUsd.startsWith('$')) {
+      const num = parseFloat(safeSpotUsd.replace(/[^0-9.]/g, ''));
+      if (!isNaN(num) && num > 0) safeSpotUsd = '$' + num.toFixed(2);
+    }
+    if (!safeSpotUsd) safeSpotUsd = '$69.00';
+
+    let safeSpotVnd = String(spotlight.priceVnd || '').trim();
+    const numSpotUsd = parseFloat(safeSpotUsd.replace(/[^0-9.]/g, '')) || 69;
+    if (!safeSpotVnd || safeSpotVnd === 'Liên hệ' || !safeSpotVnd.includes('₫')) {
+      safeSpotVnd = (Math.round(numSpotUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+    }
+
+    const priceDisplay = isVND ? safeSpotVnd : safeSpotUsd;
     const detailUrl = getPostDetailUrl(spotlight);
     const title = getPostField(spotlight, 'title');
     const category = getPostField(spotlight, 'category');
@@ -812,7 +867,7 @@
             <div class="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               <div>
                 <span class="text-[10px] text-purple-300 block uppercase font-bold">${dict.spotlightPriceLabel}</span>
-                <span class="text-xl sm:text-2xl font-black text-amber-300 price-val font-display" data-usd="${spotlight.priceUsd || '$69.00'}" data-vnd="${spotlight.priceVnd || '1.750.000₫'}">
+                <span class="text-xl sm:text-2xl font-black text-amber-300 price-val font-display" data-usd="${safeSpotUsd}" data-vnd="${safeSpotVnd}">
                   ${priceDisplay}
                 </span>
               </div>

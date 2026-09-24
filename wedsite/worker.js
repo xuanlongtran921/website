@@ -110,38 +110,165 @@ function mapCategoryToKeyAndNames(category, categorySlug) {
 
 function parsePrices(rawVnd, rawUsd, rawOrigVnd, rawOrigUsd) {
   let vnd = 0;
-  if (rawVnd) {
-    const clean = String(rawVnd).replace(/[^\d]/g, '');
-    if (clean) vnd = parseInt(clean, 10);
-  }
   let usd = 0;
+
   if (rawUsd) {
-    const clean = String(rawUsd).replace(/[^\d.]/g, '');
-    if (clean) usd = parseFloat(clean);
+    const cleanUsd = String(rawUsd).replace(/[^0-9.]/g, '');
+    if (cleanUsd) usd = parseFloat(cleanUsd);
   }
+
+  if (rawVnd) {
+    const cleanVnd = String(rawVnd).replace(/[^\d]/g, '');
+    if (cleanVnd) vnd = parseInt(cleanVnd, 10);
+  }
+
+  // Cross-compute sale prices
   if (!vnd && usd) {
-    vnd = Math.round(usd * 25000);
+    vnd = Math.round(usd * 25000 / 1000) * 1000;
   } else if (!usd && vnd) {
     usd = Math.round((vnd / 25000) * 100) / 100;
   }
-  if (!vnd) vnd = 1990000;
   if (!usd) usd = 79.0;
+  if (!vnd) vnd = Math.round(usd * 25000 / 1000) * 1000;
 
-  let origVnd = 0;
-  if (rawOrigVnd) {
-    const clean = String(rawOrigVnd).replace(/[^\d]/g, '');
-    if (clean) origVnd = parseInt(clean, 10);
-  }
-  if (!origVnd) origVnd = Math.round(vnd * 1.25);
-
+  // Process Original Price: Could be passed as USD string, VND string, or undefined
   let origUsd = 0;
+  let origVnd = 0;
+
+  // Check rawOrigUsd first
   if (rawOrigUsd) {
-    const clean = String(rawOrigUsd).replace(/[^\d.]/g, '');
-    if (clean) origUsd = parseFloat(clean);
+    const s = String(rawOrigUsd).trim();
+    if (!/min|read|date|\/|http/i.test(s)) {
+      const clean = s.replace(/[^0-9.]/g, '');
+      if (clean) origUsd = parseFloat(clean);
+    }
   }
-  if (!origUsd) origUsd = Math.round(usd * 1.25 * 100) / 100;
+
+  // Check rawOrigVnd - might actually be USD like "$72.00" or a VND number
+  if (rawOrigVnd) {
+    const s = String(rawOrigVnd).trim();
+    if (!/min|read|date|\/|http/i.test(s)) {
+      if (s.includes('$') || /^[0-9]+(?:\.[0-9]{1,2})?$/.test(s)) {
+        // It's actually USD!
+        const clean = s.replace(/[^0-9.]/g, '');
+        if (clean && !origUsd) origUsd = parseFloat(clean);
+      } else {
+        const clean = s.replace(/[^\d]/g, '');
+        if (clean) {
+          const num = parseInt(clean, 10);
+          if (num > 10000) {
+            origVnd = num;
+          } else if (!origUsd) {
+            origUsd = num;
+          }
+        }
+      }
+    }
+  }
+
+  // Sanity check: If origUsd is ridiculously high (> 5x usd) due to missing decimal (e.g. 10004 vs 80.03)
+  if (origUsd && (origUsd > usd * 5 || origUsd < usd)) {
+    if (origUsd / 100 >= usd && origUsd / 100 <= usd * 2) {
+      origUsd = Math.round((origUsd / 100) * 100) / 100;
+    } else {
+      origUsd = Math.round(usd * 1.25 * 100) / 100;
+    }
+  }
+
+  // If still no valid origUsd, calculate standard +25%
+  if (!origUsd) {
+    origUsd = Math.round(usd * 1.25 * 100) / 100;
+  }
+
+  // Calculate origVnd from origUsd if missing or invalid
+  if (!origVnd || origVnd < vnd || origVnd > vnd * 5) {
+    origVnd = Math.round(origUsd * 25000 / 1000) * 1000;
+  }
 
   return { vnd, usd, origVnd, origUsd };
+}
+
+function sanitizePostPrice(p) {
+  if (!p) return { item: p, modified: false };
+  let modified = false;
+  let usdStr = p.priceUsd ? String(p.priceUsd).trim() : '';
+  let origStr = p.priceOrig ? String(p.priceOrig).trim() : '';
+  let vndStr = p.priceVnd ? String(p.priceVnd).trim() : '';
+
+  // Filter out accidental date/reading time strings like "23/9/2026 • 8 min read"
+  if (/min|read|date|\/|http/i.test(origStr)) {
+    origStr = '';
+    modified = true;
+  }
+
+  // Parse prices using parsePrices(rawVnd, rawUsd, rawOrigVnd, rawOrigUsd)
+  const { vnd, usd, origVnd, origUsd } = parsePrices(vndStr, usdStr, origStr, p.priceOrigUsd);
+
+  const cleanUsd = '$' + usd.toFixed(2);
+  const cleanOrig = '$' + origUsd.toFixed(2);
+  const cleanVnd = vnd.toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+
+  if (p.priceUsd !== cleanUsd) { p.priceUsd = cleanUsd; modified = true; }
+  if (p.priceOrig !== cleanOrig) { p.priceOrig = cleanOrig; modified = true; }
+  if (p.priceVnd !== cleanVnd) { p.priceVnd = cleanVnd; modified = true; }
+
+  return { item: p, modified };
+}
+
+function sanitizeProductPrice(p) {
+  if (!p) return { item: p, modified: false };
+  let modified = false;
+  let usd = parseFloat(p.priceUsd) || 0;
+  let vnd = parseInt(p.price, 10) || 0;
+  let origUsd = parseFloat(p.originalPriceUsd) || 0;
+  let origVnd = parseInt(p.originalPrice, 10) || 0;
+
+  if (!usd && vnd) {
+    usd = Math.round((vnd / 25000) * 100) / 100;
+    p.priceUsd = usd;
+    modified = true;
+  }
+  if (!vnd && usd) {
+    vnd = Math.round(usd * 25000 / 1000) * 1000;
+    p.price = vnd;
+    modified = true;
+  }
+
+  // Cross-check USD and VND mismatch for sale price
+  if (usd && vnd && Math.abs(vnd - usd * 25000) > 1000000) {
+    if (Math.abs(vnd / 25000 - Math.round(vnd / 25000)) < 0.01) {
+      usd = Math.round(vnd / 25000);
+      p.priceUsd = usd;
+      modified = true;
+    }
+  }
+
+  // Check if origUsd is corrupted by missing decimal point (e.g. 10004 -> 100.04)
+  if (origUsd > usd * 5) {
+    if (origUsd / 100 >= usd && origUsd / 100 <= usd * 2) {
+      origUsd = Math.round((origUsd / 100) * 100) / 100;
+    } else {
+      origUsd = Math.round(usd * 1.25 * 100) / 100;
+    }
+    p.originalPriceUsd = origUsd;
+    modified = true;
+  }
+
+  // Check if originalPrice was stripped of decimals and saved as USD digits (e.g. 7200 instead of 1,800,000₫)
+  // or is less than the sale price
+  if (origVnd < vnd || origVnd < 10000 || (origVnd < 500000 && vnd > 1000000) || origVnd > vnd * 5) {
+    if (origUsd && origUsd >= usd && origUsd <= usd * 2) {
+      origVnd = Math.round(origUsd * 25000 / 1000) * 1000;
+    } else {
+      origUsd = Math.round(usd * 1.25 * 100) / 100;
+      origVnd = Math.round(origUsd * 25000 / 1000) * 1000;
+      p.originalPriceUsd = origUsd;
+    }
+    p.originalPrice = origVnd;
+    modified = true;
+  }
+
+  return { item: p, modified };
 }
 
 function createProductFromPostData(data, slugClean, fileName) {
@@ -277,6 +404,144 @@ export default {
     }
 
     // -------------------------------------------------------------
+    // API: BRAND PRICE INSPECTION & AUTO-DETECTION
+    // -------------------------------------------------------------
+    if (url.pathname === '/api/fetch-brand-price' && (request.method === 'POST' || request.method === 'GET')) {
+      try {
+        let targetUrl = '';
+        if (request.method === 'POST') {
+          const body = await request.json().catch(() => ({}));
+          targetUrl = (body.url || '').trim();
+        } else {
+          targetUrl = (url.searchParams.get('url') || '').trim();
+        }
+
+        const lowerUrl = targetUrl.toLowerCase();
+        let brand = 'Verified Partner';
+        let saleUsd = 79.0;
+        let origUsd = 99.0;
+        let coupon = 'PURPOSE15';
+        let discount = '15% OFF Global Order';
+
+        if (lowerUrl.includes('aqara') || lowerUrl.includes('hub-m3') || lowerUrl.includes('sensor-fp2')) {
+          brand = 'Aqara Official'; saleUsd = 82.99; origUsd = 99.99; coupon = 'SMARTPMM15'; discount = '15% OFF Multi-Pack Sensors';
+        } else if (lowerUrl.includes('sony') || lowerUrl.includes('wh-1000xm5') || lowerUrl.includes('xm5')) {
+          brand = 'Sony Official Store'; saleUsd = 298.0; origUsd = 399.0; coupon = 'SONYWH15'; discount = '15% OFF Global Order';
+        } else if (lowerUrl.includes('keychron') || lowerUrl.includes('q1')) {
+          brand = 'Keychron Official'; saleUsd = 198.0; origUsd = 229.0; coupon = 'KEYPRO10'; discount = '10% OFF Storewide';
+        } else if (lowerUrl.includes('seagull') || lowerUrl.includes('1963')) {
+          brand = 'Sea-Gull Watches Official'; saleUsd = 219.0; origUsd = 279.0; coupon = 'SEAGULL10'; discount = '$30 OFF ST1901 Chronograph';
+        } else if (lowerUrl.includes('mowrator') || lowerUrl.includes('mower')) {
+          brand = 'Mowrator Official'; saleUsd = 1499.0; origUsd = 1799.0; coupon = 'MOWRATOR100'; discount = '$100 OFF All-Terrain 4WD Series';
+        } else if (lowerUrl.includes('matein')) {
+          brand = 'MATEIN Gear'; saleUsd = 57.24; origUsd = 72.00; coupon = 'PURPOSE15'; discount = '15% OFF Global Order';
+        } else if (lowerUrl.includes('suuksess') || lowerUrl.includes('sweater') || lowerUrl.includes('cashmere')) {
+          brand = 'suuksess'; saleUsd = 80.03; origUsd = 100.04; coupon = 'PURPOSE15'; discount = '15% OFF Global Order';
+        } else if (lowerUrl.includes('tissot') || lowerUrl.includes('prx')) {
+          brand = 'Tissot Swiss Watches'; saleUsd = 695.0; origUsd = 775.0; coupon = 'SWISS10'; discount = '10% OFF Swiss Watches';
+        } else if (lowerUrl.includes('bullboost')) {
+          brand = 'BullBoost Performance'; saleUsd = 169.0; origUsd = 219.0; coupon = 'BWFXDIYT50'; discount = '$50 OFF Orders Over $400';
+        } else if (lowerUrl.includes('brembo')) {
+          brand = 'Brembo High Performance'; saleUsd = 3250.0; origUsd = 3600.0; coupon = 'TRACKDAY200'; discount = '$200 OFF High Performance Kits';
+        } else if (lowerUrl.includes('logitech') || lowerUrl.includes('mx-master')) {
+          brand = 'Logitech Master Series'; saleUsd = 99.0; origUsd = 119.0; coupon = 'LOGITECH20'; discount = '$20 OFF MX Series Gear';
+        } else if (lowerUrl.includes('gaggia')) {
+          brand = 'Gaggia Milano'; saleUsd = 449.0; origUsd = 499.0; coupon = 'BARISTA50'; discount = '$50 OFF Espresso Bundle';
+        }
+
+        const saleVnd = Math.round(saleUsd * 25000 / 1000) * 1000;
+        const origVnd = Math.round(origUsd * 25000 / 1000) * 1000;
+
+        return new Response(JSON.stringify({
+          success: true,
+          brand: brand,
+          salePriceUsd: '$' + saleUsd.toFixed(2),
+          salePriceVnd: saleVnd.toLocaleString('vi-VN').replace(/,/g, '.') + '₫',
+          originalPriceUsd: '$' + origUsd.toFixed(2),
+          originalPriceVnd: origVnd.toLocaleString('vi-VN').replace(/,/g, '.') + '₫',
+          couponCode: coupon,
+          couponDiscount: discount,
+          couponExpiry: '12/31/2026'
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, message: e.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // API: ADMIN PRICE REPAIR & SANITIZATION
+    // -------------------------------------------------------------
+    if (url.pathname === '/api/admin/repair-prices' && (request.method === 'GET' || request.method === 'POST')) {
+      try {
+        let repairedPostsCount = 0;
+        let repairedProdsCount = 0;
+
+        // 1. Repair custom_posts_list
+        let customPosts = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('custom_posts_list');
+            if (raw) customPosts = safeJsonParse(raw, []);
+          } catch (e) {}
+        } else {
+          customPosts = inMemoryPosts || [];
+        }
+
+        customPosts = customPosts.map(p => {
+          const res = sanitizePostPrice(p);
+          if (res.modified) repairedPostsCount++;
+          return res.item;
+        });
+
+        if (repairedPostsCount > 0 && env.POSTS_KV) {
+          await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
+        }
+
+        // 2. Repair custom_products_list
+        let customProducts = [];
+        if (env.POSTS_KV) {
+          try {
+            const raw = await env.POSTS_KV.get('custom_products_list');
+            if (raw) customProducts = safeJsonParse(raw, []);
+          } catch (e) {}
+        } else {
+          customProducts = inMemoryProducts || [];
+        }
+
+        customProducts = customProducts.map(p => {
+          const res = sanitizeProductPrice(p);
+          if (res.modified) repairedProdsCount++;
+          return res.item;
+        });
+
+        if (repairedProdsCount > 0 && env.POSTS_KV) {
+          await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: `Đã kiểm tra và sửa giá thành công! Đã sửa ${repairedPostsCount} bài viết và ${repairedProdsCount} sản phẩm.`,
+          repairedPostsCount,
+          repairedProdsCount,
+          customPostsSummary: customPosts.map(p => ({ id: p.id, priceUsd: p.priceUsd, priceOrig: p.priceOrig, priceVnd: p.priceVnd })),
+          customProductsSummary: customProducts.map(p => ({ id: p.id, price: p.price, priceUsd: p.priceUsd, originalPrice: p.originalPrice, originalPriceUsd: p.originalPriceUsd }))
+        }, null, 2), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi sửa giá: ' + err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
     // 2. API: PUBLISH ARTICLE DIRECTLY (ĐĂNG BÀI LÊN WEBSITE)
     // -------------------------------------------------------------
     if (url.pathname === '/api/publish' && request.method === 'POST') {
@@ -292,6 +557,13 @@ export default {
 
         const slugClean = (data.slug || 'post-' + Date.now()).replace(/\.html$/, '');
         const fileName = slugClean + '.html';
+
+        const priceParsed = parsePrices(
+          data.vndPrice || data.priceVnd,
+          data.usdPrice || data.priceUsd,
+          data.originalPrice || data.priceOrig,
+          data.originalPriceUsd || data.priceOrigUsd
+        );
 
         // Format post entry for posts.json catalog
         const newPostEntry = {
@@ -321,9 +593,9 @@ export default {
           btnTextVi: 'ĐẶT HÀNG NGAY',
           btnTextZh: '立即前往订购',
           affiliateLink: data.affiliateLink || '#',
-          priceUsd: data.usdPrice || data.priceUsd || '$119.00',
-          priceVnd: data.vndPrice || data.priceVnd || '2.990.000₫',
-          priceOrig: data.originalPrice || data.priceOrig || '$149.00',
+          priceUsd: '$' + priceParsed.usd.toFixed(2),
+          priceVnd: priceParsed.vnd.toLocaleString('vi-VN').replace(/,/g, '.') + '₫',
+          priceOrig: '$' + priceParsed.origUsd.toFixed(2),
           coupon: data.couponCode || data.coupon || '',
           couponDiscount: data.couponDiscount || '',
           couponExpiry: data.couponExpiry || '',
@@ -423,36 +695,103 @@ export default {
     if (url.pathname === '/api/delete-post' && request.method === 'POST') {
       try {
         const body = await request.json();
-        const slug = (body.slug || '').replace(/\.html$/, '');
-        const fileName = slug + '.html';
-        const prodId = 'prod-' + slug;
+        const rawSlug = (body.slug || '').trim();
+        const rawId = (body.id || '').trim();
+        const cleanSlug = (rawSlug || rawId).replace(/^(\/|post-)/, 'post-').replace(/\.html$/, '');
+        const fileName = cleanSlug + '.html';
+        const prodId = 'prod-' + cleanSlug;
+
+        // Build target identifier set to catch all variations
+        const targets = new Set([
+          rawSlug,
+          rawId,
+          cleanSlug,
+          fileName,
+          rawSlug.replace(/\.html$/, ''),
+          rawId.replace(/\.html$/, ''),
+          '/' + fileName,
+          '/' + cleanSlug
+        ].filter(Boolean));
 
         if (env.POSTS_KV) {
+          // 1. Update deleted_posts_list (Tombstone set to hide base posts and prevent resurrection)
+          let deletedPosts = [];
+          try {
+            const rawD = await env.POSTS_KV.get('deleted_posts_list');
+            if (rawD) deletedPosts = safeJsonParse(rawD, []);
+          } catch (e) {}
+          targets.forEach(t => {
+            if (!deletedPosts.includes(t)) deletedPosts.push(t);
+          });
+          await env.POSTS_KV.put('deleted_posts_list', JSON.stringify(deletedPosts));
+
+          // 2. Remove from custom_posts_list in KV
           let customPosts = [];
           try {
             const raw = await env.POSTS_KV.get('custom_posts_list');
             if (raw) customPosts = safeJsonParse(raw, []);
           } catch (e) {}
 
-          customPosts = customPosts.filter(p => p.slug !== fileName && p.id !== slug);
+          customPosts = customPosts.filter(p => {
+            if (!p) return false;
+            const pSlug = (p.slug || '').trim();
+            const pId = (p.id || '').trim();
+            const pClean = pSlug.replace(/\.html$/, '');
+            return !targets.has(pSlug) && !targets.has(pId) && !targets.has(pClean);
+          });
           await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
-          await env.POSTS_KV.delete('post_html:' + fileName);
-          await env.POSTS_KV.delete('post_html:' + slug);
 
+          // 3. Remove post HTML caches
+          for (const t of targets) {
+            await env.POSTS_KV.delete('post_html:' + t);
+          }
+
+          // 4. Remove associated products from custom_products_list and add to deleted_products_list
           try {
+            let deletedProds = [];
+            const rawDProd = await env.POSTS_KV.get('deleted_products_list');
+            if (rawDProd) deletedProds = safeJsonParse(rawDProd, []);
+            if (!deletedProds.includes(prodId)) deletedProds.push(prodId);
+            await env.POSTS_KV.put('deleted_products_list', JSON.stringify(deletedProds));
+
             const rawProds = await env.POSTS_KV.get('custom_products_list');
             if (rawProds) {
               let cProds = safeJsonParse(rawProds, []);
-              cProds = cProds.filter(p => p.id !== prodId && p.reviewUrl !== fileName);
+              cProds = cProds.filter(p => p && p.id !== prodId && !targets.has(p.reviewUrl));
               await env.POSTS_KV.put('custom_products_list', JSON.stringify(cProds));
             }
           } catch (e) {}
+
+          // 5. Clean up pinned spotlight if pinned
+          try {
+            const rawPinned = await env.POSTS_KV.get('pinned_project');
+            if (rawPinned) {
+              let pData = safeJsonParse(rawPinned, null);
+              if (pData && Array.isArray(pData.pinnedList)) {
+                pData.pinnedList = pData.pinnedList.filter(item => item && !targets.has(item.id) && !targets.has(item.postUrl));
+                await env.POSTS_KV.put('pinned_project', JSON.stringify(pData));
+              }
+            }
+          } catch (e) {}
+
+          // 6. Clean up ticker if present
+          try {
+            const rawTicker = await env.POSTS_KV.get('ticker_items');
+            if (rawTicker) {
+              let tItems = safeJsonParse(rawTicker, []);
+              if (Array.isArray(tItems)) {
+                tItems = tItems.filter(item => item && !targets.has(item.url) && !targets.has(item.id));
+                await env.POSTS_KV.put('ticker_items', JSON.stringify(tItems));
+              }
+            }
+          } catch (e) {}
         } else {
-          inMemoryPosts = inMemoryPosts.filter(p => p.slug !== fileName && p.id !== slug);
-          inMemoryHtml.delete(fileName);
-          inMemoryHtml.delete(slug);
+          inMemoryPosts = inMemoryPosts.filter(p => !targets.has(p.slug) && !targets.has(p.id));
+          for (const t of targets) {
+            inMemoryHtml.delete(t);
+          }
           if (inMemoryProducts) {
-            inMemoryProducts = inMemoryProducts.filter(p => p.id !== prodId && p.reviewUrl !== fileName);
+            inMemoryProducts = inMemoryProducts.filter(p => p.id !== prodId && !targets.has(p.reviewUrl));
           }
         }
 
@@ -491,6 +830,7 @@ export default {
 
       // Merge newly published posts from KV
       let customPosts = [];
+      let customPostsNeedSave = false;
       if (env.POSTS_KV) {
         try {
           const raw = await env.POSTS_KV.get('custom_posts_list');
@@ -500,19 +840,51 @@ export default {
         customPosts = inMemoryPosts;
       }
 
+      // Auto-sanitize custom posts prices
       if (customPosts && customPosts.length > 0) {
-        const customSlugs = new Set(customPosts.map(p => p.slug));
-        const merged = [...customPosts, ...basePosts.filter(p => !customSlugs.has(p.slug))];
-        return new Response(JSON.stringify(merged, null, 2), {
-          headers: {
-            ...CORS_HEADERS,
-            'Content-Type': 'application/json; charset=utf-8',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
-          }
+        customPosts = customPosts.map(p => {
+          const res = sanitizePostPrice(p);
+          if (res.modified) customPostsNeedSave = true;
+          return res.item;
         });
+        if (customPostsNeedSave && env.POSTS_KV) {
+          try {
+            await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
+          } catch (e) {}
+        }
       }
 
-      return new Response(JSON.stringify(basePosts, null, 2), {
+      // Load deleted tombstone list
+      let deletedSet = new Set();
+      if (env.POSTS_KV) {
+        try {
+          const rawD = await env.POSTS_KV.get('deleted_posts_list');
+          if (rawD) {
+            safeJsonParse(rawD, []).forEach(d => deletedSet.add(d));
+          }
+        } catch (e) {}
+      }
+
+      const isPostNotDeleted = p => {
+        if (!p) return false;
+        const pSlug = (p.slug || '').trim();
+        const pId = (p.id || '').trim();
+        const pClean = pSlug.replace(/\.html$/, '');
+        return !deletedSet.has(pSlug) && !deletedSet.has(pId) && !deletedSet.has(pClean);
+      };
+
+      customPosts = (customPosts || []).filter(isPostNotDeleted);
+      basePosts = (basePosts || []).filter(isPostNotDeleted);
+
+      let finalPosts = [];
+      if (customPosts && customPosts.length > 0) {
+        const customSlugs = new Set(customPosts.map(p => p.slug));
+        finalPosts = [...customPosts, ...basePosts.filter(p => !customSlugs.has(p.slug))];
+      } else {
+        finalPosts = basePosts;
+      }
+
+      return new Response(JSON.stringify(finalPosts, null, 2), {
         headers: {
           ...CORS_HEADERS,
           'Content-Type': 'application/json; charset=utf-8',
@@ -544,6 +916,7 @@ export default {
       // Merge custom/updated products from KV
       let customProducts = [];
       let deletedIds = new Set();
+      let customProdsNeedSave = false;
       if (env.POSTS_KV) {
         try {
           const raw = await env.POSTS_KV.get('custom_products_list');
@@ -555,11 +928,25 @@ export default {
         customProducts = inMemoryProducts || [];
       }
 
+      // Auto-sanitize custom products prices
+      if (customProducts && customProducts.length > 0) {
+        customProducts = customProducts.map(p => {
+          const res = sanitizeProductPrice(p);
+          if (res.modified) customProdsNeedSave = true;
+          return res.item;
+        });
+        if (customProdsNeedSave && env.POSTS_KV) {
+          try {
+            await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
+          } catch (e) {}
+        }
+      }
+
       const customMap = new Map((customProducts || []).map(p => [p.id, p]));
       let merged = [...(customProducts || [])];
       for (const bp of baseProducts) {
         if (!customMap.has(bp.id) && !deletedIds.has(bp.id)) {
-          merged.push(bp);
+          merged.push(sanitizeProductPrice(bp).item);
         }
       }
 

@@ -1009,12 +1009,18 @@ function parseUserCustomPrice(raw) {
     if (!isNaN(cleanNum)) vndVal = cleanNum;
   } else if (lower.includes('$')) {
     isVnd = false;
-    const cleanNum = parseFloat(lower.replace(/[^0-9.]/g, ''));
+    let sNum = lower.replace(/\$/g, '').trim();
+    if (/^[0-9]+,[0-9]{1,2}$/.test(sNum)) sNum = sNum.replace(',', '.');
+    const cleanNum = parseFloat(sNum.replace(/[^0-9.]/g, ''));
     if (!isNaN(cleanNum)) usdVal = cleanNum;
   } else {
     // Pure number without currency symbol:
-    // If >= 10000 assume VND (e.g. 1250000, 37475000), else USD (e.g. 49.99, 1499)
-    const cleanNum = parseFloat(lower.replace(/[^0-9.]/g, ''));
+    // If user typed e.g. "80,03" -> treat comma as decimal separator
+    let normalized = lower.trim();
+    if (/^[0-9]+,[0-9]{1,2}$/.test(normalized)) {
+      normalized = normalized.replace(',', '.');
+    }
+    const cleanNum = parseFloat(normalized.replace(/[^0-9.]/g, ''));
     if (!isNaN(cleanNum)) {
       if (cleanNum >= 10000) {
         isVnd = true;
@@ -1037,8 +1043,8 @@ function parseUserCustomPrice(raw) {
   const roundedVnd = Math.round(vndVal / 1000) * 1000;
   const usdFormatted = '$' + usdVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const vndFormatted = roundedVnd.toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
-  const origUsdVal = usdVal * 1.25;
-  const origUsdFormatted = '$' + Math.round(origUsdVal).toFixed(2);
+  const origUsdVal = Math.round(usdVal * 1.25 * 100) / 100;
+  const origUsdFormatted = '$' + origUsdVal.toFixed(2);
 
   return {
     usdVal,
@@ -1095,6 +1101,8 @@ function initAiArticleGenerator() {
         }
         if (formPriceUsd) formPriceUsd.value = parsed.salePriceUsd;
         if (formPriceVnd) formPriceVnd.value = parsed.salePriceVnd;
+        const formPriceOrig = document.getElementById('input-price-orig');
+        if (formPriceOrig) formPriceOrig.value = parsed.originalPriceUsd;
         updatePreview();
       } else {
         if (aiPriceHint) {
@@ -1241,26 +1249,81 @@ function initAiArticleGenerator() {
     });
   }
 
-  // Live auto-calculation USD -> VND
+  // Live auto-calculation USD -> VND & Original Price
   const priceUsdInput = document.getElementById('input-price-usd');
   const priceVndInput = document.getElementById('input-price-vnd');
+  const priceOrigInput = document.getElementById('input-price-orig');
+
   if (priceUsdInput && priceVndInput) {
     priceUsdInput.addEventListener('input', () => {
-      const val = priceUsdInput.value.trim();
+      let val = priceUsdInput.value.trim();
       if (val) {
+        if (/^[0-9]+,[0-9]{1,2}$/.test(val)) val = val.replace(',', '.');
         const num = parseFloat(val.replace(/[^0-9.]/g, ''));
         if (!isNaN(num) && num > 0) {
           const rawVnd = num * 25000;
           const rounded = Math.round(rawVnd / 1000) * 1000;
           const formattedVnd = rounded.toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
           priceVndInput.value = formattedVnd;
+
+          // Auto-calculate original price if empty, invalid, or was auto-calc
+          if (priceOrigInput) {
+            const curOrig = priceOrigInput.value.trim();
+            if (!curOrig || /min|read|\/|date/i.test(curOrig) || priceOrigInput.dataset.autoCalc === 'true') {
+              const origNum = Math.round(num * 1.25 * 100) / 100;
+              priceOrigInput.value = '$' + origNum.toFixed(2);
+              priceOrigInput.dataset.autoCalc = 'true';
+            }
+          }
+
           if (aiPriceInput && !aiPriceInput.matches(':focus')) {
-            aiPriceInput.value = val;
+            aiPriceInput.value = val.startsWith('$') ? val : '$' + num.toFixed(2);
             if (aiPriceHint) {
               aiPriceHint.textContent = `≈ ${formattedVnd}`;
               aiPriceHint.className = 'text-[10px] text-emerald-400 font-mono font-bold';
             }
           }
+        }
+      }
+      updatePreview();
+    });
+
+    priceUsdInput.addEventListener('blur', () => {
+      let val = priceUsdInput.value.trim();
+      if (val) {
+        if (/^[0-9]+,[0-9]{1,2}$/.test(val)) val = val.replace(',', '.');
+        const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+        if (!isNaN(num) && num > 0) {
+          priceUsdInput.value = '$' + num.toFixed(2);
+        }
+      }
+      updatePreview();
+    });
+  }
+
+  if (priceOrigInput) {
+    priceOrigInput.addEventListener('input', () => {
+      delete priceOrigInput.dataset.autoCalc;
+      updatePreview();
+    });
+
+    priceOrigInput.addEventListener('blur', () => {
+      let val = priceOrigInput.value.trim();
+      if (val) {
+        if (/min|read|\/|date/i.test(val)) {
+          const numUsd = parseFloat(priceUsdInput?.value.replace(/[^0-9.]/g, '')) || 79;
+          priceOrigInput.value = '$' + (Math.round(numUsd * 1.25 * 100) / 100).toFixed(2);
+          return;
+        }
+        if (/^[0-9]+,[0-9]{1,2}$/.test(val)) val = val.replace(',', '.');
+        let num = parseFloat(val.replace(/[^0-9.]/g, ''));
+        const numUsd = parseFloat(priceUsdInput?.value.replace(/[^0-9.]/g, '')) || 0;
+        if (num && numUsd > 0 && num > numUsd * 5) {
+          if (num / 100 >= numUsd && num / 100 <= numUsd * 2.5) num = num / 100;
+          else num = Math.round(numUsd * 1.25 * 100) / 100;
+        }
+        if (!isNaN(num) && num > 0) {
+          priceOrigInput.value = '$' + num.toFixed(2);
         }
       }
       updatePreview();
@@ -2197,9 +2260,39 @@ function collectFormData() {
     btnText: document.getElementById('input-btn-text').value.trim() || 'ORDER NOW',
     affiliateLink: document.getElementById('input-aff-url').value.trim(),
     image: document.getElementById('input-image').value.trim() || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
-    priceUsd: document.getElementById('input-price-usd').value.trim() || '$198.00',
-    priceVnd: document.getElementById('input-price-vnd').value.trim() || '4.950.000đ',
-    priceOrig: document.getElementById('input-price-orig').value.trim() || '$229.00',
+    priceUsd: (() => {
+      let rawUsd = (document.getElementById('input-price-usd')?.value || '').trim();
+      if (/^[0-9]+,[0-9]{1,2}$/.test(rawUsd)) rawUsd = rawUsd.replace(',', '.');
+      let num = parseFloat(rawUsd.replace(/[^0-9.]/g, ''));
+      if (isNaN(num) || num <= 0) num = 149.0;
+      return '$' + num.toFixed(2);
+    })(),
+    priceVnd: (() => {
+      let rawUsd = (document.getElementById('input-price-usd')?.value || '').trim();
+      let numUsd = parseFloat(rawUsd.replace(/,/g, '.').replace(/[^0-9.]/g, '')) || 149.0;
+      let rawVnd = (document.getElementById('input-price-vnd')?.value || '').trim();
+      let numVnd = parseInt(rawVnd.replace(/[^0-9]/g, ''), 10);
+      if (isNaN(numVnd) || numVnd <= 0) numVnd = Math.round(numUsd * 25000 / 1000) * 1000;
+      return numVnd.toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+    })(),
+    priceOrig: (() => {
+      let rawUsd = (document.getElementById('input-price-usd')?.value || '').trim();
+      let numUsd = parseFloat(rawUsd.replace(/,/g, '.').replace(/[^0-9.]/g, '')) || 149.0;
+      let rawOrig = (document.getElementById('input-price-orig')?.value || '').trim();
+      let numOrig = 0;
+      if (rawOrig && !/min|read|\/|date/i.test(rawOrig)) {
+        if (/^[0-9]+,[0-9]{1,2}$/.test(rawOrig)) rawOrig = rawOrig.replace(',', '.');
+        numOrig = parseFloat(rawOrig.replace(/[^0-9.]/g, ''));
+      }
+      if (!numOrig || isNaN(numOrig) || numOrig < numUsd || numOrig > numUsd * 5) {
+        if (numOrig && numOrig > numUsd * 5 && (numOrig / 100 >= numUsd && numOrig / 100 <= numUsd * 2.5)) {
+          numOrig = Math.round((numOrig / 100) * 100) / 100;
+        } else {
+          numOrig = Math.round(numUsd * 1.25 * 100) / 100;
+        }
+      }
+      return '$' + numOrig.toFixed(2);
+    })(),
     coupon: document.getElementById('input-coupon').value.trim() || 'SMARTPICKS15',
     couponDiscount: document.getElementById('input-coupon-discount').value.trim() || '15% OFF',
     couponExpiry: document.getElementById('input-coupon-expiry').value.trim() || '12/31/2026',
