@@ -1062,69 +1062,70 @@ export default {
 
       // Ensure every active post has a matching product, and synchronize all fields from the post!
       let synchronizedProducts = [];
-      let seenProdIds = new Set();
+      let seenReviewUrls = new Set();
 
       for (const post of allActivePosts) {
         const postSlug = (post.slug || post.id || '').replace(/^(\/|post-)/, '').replace(/\.html$/, '');
         const postFileName = (post.slug && post.slug.endsWith('.html')) ? post.slug : ('post-' + postSlug + '.html');
         const defaultProdId = 'prod-' + postSlug;
 
+        if (seenReviewUrls.has(postFileName) || seenReviewUrls.has(postSlug)) {
+          continue;
+        }
+
         if (deletedProdIds.has(defaultProdId) || deletedProdIds.has('prod-post-' + postSlug)) {
           continue;
         }
 
-        // Find existing product matching this post
+        // Find existing product matching this post by reviewUrl, ID, or title
         let existingProd = allExistingProds.find(pr => 
           pr && (
-            pr.id === defaultProdId || 
-            pr.id === 'prod-post-' + postSlug || 
             pr.reviewUrl === postFileName ||
             pr.reviewUrl === post.slug ||
+            pr.id === defaultProdId || 
+            pr.id === 'prod-post-' + postSlug || 
             (pr.title && post.title && pr.title.trim().toLowerCase() === post.title.trim().toLowerCase())
           )
         );
 
         const freshProd = createProductFromPostData(post, postSlug, postFileName);
+        let finalProd = null;
 
         if (existingProd) {
-          // Sync fields from post
-          let mod = false;
-          if (existingProd.title !== freshProd.title) { existingProd.title = freshProd.title; mod = true; }
-          if (existingProd.titleEn !== freshProd.titleEn) { existingProd.titleEn = freshProd.titleEn; mod = true; }
-          if (existingProd.titleVi !== freshProd.titleVi) { existingProd.titleVi = freshProd.titleVi; mod = true; }
-          if (existingProd.titleZh !== freshProd.titleZh) { existingProd.titleZh = freshProd.titleZh; mod = true; }
-          if (existingProd.price !== freshProd.price) { existingProd.price = freshProd.price; mod = true; }
-          if (existingProd.priceUsd !== freshProd.priceUsd) { existingProd.priceUsd = freshProd.priceUsd; mod = true; }
-          if (existingProd.originalPrice !== freshProd.originalPrice) { existingProd.originalPrice = freshProd.originalPrice; mod = true; }
-          if (existingProd.originalPriceUsd !== freshProd.originalPriceUsd) { existingProd.originalPriceUsd = freshProd.originalPriceUsd; mod = true; }
-          if (existingProd.image !== freshProd.image && freshProd.image) { existingProd.image = freshProd.image; mod = true; }
-          if (existingProd.affiliateUrl !== freshProd.affiliateUrl) { existingProd.affiliateUrl = freshProd.affiliateUrl; mod = true; }
-          if (existingProd.reviewUrl !== freshProd.reviewUrl) { existingProd.reviewUrl = freshProd.reviewUrl; mod = true; }
-          if (existingProd.categoryKey !== freshProd.categoryKey) { existingProd.categoryKey = freshProd.categoryKey; mod = true; }
-          if (existingProd.category !== freshProd.category) { existingProd.category = freshProd.category; mod = true; }
-          if (existingProd.categoryEn !== freshProd.categoryEn) { existingProd.categoryEn = freshProd.categoryEn; mod = true; }
-          if (existingProd.categoryVi !== freshProd.categoryVi) { existingProd.categoryVi = freshProd.categoryVi; mod = true; }
-          if (existingProd.categoryZh !== freshProd.categoryZh) { existingProd.categoryZh = freshProd.categoryZh; mod = true; }
-          if (existingProd.discountPercent !== freshProd.discountPercent) { existingProd.discountPercent = freshProd.discountPercent; mod = true; }
-          if (existingProd.rating !== freshProd.rating) { existingProd.rating = freshProd.rating; mod = true; }
-          if (existingProd.brand !== freshProd.brand) { existingProd.brand = freshProd.brand; existingProd.shopName = freshProd.brand; mod = true; }
-          if (existingProd.isPhysical !== freshProd.isPhysical) { existingProd.isPhysical = freshProd.isPhysical; mod = true; }
-          if (mod) prodNeedSave = true;
-
-          const pKey = existingProd.id;
-          if (!seenProdIds.has(pKey)) {
-            seenProdIds.add(pKey);
-            synchronizedProducts.push(existingProd);
-          }
-        } else {
-          // Add newly created product
+          existingProd.id = defaultProdId;
+          existingProd.title = freshProd.title;
+          existingProd.titleEn = freshProd.titleEn;
+          existingProd.titleVi = freshProd.titleVi;
+          existingProd.titleZh = freshProd.titleZh;
+          existingProd.price = freshProd.price;
+          existingProd.priceUsd = freshProd.priceUsd;
+          existingProd.originalPrice = freshProd.originalPrice;
+          existingProd.originalPriceUsd = freshProd.originalPriceUsd;
+          if (freshProd.image) existingProd.image = freshProd.image;
+          existingProd.affiliateUrl = freshProd.affiliateUrl;
+          existingProd.reviewUrl = postFileName;
+          existingProd.categoryKey = freshProd.categoryKey;
+          existingProd.category = freshProd.category;
+          existingProd.categoryEn = freshProd.categoryEn;
+          existingProd.categoryVi = freshProd.categoryVi;
+          existingProd.categoryZh = freshProd.categoryZh;
+          existingProd.discountPercent = freshProd.discountPercent;
+          existingProd.rating = freshProd.rating;
+          existingProd.brand = freshProd.brand;
+          existingProd.shopName = freshProd.brand;
+          existingProd.isPhysical = freshProd.isPhysical;
+          existingProd.description = freshProd.description;
+          existingProd.features = freshProd.features;
           prodNeedSave = true;
-          const pKey = freshProd.id;
-          if (!seenProdIds.has(pKey)) {
-            seenProdIds.add(pKey);
-            synchronizedProducts.push(freshProd);
-          }
+          finalProd = existingProd;
+        } else {
+          prodNeedSave = true;
+          finalProd = freshProd;
         }
+
+        seenReviewUrls.add(postFileName);
+        seenReviewUrls.add(postSlug);
+        synchronizedProducts.push(finalProd);
       }
 
       // Save back to KV if changes occurred
