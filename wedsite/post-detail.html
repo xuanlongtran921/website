@@ -805,19 +805,50 @@
         document.getElementById('product-card-excerpt').innerText = activeExcerpt;
 
         // Pricing
+        let safeUsd = String(post.priceUsd || '').trim();
+        if (safeUsd && !safeUsd.startsWith('$')) {
+          const num = parseFloat(safeUsd.replace(/[^0-9.]/g, ''));
+          if (!isNaN(num) && num > 0) safeUsd = '$' + num.toFixed(2);
+        }
+        if (!safeUsd) safeUsd = '$69.00';
+        const numSaleUsd = parseFloat(safeUsd.replace(/[^0-9.]/g, '')) || 69;
+
+        let safeVnd = String(post.priceVnd || '').trim();
+        if (!safeVnd || !safeVnd.includes('₫')) {
+          safeVnd = (Math.round(numSaleUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+        }
+
+        let safeOrigUsd = '';
+        let safeOrigVnd = '';
+        const rawOrig = String(post.priceOrig || post.originalPrice || '').trim();
+        if (rawOrig && !/min|read|\/|date/i.test(rawOrig)) {
+          let numOrig = parseFloat(rawOrig.replace(/[^0-9.]/g, ''));
+          if (numOrig && numOrig > numSaleUsd * 5 && (numOrig / 100 >= numSaleUsd && numOrig / 100 <= numSaleUsd * 2.5)) {
+            numOrig = Math.round((numOrig / 100) * 100) / 100;
+          }
+          if (numOrig && numOrig >= numSaleUsd) {
+            safeOrigUsd = '$' + numOrig.toFixed(2);
+            safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+          }
+        }
+        if (!safeOrigUsd) {
+          const numOrig = Math.round(numSaleUsd * 1.25 * 100) / 100;
+          safeOrigUsd = '$' + numOrig.toFixed(2);
+          safeOrigVnd = (Math.round(numOrig * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+        }
+
         const priceEl = document.getElementById('product-card-price');
-        priceEl.setAttribute('data-usd', post.priceUsd || '$69.00');
-        priceEl.setAttribute('data-vnd', post.priceVnd || '1.750.000₫');
-        const activeCurr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
-        priceEl.innerText = activeCurr === 'VND' ? (post.priceVnd || '1.750.000₫') : (post.priceUsd || '$69.00');
+        priceEl.setAttribute('data-usd', safeUsd);
+        priceEl.setAttribute('data-vnd', safeVnd);
 
         const origEl = document.getElementById('product-card-orig-price');
-        if (post.priceOrig) {
-          origEl.innerText = post.priceOrig;
-          origEl.style.display = 'inline';
-        } else {
-          origEl.style.display = 'none';
-        }
+        origEl.setAttribute('data-usd', safeOrigUsd);
+        origEl.setAttribute('data-vnd', safeOrigVnd);
+
+        const activeCurr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
+        priceEl.innerText = activeCurr === 'VND' ? safeVnd : safeUsd;
+        origEl.innerText = activeCurr === 'VND' ? safeOrigVnd : safeOrigUsd;
+        origEl.style.display = 'inline';
 
         // Affiliate links
         const affLink = post.affiliateLink || '#';
@@ -914,9 +945,14 @@
     document.addEventListener('DOMContentLoaded', loadPostDetail);
     window.addEventListener('languageChanged', () => loadPostDetail());
     window.addEventListener('currencyChanged', (e) => {
+      const isVND = e.detail && e.detail.currency === 'VND';
       const priceEl = document.getElementById('product-card-price');
       if (priceEl) {
-        priceEl.innerText = e.detail.currency === 'VND' ? priceEl.getAttribute('data-vnd') : priceEl.getAttribute('data-usd');
+        priceEl.innerText = isVND ? priceEl.getAttribute('data-vnd') : priceEl.getAttribute('data-usd');
+      }
+      const origEl = document.getElementById('product-card-orig-price');
+      if (origEl) {
+        origEl.innerText = isVND ? origEl.getAttribute('data-vnd') : origEl.getAttribute('data-usd');
       }
       const sidebarPrice = document.getElementById('sidebar-price');
       if (sidebarPrice && priceEl) sidebarPrice.innerText = priceEl.innerText;

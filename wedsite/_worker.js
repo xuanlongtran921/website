@@ -68,22 +68,38 @@ function safeJsonParse(text, fallback = null) {
 }
 
 function mapCategoryToKeyAndNames(category, categorySlug) {
-  let catKey = categorySlug || 'tech';
-  if (!categorySlug) {
-    const catLower = (category || '').toLowerCase();
-    if (/watch|horology|đồng hồ|dong ho|cơ khí|co khi|cổ điển|co dien|vintage|trang sức|trang suc|腕表|手表/.test(catLower)) {
-      catKey = 'watches';
-    } else if (/fashion|thời trang|thoi trang|lolita|gothic|đầm|dam|áo|ao|phụ kiện|phu kien|服饰|时装/.test(catLower)) {
-      catKey = 'fashion';
-    } else if (/auto|tuning|exhaust|manifold|xe|phụ tùng|phu tung|brakes|phanh|brembo|bullboost|racing|汽车/.test(catLower)) {
-      catKey = 'automotive';
-    } else if (/desk|setup|edc|bàn|ban|phím|phim|chuột|chuot|keychron|logitech|gaggia|cà phê|ca phe|coffee|桌面/.test(catLower)) {
-      catKey = 'desk-setup';
-    } else if (/gadget|camera|máy ảnh|may anh|pocket|thiết bị|thiet bi|数码/.test(catLower)) {
-      catKey = 'gadgets';
-    } else if (/guide|ebook|cẩm nang|cam nang|khóa học|khoa hoc|指南|教程/.test(catLower)) {
-      catKey = 'guides';
-    }
+  let catKey = (categorySlug || '').toLowerCase();
+  const catLower = ((category || '') + ' ' + (categorySlug || '')).toLowerCase();
+
+  // Digital products first
+  if (/ebook|playbook|cẩm nang|cam nang|sách|sach|guide|指南|教程/.test(catLower)) {
+    catKey = 'ebooks';
+  } else if (/preset|lut|lightroom|cybershutter|调色|预设/.test(catLower)) {
+    catKey = 'presets';
+  } else if (/notion|template|creator os|模板/.test(catLower)) {
+    catKey = 'templates';
+  } else if (/course|masterclass|khóa học|khoa hoc|workshop|视频课/.test(catLower)) {
+    catKey = 'courses';
+  } else if (/saas|cloud subscription|ai studio|phần mềm|phan mem/.test(catLower)) {
+    catKey = 'saas';
+  } else if (/watch|horology|đồng hồ|dong ho|tissot|seagull|st1901|powermatic|cơ khí|co khi|cổ điển|co dien|vintage|trang sức|trang suc|腕表|手表/.test(catLower)) {
+    catKey = 'watches';
+  } else if (/skirt|dress|bag|sweater|cashmere|velvet|lolita|gothic|thời trang|thoi trang|fashion|supreme|lilyvow|aero|leather|coat|jacket|đầm|dam|váy|vay|áo|ao|suuksess|robinpiccone|matein|sling bag|phụ kiện|phu kien|服饰|时装/.test(catLower)) {
+    catKey = 'fashion';
+  } else if (/mowrator|mower|intake|injen|n55|manifold|exhaust|brembo|bullboost|auto|tuning|car|xe|phụ tùng|phu tung|brakes|phanh|ranger|glider|plane|stunt plane|volantexrc|racing|gate opener|co-z|sliding gate|汽车/.test(catLower)) {
+    catKey = 'automotive';
+  } else if (/camera|máy ảnh|may anh|sony alpha|a7 iv|a7iv|lens|video gear|相机/.test(catLower)) {
+    catKey = 'cameras';
+  } else if (/coffee|cà phê|ca phe|espresso|gaggia|barista|espresso machine|咖啡/.test(catLower)) {
+    catKey = 'coffee';
+  } else if (/gaming|game|razer|blade|rtx|gpu|gaming gear|电竞|游戏本/.test(catLower)) {
+    catKey = 'gaming';
+  } else if (/aqara|smart home|smart|nhà thông minh|nha thong minh|matter|hub m3|sensor|projector|magcubic|hy350|iot|智能家居/.test(catLower)) {
+    catKey = 'smarthome';
+  } else if (/keychron|keyboard|bàn phím|ban phim|mx master|logitech|chuột|chuot|desk|setup|bàn|ban|edc|screen protector|iphone|drying oven|vacuum drying|桌面/.test(catLower)) {
+    catKey = 'desk-setup';
+  } else {
+    catKey = 'tech';
   }
 
   let catEn = 'Audio & Tech';
@@ -94,17 +110,30 @@ function mapCategoryToKeyAndNames(category, categorySlug) {
     catEn = 'Watches & Horology'; catVi = 'Đồng Hồ Cơ & Trang Sức'; catZh = '机械腕表与珠宝';
   } else if (catKey === 'fashion') {
     catEn = 'Alt & Gothic Fashion'; catVi = 'Thời Trang Thiết Kế'; catZh = '小众暗黑女装';
-  } else if (catKey === 'automotive' || catKey === 'auto') {
-    catKey = 'automotive';
-    catEn = 'Auto Performance'; catVi = 'Phụ Tùng Xe Hơi'; catZh = '汽车改装零件';
-  } else if (catKey === 'desk-setup' || catKey === 'edc') {
-    catKey = 'desk-setup';
+  } else if (catKey === 'automotive') {
+    catEn = 'Auto Performance & Robotics'; catVi = 'Phụ Tùng Xe Hơi & Robot'; catZh = '汽车改装与动力工程';
+  } else if (catKey === 'desk-setup') {
     catEn = 'Desk Setup & EDC'; catVi = 'Bàn Làm Việc & EDC'; catZh = '桌面搭子与EDC';
-  } else if (catKey === 'gadgets') {
-    catEn = 'Smart Gadgets & Gear'; catVi = 'Thiết Bị Công Nghệ'; catZh = '智能数码潮品';
-  } else if (catKey === 'guides') {
-    catEn = 'Guides & Digital Assets'; catVi = 'Tài Nguyên & Cẩm Nang'; catZh = '电子书与知识资产';
+  } else if (catKey === 'cameras') {
+    catEn = 'Cameras & Video Gear'; catVi = 'Máy Ảnh & Quay Phim'; catZh = '专业相机与摄录器材';
+  } else if (catKey === 'coffee') {
+    catEn = 'Coffee & Barista Gear'; catVi = 'Cà Phê & Máy Pha Barista'; catZh = '咖啡器具与意式机';
+  } else if (catKey === 'gaming') {
+    catEn = 'Pro Gaming Gear'; catVi = 'Gaming & Thể Thao Điện Tử'; catZh = '专业电竞与硬核装备';
+  } else if (catKey === 'smarthome') {
+    catEn = 'Smart Home & Living'; catVi = 'Nhà Thông Minh & IoT'; catZh = '智能家居与生活科技';
+  } else if (catKey === 'ebooks') {
+    catEn = 'Ebooks & Guides'; catVi = 'Tài Nguyên & Cẩm Nang'; catZh = '电子书与知识资产';
+  } else if (catKey === 'presets') {
+    catEn = 'Creative Presets & LUTs'; catVi = 'Preset & LUTs'; catZh = '调色预设与LUTs';
+  } else if (catKey === 'templates') {
+    catEn = 'Notion Templates'; catVi = 'Template Notion'; catZh = 'Notion 生产力模板';
+  } else if (catKey === 'courses') {
+    catEn = 'Video Courses & Masterclass'; catVi = 'Khóa Học Chuyên Sâu'; catZh = '视频大课与实战训练';
+  } else if (catKey === 'saas') {
+    catEn = 'SaaS & AI Tools'; catVi = 'Phần Mềm & SaaS'; catZh = 'SaaS 与 AI 云工具';
   }
+
   return { catKey, catEn, catVi, catZh };
 }
 
@@ -272,7 +301,10 @@ function sanitizeProductPrice(p) {
 }
 
 function createProductFromPostData(data, slugClean, fileName) {
-  const { catKey, catEn, catVi, catZh } = mapCategoryToKeyAndNames(data.category || data.categoryEn, data.categorySlug);
+  const { catKey, catEn, catVi, catZh } = mapCategoryToKeyAndNames(
+    (data.category || data.categoryEn || '') + ' ' + (data.title || '') + ' ' + (data.brand || ''),
+    data.categorySlug
+  );
   const { vnd, usd, origVnd, origUsd } = parsePrices(
     data.vndPrice || data.priceVnd,
     data.usdPrice || data.priceUsd,
@@ -281,10 +313,26 @@ function createProductFromPostData(data, slugClean, fileName) {
   );
 
   const brandName = data.brand || 'Verified Partner';
-  const prodId = 'prod-' + slugClean;
+  const rawId = (slugClean || data.slug || data.id || '').replace(/^(\/|post-)/, '').replace(/\.html$/, '');
+  const prodId = 'prod-' + rawId;
+  const reviewFile = fileName || (rawId.startsWith('post-') ? rawId : ('post-' + rawId)) + '.html';
 
   const prosList = Array.isArray(data.pros) ? data.pros : (data.pros ? String(data.pros).split('\n').filter(Boolean) : []);
-  const defaultFeatures = prosList.length > 0 ? prosList : ['100% Authentic Guaranteed', 'Full Brand Warranty'];
+  const defaultFeatures = prosList.length > 0 ? prosList : [
+    'Official manufacturer certified hardware with direct warranty coverage',
+    'Benchmark-tested efficiency exceeding industry category standards'
+  ];
+
+  let discPercent = data.couponDiscount || data.discountPercent;
+  if (!discPercent) {
+    if (origUsd > usd) {
+      discPercent = Math.round((1 - usd / origUsd) * 100) + '% OFF';
+    } else {
+      discPercent = '15% OFF';
+    }
+  }
+
+  const isDigital = ['ebooks', 'presets', 'templates', 'courses', 'saas'].includes(catKey);
 
   return {
     id: prodId,
@@ -295,15 +343,15 @@ function createProductFromPostData(data, slugClean, fileName) {
     titleEn: data.titleEn || data.title,
     titleVi: data.titleVi || data.title,
     titleZh: data.titleZh || data.title,
-    category: data.categoryEn || catEn,
-    categoryEn: data.categoryEn || catEn,
-    categoryVi: data.categoryVi || catVi,
-    categoryZh: data.categoryZh || catZh,
+    category: catEn,
+    categoryEn: catEn,
+    categoryVi: catVi,
+    categoryZh: catZh,
     price: vnd,
     priceUsd: usd,
     originalPrice: origVnd,
     originalPriceUsd: origUsd,
-    discountPercent: data.couponDiscount || '-15%',
+    discountPercent: discPercent,
     badge: brandName,
     badgeEn: brandName,
     badgeVi: brandName,
@@ -311,17 +359,17 @@ function createProductFromPostData(data, slugClean, fileName) {
     rating: parseFloat(data.rating) || 9.6,
     salesCount: 168,
     description: data.excerpt || data.intro || '',
-    descriptionEn: data.excerptEn || data.excerpt || '',
-    descriptionVi: data.excerptVi || data.excerpt || '',
-    descriptionZh: data.excerptZh || data.excerpt || '',
-    features: defaultFeatures,
-    featuresEn: data.prosEn || defaultFeatures,
-    featuresVi: data.prosVi || defaultFeatures,
-    featuresZh: data.prosZh || defaultFeatures,
-    image: data.image || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800',
-    affiliateUrl: data.affiliateLink || '#',
-    reviewUrl: fileName,
-    isPhysical: catKey !== 'guides',
+    descriptionEn: data.excerptEn || data.excerpt || data.intro || '',
+    descriptionVi: data.excerptVi || data.excerpt || data.intro || '',
+    descriptionZh: data.excerptZh || data.excerpt || data.intro || '',
+    features: defaultFeatures.slice(0, 5),
+    featuresEn: (data.prosEn || defaultFeatures).slice(0, 5),
+    featuresVi: (data.prosVi || defaultFeatures).slice(0, 5),
+    featuresZh: (data.prosZh || defaultFeatures).slice(0, 5),
+    image: data.image || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80',
+    affiliateUrl: (!isDigital ? (data.affiliateLink || '#') : '#'),
+    reviewUrl: reviewFile,
+    isPhysical: !isDigital,
     updatedAt: new Date().toISOString()
   };
 }
@@ -945,11 +993,12 @@ export default {
     // -------------------------------------------------------------
     // 4.1. API: PRODUCTS (STORE CATALOG & MANAGEMENT)
     // -------------------------------------------------------------
-    // GET /api/products & /data/products.json
+    // GET /api/products & /data/products.json (ALWAYS 100% SYNCHRONIZED WITH POSTS)
     if ((url.pathname === '/api/products' || url.pathname === '/data/products.json') && request.method === 'GET') {
       let baseProducts = [];
+      let basePosts = [];
 
-      // Fetch base products from static asset
+      // Fetch base products & posts from static asset
       if (env.ASSETS) {
         try {
           const assetReq = new Request(new URL('/data/products.json', request.url));
@@ -960,92 +1009,134 @@ export default {
             baseProducts = Array.isArray(parsed) ? parsed : (parsed.value || []);
           }
         } catch (e) {}
+        try {
+          const assetReqP = new Request(new URL('/data/posts.json', request.url));
+          const assetResP = await env.ASSETS.fetch(assetReqP);
+          if (assetResP.ok) {
+            const rawTextP = await assetResP.text();
+            const parsedP = safeJsonParse(rawTextP, []);
+            basePosts = Array.isArray(parsedP) ? parsedP : (parsedP.value || []);
+          }
+        } catch (e) {}
       }
 
-      // Merge custom/updated products from KV
+      // Fetch KV custom posts & products & deleted lists
+      let customPosts = [];
       let customProducts = [];
-      let deletedIds = new Set();
-      let customProdsNeedSave = false;
+      let deletedPostIds = new Set();
+      let deletedProdIds = new Set();
+
       if (env.POSTS_KV) {
         try {
-          const raw = await env.POSTS_KV.get('custom_products_list');
-          if (raw) customProducts = safeJsonParse(raw, []);
-          const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
-          if (rawDeleted) deletedIds = new Set(safeJsonParse(rawDeleted, []));
+          const rawPosts = await env.POSTS_KV.get('custom_posts_list');
+          if (rawPosts) customPosts = safeJsonParse(rawPosts, []);
+          const rawProds = await env.POSTS_KV.get('custom_products_list');
+          if (rawProds) customProducts = safeJsonParse(rawProds, []);
+          const rawDPosts = await env.POSTS_KV.get('deleted_posts_list');
+          if (rawDPosts) safeJsonParse(rawDPosts, []).forEach(d => deletedPostIds.add(d));
+          const rawDProds = await env.POSTS_KV.get('deleted_products_list');
+          if (rawDProds) safeJsonParse(rawDProds, []).forEach(d => deletedProdIds.add(d));
         } catch (e) {}
       } else {
+        customPosts = inMemoryPosts || [];
         customProducts = inMemoryProducts || [];
       }
 
-      // Auto-sanitize custom products prices
-      if (customProducts && customProducts.length > 0) {
-        customProducts = customProducts.map(p => {
-          const res = sanitizeProductPrice(p);
-          if (res.modified) customProdsNeedSave = true;
-          return res.item;
-        });
-        if (customProdsNeedSave && env.POSTS_KV) {
-          try {
-            await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
-          } catch (e) {}
-        }
-      }
+      // Filter active posts
+      const isPostActive = p => {
+        if (!p) return false;
+        const pSlug = (p.slug || '').trim();
+        const pId = (p.id || '').trim();
+        const pClean = pSlug.replace(/\.html$/, '');
+        return !deletedPostIds.has(pSlug) && !deletedPostIds.has(pId) && !deletedPostIds.has(pClean);
+      };
 
-      const customMap = new Map((customProducts || []).map(p => [p.id, p]));
-      let merged = [...(customProducts || [])];
-      for (const bp of baseProducts) {
-        if (!customMap.has(bp.id) && !deletedIds.has(bp.id)) {
-          merged.push(sanitizeProductPrice(bp).item);
-        }
-      }
+      const activeCustomPosts = (customPosts || []).filter(isPostActive);
+      const activeBasePosts = (basePosts || []).filter(isPostActive);
+      const customSlugs = new Set(activeCustomPosts.map(p => p.slug || (p.id + '.html')));
+      const allActivePosts = [...activeCustomPosts, ...activeBasePosts.filter(p => !customSlugs.has(p.slug || (p.id + '.html')))];
 
-      // Auto-sync / Backfill: Ensure any published article in KV has a corresponding store product
-      try {
-        let allPublishedPosts = [];
-        if (env.POSTS_KV) {
-          const rawPosts = await env.POSTS_KV.get('custom_posts_list');
-          if (rawPosts) allPublishedPosts = safeJsonParse(rawPosts, []);
+      // Build product map from existing products
+      let allExistingProds = [...(customProducts || []), ...(baseProducts || [])];
+      let prodNeedSave = false;
+
+      // Ensure every active post has a matching product, and synchronize all fields from the post!
+      let synchronizedProducts = [];
+      let seenProdIds = new Set();
+
+      for (const post of allActivePosts) {
+        const postSlug = (post.slug || post.id || '').replace(/^(\/|post-)/, '').replace(/\.html$/, '');
+        const postFileName = (post.slug && post.slug.endsWith('.html')) ? post.slug : ('post-' + postSlug + '.html');
+        const defaultProdId = 'prod-' + postSlug;
+
+        if (deletedProdIds.has(defaultProdId) || deletedProdIds.has('prod-post-' + postSlug)) {
+          continue;
+        }
+
+        // Find existing product matching this post
+        let existingProd = allExistingProds.find(pr => 
+          pr && (
+            pr.id === defaultProdId || 
+            pr.id === 'prod-post-' + postSlug || 
+            pr.reviewUrl === postFileName ||
+            pr.reviewUrl === post.slug ||
+            (pr.title && post.title && pr.title.trim().toLowerCase() === post.title.trim().toLowerCase())
+          )
+        );
+
+        const freshProd = createProductFromPostData(post, postSlug, postFileName);
+
+        if (existingProd) {
+          // Sync fields from post
+          let mod = false;
+          if (existingProd.title !== freshProd.title) { existingProd.title = freshProd.title; mod = true; }
+          if (existingProd.titleEn !== freshProd.titleEn) { existingProd.titleEn = freshProd.titleEn; mod = true; }
+          if (existingProd.titleVi !== freshProd.titleVi) { existingProd.titleVi = freshProd.titleVi; mod = true; }
+          if (existingProd.titleZh !== freshProd.titleZh) { existingProd.titleZh = freshProd.titleZh; mod = true; }
+          if (existingProd.price !== freshProd.price) { existingProd.price = freshProd.price; mod = true; }
+          if (existingProd.priceUsd !== freshProd.priceUsd) { existingProd.priceUsd = freshProd.priceUsd; mod = true; }
+          if (existingProd.originalPrice !== freshProd.originalPrice) { existingProd.originalPrice = freshProd.originalPrice; mod = true; }
+          if (existingProd.originalPriceUsd !== freshProd.originalPriceUsd) { existingProd.originalPriceUsd = freshProd.originalPriceUsd; mod = true; }
+          if (existingProd.image !== freshProd.image && freshProd.image) { existingProd.image = freshProd.image; mod = true; }
+          if (existingProd.affiliateUrl !== freshProd.affiliateUrl) { existingProd.affiliateUrl = freshProd.affiliateUrl; mod = true; }
+          if (existingProd.reviewUrl !== freshProd.reviewUrl) { existingProd.reviewUrl = freshProd.reviewUrl; mod = true; }
+          if (existingProd.categoryKey !== freshProd.categoryKey) { existingProd.categoryKey = freshProd.categoryKey; mod = true; }
+          if (existingProd.category !== freshProd.category) { existingProd.category = freshProd.category; mod = true; }
+          if (existingProd.categoryEn !== freshProd.categoryEn) { existingProd.categoryEn = freshProd.categoryEn; mod = true; }
+          if (existingProd.categoryVi !== freshProd.categoryVi) { existingProd.categoryVi = freshProd.categoryVi; mod = true; }
+          if (existingProd.categoryZh !== freshProd.categoryZh) { existingProd.categoryZh = freshProd.categoryZh; mod = true; }
+          if (existingProd.discountPercent !== freshProd.discountPercent) { existingProd.discountPercent = freshProd.discountPercent; mod = true; }
+          if (existingProd.rating !== freshProd.rating) { existingProd.rating = freshProd.rating; mod = true; }
+          if (existingProd.brand !== freshProd.brand) { existingProd.brand = freshProd.brand; existingProd.shopName = freshProd.brand; mod = true; }
+          if (existingProd.isPhysical !== freshProd.isPhysical) { existingProd.isPhysical = freshProd.isPhysical; mod = true; }
+          if (mod) prodNeedSave = true;
+
+          const pKey = existingProd.id;
+          if (!seenProdIds.has(pKey)) {
+            seenProdIds.add(pKey);
+            synchronizedProducts.push(existingProd);
+          }
         } else {
-          allPublishedPosts = inMemoryPosts || [];
-        }
-
-        let newAutoProds = [];
-        for (const post of allPublishedPosts) {
-          const postSlug = (post.slug || post.id || '').replace(/\.html$/, '');
-          const fileName = postSlug + '.html';
-          const prodId = 'prod-' + postSlug;
-
-          if (deletedIds.has(prodId)) continue;
-
-          // Check if product already exists in merged
-          const exists = merged.some(p => 
-            p.id === prodId || 
-            p.reviewUrl === fileName || 
-            p.reviewUrl === post.slug ||
-            (post.affiliateLink && post.affiliateLink !== '#' && p.affiliateUrl === post.affiliateLink)
-          );
-
-          if (!exists) {
-            const autoProd = createProductFromPostData(post, postSlug, fileName);
-            merged.unshift(autoProd);
-            newAutoProds.push(autoProd);
+          // Add newly created product
+          prodNeedSave = true;
+          const pKey = freshProd.id;
+          if (!seenProdIds.has(pKey)) {
+            seenProdIds.add(pKey);
+            synchronizedProducts.push(freshProd);
           }
         }
-
-        // Persist newly discovered products into custom_products_list so KV stays permanently synchronized
-        if (newAutoProds.length > 0) {
-          const updatedCustomList = [...newAutoProds, ...(customProducts || [])];
-          if (env.POSTS_KV) {
-            await env.POSTS_KV.put('custom_products_list', JSON.stringify(updatedCustomList));
-          } else {
-            inMemoryProducts = updatedCustomList;
-          }
-        }
-      } catch (syncErr) {
-        console.warn('Auto-sync products error:', syncErr);
       }
 
-      return new Response(JSON.stringify(merged, null, 2), {
+      // Save back to KV if changes occurred
+      if (prodNeedSave && env.POSTS_KV) {
+        try {
+          await env.POSTS_KV.put('custom_products_list', JSON.stringify(synchronizedProducts));
+        } catch (e) {}
+      } else if (prodNeedSave) {
+        inMemoryProducts = synchronizedProducts;
+      }
+
+      return new Response(JSON.stringify(synchronizedProducts, null, 2), {
         headers: {
           ...CORS_HEADERS,
           'Content-Type': 'application/json; charset=utf-8',
