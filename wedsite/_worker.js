@@ -67,6 +67,18 @@ function safeJsonParse(text, fallback = null) {
   }
 }
 
+function normSlug(s) {
+  return (s || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
+}
+
+function normFileName(s) {
+  return 'post-' + normSlug(s) + '.html';
+}
+
+function normProdId(s) {
+  return 'prod-' + normSlug(s);
+}
+
 function mapCategoryToKeyAndNames(category, categorySlug) {
   let catKey = (categorySlug || '').toLowerCase();
   const catLower = ((category || '') + ' ' + (categorySlug || '')).toLowerCase();
