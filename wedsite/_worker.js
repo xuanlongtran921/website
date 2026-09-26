@@ -313,9 +313,9 @@ function createProductFromPostData(data, slugClean, fileName) {
   );
 
   const brandName = data.brand || 'Verified Partner';
-  const rawId = (slugClean || data.slug || data.id || '').replace(/^(\/|post-)/, '').replace(/\.html$/, '');
+  const rawId = (slugClean || data.slug || data.id || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
   const prodId = 'prod-' + rawId;
-  const reviewFile = fileName || (rawId.startsWith('post-') ? rawId : ('post-' + rawId)) + '.html';
+  const reviewFile = 'post-' + rawId + '.html';
 
   const prosList = Array.isArray(data.pros) ? data.pros : (data.pros ? String(data.pros).split('\n').filter(Boolean) : []);
   const defaultFeatures = prosList.length > 0 ? prosList : [
@@ -550,25 +550,132 @@ export default {
           await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
         }
 
-        // 2. Repair custom_products_list
-        let customProducts = [];
-        if (env.POSTS_KV) {
+        // 2. Re-synchronize and repair custom_products_list directly from active posts catalog
+        let baseProducts = [];
+        let basePosts = [];
+        if (env.ASSETS) {
           try {
-            const raw = await env.POSTS_KV.get('custom_products_list');
-            if (raw) customProducts = safeJsonParse(raw, []);
+            const assetReq = new Request(new URL('/data/products.json', request.url));
+            const assetRes = await env.ASSETS.fetch(assetReq);
+            if (assetRes.ok) {
+              const rawText = await assetRes.text();
+              const parsed = safeJsonParse(rawText, []);
+              baseProducts = Array.isArray(parsed) ? parsed : (parsed.value || []);
+            }
           } catch (e) {}
-        } else {
-          customProducts = inMemoryProducts || [];
+          try {
+            const assetReqP = new Request(new URL('/data/posts.json', request.url));
+            const assetResP = await env.ASSETS.fetch(assetReqP);
+            if (assetResP.ok) {
+              const rawTextP = await assetResP.text();
+              const parsedP = safeJsonParse(rawTextP, []);
+              basePosts = Array.isArray(parsedP) ? parsedP : (parsedP.value || []);
+            }
+          } catch (e) {}
         }
 
-        customProducts = customProducts.map(p => {
-          const res = sanitizeProductPrice(p);
-          if (res.modified) repairedProdsCount++;
-          return res.item;
-        });
+        let deletedPostIds = new Set();
+        let deletedProdIds = new Set();
+        if (env.POSTS_KV) {
+          try {
+            const rawDPosts = await env.POSTS_KV.get('deleted_posts_list');
+            if (rawDPosts) safeJsonParse(rawDPosts, []).forEach(d => deletedPostIds.add(d));
+            const rawDProds = await env.POSTS_KV.get('deleted_products_list');
+            if (rawDProds) safeJsonParse(rawDProds, []).forEach(d => deletedProdIds.add(d));
+          } catch (e) {}
+        }
 
-        if (repairedProdsCount > 0 && env.POSTS_KV) {
-          await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
+        const isPostActiveForRepair = p => {
+          if (!p) return false;
+          const clean = normSlug(p.slug || p.id);
+          if (!clean) return false;
+          return !deletedPostIds.has(clean) &&
+                 !deletedPostIds.has('post-' + clean) &&
+                 !deletedPostIds.has('post-' + clean + '.html') &&
+                 !deletedPostIds.has((p.slug || '').trim()) &&
+                 !deletedPostIds.has((p.id || '').trim());
+        };
+
+        const activeCustomPosts = (customPosts || []).filter(isPostActiveForRepair);
+        const activeBasePosts = (basePosts || []).filter(isPostActiveForRepair);
+
+        const seenRepairSlugs = new Set();
+        const allActivePostsForRepair = [];
+        for (const p of [...activeCustomPosts, ...activeBasePosts]) {
+          const clean = normSlug(p.slug || p.id);
+          if (!clean || seenRepairSlugs.has(clean)) continue;
+          seenRepairSlugs.add(clean);
+          allActivePostsForRepair.push(p);
+        }
+
+        let existingProdsPool = [...baseProducts];
+        let synchronizedProducts = [];
+        let seenCleanSlugs = new Set();
+
+        for (const post of allActivePostsForRepair) {
+          const clean = normSlug(post.slug || post.id);
+          if (!clean || seenCleanSlugs.has(clean)) continue;
+
+          const postFileName = 'post-' + clean + '.html';
+          const defaultProdId = 'prod-' + clean;
+
+          if (deletedProdIds.has(defaultProdId) || deletedProdIds.has('prod-post-' + clean) || deletedProdIds.has(clean)) {
+            continue;
+          }
+
+          let existingProd = existingProdsPool.find(pr => {
+            if (!pr) return false;
+            const prClean = normSlug(pr.reviewUrl || pr.id);
+            if (prClean && prClean === clean) return true;
+            if (pr.id === defaultProdId || pr.id === 'prod-post-' + clean) return true;
+            if (pr.title && post.title && pr.title.trim().toLowerCase() === post.title.trim().toLowerCase()) return true;
+            return false;
+          });
+
+          const freshProd = createProductFromPostData(post, clean, postFileName);
+          let finalProd = null;
+
+          if (existingProd) {
+            existingProd.id = defaultProdId;
+            existingProd.title = freshProd.title;
+            existingProd.titleEn = freshProd.titleEn;
+            existingProd.titleVi = freshProd.titleVi;
+            existingProd.titleZh = freshProd.titleZh;
+            existingProd.price = freshProd.price;
+            existingProd.priceUsd = freshProd.priceUsd;
+            existingProd.originalPrice = freshProd.originalPrice;
+            existingProd.originalPriceUsd = freshProd.originalPriceUsd;
+            if (freshProd.image) existingProd.image = freshProd.image;
+            existingProd.affiliateUrl = freshProd.affiliateUrl;
+            existingProd.reviewUrl = postFileName;
+            existingProd.categoryKey = freshProd.categoryKey;
+            existingProd.category = freshProd.category;
+            existingProd.categoryEn = freshProd.categoryEn;
+            existingProd.categoryVi = freshProd.categoryVi;
+            existingProd.categoryZh = freshProd.categoryZh;
+            existingProd.discountPercent = freshProd.discountPercent;
+            existingProd.rating = freshProd.rating;
+            existingProd.brand = freshProd.brand;
+            existingProd.shopName = freshProd.brand;
+            existingProd.isPhysical = freshProd.isPhysical;
+            existingProd.description = freshProd.description;
+            existingProd.features = freshProd.features;
+            repairedProdsCount++;
+            finalProd = existingProd;
+          } else {
+            repairedProdsCount++;
+            finalProd = freshProd;
+          }
+
+          seenCleanSlugs.add(clean);
+          synchronizedProducts.push(finalProd);
+        }
+
+        let customProducts = synchronizedProducts;
+        if (env.POSTS_KV) {
+          await env.POSTS_KV.put('custom_products_list', JSON.stringify(synchronizedProducts));
+        } else {
+          inMemoryProducts = synchronizedProducts;
         }
 
         // 3. Repair pinned_project
@@ -727,7 +834,9 @@ export default {
 
           // Auto-sync store product to KV
           try {
-            const newProdEntry = createProductFromPostData(data, slugClean, fileName);
+            const cleanSlug = (data.slug || fileName).toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
+            const postFileName = 'post-' + cleanSlug + '.html';
+            const newProdEntry = createProductFromPostData(data, cleanSlug, postFileName);
             let customProducts = [];
             const rawProds = await env.POSTS_KV.get('custom_products_list');
             if (rawProds) customProducts = safeJsonParse(rawProds, []);
@@ -735,15 +844,15 @@ export default {
             // Remove from deleted list if present
             const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
             if (rawDeleted) {
-              const dList = safeJsonParse(rawDeleted, []).filter(id => id !== newProdEntry.id);
+              const dList = safeJsonParse(rawDeleted, []).filter(id => id !== newProdEntry.id && id !== ('prod-post-' + cleanSlug) && id !== cleanSlug);
               await env.POSTS_KV.put('deleted_products_list', JSON.stringify(dList));
             }
 
-            const filteredProds = (customProducts || []).filter(p => 
-              p.id !== newProdEntry.id && 
-              p.reviewUrl !== fileName && 
-              !(data.affiliateLink && data.affiliateLink !== '#' && p.affiliateUrl === data.affiliateLink)
-            );
+            const filteredProds = (customProducts || []).filter(p => {
+              if (!p) return false;
+              const pClean = (p.reviewUrl || p.id || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
+              return pClean !== cleanSlug && p.id !== newProdEntry.id && p.id !== ('prod-post-' + cleanSlug);
+            });
             customProducts = [newProdEntry, ...filteredProds];
             await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
           } catch (pErr) {
@@ -794,16 +903,20 @@ export default {
         const body = await request.json();
         const rawSlug = (body.slug || '').trim();
         const rawId = (body.id || '').trim();
-        const cleanSlug = (rawSlug || rawId).replace(/^(\/|post-)/, 'post-').replace(/\.html$/, '');
-        const fileName = cleanSlug + '.html';
+        const cleanSlug = (rawSlug || rawId).toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
+        const fileName = 'post-' + cleanSlug + '.html';
         const prodId = 'prod-' + cleanSlug;
+        const legacyProdId = 'prod-post-' + cleanSlug;
 
         // Build target identifier set to catch all variations
         const targets = new Set([
           rawSlug,
           rawId,
           cleanSlug,
+          'post-' + cleanSlug,
           fileName,
+          prodId,
+          legacyProdId,
           rawSlug.replace(/\.html$/, ''),
           rawId.replace(/\.html$/, ''),
           '/' + fileName,
@@ -973,12 +1086,14 @@ export default {
       customPosts = (customPosts || []).filter(isPostNotDeleted);
       basePosts = (basePosts || []).filter(isPostNotDeleted);
 
+      const normSlug = s => (s || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
       let finalPosts = [];
-      if (customPosts && customPosts.length > 0) {
-        const customSlugs = new Set(customPosts.map(p => p.slug));
-        finalPosts = [...customPosts, ...basePosts.filter(p => !customSlugs.has(p.slug))];
-      } else {
-        finalPosts = basePosts;
+      const seenPostSlugs = new Set();
+      for (const p of [...(customPosts || []), ...(basePosts || [])]) {
+        const clean = normSlug(p.slug || p.id);
+        if (!clean || seenPostSlugs.has(clean)) continue;
+        seenPostSlugs.add(clean);
+        finalPosts.push(p);
       }
 
       return new Response(JSON.stringify(finalPosts, null, 2), {
@@ -997,6 +1112,9 @@ export default {
     if ((url.pathname === '/api/products' || url.pathname === '/data/products.json') && request.method === 'GET') {
       let baseProducts = [];
       let basePosts = [];
+
+      // Helper slug normalizers
+      const normSlug = s => (s || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
 
       // Fetch base products & posts from static asset
       if (env.ASSETS) {
@@ -1045,50 +1163,59 @@ export default {
       // Filter active posts
       const isPostActive = p => {
         if (!p) return false;
-        const pSlug = (p.slug || '').trim();
-        const pId = (p.id || '').trim();
-        const pClean = pSlug.replace(/\.html$/, '');
-        return !deletedPostIds.has(pSlug) && !deletedPostIds.has(pId) && !deletedPostIds.has(pClean);
+        const clean = normSlug(p.slug || p.id);
+        if (!clean) return false;
+        return !deletedPostIds.has(clean) &&
+               !deletedPostIds.has('post-' + clean) &&
+               !deletedPostIds.has('post-' + clean + '.html') &&
+               !deletedPostIds.has((p.slug || '').trim()) &&
+               !deletedPostIds.has((p.id || '').trim());
       };
 
       const activeCustomPosts = (customPosts || []).filter(isPostActive);
       const activeBasePosts = (basePosts || []).filter(isPostActive);
-      const customSlugs = new Set(activeCustomPosts.map(p => p.slug || (p.id + '.html')));
-      const allActivePosts = [...activeCustomPosts, ...activeBasePosts.filter(p => !customSlugs.has(p.slug || (p.id + '.html')))];
+
+      // Deduplicate all active posts so custom posts override base posts
+      const seenPostSlugs = new Set();
+      const allActivePosts = [];
+      for (const p of [...activeCustomPosts, ...activeBasePosts]) {
+        const clean = normSlug(p.slug || p.id);
+        if (!clean || seenPostSlugs.has(clean)) continue;
+        seenPostSlugs.add(clean);
+        allActivePosts.push(p);
+      }
 
       // Build product map from existing products
       let allExistingProds = [...(customProducts || []), ...(baseProducts || [])];
-      let prodNeedSave = false;
 
       // Ensure every active post has a matching product, and synchronize all fields from the post!
       let synchronizedProducts = [];
-      let seenReviewUrls = new Set();
+      let seenCleanSlugs = new Set();
 
       for (const post of allActivePosts) {
-        const postSlug = (post.slug || post.id || '').replace(/^(\/|post-)/, '').replace(/\.html$/, '');
-        const postFileName = (post.slug && post.slug.endsWith('.html')) ? post.slug : ('post-' + postSlug + '.html');
-        const defaultProdId = 'prod-' + postSlug;
-
-        if (seenReviewUrls.has(postFileName) || seenReviewUrls.has(postSlug)) {
+        const clean = normSlug(post.slug || post.id);
+        if (!clean || seenCleanSlugs.has(clean)) {
           continue;
         }
 
-        if (deletedProdIds.has(defaultProdId) || deletedProdIds.has('prod-post-' + postSlug)) {
+        const postFileName = 'post-' + clean + '.html';
+        const defaultProdId = 'prod-' + clean;
+
+        if (deletedProdIds.has(defaultProdId) || deletedProdIds.has('prod-post-' + clean) || deletedProdIds.has(clean)) {
           continue;
         }
 
-        // Find existing product matching this post by reviewUrl, ID, or title
-        let existingProd = allExistingProds.find(pr => 
-          pr && (
-            pr.reviewUrl === postFileName ||
-            pr.reviewUrl === post.slug ||
-            pr.id === defaultProdId || 
-            pr.id === 'prod-post-' + postSlug || 
-            (pr.title && post.title && pr.title.trim().toLowerCase() === post.title.trim().toLowerCase())
-          )
-        );
+        // Find existing product matching this post by clean slug, reviewUrl, ID, or title
+        let existingProd = allExistingProds.find(pr => {
+          if (!pr) return false;
+          const prClean = normSlug(pr.reviewUrl || pr.id);
+          if (prClean && prClean === clean) return true;
+          if (pr.id === defaultProdId || pr.id === 'prod-post-' + clean) return true;
+          if (pr.title && post.title && pr.title.trim().toLowerCase() === post.title.trim().toLowerCase()) return true;
+          return false;
+        });
 
-        const freshProd = createProductFromPostData(post, postSlug, postFileName);
+        const freshProd = createProductFromPostData(post, clean, postFileName);
         let finalProd = null;
 
         if (existingProd) {
@@ -1116,24 +1243,21 @@ export default {
           existingProd.isPhysical = freshProd.isPhysical;
           existingProd.description = freshProd.description;
           existingProd.features = freshProd.features;
-          prodNeedSave = true;
           finalProd = existingProd;
         } else {
-          prodNeedSave = true;
           finalProd = freshProd;
         }
 
-        seenReviewUrls.add(postFileName);
-        seenReviewUrls.add(postSlug);
+        seenCleanSlugs.add(clean);
         synchronizedProducts.push(finalProd);
       }
 
-      // Save back to KV if changes occurred
-      if (prodNeedSave && env.POSTS_KV) {
+      // Save back clean synchronized products to KV to keep KV synchronized and free of stale duplicates
+      if (env.POSTS_KV) {
         try {
           await env.POSTS_KV.put('custom_products_list', JSON.stringify(synchronizedProducts));
         } catch (e) {}
-      } else if (prodNeedSave) {
+      } else {
         inMemoryProducts = synchronizedProducts;
       }
 

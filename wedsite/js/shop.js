@@ -1773,7 +1773,15 @@ async function fetchBackgroundProducts() {
         flat = raw.value;
       }
       if (flat.length > 0) {
-        allProducts = flat;
+        const seenClean = new Set();
+        const deduped = [];
+        flat.forEach(p => {
+          const key = (p.reviewUrl || p.id || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
+          if (!key || seenClean.has(key)) return;
+          seenClean.add(key);
+          deduped.push(p);
+        });
+        allProducts = deduped.length > 0 ? deduped : flat;
         updateCategoryCounts();
         populateStoreDropdown();
         applyShopFiltersAndRender();
