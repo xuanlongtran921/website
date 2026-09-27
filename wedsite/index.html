@@ -574,7 +574,7 @@
   </section>
 
   <!-- FEATURED BLOG ARTICLES GRID -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <section id="featured-articles-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 scroll-mt-20">
     <div class="flex items-center justify-between mb-8">
       <div>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-display" data-i18n="featured_posts_title">Featured Reviews & CRO Showcases</h2>
@@ -585,7 +585,7 @@
       </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div id="home-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Review: Mowrator S1 4WD Smart Remote Control Mower & Patrol Vehicle In-Depth Review (2026) -->
       <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col group">
         <div class="relative h-52 w-full bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318] flex items-center justify-center p-3 overflow-hidden">
@@ -956,6 +956,22 @@
         </div>
       </article>
 
+    </div>
+
+    <!-- Home Articles Pagination Controls -->
+    <div id="home-articles-pagination" class="pt-8 mt-10 border-t border-purple-200/60 dark:border-purple-800/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-xs font-medium text-slate-500 dark:text-purple-300" id="home-pagination-info">
+        Trang 1 / 6 (31 bài viết)
+      </div>
+      <div class="flex items-center gap-1.5 sm:gap-2" id="home-pagination-buttons">
+        <button type="button" onclick="window.goToHomeArticlesPage(1)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-xs font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 text-white shadow-md scale-105 flex items-center justify-center">1</button>
+        <button type="button" onclick="window.goToHomeArticlesPage(2)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-xs font-extrabold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-400 flex items-center justify-center">2</button>
+        <button type="button" onclick="window.goToHomeArticlesPage(3)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-xs font-extrabold bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-400 flex items-center justify-center">3</button>
+        <button type="button" onclick="window.goToHomeArticlesPage(2)" class="px-3 sm:px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-[#120a26] text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:border-purple-400 flex items-center gap-1 min-h-[40px]">
+          <span class="hidden sm:inline">Trang Sau</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1633,7 +1649,8 @@
   <div id="toast"></div>
 
   <!-- Scripts -->
-  <script src="js/app.js?v=20260924_1535"></script>
-  <script src="js/checkout.js?v=20260924_1535"></script>
+  <script src="js/app.js?v=20260927_1430"></script>
+  <script src="js/checkout.js?v=20260927_1430"></script>
+  <script src="js/home-articles.js?v=20260927_1430"></script>
 </body>
 </html>
