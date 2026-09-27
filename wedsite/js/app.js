@@ -2666,11 +2666,8 @@ function initPageTransitions() {
   });
 }
 
-// Dynamic Home Category Pills Count Sync
+// Dynamic Category Counts Sync across Mega Dropdown, Mobile Menu & Home Pills
 function initIndexCategoryPills() {
-  const container = document.getElementById('home-category-pills');
-  if (!container) return;
-
   fetch('data/products.json?t=' + Date.now())
     .then(res => {
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -2741,38 +2738,57 @@ function initIndexCategoryPills() {
         }
       });
 
-      const updateCountEl = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
+      const applyCounts = () => {
+        // Update Home Category Pills
+        const updateCountEl = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val;
+        };
+
+        updateCountEl('home-count-all', counts.all);
+        updateCountEl('home-count-physical', counts.physical);
+        updateCountEl('home-count-digital', counts.digital);
+        updateCountEl('home-count-fashion', counts.fashion);
+        updateCountEl('home-count-watches', counts.watches);
+        updateCountEl('home-count-auto', counts.automotive);
+        updateCountEl('home-count-tech', counts.tech);
+        updateCountEl('home-count-desk', counts['desk-setup']);
+        updateCountEl('home-count-cameras', counts.cameras);
+        updateCountEl('home-count-coffee', counts.coffee);
+        updateCountEl('home-count-gaming', counts.gaming);
+        updateCountEl('home-count-smarthome', counts.smarthome);
+        updateCountEl('home-count-ebooks', counts.ebooks);
+        updateCountEl('home-count-presets', counts.presets);
+        updateCountEl('home-count-templates', counts.templates);
+        updateCountEl('home-count-courses', counts.courses);
+        updateCountEl('home-count-saas', counts.saas);
+
+        // Update Desktop Mega Dropdown counts
+        document.querySelectorAll('[data-mega-cat]').forEach(el => {
+          const cat = el.getAttribute('data-mega-cat');
+          if (counts[cat] !== undefined) el.textContent = counts[cat];
+        });
+
+        // Update Mobile Dropdown counts
+        document.querySelectorAll('[data-mob-cat]').forEach(el => {
+          const cat = el.getAttribute('data-mob-cat');
+          if (counts[cat] !== undefined) el.textContent = counts[cat];
+        });
+
+        // Update Footer and Hero Action text
+        const fullStoreBtn = document.getElementById('home-full-store-count');
+        if (fullStoreBtn) {
+          const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+          if (lang === 'vi') fullStoreBtn.textContent = `Xem Toàn Bộ ${counts.all} Sản Phẩm & Cửa Hàng`;
+          else if (lang === 'en') fullStoreBtn.textContent = `View Full Store (${counts.all} Items)`;
+          else if (lang === 'zh') fullStoreBtn.textContent = `查看全部 ${counts.all} 款严选好物`;
+        }
       };
 
-      updateCountEl('home-count-all', counts.all);
-      updateCountEl('home-count-physical', counts.physical);
-      updateCountEl('home-count-digital', counts.digital);
-      updateCountEl('home-count-fashion', counts.fashion);
-      updateCountEl('home-count-watches', counts.watches);
-      updateCountEl('home-count-auto', counts.automotive);
-      updateCountEl('home-count-tech', counts.tech);
-      updateCountEl('home-count-desk', counts['desk-setup']);
-      updateCountEl('home-count-cameras', counts.cameras);
-      updateCountEl('home-count-coffee', counts.coffee);
-      updateCountEl('home-count-gaming', counts.gaming);
-      updateCountEl('home-count-smarthome', counts.smarthome);
-      updateCountEl('home-count-ebooks', counts.ebooks);
-      updateCountEl('home-count-presets', counts.presets);
-      updateCountEl('home-count-templates', counts.templates);
-      updateCountEl('home-count-courses', counts.courses);
-      updateCountEl('home-count-saas', counts.saas);
-
-      const fullStoreBtn = document.getElementById('home-full-store-count');
-      if (fullStoreBtn) {
-        const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
-        if (lang === 'vi') fullStoreBtn.textContent = `Xem Toàn Bộ ${counts.all} Sản Phẩm & Cửa Hàng`;
-        else if (lang === 'en') fullStoreBtn.textContent = `View Full Store (${counts.all} Items)`;
-        else if (lang === 'zh') fullStoreBtn.textContent = `查看全部 ${counts.all} 款严选好物`;
-      }
+      applyCounts();
+      window.addEventListener('languageChanged', applyCounts);
     })
-    .catch(err => console.debug('Home category pills dynamic sync skipped:', err));
+    .catch(err => console.debug('Catalog category dynamic sync skipped:', err));
 }
 
 // -------------------------------------------------------------
