@@ -2479,15 +2479,13 @@ export default {
         const assetRes = await env.ASSETS.fetch(request);
         if (assetRes.ok) return assetRes;
 
-        // Fallback to post-detail.html with explicit slug param
-        const slugClean = cleanPath.replace(/\.html$/, '');
-        const detailUrl = new URL('/post-detail.html', request.url);
-        detailUrl.searchParams.set('slug', slugClean);
-        url.searchParams.forEach((val, key) => {
-          if (!detailUrl.searchParams.has(key)) detailUrl.searchParams.set(key, val);
-        });
-        const detailRes = await env.ASSETS.fetch(new Request(detailUrl, request));
-        if (detailRes.ok) return detailRes;
+        // Fallback to post-detail.html
+        const detailRes = await env.ASSETS.fetch(new Request(new URL('/post-detail.html', request.url)));
+        if (detailRes.ok) {
+          return new Response(detailRes.body, {
+            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+          });
+        }
       }
     }
 

@@ -880,16 +880,24 @@
           couponSection.classList.add('hidden');
         }
 
+        const activeBtnText = lang === 'vi' ? (post.btnTextVi || 'ĐẶT HÀNG NGAY') : (lang === 'zh' ? (post.btnTextZh || '立即前往订购') : (post.btnText || 'ORDER NOW'));
+
         // Body texts
-        document.getElementById('content-intro-text').innerText = post.intro || post.excerpt;
-        document.getElementById('content-body-text').innerText = post.body || 'We conducted independent 30-day benchmarking to test material durability, real-world tolerance, and daily performance.';
-        document.getElementById('content-verdict-text').innerText = post.verdict || 'An exceptional high-performance investment in its tier, exceeding our strict testing standards.';
+        const activeIntro = (lang === 'vi' ? (post.introVi || post.intro) : (lang === 'zh' ? (post.introZh || post.intro) : (post.intro || post.introEn))) || activeExcerpt;
+        const activeBody = (lang === 'vi' ? (post.bodyVi || post.body) : (lang === 'zh' ? (post.bodyZh || post.body) : (post.body || post.bodyEn))) || 'We conducted independent 30-day benchmarking to test material durability, real-world tolerance, and daily performance.';
+        const activeVerdict = (lang === 'vi' ? (post.verdictVi || post.verdict) : (lang === 'zh' ? (post.verdictZh || post.verdict) : (post.verdict || post.verdictEn))) || 'An exceptional high-performance investment in its tier, exceeding our strict testing standards.';
+
+        document.getElementById('content-intro-text').innerText = activeIntro;
+        document.getElementById('content-body-text').innerText = activeBody;
+        document.getElementById('content-verdict-text').innerText = activeVerdict;
 
         // Pros
         const prosList = document.getElementById('pros-list');
         prosList.innerHTML = '';
-        if (post.pros && post.pros.length) {
-          post.pros.forEach(item => {
+        let activePros = (lang === 'vi' ? (post.prosVi || post.pros) : (lang === 'zh' ? (post.prosZh || post.pros) : (post.pros || post.prosEn))) || post.pros;
+        if (typeof activePros === 'string') activePros = [activePros];
+        if (activePros && activePros.length) {
+          activePros.forEach(item => {
             const li = document.createElement('li');
             li.className = 'flex items-start gap-2';
             li.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i> <span>${item}</span>`;
@@ -902,8 +910,10 @@
         // Cons
         const consList = document.getElementById('cons-list');
         consList.innerHTML = '';
-        if (post.cons && post.cons.length) {
-          post.cons.forEach(item => {
+        let activeCons = (lang === 'vi' ? (post.consVi || post.cons) : (lang === 'zh' ? (post.consZh || post.cons) : (post.cons || post.consEn))) || post.cons;
+        if (typeof activeCons === 'string') activeCons = [activeCons];
+        if (activeCons && activeCons.length) {
+          activeCons.forEach(item => {
             const li = document.createElement('li');
             li.className = 'flex items-start gap-2';
             li.innerHTML = `<i data-lucide="x" class="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5"></i> <span>${item}</span>`;
@@ -913,26 +923,29 @@
           consList.innerHTML = `<li class="flex items-start gap-2"><i data-lucide="x" class="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5"></i> <span>Limited promotional batches, early order recommended</span></li>`;
         }
 
-        // Next / Prev article navigation
+        // Next / Prev article navigation with smooth continuous looping
         const currentIndex = posts.findIndex(p => p.id === post.id);
-        if (currentIndex > 0) {
-          const prevPost = posts[currentIndex - 1];
-          const prevLink = prevPost.slug && prevPost.slug.startsWith('post-') ? prevPost.slug : `post-detail.html?id=${prevPost.id}`;
-          document.getElementById('prev-article-btn').href = prevLink;
-          document.getElementById('prev-article-title').innerText = prevPost.title;
-        } else {
-          document.getElementById('prev-article-btn').href = 'post.html';
-          document.getElementById('prev-article-title').innerText = '« All Reviews';
+        const prevIndex = (currentIndex - 1 + posts.length) % posts.length;
+        const nextIndex = (currentIndex + 1) % posts.length;
+
+        const prevPost = posts[prevIndex];
+        const nextPost = posts[nextIndex];
+
+        const prevTitle = lang === 'vi' ? (prevPost.titleVi || prevPost.title) : (lang === 'zh' ? (prevPost.titleZh || prevPost.title) : (prevPost.title || prevPost.titleEn));
+        const nextTitle = lang === 'vi' ? (nextPost.titleVi || nextPost.title) : (lang === 'zh' ? (nextPost.titleZh || nextPost.title) : (nextPost.title || nextPost.titleEn));
+
+        const getLink = (p) => p.slug ? (p.slug.endsWith('.html') ? p.slug : p.slug + '.html') : `post-detail.html?id=${p.id}`;
+
+        const prevBtn = document.getElementById('prev-article-btn');
+        if (prevBtn) {
+          prevBtn.href = getLink(prevPost);
+          document.getElementById('prev-article-title').innerText = prevTitle;
         }
 
-        if (currentIndex < posts.length - 1) {
-          const nextPost = posts[currentIndex + 1];
-          const nextLink = nextPost.slug && nextPost.slug.startsWith('post-') ? nextPost.slug : `post-detail.html?id=${nextPost.id}`;
-          document.getElementById('next-article-btn').href = nextLink;
-          document.getElementById('next-article-title').innerText = nextPost.title;
-        } else {
-          document.getElementById('next-article-btn').href = 'post.html';
-          document.getElementById('next-article-title').innerText = '« All Reviews';
+        const nextBtn = document.getElementById('next-article-btn');
+        if (nextBtn) {
+          nextBtn.href = getLink(nextPost);
+          document.getElementById('next-article-title').innerText = nextTitle;
         }
 
         lucide.createIcons();

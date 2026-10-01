@@ -390,17 +390,17 @@
     }
 
     if (catSlug === targetCat) return true;
-    if (targetCat === 'auto' && catSlug === 'automotive') return true;
-    if (targetCat === 'edc' && (catSlug === 'desk' || catSlug === 'desk-setup')) return true;
+    if ((targetCat === 'auto' || targetCat === 'automotive') && (catSlug === 'automotive' || catSlug === 'auto')) return true;
+    if ((targetCat === 'edc' || targetCat === 'desk-setup') && (catSlug === 'desk' || catSlug === 'desk-setup' || catSlug === 'edc')) return true;
     if (targetCat === 'cameras' && (catSlug === 'camera' || catSlug === 'cameras')) return true;
-    if (targetCat === 'coffee' && (catSlug === 'cafe' || catSlug === 'espresso')) return true;
-    if (targetCat === 'gaming' && (catSlug === 'game' || catSlug === 'games' || catSlug === 'laptop')) return true;
-    if (targetCat === 'smarthome' && (catSlug === 'smart-home' || catSlug === 'iot')) return true;
-    if (targetCat === 'ebooks' && (catSlug === 'ebook' || catSlug === 'guide' || catSlug === 'guides')) return true;
-    if (targetCat === 'presets' && (catSlug === 'preset' || catSlug === 'lut' || catSlug === 'luts')) return true;
-    if (targetCat === 'templates' && (catSlug === 'template' || catSlug === 'notion')) return true;
-    if (targetCat === 'courses' && (catSlug === 'course' || catSlug === 'video' || catSlug === 'workshop')) return true;
-    if (targetCat === 'saas' && (catSlug === 'software' || catSlug === 'ai' || catSlug === 'cloud')) return true;
+    if (targetCat === 'coffee' && (catSlug === 'cafe' || catSlug === 'espresso' || catSlug === 'coffee')) return true;
+    if (targetCat === 'gaming' && (catSlug === 'game' || catSlug === 'games' || catSlug === 'laptop' || catSlug === 'gaming')) return true;
+    if (targetCat === 'smarthome' && (catSlug === 'smart-home' || catSlug === 'iot' || catSlug === 'smarthome')) return true;
+    if (targetCat === 'ebooks' && (catSlug === 'ebook' || catSlug === 'guide' || catSlug === 'guides' || catSlug === 'ebooks')) return true;
+    if (targetCat === 'presets' && (catSlug === 'preset' || catSlug === 'lut' || catSlug === 'luts' || catSlug === 'presets')) return true;
+    if (targetCat === 'templates' && (catSlug === 'template' || catSlug === 'notion' || catSlug === 'templates')) return true;
+    if (targetCat === 'courses' && (catSlug === 'course' || catSlug === 'video' || catSlug === 'workshop' || catSlug === 'courses')) return true;
+    if (targetCat === 'saas' && (catSlug === 'software' || catSlug === 'ai' || catSlug === 'cloud' || catSlug === 'saas')) return true;
 
     const catText = ((item.category || '') + ' ' + (item.categoryEn || '') + ' ' + (item.categoryVi || '') + ' ' + (item.categoryZh || '') + ' ' + (item.title || '') + ' ' + (item.brand || '')).toLowerCase();
     if (targetCat === 'watches') return catText.includes('đồng hồ') || catText.includes('watch') || catText.includes('horology') || catText.includes('cơ khí') || catText.includes('cổ điển') || catText.includes('seagull') || catText.includes('tissot') || catText.includes('腕表') || catText.includes('手表');
@@ -907,17 +907,20 @@
    * Determine Post Detail URL
    */
   function getPostDetailUrl(post) {
-    const existingDedicated = [
-      'post-lilyvow.html', 
-      'post-bullboost.html', 
-      'post-seagull.html', 
-      'post-sony-wh-1000xm5.html', 
-      'post-sony.html'
-    ];
-    if (post.slug && existingDedicated.includes(post.slug)) {
-      return post.slug;
+    if (!post) return 'post.html';
+    if (post.slug) {
+      let s = post.slug.trim();
+      if (!s.endsWith('.html')) s += '.html';
+      if (!s.startsWith('post-') && !s.startsWith('http') && !s.includes('/')) s = 'post-' + s;
+      return s;
     }
-    return `post-detail.html?id=${encodeURIComponent(post.id || post.slug)}`;
+    if (post.id) {
+      let id = post.id.trim();
+      if (!id.endsWith('.html')) id += '.html';
+      if (!id.startsWith('post-') && !id.startsWith('http') && !id.includes('/')) id = 'post-' + id;
+      return id;
+    }
+    return 'post.html';
   }
 
   /**
