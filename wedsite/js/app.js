@@ -438,631 +438,147 @@ function initTopBarTicker() {
 
 // Global Spotlight Search Engine (Prioritizing Website Articles & Reviews)
 function initSearch() {
-  const searchCatalog = [
-    // --- 20 REAL WEBSITE ARTICLES (TOP PRIORITY) ---
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'review-sony-wh-1000xm5',
-      badge: 'Audio & Tech Gear',
-      badgeVi: 'Âm Thanh & Công Nghệ',
-      badgeZh: '音频与科技数码',
-      badgeClass: 'bg-rose-500 text-white',
-      icon: 'headphones',
-      title: 'Sony WH-1000XM5 Review: Is It Worth Upgrading from the XM4?',
-      titleVi: 'Đánh Giá Sony WH-1000XM5: Có Đáng Để Nâng Cấp Từ Đời XM4 Không?',
-      titleZh: '索尼WH-1000XM5头戴降噪耳机深度评测：是否值得从XM4升级？',
-      desc: '3-month hands-on test with Sony\'s flagship ANC headphones. Auto NC Optimizer, 8 AI microphones, and Hi-Res LDAC.',
-      descVi: 'Trải nghiệm thực tế sau 3 tháng sử dụng tai nghe chống ồn flagship của Sony. Chống ồn tự động và chất âm Hi-Res LDAC.',
-      descZh: '三个月真实深度佩戴体验：集成8麦克风AI环境降噪，双芯片V1/QN1与LDAC无损高清无线传输。',
-      url: 'post-sony-wh-1000xm5.html',
-      rating: '9.4',
-      readTime: '8 min read',
-      readTimeVi: '8 phút đọc',
-      readTimeZh: '8 分钟阅读',
-      categorySlug: 'tech',
-      keywords: ['sony', 'wh-1000xm5', 'xm5', 'tai nghe', 'chống ồn', 'anc', 'headphones', 'audio', 'âm thanh', 'earphones', 'bluetooth', 'hi-res', 'ldac', '耳机', '降噪', '索尼']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-seagull',
-      badge: 'Mechanical Watches',
-      badgeVi: 'Đồng Hồ Cơ Khí',
-      badgeZh: '机械腕表与配饰',
-      badgeClass: 'bg-indigo-600 text-white',
-      icon: 'watch',
-      title: 'Sea-Gull 1963 Chronograph Review: The Best Mechanical Chronograph Under $300',
-      titleVi: 'Đánh Giá Sea-Gull 1963 Chronograph: Biểu Tượng Đồng Hồ Cơ Bấm Giờ Dưới $300',
-      titleZh: '海鸥1963时代经典空军机械码表深度测评：300美元内首选',
-      desc: 'Historical ST1901 column wheel movement teardown, daily accuracy on timegrapher (+4s/day), and sapphire guide.',
-      descVi: 'Mổ xẻ cỗ máy cơ bấm giờ bánh xe cột ST1901 huyền thoại, độ chính xác đo máy +4s/ngày và so sánh kính sapphire.',
-      descZh: '复刻经典ST1901导柱轮计时机芯拆解、校表仪每日+4秒高精度与蓝宝石镜面选购指南。',
-      url: 'post-seagull.html',
-      rating: '9.7',
-      readTime: '10 min read',
-      readTimeVi: '10 phút đọc',
-      readTimeZh: '10 分钟阅读',
-      categorySlug: 'watches',
-      keywords: ['seagull', 'sea-gull', '1963', 'watch', 'chronograph', 'st1901', 'đồng hồ', 'đồng hồ cơ', 'bấm giờ', 'cơ khí', 'lộ đáy', 'sapphire', 'venus 175', 'peteonpurpose', '海鸥表', '手表', '机械表']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-lilyvow',
-      badge: 'Alt & Gothic Fashion',
-      badgeVi: 'Thời Trang Thiết Kế',
-      badgeZh: '小众暗黑女装',
-      badgeClass: 'bg-pink-600 text-white',
-      icon: 'sparkles',
-      title: 'LilyVow Review 2026: Authentic Lolita & Gothic Alt Fashion Tested',
-      titleVi: 'Đánh Giá LilyVow 2026: Trải Nghiệm Thời Trang Lolita & Gothic Thiết Kế',
-      titleZh: 'LilyVow 2026深度评测：暗黑哥特与洛丽塔服饰品质实测',
-      desc: 'Hands-on fabric teardown, custom sizing accuracy test ($25 alteration), and verified 15% discount code.',
-      descVi: 'Kiểm định chất lượng vải ren cao cấp, độ chính xác dịch vụ may đo riêng và mã giảm giá 15% độc quyền.',
-      descZh: '面料工艺拆解、专属定制量体剪裁精度实测与独家85折优惠券。',
-      url: 'post-lilyvow.html',
-      rating: '9.6',
-      readTime: '7 min read',
-      readTimeVi: '7 phút đọc',
-      readTimeZh: '7 分钟阅读',
-      categorySlug: 'fashion',
-      keywords: ['lilyvow', 'lolita', 'gothic', 'dress', 'fashion', 'alt fashion', 'thời trang', 'đầm', 'váy', 'thiết kế', 'ren', 'corset', 'peteonpurpose', '服饰', '哥特', '洛丽塔']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-bullboost',
-      badge: 'Auto Performance',
-      badgeVi: 'Phụ Tùng Xe Hơi',
-      badgeZh: '汽车改装零件',
-      badgeClass: 'bg-amber-600 text-white',
-      icon: 'gauge',
-      title: 'BullBoost Performance Review: CNC Billet Intake Manifolds & Titanium Exhausts',
-      titleVi: 'Đánh Giá BullBoost Performance: Cổ Hút Nhôm CNC & Pô Titanium Hiệu Năng Cao',
-      titleZh: 'BullBoost高性能进气歧管与钛合金排气深度评测',
-      desc: 'Dyno flow-bench tested (+34 WHP gains), 75+ PSI boost threshold, and $50 promo code on orders over $400.',
-      descVi: 'Đo đạc công suất thực tế trên máy Dyno (+34 WHP), chịu áp suất nạp 75+ PSI và mã giảm $50 cho đơn từ $400.',
-      descZh: '台架流速实测增加34匹轮上马力，承受75+ PSI涡轮高增压，订单满400美元立减50美元。',
-      url: 'post-bullboost.html',
-      rating: '9.5',
-      readTime: '9 min read',
-      readTimeVi: '9 phút đọc',
-      readTimeZh: '9 分钟阅读',
-      categorySlug: 'auto',
-      keywords: ['bullboost', 'performance', 'manifold', 'titanium', 'exhaust', 'exhausts', 'racing', 'pô', 'cổ hút', 'đua xe', 'xe hơi', 'k20', 'k24', 'civic', 'độ xe', 'bwfxdiyt', '改装', '排气']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-tissot-prx',
-      badge: 'Mechanical Watches',
-      badgeVi: 'Đồng Hồ Thụy Sĩ',
-      badgeZh: '机械腕表与配饰',
-      badgeClass: 'bg-indigo-600 text-white',
-      icon: 'watch',
-      title: 'Tissot PRX Powermatic 80 Ice Blue: The Ultimate Integrated Steel Sports Watch',
-      titleVi: 'Tissot PRX Powermatic 80 Ice Blue: Đỉnh Cao Đồng Hồ Thể Thao Tích Hợp Thụy Sĩ',
-      titleZh: '天梭PRX Powermatic 80冰蓝盘评测：万元内一体式精钢运动表巅峰',
-      desc: 'Striking waffle ice blue dial, 80-hour power reserve, Nivachron anti-magnetic spring, and brushed steel bracelet.',
-      descVi: 'Mặt số vân Waffle Ice Blue hút mắt, bộ máy Powermatic 80 trữ cót 80 giờ và dây thép tích hợp hoàn thiện sắc sảo.',
-      descZh: '吸睛华夫格冰蓝盘面、80小时超长动力储备、Nivachron抗磁游丝与细腻拉丝一体式钢带。',
-      url: 'post-tissot-prx.html',
-      rating: '9.7',
-      readTime: '8 min read',
-      readTimeVi: '8 phút đọc',
-      readTimeZh: '8 分钟阅读',
-      categorySlug: 'watches',
-      keywords: ['tissot', 'prx', 'powermatic 80', 'ice blue', 'watch', 'đồng hồ', 'thụy sĩ', 'swiss', 'dây thép', 'cơ khí', '天梭', '手表']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-keychron-q1',
-      badge: 'Desk Setup & EDC',
-      badgeVi: 'Bàn Làm Việc & EDC',
-      badgeZh: '桌面搭子与EDC',
-      badgeClass: 'bg-cyan-600 text-white',
-      icon: 'keyboard',
-      title: 'Keychron Q1 Pro Wireless Review: Premium CNC Aluminum Custom Keyboard',
-      titleVi: 'Keychron Q1 Pro Wireless: Bàn Phím Cơ CNC Full Nhôm Cho Dân Chuyên Nghiệp',
-      titleZh: 'Keychron Q1 Pro无线客制化机械键盘深度评测：全CNC铝合金质感之作',
-      desc: 'Full 6063 CNC aluminum body, double-gasket acoustic mount, Bluetooth 5.1, and QMK/VIA key remapping.',
-      descVi: 'Vỏ nhôm CNC 6063 đầm chắc, cơ chế đệm Gasket-mount kép êm ái, kết nối không dây Bluetooth 5.1 và keycap OSA PBT.',
-      descZh: '全6063航空铝合金机身、双重Gasket缓冲减震结构、蓝牙5.1多设备无缝切换与QMK/VIA开源改键。',
-      url: 'post-keychron-q1.html',
-      rating: '9.5',
-      readTime: '9 min read',
-      readTimeVi: '9 phút đọc',
-      readTimeZh: '9 分钟阅读',
-      categorySlug: 'edc',
-      keywords: ['keychron', 'q1', 'q1 pro', 'keyboard', 'bàn phím', 'bàn phím cơ', 'nhôm', 'cnc', 'gasket', 'qmk', 'via', 'edc', 'setup', '客制化', '机械键盘']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-brembo-gt',
-      badge: 'Auto Performance',
-      badgeVi: 'Phụ Tùng Xe Hơi',
-      badgeZh: '汽车改装零件',
-      badgeClass: 'bg-amber-600 text-white',
-      icon: 'gauge',
-      title: 'Brembo GT 6-Piston Billet Big Brake Kit Review: Maximum Stopping Power Tested',
-      titleVi: 'Đánh Giá Cùm Phanh Brembo GT 6-Piston Billet: Đỉnh Cao Hiệu Năng Hãm Phanh',
-      titleZh: '布雷博Brembo GT六活塞锻造刹车套件深度测评：极致制动表现',
-      desc: 'Monobloc billet 6-piston calipers, 2-piece floating slotted rotors, zero fade threshold at 200+ km/h track sessions.',
-      descVi: 'Cùm phanh nhôm Billet 6-piston nguyên khối, đĩa phanh 2 mảnh tản nhiệt và cảm giác chân phanh thể thao chính xác.',
-      descZh: '单体一体成型六活塞锻造卡钳、双片分体打孔划线刹车盘，赛道200+时速连续制动零热衰减。',
-      url: 'post-brembo-gt.html',
-      rating: '9.8',
-      readTime: '11 min read',
-      readTimeVi: '11 phút đọc',
-      readTimeZh: '11 分钟阅读',
-      categorySlug: 'auto',
-      keywords: ['brembo', 'brembo gt', 'brakes', 'phanh', 'cùm phanh', 'đĩa phanh', 'đua xe', 'racing', 'track', 'auto', 'xe hơi', '刹车', '卡钳']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-sony-a7iv',
-      badge: 'Cameras & Creator Gear',
-      badgeVi: 'Máy Ảnh & Video',
-      badgeZh: '相机与创作装备',
-      badgeClass: 'bg-purple-600 text-white',
-      icon: 'camera',
-      title: 'Sony Alpha A7 IV Review: The Best All-Round Full-Frame Hybrid Camera',
-      titleVi: 'Sony Alpha A7 IV Review: Chiếc Máy Ảnh Full-Frame Hybrid Toàn Diện Nhất',
-      titleZh: '索尼Alpha A7M4全画幅微单深度评测：全能水桶机标杆',
-      desc: '33MP BSI CMOS sensor, 4K 60p 10-bit 4:2:2 recording, Real-time AI Eye AF for humans, birds, and animals.',
-      descVi: 'Cảm biến BSI CMOS 33MP, quay 4K 60p 10-bit 4:2:2, lấy nét tự động thời gian thực Real-time Eye AF siêu dính.',
-      descZh: '3300万像素背照式传感器、4K 60帧10-bit 4:2:2高规格录制、实时眼部对焦识别与S-Cinetone电影色彩。',
-      url: 'post-sony-a7iv.html',
-      rating: '9.8',
-      readTime: '12 min read',
-      readTimeVi: '12 phút đọc',
-      readTimeZh: '12 分钟阅读',
-      categorySlug: 'cameras',
-      keywords: ['sony', 'a7iv', 'a7 iv', 'a7m4', 'camera', 'máy ảnh', 'mirrorless', 'full-frame', 'video', 'quay phim', 'chụp ảnh', '索尼', '微单', '相机']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-devialet-phantom',
-      badge: 'Audio & Tech Gear',
-      badgeVi: 'Âm Thanh Hi-End',
-      badgeZh: '音频与科技数码',
-      badgeClass: 'bg-rose-500 text-white',
-      icon: 'headphones',
-      title: 'Devialet Phantom II 98dB Review: Audiophile Beast in an Ultra-Compact Frame',
-      titleVi: 'Devialet Phantom II 98dB: Quái Thú Âm Thanh Hi-End Trong Thân Hình Nhỏ Gọn',
-      titleZh: '帝瓦雷Devialet Phantom II 98dB无线音响实测：小身材爆发澎湃能量',
-      desc: '400W RMS power, heart-thumping 18Hz sub-bass, zero distortion at high volumes, and futuristic spaceship design.',
-      descVi: 'Công suất 400W RMS, dải trầm xuống sâu 18Hz rung chuyển căn phòng, độ méo tiếng bằng 0 và thiết kế phi thuyền.',
-      descZh: '400瓦RMS狂暴功率输出、震撼人心的18Hz超低频下潜、高音量零失真与未来科幻太空舱造型。',
-      url: 'post-devialet-phantom.html',
-      rating: '9.6',
-      readTime: '8 min read',
-      readTimeVi: '8 phút đọc',
-      readTimeZh: '8 分钟阅读',
-      categorySlug: 'tech',
-      keywords: ['devialet', 'phantom', 'loa', 'loa bluetooth', 'speaker', 'hi-end', 'audiophile', 'âm thanh', 'bass', '帝瓦雷', '音响']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-aero-leather',
-      badge: 'Alt & Gothic Fashion',
-      badgeVi: 'Thời Trang Đồ Da',
-      badgeZh: '小众暗黑女装',
-      badgeClass: 'bg-pink-600 text-white',
-      icon: 'sparkles',
-      title: 'Aero Leather Highwayman Review: The Lifetime Horween Horsehide Jacket',
-      titleVi: 'Aero Leather Highwayman: Chiếc Áo Khoác Da Ngựa Sống Cùng Bạn Cả Đời',
-      titleZh: '苏格兰Aero Leather公路人马皮夹克深度测评：一件穿一生的传家之宝',
-      desc: 'Heavy 3.5oz Horween Chromexcel front-quarter horsehide, vintage brass Talon zipper, and hand-built in Scotland.',
-      descVi: 'Da ngựa Horween Chromexcel dày 3.5oz thuộc thảo mộc, khoá kéo đồng Talon cổ điển và may thủ công tại Scotland.',
-      descZh: '重磅3.5盎司芝加哥Horween植鞣茶芯马皮、复古黄铜Talon拉链与苏格兰老匠人纯手工定制。',
-      url: 'post-aero-leather.html',
-      rating: '9.9',
-      readTime: '10 min read',
-      readTimeVi: '10 phút đọc',
-      readTimeZh: '10 分钟阅读',
-      categorySlug: 'fashion',
-      keywords: ['aero leather', 'highwayman', 'jacket', 'áo khoác', 'áo da', 'áo khoác da', 'da ngựa', 'horween', 'leather', 'thời trang', '皮衣', '马皮']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-gaggia-classic',
-      badge: 'Espresso & Coffee Gear',
-      badgeVi: 'Cà Phê & Lifestyle',
-      badgeZh: '精品咖啡生活',
-      badgeClass: 'bg-amber-700 text-white',
-      icon: 'coffee',
-      title: 'Gaggia Classic Pro E24 Review: Barista-Grade Home Espresso Machine',
-      titleVi: 'Gaggia Classic Pro E24: Cỗ Máy Espresso Chuẩn Barista Cho Gia Đình',
-      titleZh: '加吉亚Gaggia Classic Pro E24半自动咖啡机实测：家用入门之王',
-      desc: 'Commercial 58mm chrome-plated brass portafilter, 3-way solenoid valve, and professional 2-hole steam wand.',
-      descVi: 'Tay pha chuẩn thương mại 58mm bằng đồng mạ crôm, van xả áp 3 chiều 3-way solenoid và vòi đánh sữa chuyên nghiệp.',
-      descZh: '商业级58毫米镀铬黄铜手柄、专业三通电磁阀泄压机制与双孔高压蒸汽打奶泡喷头。',
-      url: 'post-gaggia-classic.html',
-      rating: '9.5',
-      readTime: '8 min read',
-      readTimeVi: '8 phút đọc',
-      readTimeZh: '8 分钟阅读',
-      categorySlug: 'coffee',
-      keywords: ['gaggia', 'classic pro', 'espresso', 'coffee', 'máy pha cà phê', 'cà phê', 'barista', 'latte', 'steamer', '咖啡机']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-mx-master-3s',
-      badge: 'Desk Setup & EDC',
-      badgeVi: 'Bàn Làm Việc EDC',
-      badgeZh: '桌面搭子与EDC',
-      badgeClass: 'bg-cyan-600 text-white',
-      icon: 'mouse',
-      title: 'Logitech MX Master 3S Review: The Undisputed King of Productivity Mice',
-      titleVi: 'Logitech MX Master 3S Review: Chuột Công Thái Học Tốt Nhất Mọi Thời Đại',
-      titleZh: '罗技MX Master 3S无线人体工学鼠标深度测评：办公效率天花板',
-      desc: '8000 DPI Darkfield sensor on glass, electromagnetic MagSpeed 1,000 lines/sec scroll, and 90% quieter clicks.',
-      descVi: 'Cảm biến 8000 DPI Darkfield di trên mặt kính, con lăn điện từ MagSpeed cuộn 1000 dòng/giây và phím bấm Quiet Clicks.',
-      descZh: '8000 DPI玻璃表面精准追踪传感器、MagSpeed电磁疾速滚轮1秒千行与90%静音微动设计。',
-      url: 'post-mx-master-3s.html',
-      rating: '9.7',
-      readTime: '7 min read',
-      readTimeVi: '7 phút đọc',
-      readTimeZh: '7 分钟阅读',
-      categorySlug: 'edc',
-      keywords: ['logitech', 'mx master', 'mx master 3s', 'mouse', 'chuột', 'chuột máy tính', 'chuột không dây', 'công thái học', 'magspeed', 'edc', '罗技', '鼠标']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-supreme-review',
-      badge: 'Alt & Gothic Fashion',
-      badgeVi: 'Thời Trang Thiết Kế',
-      badgeZh: '小众暗黑女装',
-      badgeClass: 'bg-pink-600 text-white',
-      icon: 'sparkles',
-      title: 'Supreme Review: Authentic Craftsmanship, Sizing & Global Shipping Tested',
-      titleVi: 'Đánh Giá Supreme: Chất Lượng Thủ Công, Bảng Size Chuẩn & Giao Hàng Toàn Cầu',
-      titleZh: 'Supreme 深度评测：正品做工质感、尺码实测与全球直邮体验',
-      desc: 'Connecting international shoppers with authentic indie designer ateliers, featuring high-GSM jacquard fabrics and custom sizing.',
-      descVi: 'Kết nối người mua quốc tế với xưởng thiết kế độc lập, chất vải jacquard cao cấp và nhận may đo theo kích thước riêng.',
-      descZh: '连接全球消费者与原创独立设计工坊，重磅提花面料质感与专属量体定制服务。',
-      url: 'post-supreme-review.html',
-      rating: '9.6',
-      readTime: '6 min read',
-      readTimeVi: '6 phút đọc',
-      readTimeZh: '6 分钟阅读',
-      categorySlug: 'fashion',
-      keywords: ['supreme', 'fashion', 'alt fashion', 'thời trang', 'đầm', 'áo', 'thiết kế', 'peteonpurpose', '服饰']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-razer-blade-16',
-      badge: 'Gaming Gear & Laptops',
-      badgeVi: 'Gaming & Gear',
-      badgeZh: '电竞游戏外设',
-      badgeClass: 'bg-emerald-600 text-white',
-      icon: 'gamepad-2',
-      title: 'Razer Blade 16 Review: The Ultimate Dual-Mode Mini-LED Gaming Machine',
-      titleVi: 'Đánh Giá Razer Blade 16: Cỗ Máy Gaming Mini-LED Chuyển Chế Độ Độc Nhất 2026',
-      titleZh: '雷蛇 Razer Blade 16 深度评测：全球首发双模Mini-LED超薄旗舰游戏本',
-      desc: 'Featuring Intel Core i9-14900HX, RTX 4090, and a mind-blowing dual-mode Mini-LED display switching between 4K 120Hz and FHD+ 240Hz.',
-      descVi: 'Trang bị chip i9-14900HX, đồ họa RTX 4090 và màn hình Mini-LED chuyển đổi linh hoạt giữa 4K 120Hz cho đồ họa và FHD 240Hz cho eSports.',
-      descZh: '搭载i9-14900HX与RTX 4090顶级显卡，全球首创双模Mini-LED屏幕实现4K创作与240Hz电竞自由切换。',
-      url: 'post-detail.html?id=post-razer-blade-16',
-      rating: '9.8',
-      readTime: '11 min read',
-      readTimeVi: '11 phút đọc',
-      readTimeZh: '11 分钟阅读',
-      categorySlug: 'gaming',
-      keywords: ['razer', 'blade 16', 'laptop', 'gaming laptop', 'laptop gaming', 'rtx 4090', 'mini-led', 'máy tính', 'chơi game', '雷蛇', '游戏本']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-aqara-smart-hub',
-      badge: 'Smart Home & Automation',
-      badgeVi: 'Nhà Thông Minh',
-      badgeZh: '智能家居生活',
-      badgeClass: 'bg-blue-600 text-white',
-      icon: 'home',
-      title: 'Aqara Hub M3 Review: The Ultimate Matter & Thread Smart Home Central',
-      titleVi: 'Đánh Giá Aqara Hub M3: Trung Tâm Điều Khiển Nhà Thông Minh Hỗ Trợ Matter & Thread Toàn Diện',
-      titleZh: '绿米 Aqara Hub M3 深度评测：支持Matter与Thread的全能智能家居边缘中枢',
-      desc: 'Bridging Apple HomeKit, Google Home, Alexa, and Home Assistant with local edge computing and 360-degree infrared learning.',
-      descVi: 'Đồng bộ hóa mượt mà giữa Apple Home, Google Home, Alexa và Home Assistant với khả năng tự động hóa nội bộ không cần internet.',
-      descZh: '无缝打通苹果Apple Home、谷歌Home与Home Assistant，本地边缘计算断网可用，自带360度大功率红外遥控。',
-      url: 'post-detail.html?id=post-aqara-smart-hub',
-      rating: '9.6',
-      readTime: '8 min read',
-      readTimeVi: '8 phút đọc',
-      readTimeZh: '8 分钟阅读',
-      categorySlug: 'smarthome',
-      keywords: ['aqara', 'hub m3', 'matter', 'thread', 'smart home', 'nhà thông minh', 'homekit', 'home assistant', 'tự động hóa', 'công tắc thông minh', '绿米', '智能家居']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-ebook-affiliate-blueprint',
-      badge: 'Ebooks & Playbooks',
-      badgeVi: 'Cẩm Nang & Ebook',
-      badgeZh: '电子手册与指南',
-      badgeClass: 'bg-purple-700 text-white',
-      icon: 'book-open',
-      title: 'Affiliate Blog Blueprint 2026: The Comprehensive Zero to $1,000/Mo Playbook',
-      titleVi: 'Cẩm Nang Xây Dựng Affiliate Blog 2026: Từ Số 0 Lên 20 Triệu/Tháng Tự Động Hóa',
-      titleZh: '电子书：《从0到月入过万的联盟博客变现全攻略 2026》深度指南',
-      desc: 'Step-by-step 180-page PDF playbook breaking down buyer-intent SEO, CRO funnels, multi-network tracking, and high-ticket merchant negotiations.',
-      descVi: '180 trang tài liệu chi tiết hướng dẫn chọn ngách tỷ lệ chuyển đổi cao, xây dựng hệ thống so sánh giá và đàm phán hợp đồng tài trợ.',
-      descZh: '180页超详细实操手册，深度拆解商业意图关键词挖掘、多维比价矩阵设计与品牌高佣金谈判秘籍。',
-      url: 'post-detail.html?id=post-ebook-affiliate-blueprint',
-      rating: '9.9',
-      readTime: '15 min read',
-      readTimeVi: '15 phút đọc',
-      readTimeZh: '15 分钟阅读',
-      categorySlug: 'ebooks',
-      keywords: ['affiliate', 'blueprint', 'ebook', 'kiếm tiền', 'sách', 'cẩm nang', 'marketing', 'tiếp thị liên kết', 'seo', 'cro', '电子书', '变现']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-preset-cinematic-creator',
-      badge: 'Creative Presets & LUTs',
-      badgeVi: 'Preset & LUTs',
-      badgeZh: '调色预设与LUTs',
-      badgeClass: 'bg-pink-500 text-white',
-      icon: 'image',
-      title: '25 Pro Lightroom Presets Review: Cinematic Tech & Moody Neon LUTs',
-      titleVi: 'Đánh Giá Bộ 25 Preset Lightroom: Phong Cách Cinematic Công Nghệ & Màu Neon Đêm',
-      titleZh: '25款 Lightroom 大师级调色预设评测：赛博科技感与电影级暗光LUTs',
-      desc: 'Crafted specifically for desk setups, mechanical keyboards, nighttime cityscapes, and high-CTR tech YouTube thumbnails.',
-      descVi: 'Được tối ưu cho góc máy tính, bàn phím cơ, ảnh đêm thành phố và ảnh bìa YouTube công nghệ thu hút triệu lượt xem.',
-      descZh: '专为桌面搭配、客制化机械键盘特写、赛博朋克夜景以及YouTube科技类高点击封面调色精心打磨。',
-      url: 'post-detail.html?id=post-preset-cinematic-creator',
-      rating: '9.8',
-      readTime: '6 min read',
-      readTimeVi: '6 phút đọc',
-      readTimeZh: '6 分钟阅读',
-      categorySlug: 'presets',
-      keywords: ['lightroom', 'preset', 'presets', 'luts', 'màu', 'chỉnh ảnh', 'cinematic', 'bàn làm việc', 'nhiếp ảnh', '调色', '预设', '滤镜']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-template-notion-content-os',
-      badge: 'Notion Templates',
-      badgeVi: 'Template Notion',
-      badgeZh: 'Notion 生产力模板',
-      badgeClass: 'bg-indigo-500 text-white',
-      icon: 'layout',
-      title: 'Ultimate Content Creator OS: Notion Workspace for Editorial & Revenue Tracking',
-      titleVi: 'Trải Nghiệm Content Creator OS: Không Gian Notion Quản Lý Đăng Bài & Doanh Thu Tự Động',
-      titleZh: 'Notion 创作者OS深度评测：全域内容排期、赞助商CRM与分销收益追踪系统',
-      desc: 'All-in-one Notion workspace featuring automated content calendar, multi-platform sponsor CRM, and live affiliate earnings tracker.',
-      descVi: 'Không gian làm việc Notion tất-cả-trong-một: lịch xuất bản tự động, quản lý quan hệ nhãn hàng tài trợ và theo dõi dòng tiền hoa hồng.',
-      descZh: '集成全自动化内容发布日历、多平台商业赞助商CRM管理库以及全自动月度佣金收益核算看板。',
-      url: 'post-detail.html?id=post-template-notion-content-os',
-      rating: '9.8',
-      readTime: '8 min read',
-      readTimeVi: '8 phút đọc',
-      readTimeZh: '8 分钟阅读',
-      categorySlug: 'templates',
-      keywords: ['notion', 'template', 'template notion', 'creator os', 'quản lý', 'bảng biểu', 'năng suất', 'crm', 'doanh thu', '模板', '看板']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-course-seo-affiliate-crash',
-      badge: 'Video Masterclasses',
-      badgeVi: 'Khóa Học Video',
-      badgeZh: '视频实战大师课',
-      badgeClass: 'bg-violet-600 text-white',
-      icon: 'video',
-      title: 'High-Ticket Affiliate & SEO Mastery Video Masterclass: Complete Breakdown',
-      titleVi: 'Đánh Giá Khóa Học Video: Bí Quyết SEO Top 1 & Tiếp Thị Liên Kết High-Ticket Thực Chiến',
-      titleZh: '高佣金联盟营销与实操SEO视频大师课：实操深度评测',
-      desc: '14 hours of on-screen video breakdown on parasite SEO, high-ticket affiliate funnel design, and programmatic comparison pages.',
-      descVi: '14 giờ video thực chiến phân tích thuật toán Google, phễu chuyển đổi hoa hồng cao ngất ngưởng và kỹ thuật làm trang so sánh giá.',
-      descZh: '14小时高清实操录播课：拆解高阶Parasite SEO策略、高佣金转化漏斗设计以及程序化比价页面搭建技巧。',
-      url: 'post-detail.html?id=post-course-seo-affiliate-crash',
-      rating: '9.7',
-      readTime: '12 min read',
-      readTimeVi: '12 phút đọc',
-      readTimeZh: '12 分钟阅读',
-      categorySlug: 'courses',
-      keywords: ['course', 'khóa học', 'video', 'seo', 'affiliate', 'kiếm tiền', 'top 1 google', 'masterclass', 'tiếp thị liên kết', '课程', '视频课']
-    },
-    {
-      isArticle: true,
-      type: 'Review',
-      id: 'post-saas-ai-writer-pass',
-      badge: 'AI Tools & SaaS',
-      badgeVi: 'Công Cụ AI & SaaS',
-      badgeZh: 'AI工具与SaaS',
-      badgeClass: 'bg-sky-600 text-white',
-      icon: 'cpu',
-      title: 'SmartPicks AI Studio Review: Autonomous Trilingual Content & Comparison Engine',
-      titleVi: 'Đánh Giá SmartPicks AI Studio: Nền Tảng Tự Động Hóa Viết Bài So Sánh Đa Ngôn Ngữ',
-      titleZh: 'SmartPicks AI Studio 深度评测：全自动三语测评生成与智能比价引擎',
-      desc: 'AI platform purpose-built for affiliate publishers, generating factual product breakdowns, comparison matrices, and trilingual copy in minutes.',
-      descVi: 'Nền tảng AI chuyên biệt cho nhà sáng tạo nội dung affiliate, tự động tổng hợp thông số thực tế, bảng so sánh và dịch 3 thứ tiếng chuẩn xác.',
-      descZh: '专为联盟创作者量身定制的AI生产力工具：一分钟自动生成参数拆解、多维比价矩阵与高转化三语本地化文案。',
-      url: 'post-detail.html?id=post-saas-ai-writer-pass',
-      rating: '9.9',
-      readTime: '10 min read',
-      readTimeVi: '10 phút đọc',
-      readTimeZh: '10 分钟阅读',
-      categorySlug: 'saas',
-      keywords: ['ai', 'ai writer', 'smartpicks ai', 'saas', 'trí tuệ nhân tạo', 'viết bài tự động', 'công cụ', 'dịch thuật', 'so sánh giá', '人工智能', '工具']
-    },
+  let searchCatalog = [];
+  let isCatalogLoaded = false;
 
-    // --- SECONDARY: STORE PRODUCTS & MEDIA KIT ---
-    {
-      isArticle: false,
-      type: 'Product',
-      id: 'prod-sony-xm5',
-      badge: 'Store Product',
-      badgeVi: 'Sản Phẩm Cửa Hàng',
-      badgeZh: '精选数码',
-      badgeClass: 'bg-purple-600 text-white',
-      priceUSD: '$298.00',
-      priceVND: '7.490.000₫',
-      icon: 'headphones',
-      title: 'Sony WH-1000XM5 Wireless Noise Canceling Headphones',
-      titleVi: 'Tai Nghe Chống Ồn Không Dây Cao Cấp Sony WH-1000XM5',
-      titleZh: '索尼 WH-1000XM5 旗舰级头戴式双芯降噪无线耳机',
-      desc: 'Auto NC Optimizer with 8 microphones, 30-hour battery, and LDAC Hi-Res Audio wireless support.',
-      descVi: 'Công nghệ chống ồn tự động tối ưu 8 micro, pin 30 tiếng liên tục và chuẩn âm thanh Hi-Res LDAC không dây.',
-      descZh: '8麦克风双芯驱动自动降噪优化系统，30小时超长续航，支持LDAC高解析度无损蓝牙传输。',
-      url: 'shop.html?cat=tech',
-      keywords: ['sony', 'xm5', 'wh1000xm5', 'tai nghe', 'sản phẩm', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Product',
-      id: 'prod-seagull-1963',
-      badge: 'Store Product',
-      badgeVi: 'Sản Phẩm Cửa Hàng',
-      badgeZh: '精选腕表',
-      badgeClass: 'bg-purple-600 text-white',
-      priceUSD: '$219.00',
-      priceVND: '5.490.000₫',
-      icon: 'watch',
-      title: 'Sea-Gull 1963 38mm ST1901 Chronograph Watch',
-      titleVi: 'Đồng Hồ Cơ Bấm Giờ Sea-Gull 1963 ST1901 38mm Sapphire',
-      titleZh: '海鸥1963复刻版 38mm 航空计时机械码表 ST1901机芯',
-      desc: 'Authentic military aviation chronograph with column-wheel manual wind ST1901 calibre.',
-      descVi: 'Bản tái bản phi công quân sự chuẩn xác, cỗ máy lên cót tay bánh xe cột ST1901 lộ đáy kính sapphire.',
-      descZh: '正品军表复刻，经典导柱轮手卷计时ST1901机芯，背透蓝宝石镜面展现精湛机械打磨。',
-      url: 'shop.html?cat=watches',
-      keywords: ['seagull', '1963', 'watch', 'đồng hồ', 'sản phẩm', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Product',
-      id: 'prod-tissot-prx',
-      badge: 'Store Product',
-      badgeVi: 'Sản Phẩm Cửa Hàng',
-      badgeZh: '瑞士名表',
-      badgeClass: 'bg-purple-600 text-white',
-      priceUSD: '$695.00',
-      priceVND: '17.500.000₫',
-      icon: 'watch',
-      title: 'Tissot PRX Powermatic 80 Ice Blue Dial 40mm',
-      titleVi: 'Đồng Hồ Thụy Sĩ Tissot PRX Powermatic 80 Ice Blue 40mm',
-      titleZh: '天梭 PRX 系列 机械动力80 冰蓝色表盘 40mm 一体式钢带',
-      desc: '80-hour power reserve with Nivachron anti-magnetic balance spring and waffle tapisserie dial.',
-      descVi: 'Thời lượng trữ cót 80 giờ với dây tóc kháng từ Nivachron và mặt số vân nổi waffle xanh băng tuyệt đẹp.',
-      descZh: '80小时长动力储存，配备 Nivachron 强抗磁游丝与华夫格立体冰蓝纹理盘面。',
-      url: 'shop.html?cat=watches',
-      keywords: ['tissot', 'prx', 'watch', 'đồng hồ', 'sản phẩm', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Product',
-      id: 'prod-lilyvow-gothic-op',
-      badge: 'Store Product',
-      badgeVi: 'Sản Phẩm Cửa Hàng',
-      badgeZh: '独立女装',
-      badgeClass: 'bg-purple-600 text-white',
-      priceUSD: '$69.00',
-      priceVND: '1.750.000₫',
-      icon: 'sparkles',
-      title: 'LilyVow Victorian Velvet Gothic Lolita OP Dress',
-      titleVi: 'Váy Thiết Kế LilyVow Nhung Đen Gothic Victorian OP',
-      titleZh: 'LilyVow 暗黑维多利亚丝绒蕾丝复古洛丽塔OP长裙',
-      desc: '380 GSM high-density black velvet with Venise floral lace and steel-boned corset waistline.',
-      descVi: 'Chất nhung đen tuyền định lượng cao 380 GSM phối ren Venise hoa nổi và gọng corset siết eo tôn dáng.',
-      descZh: '380克高克重密织暗黑丝绒，进口威尼斯刺绣花边与内置钢骨收腰设计。',
-      url: 'shop.html?cat=fashion',
-      keywords: ['lilyvow', 'dress', 'váy', 'đầm', 'sản phẩm', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Product',
-      id: 'prod-bullboost-manifold',
-      badge: 'Store Product',
-      badgeVi: 'Sản Phẩm Cửa Hàng',
-      badgeZh: '性能改装',
-      badgeClass: 'bg-purple-600 text-white',
-      priceUSD: '$169.00',
-      priceVND: '4.250.000₫',
-      icon: 'shopping-bag',
-      title: 'BullBoost Billet CNC Intake Manifold K20/K24 Civic',
-      titleVi: 'Cổ Hút Nhôm Billet CNC BullBoost Civic Si K-Series',
-      titleZh: 'BullBoost 铝合金CNC切削高增压进气歧管 本田K20/K24',
-      desc: 'T6061 billet aluminum plenum with velocity stacks engineered for 70+ PSI boost setups.',
-      descVi: 'Nhôm nguyên khối T6061 gia công CNC với họng hút dạng kèn, tối ưu lưu lượng nạp cho turbo trên 70 PSI.',
-      descZh: '航空级T6061铝合金数控切削，内置气流喇叭口，可承受70+ PSI超高增压气流冲击。',
-      url: 'shop.html?cat=automotive',
-      keywords: ['bullboost', 'manifold', 'cổ hút', 'sản phẩm', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Digital Store',
-      id: 'prod-ebook-blueprint',
-      badge: 'Ebook',
-      badgeVi: 'Sách Số',
-      badgeZh: '电子书',
-      badgeClass: 'bg-pink-600 text-white',
-      priceUSD: '$7.99',
-      priceVND: '199.000₫',
-      icon: 'file-text',
-      title: 'Affiliate Blog Blueprint: Zero to $1,000/Mo (eBook)',
-      titleVi: 'Ebook: Cẩm Nang Affiliate Blog Từ Số 0 Lên 20 Triệu/Tháng',
-      titleZh: '电子书：《从0到月入过万的联盟博客变现全攻略》',
-      desc: '250+ page actionable playbook on high-margin niche selection and on-page SEO frameworks.',
-      descVi: 'Sách cẩm nang 250+ trang hướng dẫn chọn ngách lợi nhuận cao và cấu trúc SEO tối ưu.',
-      descZh: '250+页实操手册，深度剖析高利润利基市场选择与站内SEO变现框架。',
-      url: 'shop.html',
-      keywords: ['ebook', 'blueprint', 'pdf', 'book', 'sách', 'cẩm nang', '电子书', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Digital Store',
-      id: 'prod-lightroom-presets',
-      badge: 'Preset Pack',
-      badgeVi: 'Bộ Preset',
-      badgeZh: '调色包',
-      badgeClass: 'bg-amber-500 text-white',
-      priceUSD: '$5.99',
-      priceVND: '149.000₫',
-      icon: 'image',
-      title: '25 Pro Lightroom Presets: Cinematic Tech Pack',
-      titleVi: 'Bộ 25 Preset Lightroom Master Tone: Cinematic Tech',
-      titleZh: '25款精调Lightroom预设：科技影调大师包',
-      desc: 'Custom-tuned XMP & DNG profiles for aesthetic tech gadget reviews and desk setups.',
-      descVi: 'Profile màu XMP & DNG tối ưu chụp ảnh sản phẩm công nghệ và góc làm việc.',
-      descZh: '专为数码测评与桌面博主定制调校的 XMP & DNG 电影感滤镜包。',
-      url: 'shop.html',
-      keywords: ['lightroom', 'preset', 'photo', 'cinematic', 'ảnh', 'màu', '预设', 'shop']
-    },
-    {
-      isArticle: false,
-      type: 'Digital Store',
-      id: 'prod-notion-tracker',
-      badge: 'Notion OS',
-      badgeVi: 'Mẫu Notion',
-      badgeZh: 'Notion模板',
-      badgeClass: 'bg-emerald-600 text-white',
-      priceUSD: '$3.99',
-      priceVND: '99.000₫',
-      icon: 'layout',
-      title: 'Notion Content Hub & Affiliate Revenue Tracker',
-      titleVi: 'Template Notion: Content Hub & Quản Lý Doanh Thu Affiliate',
-      titleZh: 'Notion内容中枢与分销收益管理看板',
-      desc: 'Unified editorial pipeline, multi-network affiliate link vault, and automated monthly payout tracker.',
-      descVi: 'Hệ thống quản lý bài viết, kho link affiliate và bảng tự động tính dòng tiền hoa hồng.',
-      descZh: '内容选题排期、多平台分销外链库与自动化月度收益核算看板。',
-      url: 'shop.html',
-      keywords: ['notion', 'template', 'hub', 'tracker', 'bảng biểu', 'quản lý', '模板', 'shop']
-    },
-    {
+  // Helper: Category badge styling
+  function getCategoryBadgeClass(slug) {
+    const s = (slug || '').toLowerCase();
+    if (s.includes('fashion')) return 'bg-pink-600 text-white';
+    if (s.includes('watch')) return 'bg-indigo-600 text-white';
+    if (s.includes('auto')) return 'bg-amber-600 text-white';
+    if (s.includes('tech') || s.includes('audio')) return 'bg-rose-500 text-white';
+    if (s.includes('desk') || s.includes('edc')) return 'bg-cyan-600 text-white';
+    if (s.includes('camera')) return 'bg-blue-600 text-white';
+    if (s.includes('coffee')) return 'bg-amber-700 text-white';
+    if (s.includes('gaming')) return 'bg-purple-600 text-white';
+    if (s.includes('smart')) return 'bg-emerald-600 text-white';
+    if (s.includes('ebook')) return 'bg-purple-700 text-white';
+    if (s.includes('preset')) return 'bg-fuchsia-600 text-white';
+    if (s.includes('template')) return 'bg-emerald-600 text-white';
+    if (s.includes('course')) return 'bg-violet-600 text-white';
+    return 'bg-purple-600 text-white';
+  }
+
+  // Helper: Category icon
+  function getCategoryIcon(slug) {
+    const s = (slug || '').toLowerCase();
+    if (s.includes('fashion')) return 'sparkles';
+    if (s.includes('watch')) return 'watch';
+    if (s.includes('auto')) return 'gauge';
+    if (s.includes('tech') || s.includes('audio')) return 'headphones';
+    if (s.includes('desk') || s.includes('edc')) return 'keyboard';
+    if (s.includes('camera')) return 'camera';
+    if (s.includes('coffee')) return 'coffee';
+    if (s.includes('gaming')) return 'gamepad-2';
+    if (s.includes('smart')) return 'home';
+    if (s.includes('ebook')) return 'book-open';
+    if (s.includes('preset')) return 'sliders';
+    if (s.includes('template')) return 'layout';
+    if (s.includes('course')) return 'video';
+    return 'file-text';
+  }
+
+  // Helper: Post detail URL
+  function getPostUrl(post) {
+    if (!post) return 'post.html';
+    if (post.slug) {
+      let s = post.slug.trim();
+      if (!s.endsWith('.html')) s += '.html';
+      if (!s.startsWith('post-') && !s.startsWith('http') && !s.includes('/')) s = 'post-' + s;
+      return s;
+    }
+    if (post.id) {
+      let id = post.id.trim();
+      if (!id.endsWith('.html')) id += '.html';
+      if (!id.startsWith('post-') && !id.startsWith('http') && !id.includes('/')) id = 'post-' + id;
+      return id;
+    }
+    return 'post.html';
+  }
+
+  // Build searchable keywords array
+  function buildSearchKeywords(item) {
+    const tokens = [
+      item.title, item.titleVi, item.titleZh, item.titleEn,
+      item.excerpt, item.excerptVi, item.excerptZh,
+      item.category, item.categoryEn, item.categoryVi, item.categoryZh,
+      item.brand, item.coupon, item.couponDiscount,
+      item.categorySlug, item.categoryKey
+    ].filter(Boolean).join(' ').toLowerCase();
+    return Array.from(new Set(tokens.split(/[\s,._\-/#+]+/))).filter(t => t.length > 1);
+  }
+
+  // Build complete dynamic catalog from posts and products
+  function buildSearchCatalogFromData(posts, products) {
+    const catalog = [];
+
+    // 1. Articles & Reviews from posts.json
+    if (Array.isArray(posts)) {
+      posts.forEach(p => {
+        if (!p || (!p.id && !p.slug && !p.title)) return;
+        const readTimeRaw = p.readTime || '8 min read';
+        catalog.push({
+          isArticle: true,
+          type: 'Review',
+          id: p.id || p.slug,
+          badge: p.categoryEn || p.category || 'Curated Review',
+          badgeVi: p.categoryVi || p.category || 'Đánh Giá Chi Tiết',
+          badgeZh: p.categoryZh || p.category || '深度评测',
+          badgeClass: getCategoryBadgeClass(p.categorySlug || p.category),
+          icon: getCategoryIcon(p.categorySlug || p.category),
+          title: p.title || p.titleEn || '',
+          titleVi: p.titleVi || p.title || '',
+          titleZh: p.titleZh || p.title || '',
+          desc: p.excerpt || p.excerptEn || p.intro || '',
+          descVi: p.excerptVi || p.excerpt || p.intro || '',
+          descZh: p.excerptZh || p.excerpt || p.intro || '',
+          url: getPostUrl(p),
+          rating: p.rating || '9.5',
+          readTime: readTimeRaw,
+          readTimeVi: readTimeRaw.replace(/min read/i, 'phút đọc').replace(/min/i, 'phút'),
+          readTimeZh: readTimeRaw.replace(/min read/i, '分钟阅读').replace(/min/i, '分钟'),
+          categorySlug: p.categorySlug || 'tech',
+          brand: p.brand || '',
+          coupon: p.coupon || '',
+          isFeatured: p.isFeatured || false,
+          keywords: buildSearchKeywords(p)
+        });
+      });
+    }
+
+    // 2. Store Products from products.json
+    if (Array.isArray(products)) {
+      products.forEach(pr => {
+        if (!pr || (!pr.id && !pr.title)) return;
+        const slug = pr.categorySlug || pr.categoryKey || 'tech';
+        catalog.push({
+          isArticle: false,
+          type: 'Store Product',
+          id: pr.id,
+          badge: pr.categoryEn || pr.category || 'Hardware',
+          badgeVi: pr.categoryVi || pr.category || 'Sản Phẩm',
+          badgeZh: pr.categoryZh || pr.category || '精选商品',
+          badgeClass: 'bg-purple-600 text-white',
+          priceUSD: pr.priceUsd || pr.price || '$99.00',
+          priceVND: pr.priceVnd || '2.490.000₫',
+          icon: getCategoryIcon(slug),
+          title: pr.title || pr.titleEn || '',
+          titleVi: pr.titleVi || pr.title || '',
+          titleZh: pr.titleZh || pr.title || '',
+          desc: pr.description || pr.descriptionEn || '',
+          descVi: pr.descriptionVi || pr.description || '',
+          descZh: pr.descriptionZh || pr.description || '',
+          url: pr.reviewUrl ? getPostUrl({ slug: pr.reviewUrl }) : (pr.affiliateUrl || 'shop.html'),
+          brand: pr.brand || '',
+          categorySlug: slug,
+          keywords: buildSearchKeywords(pr)
+        });
+      });
+    }
+
+    // 3. Media Kit & Brand Sponsorship
+    catalog.push({
       isArticle: false,
       type: 'Media Kit',
       id: 'sponsor-media-kit',
@@ -1079,8 +595,66 @@ function initSearch() {
       descZh: '携手 Smart Picks Review：入选精选榜单、定制深度单品测评与全站独家品牌曝光。',
       url: 'sponsor.html',
       keywords: ['sponsor', 'media kit', 'advertising', 'báo giá', 'tài trợ', 'quảng cáo', '赞助', '刊例']
+    });
+
+    return catalog;
+  }
+
+  // Asynchronously fetch live data and sync search catalog
+  async function syncSearchCatalog() {
+    try {
+      const [resPosts, resProds] = await Promise.all([
+        fetch('data/posts.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('data/products.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+      ]);
+
+      if (resPosts && Array.isArray(resPosts) && resPosts.length > 0) {
+        searchCatalog = buildSearchCatalogFromData(resPosts, resProds || []);
+        isCatalogLoaded = true;
+        updateCatalogBadgesAndPlaceholder();
+      }
+    } catch (e) {
+      console.warn('Spotlight search sync error:', e);
     }
-  ];
+  }
+
+  // Update dynamic count tags and placeholders on modal
+  function updateCatalogBadgesAndPlaceholder() {
+    const articleCount = searchCatalog.filter(it => it.isArticle).length;
+    const productCount = searchCatalog.filter(it => !it.isArticle && it.type !== 'Media Kit').length;
+
+    const modalEl = document.getElementById('spotlight-search-modal');
+    if (modalEl) {
+      const artTab = modalEl.querySelector('button[data-filter="articles"] .filter-tab-label');
+      if (artTab) {
+        artTab.setAttribute('data-en', `Articles & Reviews (${articleCount})`);
+        artTab.setAttribute('data-vi', `Bài Viết & Đánh Giá (${articleCount})`);
+        artTab.setAttribute('data-zh', `评测文章 (${articleCount})`);
+      }
+      const prodTab = modalEl.querySelector('button[data-filter="products"] .filter-tab-label');
+      if (prodTab) {
+        prodTab.setAttribute('data-en', `Store Products (${productCount})`);
+        prodTab.setAttribute('data-vi', `Sản Phẩm Cửa Hàng (${productCount})`);
+        prodTab.setAttribute('data-zh', `商店商品 (${productCount})`);
+      }
+    }
+
+    const currentLang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+    updateFilterLabels(currentLang);
+
+    const inputEl = document.getElementById('spotlight-search-input');
+    if (inputEl && !inputEl.value.trim()) {
+      const placeholders = {
+        en: `Search ${articleCount}+ reviews, guides, tech deals...`,
+        vi: `Tìm kiếm ${articleCount}+ bài viết đánh giá, cẩm nang, sản phẩm...`,
+        zh: `搜索 ${articleCount}+ 篇深度评测、实操指南、科技装备...`
+      };
+      inputEl.placeholder = placeholders[currentLang] || placeholders.en;
+    }
+  }
+
+  // Start background sync immediately
+  syncSearchCatalog();
 
   let currentSearchFilter = 'all'; // 'all', 'articles', 'products'
 
@@ -1133,7 +707,7 @@ function initSearch() {
             </button>
             <button type="button" class="spotlight-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-purple-100/70 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900 border border-purple-200/60 dark:border-purple-800/60" data-filter="articles">
               <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-              <span class="filter-tab-label" data-en="Articles & Reviews (20)" data-vi="Bài Viết & Đánh Giá (20)" data-zh="评测文章 (20)">Bài Viết & Đánh Giá (20)</span>
+              <span class="filter-tab-label" data-en="Articles & Reviews (33)" data-vi="Bài Viết & Đánh Giá (33)" data-zh="评测文章 (33)">Bài Viết & Đánh Giá (33)</span>
             </button>
             <button type="button" class="spotlight-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-purple-100/70 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900 border border-purple-200/60 dark:border-purple-800/60" data-filter="products">
               <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
@@ -1199,10 +773,11 @@ function initSearch() {
   // Open Spotlight Modal with Zoom-in Animation
   function openSpotlight(initialQuery = '') {
     const currentLang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
+    const articleCount = searchCatalog.filter(it => it.isArticle).length || 33;
     const placeholders = {
-      en: 'Search 20+ reviews, guides, tech deals...',
-      vi: 'Tìm kiếm 20+ bài viết đánh giá, cẩm nang, sản phẩm...',
-      zh: '搜索 20+ 篇深度评测、实操指南、科技装备...'
+      en: `Search ${articleCount}+ reviews, guides, tech deals...`,
+      vi: `Tìm kiếm ${articleCount}+ bài viết đánh giá, cẩm nang, sản phẩm...`,
+      zh: `搜索 ${articleCount}+ 篇深度评测、实操指南、科技装备...`
     };
     input.placeholder = placeholders[currentLang] || placeholders.en;
     updateFilterLabels(currentLang);
@@ -1488,20 +1063,18 @@ function initSearch() {
     const currentLang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : (localStorage.getItem('blog_lang') || 'en');
     const currentCurrency = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
 
-    // 1. Match search items
+    // 1. Match search items via Token Matching across all multilingual fields
+    const qTokens = q.split(/\s+/).filter(Boolean);
     let matches = searchCatalog.filter(item => {
-      const titleMatch = (item.title && item.title.toLowerCase().includes(q)) ||
-        (item.titleVi && item.titleVi.toLowerCase().includes(q)) ||
-        (item.titleZh && item.titleZh.toLowerCase().includes(q));
-      const descMatch = (item.desc && item.desc.toLowerCase().includes(q)) ||
-        (item.descVi && item.descVi.toLowerCase().includes(q)) ||
-        (item.descZh && item.descZh.toLowerCase().includes(q));
-      const badgeMatch = (item.badge && item.badge.toLowerCase().includes(q)) ||
-        (item.badgeVi && item.badgeVi.toLowerCase().includes(q)) ||
-        (item.badgeZh && item.badgeZh.toLowerCase().includes(q));
-      const typeMatch = item.type && item.type.toLowerCase().includes(q);
-      const keywordMatch = item.keywords && item.keywords.some(k => k.toLowerCase().includes(q));
-      return titleMatch || descMatch || badgeMatch || typeMatch || keywordMatch;
+      const searchable = [
+        item.title, item.titleVi, item.titleZh, item.titleEn,
+        item.desc, item.descVi, item.descZh,
+        item.badge, item.badgeVi, item.badgeZh,
+        item.brand, item.coupon, item.type, item.categorySlug,
+        ...(item.keywords || [])
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      return qTokens.every(tok => searchable.includes(tok));
     });
 
     // 2. Apply active filter tab if not 'all'

@@ -125,7 +125,7 @@
                 <div>
                   <div class="flex items-center gap-1.5 px-2 py-1 mb-2 text-[11px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-wider">
                     <i data-lucide="package" class="w-3.5 h-3.5"></i>
-                    <span data-i18n="nav_physical_gear">Physical Gear & Hardware (27)</span>
+                    <span data-i18n="nav_physical_gear">Physical Gear & Hardware (29)</span>
                   </div>
                   <div class="space-y-0.5 text-xs">
                     <a href="shop.html?cat=fashion" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 text-slate-700 dark:text-purple-200 transition-colors group/item">
@@ -218,7 +218,7 @@
               <!-- Bottom Action Row -->
               <div class="pt-3 px-2 flex items-center justify-between text-xs font-bold">
                 <a href="shop.html" class="text-purple-600 dark:text-purple-400 hover:text-pink-500 flex items-center gap-1 transition-colors">
-                  <span data-i18n="view_full_shop">View Full Store (31 Items)</span> &rarr;
+                  <span data-i18n="view_full_shop">View Full Store (33 Items)</span> &rarr;
                 </a>
                 <a href="post.html" class="text-slate-500 dark:text-purple-300 hover:text-purple-600 flex items-center gap-1 transition-colors">
                   <span data-i18n="view_all_posts">Browse All 31 Reviews</span> &rarr;
@@ -359,7 +359,7 @@
           <i data-lucide="chevron-down" class="w-4 h-4 text-purple-400 group-open/mob:rotate-180 transition-transform"></i>
         </summary>
         <div class="pl-3 pr-1 py-2 space-y-2 text-xs">
-          <div class="font-extrabold text-[10px] text-purple-500 uppercase" data-i18n="nav_physical_gear">Physical Gear (27)</div>
+          <div class="font-extrabold text-[10px] text-purple-500 uppercase" data-i18n="nav_physical_gear">Physical Gear (29)</div>
           <div class="grid grid-cols-2 gap-1.5 pl-1">
             <a href="shop.html?cat=fashion" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">👗 Alt Fashion (<span data-mob-cat="fashion">6</span>)</a>
             <a href="shop.html?cat=watches" class="py-1 text-slate-600 dark:text-purple-300 hover:text-pink-500">⌚ Watches (<span data-mob-cat="watches">2</span>)</a>
@@ -448,26 +448,26 @@
           <div class="col-span-2 sm:col-span-1 flex items-center gap-1.5 sm:gap-2 min-w-0">
             <span class="text-xs font-bold text-slate-500 dark:text-purple-300 whitespace-nowrap hidden sm:inline">Category:</span>
             <select id="review-category-select" class="w-full min-w-0 px-2.5 sm:px-3 py-2 rounded-xl bg-purple-50/70 dark:bg-[#1a0f35] border border-purple-200 dark:border-purple-800 text-xs font-bold text-slate-800 dark:text-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer truncate">
-              <option value="all">🌟 All Reviews (20)</option>
-              <option value="physical">📦 Physical Gear (15)</option>
-              <option value="digital">⚡ Digital Downloads (5)</option>
+              <option value="all">🌟 All Reviews (33)</option>
+              <option value="physical">📦 Physical Gear (29)</option>
+              <option value="digital">⚡ Digital Downloads (4)</option>
               <optgroup label="📦 PHYSICAL GEAR">
-                <option value="fashion">👗 Alt Fashion (3)</option>
-                <option value="watches">⌚ Watches (2)</option>
-                <option value="auto">🏎️ Auto Performance (2)</option>
-                <option value="tech">🎧 Audio & Tech (2)</option>
-                <option value="edc">💻 Desk Setup & EDC (2)</option>
+                <option value="fashion">👗 Alt & Gothic Fashion (8)</option>
+                <option value="watches">⌚ Mechanical Watches (2)</option>
+                <option value="auto">🏎️ Auto Performance (8)</option>
+                <option value="tech">🎧 Audio & Tech Gear (3)</option>
+                <option value="edc">💻 Desk Setup & EDC (3)</option>
                 <option value="cameras">📷 Cameras & Video (1)</option>
                 <option value="coffee">☕ Espresso & Coffee (1)</option>
                 <option value="gaming">🎮 Gaming & Laptops (1)</option>
-                <option value="smarthome">🏠 Smart Home (1)</option>
+                <option value="smarthome">🏠 Smart Home (2)</option>
               </optgroup>
               <optgroup label="⚡ DIGITAL PRODUCTS">
                 <option value="ebooks">📚 Ebooks & Playbooks (1)</option>
                 <option value="presets">🎨 Presets & LUTs (1)</option>
                 <option value="templates">📑 Notion OS (1)</option>
                 <option value="courses">🎓 Video Courses (1)</option>
-                <option value="saas">⚡ SaaS & AI Tools (1)</option>
+                <option value="saas">⚡ SaaS & AI Tools (0)</option>
               </optgroup>
             </select>
           </div>
@@ -500,28 +500,28 @@
       <!-- Bottom Row: Category Filter Tabs with Mobile Swipe -->
       <div class="w-full max-w-full min-w-0 flex items-center gap-2 pt-3 border-t border-purple-100 dark:border-purple-900/40 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap" id="category-filter-tabs">
         <button data-cat="all" class="cat-pill active flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_all">🌟 All Reviews</span> (<span id="count-cat-all">20</span>)
+          <span data-i18n="reviews_cat_all">🌟 All Reviews</span> (<span id="count-cat-all">33</span>)
         </button>
         <button data-cat="physical" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-[#120a26] text-purple-700 dark:text-purple-300 border-2 border-purple-300 dark:border-purple-700 hover:border-purple-500 transition-all cursor-pointer">
-          <span data-i18n="shop_tab_physical">📦 Physical Gear</span> (<span id="count-cat-physical">15</span>)
+          <span data-i18n="shop_tab_physical">📦 Physical Gear</span> (<span id="count-cat-physical">29</span>)
         </button>
         <button data-cat="digital" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-[#120a26] text-pink-600 dark:text-pink-300 border-2 border-pink-300 dark:border-pink-700 hover:border-pink-500 transition-all cursor-pointer">
-          <span data-i18n="shop_tab_digital">⚡ Digital Downloads</span> (<span id="count-cat-digital">5</span>)
+          <span data-i18n="shop_tab_digital">⚡ Digital Downloads</span> (<span id="count-cat-digital">4</span>)
         </button>
         <button data-cat="watches" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
           <span data-i18n="reviews_cat_watches">⌚ Mechanical Watches</span> (<span id="count-cat-watches">2</span>)
         </button>
         <button data-cat="auto" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_auto">🏎️ Auto Performance</span> (<span id="count-cat-auto">2</span>)
+          <span data-i18n="reviews_cat_auto">🏎️ Auto Performance</span> (<span id="count-cat-auto">8</span>)
         </button>
         <button data-cat="fashion" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_fashion">👗 Alt & Gothic Fashion</span> (<span id="count-cat-fashion">3</span>)
+          <span data-i18n="reviews_cat_fashion">👗 Alt & Gothic Fashion</span> (<span id="count-cat-fashion">8</span>)
         </button>
         <button data-cat="tech" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_tech">🎧 Audio & Tech Gear</span> (<span id="count-cat-tech">2</span>)
+          <span data-i18n="reviews_cat_tech">🎧 Audio & Tech Gear</span> (<span id="count-cat-tech">3</span>)
         </button>
         <button data-cat="edc" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_edc">💻 Desk Setup & EDC</span> (<span id="count-cat-edc">2</span>)
+          <span data-i18n="reviews_cat_edc">💻 Desk Setup & EDC</span> (<span id="count-cat-edc">3</span>)
         </button>
         <button data-cat="cameras" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
           <span data-i18n="reviews_cat_cameras">📷 Cameras & Video</span> (<span id="count-cat-cameras">1</span>)
@@ -533,7 +533,7 @@
           <span data-i18n="reviews_cat_gaming">🎮 Gaming & Laptops</span> (<span id="count-cat-gaming">1</span>)
         </button>
         <button data-cat="smarthome" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_smarthome">🏠 Smart Home</span> (<span id="count-cat-smarthome">1</span>)
+          <span data-i18n="reviews_cat_smarthome">🏠 Smart Home</span> (<span id="count-cat-smarthome">2</span>)
         </button>
         <button data-cat="ebooks" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
           <span data-i18n="reviews_cat_ebooks">📚 Ebooks & Playbooks</span> (<span id="count-cat-ebooks">1</span>)
@@ -548,7 +548,7 @@
           <span data-i18n="reviews_cat_courses">🎓 Video Courses</span> (<span id="count-cat-courses">1</span>)
         </button>
         <button data-cat="saas" class="cat-pill flex-shrink-0 whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-purple-50/80 dark:bg-[#160d2e] text-slate-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 transition-all cursor-pointer">
-          <span data-i18n="reviews_cat_saas">⚡ SaaS & AI Tools</span> (<span id="count-cat-saas">1</span>)
+          <span data-i18n="reviews_cat_saas">⚡ SaaS & AI Tools</span> (<span id="count-cat-saas">0</span>)
         </button>
       </div>
 

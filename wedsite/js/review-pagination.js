@@ -389,34 +389,28 @@
       return item.isPhysical === false || digitalSlugs.includes(catSlug);
     }
 
-    if (catSlug === targetCat) return true;
-    if ((targetCat === 'auto' || targetCat === 'automotive') && (catSlug === 'automotive' || catSlug === 'auto')) return true;
-    if ((targetCat === 'edc' || targetCat === 'desk-setup') && (catSlug === 'desk' || catSlug === 'desk-setup' || catSlug === 'edc')) return true;
-    if (targetCat === 'cameras' && (catSlug === 'camera' || catSlug === 'cameras')) return true;
-    if (targetCat === 'coffee' && (catSlug === 'cafe' || catSlug === 'espresso' || catSlug === 'coffee')) return true;
-    if (targetCat === 'gaming' && (catSlug === 'game' || catSlug === 'games' || catSlug === 'laptop' || catSlug === 'gaming')) return true;
-    if (targetCat === 'smarthome' && (catSlug === 'smart-home' || catSlug === 'iot' || catSlug === 'smarthome')) return true;
-    if (targetCat === 'ebooks' && (catSlug === 'ebook' || catSlug === 'guide' || catSlug === 'guides' || catSlug === 'ebooks')) return true;
-    if (targetCat === 'presets' && (catSlug === 'preset' || catSlug === 'lut' || catSlug === 'luts' || catSlug === 'presets')) return true;
-    if (targetCat === 'templates' && (catSlug === 'template' || catSlug === 'notion' || catSlug === 'templates')) return true;
-    if (targetCat === 'courses' && (catSlug === 'course' || catSlug === 'video' || catSlug === 'workshop' || catSlug === 'courses')) return true;
-    if (targetCat === 'saas' && (catSlug === 'software' || catSlug === 'ai' || catSlug === 'cloud' || catSlug === 'saas')) return true;
+    if (catSlug) {
+      if (catSlug === targetCat) return true;
+      if ((targetCat === 'auto' || targetCat === 'automotive') && (catSlug === 'automotive' || catSlug === 'auto')) return true;
+      if ((targetCat === 'edc' || targetCat === 'desk-setup') && (catSlug === 'desk' || catSlug === 'desk-setup' || catSlug === 'edc')) return true;
+      if (targetCat === 'cameras' && (catSlug === 'camera' || catSlug === 'cameras')) return true;
+      if (targetCat === 'coffee' && (catSlug === 'cafe' || catSlug === 'espresso' || catSlug === 'coffee')) return true;
+      if (targetCat === 'gaming' && (catSlug === 'game' || catSlug === 'games' || catSlug === 'laptop' || catSlug === 'gaming')) return true;
+      if (targetCat === 'smarthome' && (catSlug === 'smart-home' || catSlug === 'iot' || catSlug === 'smarthome')) return true;
+      if (targetCat === 'ebooks' && (catSlug === 'ebook' || catSlug === 'guide' || catSlug === 'guides' || catSlug === 'ebooks')) return true;
+      if (targetCat === 'presets' && (catSlug === 'preset' || catSlug === 'lut' || catSlug === 'luts' || catSlug === 'presets')) return true;
+      if (targetCat === 'templates' && (catSlug === 'template' || catSlug === 'notion' || catSlug === 'templates')) return true;
+      if (targetCat === 'courses' && (catSlug === 'course' || catSlug === 'video' || catSlug === 'workshop' || catSlug === 'courses')) return true;
+      if (targetCat === 'saas' && (catSlug === 'software' || catSlug === 'ai' || catSlug === 'cloud' || catSlug === 'saas')) return true;
+      return false;
+    }
 
     const catText = ((item.category || '') + ' ' + (item.categoryEn || '') + ' ' + (item.categoryVi || '') + ' ' + (item.categoryZh || '') + ' ' + (item.title || '') + ' ' + (item.brand || '')).toLowerCase();
-    if (targetCat === 'watches') return catText.includes('đồng hồ') || catText.includes('watch') || catText.includes('horology') || catText.includes('cơ khí') || catText.includes('cổ điển') || catText.includes('seagull') || catText.includes('tissot') || catText.includes('腕表') || catText.includes('手表');
-    if (targetCat === 'auto') return catText.includes('xe') || catText.includes('auto') || catText.includes('car') || catText.includes('phụ tùng') || catText.includes('manifold') || catText.includes('exhaust') || catText.includes('racing') || catText.includes('brembo') || catText.includes('bullboost') || catText.includes('phanh') || catText.includes('汽车');
-    if (targetCat === 'fashion') return catText.includes('thời trang') || catText.includes('fashion') || catText.includes('gothic') || catText.includes('lolita') || catText.includes('áo') || catText.includes('váy') || catText.includes('đầm') || catText.includes('lilyvow') || catText.includes('supreme') || catText.includes('aero') || catText.includes('leather') || catText.includes('服饰') || catText.includes('时装');
-    if (targetCat === 'tech') return (catText.includes('công nghệ') || catText.includes('tech') || catText.includes('audio') || catText.includes('âm thanh') || catText.includes('tai nghe') || catText.includes('sony') || catText.includes('devialet') || catText.includes('shure')) && !catText.includes('camera') && !catText.includes('máy ảnh');
-    if (targetCat === 'edc') return (catText.includes('bàn làm việc') || catText.includes('edc') || catText.includes('desk') || catText.includes('setup') || catText.includes('bàn phím') || catText.includes('chuột') || catText.includes('keychron') || catText.includes('logitech') || catText.includes('mx master')) && !catText.includes('coffee') && !catText.includes('gaggia');
-    if (targetCat === 'cameras') return catText.includes('máy ảnh') || catText.includes('camera') || catText.includes('sony a7') || catText.includes('creator') || catText.includes('video gear') || catText.includes('相机');
-    if (targetCat === 'coffee') return catText.includes('cà phê') || catText.includes('coffee') || catText.includes('espresso') || catText.includes('gaggia') || catText.includes('barista');
-    if (targetCat === 'gaming') return catText.includes('gaming') || catText.includes('game') || catText.includes('razer') || catText.includes('blade') || catText.includes('rtx') || catText.includes('电竞') || catText.includes('游戏本');
-    if (targetCat === 'smarthome') return catText.includes('smart home') || catText.includes('nhà thông minh') || catText.includes('matter') || catText.includes('aqara') || catText.includes('hub') || catText.includes('智能家居');
-    if (targetCat === 'ebooks') return catText.includes('ebook') || catText.includes('playbook') || catText.includes('cẩm nang') || catText.includes('sách') || catText.includes('电子书');
-    if (targetCat === 'presets') return catText.includes('preset') || catText.includes('lut') || catText.includes('lightroom') || catText.includes('cybershutter') || catText.includes('预设');
-    if (targetCat === 'templates') return catText.includes('notion') || catText.includes('template') || catText.includes('creator os') || catText.includes('模板');
-    if (targetCat === 'courses') return catText.includes('course') || catText.includes('masterclass') || catText.includes('khóa học') || catText.includes('workshop') || catText.includes('视频课');
-    if (targetCat === 'saas') return catText.includes('saas') || catText.includes('cloud') || catText.includes('phần mềm') || catText.includes('ai studio') || catText.includes('writer');
+    if (targetCat === 'watches') return catText.includes('đồng hồ') || catText.includes('watch') || catText.includes('horology') || catText.includes('cơ khí') || catText.includes('seagull') || catText.includes('tissot');
+    if (targetCat === 'auto') return catText.includes('xe') || catText.includes('auto') || catText.includes('car') || catText.includes('brembo') || catText.includes('bullboost');
+    if (targetCat === 'fashion') return catText.includes('thời trang') || catText.includes('fashion') || catText.includes('gothic') || catText.includes('lilyvow') || catText.includes('supreme');
+    if (targetCat === 'tech') return catText.includes('tech') || catText.includes('audio') || catText.includes('tai nghe') || catText.includes('sony');
+    if (targetCat === 'edc') return catText.includes('desk') || catText.includes('setup') || catText.includes('bàn phím') || catText.includes('chuột');
     return false;
   }
 
@@ -432,12 +426,25 @@
     const heroCount = document.getElementById('hero-total-posts-count');
     if (heroCount) heroCount.innerText = totalCount + '+';
 
+    // Update category pills
     filterTabs.forEach(btn => {
       const cat = btn.getAttribute('data-cat');
       const catCount = (cat === 'all') ? totalCount : allReviews.filter(item => matchPostToCategory(item, cat)).length;
       const label = (dict.catPills && dict.catPills[cat]) || cat;
       btn.innerHTML = `<span data-i18n="reviews_cat_${cat}">${label}</span> (<span id="count-cat-${cat}">${catCount}</span>)`;
     });
+
+    // Update Category Select Dropdown options
+    const catSelect = document.getElementById('review-category-select');
+    if (catSelect) {
+      Array.from(catSelect.options).forEach(opt => {
+        const cat = opt.value;
+        if (!cat) return;
+        const catCount = (cat === 'all') ? totalCount : allReviews.filter(item => matchPostToCategory(item, cat)).length;
+        const label = (dict.catPills && dict.catPills[cat]) || opt.textContent.replace(/\s*\(\d+\)/, '');
+        opt.textContent = `${label} (${catCount})`;
+      });
+    }
   }
 
   /**
@@ -449,17 +456,18 @@
     // 1. Filter by Category
     filteredReviews = allReviews.filter(item => matchPostToCategory(item, currentCategory));
 
-    // 2. Filter by Search Query across all multilingual fields
+    // 2. Filter by Search Query across all multilingual fields with Token Matching
     if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+      const qTokens = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
       filteredReviews = filteredReviews.filter(item => {
-        const fields = [
-          item.title, item.titleVi, item.titleZh,
+        const searchable = [
+          item.title, item.titleVi, item.titleZh, item.titleEn,
           item.excerpt, item.excerptVi, item.excerptZh,
           item.category, item.categoryEn, item.categoryVi, item.categoryZh,
-          item.brand, item.coupon
-        ];
-        return fields.some(val => val && val.toLowerCase().includes(q));
+          item.categorySlug,
+          item.brand, item.coupon, item.intro, item.body, item.verdict
+        ].filter(Boolean).join(' ').toLowerCase();
+        return qTokens.every(tok => searchable.includes(tok));
       });
     }
 

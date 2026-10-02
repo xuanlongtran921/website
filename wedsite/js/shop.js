@@ -1883,6 +1883,19 @@ function updateCategoryCounts() {
       }
     }
   });
+
+  // Synchronize shop-category-select dropdown options dynamically
+  const shopCatSelect = document.getElementById('shop-category-select');
+  if (shopCatSelect) {
+    Array.from(shopCatSelect.options).forEach(opt => {
+      const cat = opt.value;
+      if (!cat) return;
+      if (counts[cat] !== undefined) {
+        const baseName = opt.textContent.replace(/\s*\(\d+\)/, '');
+        opt.textContent = `${baseName} (${counts[cat]})`;
+      }
+    });
+  }
 }
 
 function populateStoreDropdown() {

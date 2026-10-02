@@ -1099,6 +1099,34 @@ export default {
       basePosts = (basePosts || []).filter(isPostNotDeleted);
 
       const normSlug = s => (s || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
+      
+      // Build lookup map from basePosts for static images & normalized fields
+      const baseMap = new Map();
+      for (const bp of (basePosts || [])) {
+        const c = normSlug(bp.slug || bp.id);
+        if (c) baseMap.set(c, bp);
+      }
+
+      // Sanitize custom posts: replace bloated base64 images if basePosts has static image
+      for (const cp of (customPosts || [])) {
+        const c = normSlug(cp.slug || cp.id);
+        if (c && baseMap.has(c)) {
+          const bp = baseMap.get(c);
+          if (bp.image && !bp.image.startsWith('data:image') && cp.image && cp.image.startsWith('data:image')) {
+            cp.image = bp.image;
+            customPostsNeedSave = true;
+          }
+          if (bp.categorySlug && (!cp.categorySlug || cp.categorySlug === 'tech')) {
+            cp.categorySlug = bp.categorySlug;
+            cp.category = bp.category;
+            cp.categoryEn = bp.categoryEn;
+            cp.categoryVi = bp.categoryVi;
+            cp.categoryZh = bp.categoryZh;
+            customPostsNeedSave = true;
+          }
+        }
+      }
+
       let finalPosts = [];
       const seenPostSlugs = new Set();
       for (const p of [...(customPosts || []), ...(basePosts || [])]) {
@@ -2457,7 +2485,8 @@ export default {
     // -------------------------------------------------------------
     // 10. DYNAMIC POST HTML SERVING (FOR NEWLY PUBLISHED POSTS)
     // -------------------------------------------------------------
-    if (url.pathname.startsWith('/post-')) {
+    const isStaticSystemPage = ['/index.html', '/post.html', '/shop.html', '/sponsor.html', '/admin.html', '/post-detail.html', '/admin-cms/index.html'].includes(url.pathname);
+    if (url.pathname.startsWith('/post-') || (url.pathname.endsWith('.html') && !isStaticSystemPage)) {
       const cleanPath = url.pathname.replace(/^\//, '');
 
       // Check KV for saved HTML
