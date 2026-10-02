@@ -2197,7 +2197,7 @@ function initPageTransitions() {
     }
   }, { passive: true });
 
-  // Intercept Clicks for Butter-Smooth Transition
+  // Instant Tactile Feedback on Navigation Click (Zero Delay / No Dead Pause)
   document.addEventListener('click', (e) => {
     // Ignore modified clicks (Ctrl, Cmd, Shift, Alt, middle-click)
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
@@ -2206,37 +2206,27 @@ function initPageTransitions() {
     if (!isInternalNavigableLink(a)) return;
 
     const targetUrl = a.href;
-
-    // If current URL is exactly the target URL, avoid redundant transition
     if (targetUrl === window.location.href) return;
 
-    e.preventDefault();
-
-    // Start progress bar animation immediately
+    // Start neon top progress bar immediately in 0ms
     if (bar) {
       bar.classList.add('animating');
       bar.style.opacity = '1';
-      bar.style.width = '75%';
+      bar.style.width = '70%';
     }
 
-    // Trigger smooth fade out
+    // Gentle exit state without freezing or blocking pointer events
     document.body.classList.add('page-is-exiting');
 
-    // Smooth navigation after 90ms (quick & ultra responsive)
-    setTimeout(() => {
-      if (bar) bar.style.width = '95%';
-      window.location.href = targetUrl;
-    }, 90);
-
-    // Fail-safe: if navigation is stalled or cancelled, restore UI after 3.5s
+    // Fail-safe to restore bar if user aborts or stays on page
     setTimeout(() => {
       document.body.classList.remove('page-is-exiting');
       if (bar) {
         bar.style.opacity = '0';
         bar.style.width = '0%';
       }
-    }, 3500);
-  });
+    }, 4000);
+  }, { passive: true });
 }
 
 // Dynamic Category Counts Sync across Mega Dropdown, Mobile Menu & Home Pills

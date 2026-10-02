@@ -178,6 +178,7 @@
 
     // Render the initial page
     renderHomePage(currentHomePage, false);
+    preloadAdjacentImages(currentHomePage);
 
     // Setup Event Listeners
     window.addEventListener('currencyChanged', onCurrencyChanged);
@@ -208,8 +209,8 @@
     const activeCurr = getCurrentCurrency();
     const isVND = activeCurr === 'VND';
 
-    // Render 6 Cards
-    grid.innerHTML = pageItems.map(post => {
+    // Build Cards HTML
+    const newCardsHtml = pageItems.map(post => {
       const title = getPostField(post, 'title');
       const category = getPostField(post, 'category') || 'Review';
       const excerpt = getPostField(post, 'excerpt');
@@ -349,6 +350,25 @@
       `;
     }).join('');
 
+    // Smooth Content Swap Function
+    const applyNewContent = () => {
+      grid.innerHTML = newCardsHtml;
+      grid.classList.remove('grid-transition-out');
+      grid.classList.add('grid-transition-in');
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      preloadAdjacentImages(currentHomePage);
+    };
+
+    if (grid.children.length > 0 && scrollToSection) {
+      grid.classList.remove('grid-transition-in');
+      grid.classList.add('grid-transition-out');
+      setTimeout(applyNewContent, 75);
+    } else {
+      applyNewContent();
+    }
+
     // Render Pagination Controls
     if (paginationContainer && paginationInfo && paginationButtons) {
       paginationContainer.classList.remove('hidden');
@@ -450,13 +470,36 @@
       lucide.createIcons();
     }
 
-    // Smooth scroll to top of section on page change
+    // Smart Smooth Scroll: Only scroll if user is NOT already looking at the section
     if (scrollToSection) {
       const section = document.getElementById('featured-articles-section');
       if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const rect = section.getBoundingClientRect();
+        // If viewport is above or below the section, smoothly center it
+        if (rect.top < -60 || rect.top > 250) {
+          const targetY = window.pageYOffset + rect.top - 80;
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
       }
     }
+  }
+
+  /**
+   * Preload Adjacent Page Images for Instant Zero-Lag Transitions
+   */
+  function preloadAdjacentImages(page) {
+    if (!allHomeArticles || !allHomeArticles.length) return;
+    const totalPages = Math.ceil(allHomeArticles.length / itemsPerPage);
+    const pagesToPreload = [page - 1, page + 1].filter(p => p >= 1 && p <= totalPages);
+    pagesToPreload.forEach(p => {
+      const slice = allHomeArticles.slice((p - 1) * itemsPerPage, p * itemsPerPage);
+      slice.forEach(item => {
+        if (item && item.image && !item.image.startsWith('data:')) {
+          const img = new Image();
+          img.src = item.image;
+        }
+      });
+    });
   }
 
   /**

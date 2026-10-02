@@ -99,11 +99,10 @@ main {
   }
 }
 
-/* Page Exit State: Soft fade out without any header/body scale distortion */
+/* Page Exit State: Gentle touch with top neon bar, zero harsh freeze */
 body.page-is-exiting {
-  opacity: 0.35 !important;
-  pointer-events: none !important;
-  transition: opacity 0.1s ease-out !important;
+  opacity: 0.95 !important;
+  transition: opacity 0.08s ease-out !important;
 }
 
 /* Top Slim Neon Progress Bar */
@@ -426,15 +425,66 @@ h1, h2, h3, .font-display {
   right: -11px;
 }
 
-/* Card Hover Elevation with Purple Aura */
+/* High-Performance Card Hover & Tactile Selection Elevation */
 .card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .card-hover:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 45px -10px rgba(147, 51, 234, 0.25);
-  border-color: rgba(168, 85, 247, 0.6);
+  transform: translateY(-5px);
+  box-shadow: 0 18px 38px -8px rgba(147, 51, 234, 0.24);
+  border-color: rgba(168, 85, 247, 0.55);
+}
+
+.card-hover:active {
+  transform: scale(0.985) translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(147, 51, 234, 0.3);
+  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out !important;
+}
+
+/* Zero-Jank Fluid Grid Transition Classes */
+.grid-transition-out {
+  opacity: 0.15 !important;
+  transform: translateY(-4px) scale(0.995) !important;
+  transition: opacity 0.09s ease-out, transform 0.09s ease-out !important;
+  pointer-events: none;
+}
+
+.grid-transition-in {
+  animation: gridCardsGlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  will-change: opacity, transform;
+}
+
+@keyframes gridCardsGlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Micro-Stagger for Grid Cards to Eliminate Clunky Block Appearance */
+.grid-transition-in > article:nth-child(1), .grid-transition-in > div:nth-child(1) { animation-delay: 0ms; }
+.grid-transition-in > article:nth-child(2), .grid-transition-in > div:nth-child(2) { animation-delay: 20ms; }
+.grid-transition-in > article:nth-child(3), .grid-transition-in > div:nth-child(3) { animation-delay: 40ms; }
+.grid-transition-in > article:nth-child(4), .grid-transition-in > div:nth-child(4) { animation-delay: 60ms; }
+.grid-transition-in > article:nth-child(5), .grid-transition-in > div:nth-child(5) { animation-delay: 80ms; }
+.grid-transition-in > article:nth-child(6), .grid-transition-in > div:nth-child(6) { animation-delay: 100ms; }
+
+/* Interactive Tactile Pill and Button Click Feedback */
+.cat-pill, .spotlight-filter-btn {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
+  will-change: transform;
+}
+.cat-pill:active, .spotlight-filter-btn:active {
+  transform: scale(0.94) !important;
+  transition: transform 0.05s ease-out !important;
 }
 
 /* High-Converting Shimmer Button */

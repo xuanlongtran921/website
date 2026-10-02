@@ -2010,7 +2010,11 @@ function filterByStore(storeName) {
   applyShopFiltersAndRender();
   const shopSec = document.getElementById('filter-tabs');
   if (shopSec) {
-    shopSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const rect = shopSec.getBoundingClientRect();
+    if (rect.top < -60 || rect.top > 250) {
+      const targetY = window.pageYOffset + rect.top - 80;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
   }
 }
 
@@ -2118,7 +2122,7 @@ function renderShopPage() {
   }
 
   // Render Cards with Smooth Glide Animation
-  container.innerHTML = pageItems.map(prod => {
+  const prodsHtml = pageItems.map(prod => {
     const title = (lang === 'vi' && prod.titleVi) ? prod.titleVi : ((lang === 'zh' && prod.titleZh) ? prod.titleZh : (prod.titleEn || prod.title));
     const desc = (lang === 'vi' && prod.descriptionVi) ? prod.descriptionVi : ((lang === 'zh' && prod.descriptionZh) ? prod.descriptionZh : (prod.descriptionEn || prod.description));
     const cat = (lang === 'vi' && prod.categoryVi) ? prod.categoryVi : ((lang === 'zh' && prod.categoryZh) ? prod.categoryZh : (prod.categoryEn || prod.category));
@@ -2195,16 +2199,24 @@ function renderShopPage() {
     '</article>';
   }).join('');
 
-  container.classList.remove('animate-content-in');
-  void container.offsetWidth;
-  container.classList.add('animate-content-in');
+  // Smooth Content Swap Function
+  const applyNewProds = () => {
+    container.innerHTML = prodsHtml;
+    container.classList.remove('grid-transition-out');
+    container.classList.add('grid-transition-in');
+    renderShopPagination(totalPages);
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+    preloadAdjacentShopImages(currentPage);
+  };
 
-  // Render Pagination Controls
-  renderShopPagination(totalPages);
-
-  // Recreate Lucide Icons
-  if (window.lucide) {
-    lucide.createIcons();
+  if (container.children.length > 0) {
+    container.classList.remove('grid-transition-in');
+    container.classList.add('grid-transition-out');
+    setTimeout(applyNewProds, 75);
+  } else {
+    applyNewProds();
   }
 }
 
@@ -2256,12 +2268,31 @@ function renderShopPagination(totalPages) {
   container.innerHTML = btns;
 }
 
+function preloadAdjacentShopImages(page) {
+  if (!filteredProducts || !filteredProducts.length) return;
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const pagesToPreload = [page - 1, page + 1].filter(p => p >= 1 && p <= totalPages);
+  pagesToPreload.forEach(p => {
+    const slice = filteredProducts.slice((p - 1) * itemsPerPage, p * itemsPerPage);
+    slice.forEach(item => {
+      if (item && item.image && !item.image.startsWith('data:')) {
+        const img = new Image();
+        img.src = item.image;
+      }
+    });
+  });
+}
+
 function goToShopPage(page) {
   currentPage = page;
   renderShopPage();
   const shopSec = document.getElementById('filter-tabs');
   if (shopSec) {
-    shopSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const rect = shopSec.getBoundingClientRect();
+    if (rect.top < -60 || rect.top > 250) {
+      const targetY = window.pageYOffset + rect.top - 80;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
   }
 }
 

@@ -559,7 +559,7 @@
     const activeCurr = (typeof window.getCurrentCurrency === 'function') ? window.getCurrentCurrency() : (localStorage.getItem('preferred_currency') || 'USD');
     const isVND = activeCurr === 'VND';
 
-    grid.innerHTML = pageItems.map(post => {
+    const newCardsHtml = pageItems.map(post => {
       const title = getPostField(post, 'title');
       const category = getPostField(post, 'category');
       const excerpt = getPostField(post, 'excerpt');
@@ -714,14 +714,29 @@
       `;
     }).join('');
 
+    // Smooth Content Swap Function
+    const applyNewContent = () => {
+      grid.innerHTML = newCardsHtml;
+      grid.classList.remove('grid-transition-out');
+      grid.classList.add('grid-transition-in');
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      preloadAdjacentReviews(currentPage);
+    };
+
+    if (grid.children.length > 0) {
+      grid.classList.remove('grid-transition-in');
+      grid.classList.add('grid-transition-out');
+      setTimeout(applyNewContent, 75);
+    } else {
+      applyNewContent();
+    }
+
     // Update Status Summary
     const statusSummary = document.getElementById('pagination-status-summary');
     if (statusSummary) {
       statusSummary.innerText = dict.showingSummary(startIndex + 1, endIndex, filteredReviews.length);
-    }
-
-    if (window.lucide) {
-      lucide.createIcons();
     }
   }
 
@@ -978,16 +993,38 @@
   }
 
   /**
+   * Preload Adjacent Reviews Images for Instant Zero-Lag Transitions
+   */
+  function preloadAdjacentReviews(page) {
+    if (!filteredReviews || !filteredReviews.length) return;
+    const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
+    const pagesToPreload = [page - 1, page + 1].filter(p => p >= 1 && p <= totalPages);
+    pagesToPreload.forEach(p => {
+      const slice = filteredReviews.slice((p - 1) * itemsPerPage, p * itemsPerPage);
+      slice.forEach(item => {
+        if (item && item.image && !item.image.startsWith('data:')) {
+          const img = new Image();
+          img.src = item.image;
+        }
+      });
+    });
+  }
+
+  /**
    * Global Page Change function
    */
   window.goToPage = function(pageNumber) {
     currentPage = pageNumber;
     applyFiltersAndRender(true);
 
-    // Smooth scroll to top of reviews section
+    // Smart Smooth scroll to top of reviews section
     const section = document.getElementById('reviews-section');
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const rect = section.getBoundingClientRect();
+      if (rect.top < -60 || rect.top > 250) {
+        const targetY = window.pageYOffset + rect.top - 80;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
     }
   };
 
