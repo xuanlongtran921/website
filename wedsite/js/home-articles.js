@@ -145,10 +145,13 @@
       if (!isNaN(p) && p > 0) currentHomePage = p;
     }
 
-    // Fetch live posts from API / Static JSON with cache busting
+    // Fetch live posts from API / Static JSON with cache busting and fallback
     try {
-      const res = await fetch('data/posts.json?t=' + Date.now());
-      if (res.ok) {
+      let res = await fetch('data/posts.json?t=' + Date.now()).catch(() => null);
+      if (!res || !res.ok) {
+        res = await fetch('/api/posts?t=' + Date.now()).catch(() => null);
+      }
+      if (res && res.ok) {
         const raw = await res.json();
         let flat = [];
         if (Array.isArray(raw)) {
@@ -162,7 +165,7 @@
         }
       }
     } catch (err) {
-      console.warn('Cannot fetch data/posts.json, keeping current articles:', err);
+      console.warn('Cannot fetch articles catalog, keeping current articles:', err);
     }
 
     // If fetch failed or returned empty, keep fallback articles

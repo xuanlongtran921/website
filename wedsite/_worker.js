@@ -534,6 +534,91 @@ export default {
     }
 
     // -------------------------------------------------------------
+    // -------------------------------------------------------------
+    // API: ADMIN CLEAN KV (PURGE BLOATED BASE64 IMAGES)
+    // -------------------------------------------------------------
+    if (url.pathname === '/api/admin/clean-kv' && (request.method === 'GET' || request.method === 'POST')) {
+      try {
+        let cleanedPosts = 0;
+        let cleanedProds = 0;
+        let customPosts = [];
+        if (env.POSTS_KV) {
+          const raw = await env.POSTS_KV.get('custom_posts_list');
+          if (raw) customPosts = safeJsonParse(raw, []);
+          for (const p of customPosts) {
+            if (p && p.image && typeof p.image === 'string' && p.image.startsWith('data:image')) {
+              const clean = normSlug(p.slug || p.id);
+              const ext = p.image.includes('image/png') ? 'png' : 'jpg';
+              try {
+                await env.POSTS_KV.put('post_img:' + clean, p.image);
+              } catch (e) {}
+              p.image = 'images/posts/' + clean + '.' + ext;
+              cleanedPosts++;
+            }
+          }
+          await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
+
+          let customProducts = [];
+          const rawP = await env.POSTS_KV.get('custom_products_list');
+          if (rawP) customProducts = safeJsonParse(rawP, []);
+          for (const pr of customProducts) {
+            if (pr && pr.image && typeof pr.image === 'string' && pr.image.startsWith('data:image')) {
+              const clean = normSlug(pr.reviewUrl || pr.id);
+              const ext = pr.image.includes('image/png') ? 'png' : 'jpg';
+              pr.image = 'images/posts/' + clean + '.' + ext;
+              cleanedProds++;
+            }
+          }
+          await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: `Cleaned ${cleanedPosts} posts and ${cleanedProds} products in KV.`,
+          postsCount: customPosts.length
+        }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: e.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // API: SERVE IMAGES FROM KV
+    // -------------------------------------------------------------
+    if (url.pathname.startsWith('/api/images/')) {
+      const imgSlug = normSlug(url.pathname.replace(/^\/api\/images\//, '').replace(/\.(png|jpg|jpeg|webp)$/i, ''));
+      if (env.POSTS_KV && imgSlug) {
+        try {
+          const rawImg = await env.POSTS_KV.get('post_img:' + imgSlug);
+          if (rawImg && rawImg.startsWith('data:image')) {
+            const parts = rawImg.split(',', 2);
+            const mime = (parts[0].match(/:(.*?);/) || [])[1] || 'image/png';
+            const binaryStr = atob(parts[1]);
+            const bytes = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) {
+              bytes[i] = binaryStr.charCodeAt(i);
+            }
+            return new Response(bytes.buffer, {
+              headers: {
+                'Content-Type': mime,
+                'Cache-Control': 'public, max-age=31536000, immutable',
+                ...CORS_HEADERS
+              }
+            });
+          }
+        } catch (e) {}
+      }
+      if (env.ASSETS) {
+        return env.ASSETS.fetch(new Request(new URL('/images/posts/' + imgSlug + '.jpg', request.url)));
+      }
+      return new Response('Image not found', { status: 404 });
+    }
+
     // API: ADMIN PRICE REPAIR & SANITIZATION
     // -------------------------------------------------------------
     if (url.pathname === '/api/admin/repair-prices' && (request.method === 'GET' || request.method === 'POST')) {
@@ -1062,13 +1147,24 @@ export default {
         customPosts = inMemoryPosts;
       }
 
-      // Auto-sanitize custom posts prices
+      // Auto-sanitize custom posts: prices AND bloated base64 images
       if (customPosts && customPosts.length > 0) {
-        customPosts = customPosts.map(p => {
+        for (const p of customPosts) {
           const res = sanitizePostPrice(p);
           if (res.modified) customPostsNeedSave = true;
-          return res.item;
-        });
+          
+          if (p.image && typeof p.image === 'string' && p.image.startsWith('data:image')) {
+            const clean = normSlug(p.slug || p.id);
+            if (env.POSTS_KV && clean) {
+              try {
+                await env.POSTS_KV.put('post_img:' + clean, p.image);
+              } catch (e) {}
+            }
+            const ext = p.image.includes('image/png') ? 'png' : 'jpg';
+            p.image = 'images/posts/' + clean + '.' + ext;
+            customPostsNeedSave = true;
+          }
+        }
         if (customPostsNeedSave && env.POSTS_KV) {
           try {
             await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
@@ -1107,12 +1203,12 @@ export default {
         if (c) baseMap.set(c, bp);
       }
 
-      // Sanitize custom posts: replace bloated base64 images if basePosts has static image
+      // Sanitize custom posts against basePosts static images
       for (const cp of (customPosts || [])) {
         const c = normSlug(cp.slug || cp.id);
         if (c && baseMap.has(c)) {
           const bp = baseMap.get(c);
-          if (bp.image && !bp.image.startsWith('data:image') && cp.image && cp.image.startsWith('data:image')) {
+          if (bp.image && !bp.image.startsWith('data:image') && cp.image !== bp.image) {
             cp.image = bp.image;
             customPostsNeedSave = true;
           }
@@ -1124,7 +1220,16 @@ export default {
             cp.categoryZh = bp.categoryZh;
             customPostsNeedSave = true;
           }
+        } else if (cp.image && cp.image.startsWith('data:image')) {
+          const ext = cp.image.includes('image/png') ? 'png' : 'jpg';
+          cp.image = 'images/posts/' + c + '.' + ext;
+          customPostsNeedSave = true;
         }
+      }
+      if (customPostsNeedSave && env.POSTS_KV) {
+        try {
+          await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
+        } catch (e) {}
       }
 
       let finalPosts = [];
