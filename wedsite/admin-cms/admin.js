@@ -2604,185 +2604,269 @@ function generateFullPostHtml(data) {
   </header>
 
   <!-- ARTICLE MAIN CONTENT -->
-  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-8">
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
 
     <!-- Breadcrumb -->
-    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-purple-300/70">
-      <a href="index.html" class="hover:text-purple-600">Home</a>
+    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-purple-300/70 mb-6">
+      <a href="index.html" class="hover:text-purple-600 transition-colors" data-i18n="nav_home">Home</a>
       <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-      <a href="post.html" class="hover:text-purple-600">Reviews</a>
+      <a href="post.html" class="hover:text-purple-600 transition-colors" data-i18n="nav_reviews">Reviews</a>
       <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
       <span class="text-pink-600 dark:text-pink-400 font-bold">${escapeHtml(data.category)}</span>
     </div>
 
-    <!-- Article Header -->
-    <div class="space-y-4">
-      <span class="inline-block bg-pink-600 text-white text-xs font-black uppercase px-3 py-1 rounded-full shadow-sm">
-        ${escapeHtml(data.category)}
-      </span>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight font-display">
-        ${escapeHtml(data.title)}
-      </h1>
-      <p class="text-base sm:text-lg text-slate-600 dark:text-purple-200/80 leading-relaxed">
-        ${escapeHtml(data.excerpt)}
-      </p>
+    <!-- 2-COLUMN SPLIT LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
-      <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-purple-200/60 dark:border-purple-900/50">
-        <div class="flex items-center gap-3">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Author" class="w-10 h-10 rounded-full border-2 border-pink-500/50">
-          <div>
-            <div class="font-bold text-slate-900 dark:text-white text-sm">Editorial Team</div>
-            <div class="text-xs text-slate-400">${data.date} • 8 min read</div>
+      <!-- ========================================== -->
+      <!-- LEFT COLUMN: PRODUCT IMAGE, PRICE & DEALS  -->
+      <!-- ========================================== -->
+      <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
+
+        <!-- 1. Luxury Product Showcase (Never Cropped) -->
+        <div class="product-hero-container relative rounded-3xl overflow-hidden border border-purple-200/80 dark:border-purple-800/60 shadow-xl bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#180933] dark:via-[#110424] dark:to-[#0a0218] p-5 sm:p-6 flex flex-col items-center justify-center">
+          <div class="w-full flex items-center justify-between mb-3 z-10">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-md uppercase tracking-wider">
+              <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+              <span>Verified Product</span>
+            </span>
+            <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 font-black text-xs">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+              <span>${data.rating || '9.8'} / 10</span>
+            </div>
           </div>
-        </div>
 
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 font-extrabold text-sm">
-          <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
-          <span>${data.rating} / 10 Overall Score</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hero Image Banner (Luxury Product Showcase - Never Cropped) -->
-    <div class="product-hero-container relative rounded-3xl overflow-hidden border border-purple-200/80 dark:border-purple-800/60 shadow-xl bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#180933] dark:via-[#110424] dark:to-[#0a0218] p-4 sm:p-6 flex items-center justify-center min-h-[360px] max-h-[560px]">
-      <img src="${escapeHtml(data.image)}" alt="${escapeHtml(data.title)}" class="max-h-[460px] w-auto max-w-full h-auto object-contain rounded-2xl drop-shadow-2xl mx-auto transition-transform duration-300 hover:scale-[1.02]">
-    </div>
-
-    <!-- Quick Verdict & Affiliate Box -->
-    <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-tr from-purple-50 to-pink-50 dark:from-[#170a36] dark:to-[#210e4a] border-2 border-purple-300 dark:border-purple-800 shadow-xl space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-purple-200/70 dark:border-purple-900/60">
-        <div>
-          <span class="text-xs font-black uppercase text-pink-600 dark:text-pink-400 tracking-wider">Editor's Choice Deal:</span>
-          <div class="flex items-baseline gap-3 mt-1">
-            <span class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono price-val font-display" data-usd="${escapeHtml(data.priceUsd)}" data-vnd="${escapeHtml(data.priceVnd)}">${escapeHtml(data.priceUsd)}</span>
-            <span class="text-sm text-slate-400 line-through font-mono strike-val price-val font-display" data-usd="${escapeHtml(data.priceOrig)}" data-vnd="${escapeHtml(priceOrigVnd)}">${escapeHtml(data.priceOrig)}</span>
+          <div class="w-full flex items-center justify-center py-2 min-h-[260px] sm:min-h-[300px]">
+            <img src="${escapeHtml(data.image)}" alt="${escapeHtml(data.title)}" class="max-h-[340px] sm:max-h-[380px] w-auto max-w-full h-auto object-contain rounded-2xl drop-shadow-2xl mx-auto transition-transform duration-300 hover:scale-[1.03]">
           </div>
+
+          <p class="text-[11px] text-center text-slate-400 dark:text-purple-300/60 mt-2 font-medium">
+            Hands-on evaluated in our testing lab • 100% Genuine
+          </p>
         </div>
 
-        <div class="p-3.5 rounded-2xl bg-white dark:bg-[#12082b] border border-amber-400/40 text-center shadow-sm">
-          <span class="text-[10px] font-extrabold uppercase text-amber-500 block">Exclusive Coupon</span>
-          <div class="flex items-center gap-2 mt-1">
-            <code class="text-sm font-black font-mono text-amber-600 dark:text-amber-300">${escapeHtml(data.coupon)}</code>
-            <button onclick="copyToClipboard('${escapeHtml(data.coupon)}', 'Copied coupon code!')" class="px-2 py-1 rounded-lg bg-amber-500 text-white text-[11px] font-bold hover:bg-amber-600 transition-colors">
-              Copy
+        <!-- 2. Editor's Choice Deal & Price Box -->
+        <div class="p-6 rounded-3xl bg-gradient-to-tr from-purple-50 to-pink-50 dark:from-[#170a36] dark:to-[#210e4a] border-2 border-purple-300 dark:border-purple-800 shadow-xl space-y-5">
+          <div class="flex items-start justify-between gap-4 pb-4 border-b border-purple-200/70 dark:border-purple-900/60">
+            <div>
+              <span class="text-xs font-black uppercase text-pink-600 dark:text-pink-400 tracking-wider">Editor's Choice Deal:</span>
+              <div class="flex items-baseline gap-3 mt-1">
+                <span class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono price-val font-display" data-usd="${escapeHtml(data.priceUsd)}" data-vnd="${escapeHtml(data.priceVnd)}">${escapeHtml(data.priceUsd)}</span>
+                <span class="text-sm text-slate-400 line-through font-mono strike-val price-val font-display" data-usd="${escapeHtml(data.priceOrig)}" data-vnd="${escapeHtml(priceOrigVnd)}">${escapeHtml(data.priceOrig)}</span>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
+              Save ${escapeHtml(data.couponDiscount || 'Special')}
+            </span>
+          </div>
+
+          <!-- Exclusive Coupon Box -->
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-[#12082b] border border-amber-400/40 shadow-sm flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <span class="text-[10px] font-extrabold uppercase text-amber-500 block">Exclusive Promo Coupon</span>
+              <code class="text-sm font-black font-mono text-amber-600 dark:text-amber-300 block truncate">${escapeHtml(data.coupon)}</code>
+            </div>
+            <button onclick="copyToClipboard('${escapeHtml(data.coupon)}', 'Copied coupon code!')" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span>Copy</span>
             </button>
           </div>
-          <span class="text-[10px] text-slate-400 block mt-1">${escapeHtml(data.couponDiscount)} • Expires: ${escapeHtml(data.couponExpiry)}</span>
+
+          <!-- Primary CTA Button -->
+          <div>
+            <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-xl shadow-purple-600/30 transition-all btn-shimmer group">
+              <span>${escapeHtml(data.btnText)}</span>
+              <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
+            </a>
+            <p class="text-[11px] text-center text-slate-400 dark:text-purple-300/60 mt-2">
+              Direct verified merchant link • Official warranty • Fast delivery
+            </p>
+          </div>
+
+          <!-- Pros & Cons Matrix -->
+          <div class="space-y-3 pt-2 border-t border-purple-200/60 dark:border-purple-900/50">
+            <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-[#100726]/80 border border-emerald-500/30">
+              <h4 class="font-extrabold text-emerald-600 dark:text-emerald-400 text-xs uppercase mb-2 flex items-center gap-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4 flex-shrink-0"></i>
+                Key Advantages (Pros)
+              </h4>
+              <ul class="space-y-1.5">
+                ${prosHtml}
+              </ul>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-[#100726]/80 border border-rose-500/30">
+              <h4 class="font-extrabold text-rose-600 dark:text-rose-400 text-xs uppercase mb-2 flex items-center gap-1.5">
+                <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+                Points to Consider (Cons)
+              </h4>
+              <ul class="space-y-1.5">
+                ${consHtml}
+              </ul>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-4 rounded-2xl bg-white/80 dark:bg-[#100726]/80 border border-emerald-500/30">
-          <h4 class="font-extrabold text-emerald-600 dark:text-emerald-400 text-xs uppercase mb-3 flex items-center gap-1.5">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            Key Advantages (Pros)
-          </h4>
-          <ul class="space-y-2">
-            ${prosHtml}
-          </ul>
+      <!-- ========================================== -->
+      <!-- RIGHT COLUMN: FULL REVIEW ARTICLE CONTENT -->
+      <!-- ========================================== -->
+      <div class="lg:col-span-7 space-y-8">
+
+        <!-- Article Header & Meta -->
+        <div class="space-y-4 pb-6 border-b border-purple-200/60 dark:border-purple-900/50">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-block bg-pink-600 text-white text-xs font-black uppercase px-3 py-1 rounded-full shadow-sm">
+              ${escapeHtml(data.category)}
+            </span>
+            <span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Hands-On Tested & Verified
+            </span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-snug font-display">
+            ${escapeHtml(data.title)}
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 dark:text-purple-200/90 leading-relaxed font-normal">
+            ${escapeHtml(data.excerpt)}
+          </p>
+
+          <!-- Author / Date / Rating Meta Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-purple-100 dark:border-purple-900/40 text-xs text-slate-500 dark:text-purple-300/70">
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Editorial Team" class="w-10 h-10 rounded-full border-2 border-pink-500/50 object-cover">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">Editorial Team</div>
+                <div class="text-xs text-slate-400">${data.date || 'Today'} • 8 min read</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 font-extrabold text-sm">
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <span>${data.rating || '9.8'} / 10 Overall Score</span>
+            </div>
+          </div>
+
+          <!-- Editorial Transparency Disclosure -->
+          <div class="p-3.5 rounded-2xl bg-purple-50/80 dark:bg-purple-950/40 border-l-4 border-purple-500 text-xs text-purple-900 dark:text-purple-200 leading-relaxed">
+            <strong>⚠️ Editorial Disclosure:</strong> We independently test and evaluate products. If you purchase through links on our site, we may earn an affiliate commission at zero additional cost to you.
+          </div>
         </div>
 
-        <div class="p-4 rounded-2xl bg-white/80 dark:bg-[#100726]/80 border border-rose-500/30">
-          <h4 class="font-extrabold text-rose-600 dark:text-rose-400 text-xs uppercase mb-3 flex items-center gap-1.5">
-            <i data-lucide="x-circle" class="w-4 h-4"></i>
-            Points to Consider (Cons)
-          </h4>
-          <ul class="space-y-2">
-            ${consHtml}
-          </ul>
+        <!-- Narrative Review Body -->
+        <article class="prose prose-purple dark:prose-invert max-w-none space-y-6 text-sm sm:text-base leading-relaxed">
+          
+          <!-- Section 1 -->
+          <div class="space-y-3">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">1</span>
+              Hands-On Experience & Design Overview
+            </h2>
+            <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
+              ${escapeHtml(data.intro || data.excerpt)}
+            </p>
+          </div>
+
+          <!-- Section 2 -->
+          <div class="space-y-3">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">2</span>
+              In-Depth Performance & Technical Analysis
+            </h2>
+            <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
+              ${escapeHtml(data.body || 'Engineered with high-precision tolerances and verified under demanding real-world conditions.')}
+            </p>
+          </div>
+
+          <!-- Section 3: Live Comparison Table -->
+          <div class="space-y-3">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">3</span>
+              Price Comparison & Where to Buy
+            </h2>
+            <div class="comparison-table-wrapper rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm overflow-x-auto bg-white dark:bg-[#120a26]">
+              <table class="comparison-table text-xs text-left w-full">
+                <thead class="bg-purple-50 dark:bg-purple-950/70 text-purple-900 dark:text-purple-200 font-bold">
+                  <tr>
+                    <th class="p-3">Store / Channel</th>
+                    <th class="p-3">Price</th>
+                    <th class="p-3">Authenticity & Warranty</th>
+                    <th class="p-3">Perks</th>
+                    <th class="p-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="comparison-highlight border-l-4 border-l-pink-500 bg-pink-50/30 dark:bg-pink-950/20">
+                    <td class="p-3 font-bold text-slate-900 dark:text-white">
+                      ${escapeHtml(data.brand)} Official
+                      <span class="block text-[10px] text-pink-500 font-normal">Direct Verified Store</span>
+                    </td>
+                    <td class="p-3">
+                      <span class="font-extrabold text-pink-600 text-sm price-val" data-vnd="${escapeHtml(data.priceVnd)}" data-usd="${escapeHtml(data.priceUsd)}">${escapeHtml(data.priceUsd)}</span>
+                    </td>
+                    <td class="p-3">100% Genuine Direct Stock with Manufacturer Warranty</td>
+                    <td class="p-3"><span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">Lowest Price</span></td>
+                    <td class="p-3 text-right">
+                      <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="px-3.5 py-1.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold rounded-xl text-xs inline-block shadow-sm">
+                        ORDER NOW &rarr;
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="border-t border-purple-100 dark:border-purple-900/40">
+                    <td class="p-3 font-bold text-slate-900 dark:text-white">Authorized Retail Partners</td>
+                    <td class="p-3"><span class="font-bold text-sm price-val" data-vnd="${escapeHtml(priceOrigVnd)}" data-usd="${escapeHtml(data.priceOrig)}">${escapeHtml(data.priceOrig)}</span></td>
+                    <td class="p-3">Original retail box & standard guarantee</td>
+                    <td class="p-3">Standard return window</td>
+                    <td class="p-3 text-right">
+                      <span class="text-slate-400 font-semibold">Standard Retail</span>
+                    </td>
+                  </tr>
+                  <tr class="border-t border-purple-100 dark:border-purple-900/40">
+                    <td class="p-3 font-bold text-slate-900 dark:text-white">Third-Party Marketplaces</td>
+                    <td class="p-3"><span class="font-bold text-sm text-slate-400">Fluctuating / Variable</span></td>
+                    <td class="p-3">Unverified seller sources</td>
+                    <td class="p-3">Limited customer resolution</td>
+                    <td class="p-3 text-right">
+                      <span class="text-rose-500 font-bold">Caution Advised</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 4: Final Verdict -->
+          <div class="space-y-3">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">4</span>
+              Final Verdict: Is It Worth It?
+            </h2>
+            <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
+              ${escapeHtml(data.verdict || 'With its class-leading design and proven performance, this is an undeniable recommendation for anyone looking for the best in class.')}
+            </p>
+          </div>
+
+        </article>
+
+        <!-- Bottom Final CTA Banner -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-purple-900 via-violet-900 to-pink-900 text-white space-y-4 shadow-2xl">
+          <h3 class="text-xl sm:text-2xl font-black">Ready to Experience ${escapeHtml(data.brand)}?</h3>
+          <p class="text-xs sm:text-sm text-purple-200 leading-relaxed">
+            Order through the verified direct affiliate link below to secure exclusive promotional pricing with promo code: <strong class="text-amber-300 font-mono">${escapeHtml(data.coupon)}</strong>.
+          </p>
+          <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-white text-purple-900 hover:bg-pink-100 font-black text-sm shadow-xl transition-all">
+              <span>${escapeHtml(data.btnText)}</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <span class="text-xs text-purple-300 font-mono">Promo Code: <strong class="text-white">${escapeHtml(data.coupon)}</strong></span>
+          </div>
         </div>
+
       </div>
 
-      <div class="pt-2">
-        <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-purple-600/30 transition-all btn-shimmer">
-          <span>${escapeHtml(data.btnText)}</span>
-          <i data-lucide="external-link" class="w-4 h-4"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Article Body Sections -->
-    <article class="prose prose-purple dark:prose-invert max-w-none space-y-6 text-sm sm:text-base leading-relaxed">
-      <h2 class="text-2xl font-black text-slate-900 dark:text-white font-display">1. Hands-On Experience & Design Overview</h2>
-      <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
-        ${escapeHtml(data.intro || data.excerpt)}
-      </p>
-
-      <h2 class="text-2xl font-black text-slate-900 dark:text-white font-display">2. In-Depth Performance & Technical Analysis</h2>
-      <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
-        ${escapeHtml(data.body || 'Engineered with high-precision tolerances and verified under demanding real-world conditions.')}
-      </p>
-
-      <!-- Section 3: Live Comparison Table (Responsive & Never Clipped) -->
-      <h2 class="text-2xl font-black text-slate-900 dark:text-white font-display">3. Price Comparison & Where to Buy</h2>
-      <div class="comparison-table-wrapper rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm mb-8 overflow-x-auto bg-white dark:bg-[#120a26]">
-        <table class="comparison-table text-xs text-left">
-          <thead class="bg-purple-50 dark:bg-purple-950/70 text-purple-900 dark:text-purple-200 font-bold">
-            <tr>
-              <th class="w-1/4">Store / Channel</th>
-              <th>Price</th>
-              <th>Authenticity & Warranty</th>
-              <th>Perks</th>
-              <th class="text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="comparison-highlight border-l-4 border-l-pink-500">
-              <td class="font-bold text-slate-900 dark:text-white">
-                ${escapeHtml(data.brand)} Official
-                <span class="block text-[10px] text-pink-500 font-normal">Direct Verified Store</span>
-              </td>
-              <td>
-                <span class="font-extrabold text-pink-600 text-sm price-val" data-vnd="${escapeHtml(data.priceVnd)}" data-usd="${escapeHtml(data.priceUsd)}">${escapeHtml(data.priceUsd)}</span>
-              </td>
-              <td>100% Genuine Direct Stock with Manufacturer Warranty</td>
-              <td><span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">Lowest Price</span></td>
-              <td class="text-right">
-                <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="px-3.5 py-1.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl text-xs inline-block">
-                  ORDER NOW &rarr;
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td class="font-bold text-slate-900 dark:text-white">Authorized Retail Partners</td>
-              <td><span class="font-bold text-sm price-val" data-vnd="${escapeHtml(priceOrigVnd)}" data-usd="${escapeHtml(data.priceOrig)}">${escapeHtml(data.priceOrig)}</span></td>
-              <td>Original retail box & standard guarantee</td>
-              <td>Standard return window</td>
-              <td class="text-right">
-                <span class="text-slate-400 font-semibold">Standard Retail</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="font-bold text-slate-900 dark:text-white">Third-Party Marketplaces</td>
-              <td><span class="font-bold text-sm text-slate-400">Fluctuating / Variable</span></td>
-              <td>Unverified seller sources</td>
-              <td>Limited customer resolution</td>
-              <td class="text-right">
-                <span class="text-rose-500 font-bold">Caution Advised</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2 class="text-2xl font-black text-slate-900 dark:text-white font-display">4. Final Verdict: Is It Worth It?</h2>
-      <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
-        ${escapeHtml(data.verdict || 'With its class-leading design and proven performance, this is an undeniable recommendation for anyone looking for the best in class.')}
-      </p>
-    </article>
-
-    <!-- Bottom Final CTA Banner -->
-    <div class="p-8 rounded-3xl bg-gradient-to-r from-purple-900 via-violet-900 to-pink-900 text-white text-center space-y-4 shadow-2xl">
-      <h3 class="text-2xl font-black">Ready to Experience ${escapeHtml(data.brand)}?</h3>
-      <p class="text-xs sm:text-sm text-purple-200 max-w-xl mx-auto">
-        Order through the verified direct affiliate link below to secure exclusive promotional pricing with promo code: <strong class="text-amber-300 font-mono">${escapeHtml(data.coupon)}</strong>.
-      </p>
-      <div class="pt-2">
-        <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-purple-900 hover:bg-pink-100 font-black text-sm shadow-xl transition-all">
-          <span>${escapeHtml(data.btnText)}</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </a>
-      </div>
     </div>
 
   </main>

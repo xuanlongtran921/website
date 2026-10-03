@@ -199,230 +199,142 @@
     </div>
   </header>
 
-  <!-- Main Article Layout -->
+      <!-- Main Review Article Content -->
   <main class="w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 min-w-0">
     
-    <!-- Breadcrumb -->
     <nav class="text-xs text-purple-600 dark:text-purple-400 mb-4 flex items-center gap-2">
-      <a href="index.html" class="hover:underline">Home</a>
-      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-      <a href="post.html" class="hover:underline">Reviews</a>
-      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-      <span class="text-slate-800 dark:text-purple-200 font-semibold">Product Name</span>
-    </nav>
+<a class="hover:underline" href="index.html">Home</a>
+<i class="w-3.5 h-3.5" data-lucide="chevron-right"></i>
+<a class="hover:underline" href="post.html">Reviews</a>
+<i class="w-3.5 h-3.5" data-lucide="chevron-right"></i>
+<span class="text-slate-800 dark:text-purple-200 font-semibold">Product Name</span>
+</nav>
 
-    <!-- Article Header -->
-    <div class="max-w-4xl space-y-4 mb-8">
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="glow-pill-badge">✨ Featured Review 2026</span>
-        <span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-          <i data-lucide="check" class="w-3.5 h-3.5"></i> Verified Purchase & Tested
+    <!-- 2-COLUMN SPLIT LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      <!-- ========================================== -->
+      <!-- LEFT COLUMN: PRODUCT IMAGE, PRICE & DEALS  -->
+      <!-- ========================================== -->
+      <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
+        <!-- 1. Luxury Product Showcase (Never Cropped) -->
+        <div class="product-hero-container relative rounded-3xl overflow-hidden border border-purple-200/80 dark:border-purple-800/60 shadow-xl bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#180933] dark:via-[#110424] dark:to-[#0a0218] p-5 sm:p-6 flex flex-col items-center justify-center">
+          <div class="w-full flex items-center justify-between mb-3 z-10">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-md uppercase tracking-wider">
+              <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+              <span>Verified Gear</span>
+            </span>
+            <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 font-black text-xs">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+              <span>9.6 / 10</span>
+            </div>
+          </div>
+
+          <div class="w-full flex items-center justify-center py-2 min-h-[260px] sm:min-h-[300px]">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Author" class="max-h-[340px] sm:max-h-[380px] w-auto max-w-full h-auto object-contain rounded-2xl drop-shadow-2xl mx-auto transition-transform duration-300 hover:scale-[1.03]">
+          </div>
+
+          <p class="text-[11px] text-center text-slate-400 dark:text-purple-300/60 mt-2 font-medium">
+            Evaluated in our testing lab • 100% Authentic
+          </p>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- RIGHT COLUMN: FULL REVIEW ARTICLE CONTENT -->
+      <!-- ========================================== -->
+      <div class="lg:col-span-7 space-y-8 article-body">
+        <div class="space-y-4 pb-6 border-b border-purple-200/60 dark:border-purple-900/50">
+<div class="flex flex-wrap items-center gap-2">
+<span class="glow-pill-badge">✨ Featured Review 2026</span>
+<span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+<i class="w-3.5 h-3.5" data-lucide="check"></i> Verified Purchase &amp; Tested
         </span>
-      </div>
-
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug font-display">
-        Product Name Review 2026: In-Depth Real-World Test & Verdict
+</div>
+<h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug font-display">
+        Product Name Review 2026: In-Depth Real-World Test &amp; Verdict
       </h1>
-
-      <div class="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-purple-200/50 dark:border-purple-900/40 text-xs text-slate-500 dark:text-purple-300/70">
-        <div class="flex items-center gap-3">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Author" class="w-9 h-9 rounded-full object-cover ring-2 ring-purple-500">
-          <div>
-            <span class="font-bold text-slate-800 dark:text-purple-200">Editorial Team</span>
-            <span class="block text-[11px]">Senior Product Reviewer</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Today</span>
-          <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 6 min read</span>
-        </div>
+<div class="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-purple-200/50 dark:border-purple-900/40 text-xs text-slate-500 dark:text-purple-300/70">
+<div class="flex items-center gap-3">
+<img alt="Author" class="w-9 h-9 rounded-full object-cover ring-2 ring-purple-500" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=100&amp;q=80"/>
+<div>
+<span class="font-bold text-slate-800 dark:text-purple-200">Editorial Team</span>
+<span class="block text-[11px]">Senior Product Reviewer</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><i class="w-3.5 h-3.5" data-lucide="calendar"></i> Today</span>
+<span class="flex items-center gap-1"><i class="w-3.5 h-3.5" data-lucide="clock"></i> 6 min read</span>
+</div>
+</div>
+<!-- Transparency Box -->
+<div class="p-4 bg-purple-50 dark:bg-purple-950/40 border-l-4 border-purple-500 rounded-r-2xl text-xs text-purple-900 dark:text-purple-200 leading-relaxed">
+<strong>⚠️ Editorial Disclosure:</strong> This review contains verified affiliate links. If you purchase through these links, we may earn an editorial commission to support our independent lab at zero additional cost to you.
       </div>
+</div>
 
-      <!-- Transparency Box -->
-      <div class="p-4 bg-purple-50 dark:bg-purple-950/40 border-l-4 border-purple-500 rounded-r-2xl text-xs text-purple-900 dark:text-purple-200 leading-relaxed">
-        <strong>⚠️ Editorial Disclosure:</strong> This review contains verified affiliate links. If you purchase through these links, we may earn an editorial commission to support our independent lab at zero additional cost to you.
+        <div class="space-y-6 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-purple-200/90">
+          <div class="space-y-4 pb-6 border-b border-purple-200/60 dark:border-purple-900/50">
+<div class="flex flex-wrap items-center gap-2">
+<span class="glow-pill-badge">✨ Featured Review 2026</span>
+<span class="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+<i class="w-3.5 h-3.5" data-lucide="check"></i> Verified Purchase &amp; Tested
+        </span>
+</div>
+<h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug font-display">
+        Product Name Review 2026: In-Depth Real-World Test &amp; Verdict
+      </h1>
+<div class="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-purple-200/50 dark:border-purple-900/40 text-xs text-slate-500 dark:text-purple-300/70">
+<div class="flex items-center gap-3">
+<img alt="Author" class="w-9 h-9 rounded-full object-cover ring-2 ring-purple-500" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=100&amp;q=80"/>
+<div>
+<span class="font-bold text-slate-800 dark:text-purple-200">Editorial Team</span>
+<span class="block text-[11px]">Senior Product Reviewer</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><i class="w-3.5 h-3.5" data-lucide="calendar"></i> Today</span>
+<span class="flex items-center gap-1"><i class="w-3.5 h-3.5" data-lucide="clock"></i> 6 min read</span>
+</div>
+</div>
+<!-- Transparency Box -->
+<div class="p-4 bg-purple-50 dark:bg-purple-950/40 border-l-4 border-purple-500 rounded-r-2xl text-xs text-purple-900 dark:text-purple-200 leading-relaxed">
+<strong>⚠️ Editorial Disclosure:</strong> This review contains verified affiliate links. If you purchase through these links, we may earn an editorial commission to support our independent lab at zero additional cost to you.
       </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-      
-      <div class="lg:col-span-8 article-body">
-        
-        <!-- [FEATURED IMAGE] -->
-        <div class="rounded-3xl overflow-hidden shadow-2xl mb-8 border border-purple-200/50 dark:border-purple-800/50">
-          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80" alt="Review Image" class="w-full h-80 sm:h-96 object-cover">
-          <p class="text-[11px] text-center text-slate-400 py-2.5 bg-white dark:bg-[#120a28]">Unboxed hardware captured in our testing lab during hands-on evaluation.</p>
-        </div>
-
-        <!-- ========================================================
-             [STEP 2]: PRODUCT CARD & AFFILIATE LINK
-             ======================================================== -->
-        <div id="affiliate-product-card" class="bg-white dark:bg-[#120a26] p-6 sm:p-7 rounded-3xl border-2 border-purple-500/40 shadow-xl mb-8 cosmic-card-glow">
-          
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-purple-100 dark:border-purple-900/60">
-            <div>
-              <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">Editor's Choice 2026</span>
-              <h3 class="text-xl font-extrabold text-slate-900 dark:text-white !mt-1">Verified Authentic Product</h3>
-            </div>
-            <div class="flex items-center gap-2 bg-purple-50 dark:bg-purple-950 px-4 py-1.5 rounded-full border border-purple-200 dark:border-purple-800 shadow-sm">
-              <span class="text-xs text-slate-500 dark:text-purple-300">Overall Score:</span>
-              <span class="text-sm font-black text-amber-400 flex items-center gap-1">
-                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> 9.5 / 10
-              </span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 my-5 items-center">
-            <div class="sm:col-span-5">
-              <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=600&q=80" alt="Product" class="w-full h-44 object-cover rounded-2xl shadow-sm">
-            </div>
-            <div class="sm:col-span-7 space-y-2 text-xs">
-              <p class="text-slate-600 dark:text-purple-200/80 leading-relaxed font-medium">
-                Hands-on summary of core product highlights: aerospace-grade build quality, exceptional real-world performance, and global warranty support.
-              </p>
-              <div class="pt-2">
-                <span class="text-slate-400 text-xs">Best verified price:</span>
-                <div class="text-2xl font-black text-rose-600 dark:text-rose-400 font-display">
-                  <span class="price-val" data-vnd="2.490.000đ" data-usd="$99.00">$99.00</span>
-                  <span class="text-xs text-emerald-500 font-bold bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded-full ml-2">Save Extra 15%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- BUY NOW BUTTON -->
-          <div class="space-y-3">
-            <a href="https://example.com/?ref=YOUR_CODE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Official Store', 'https://example.com/?ref=YOUR_CODE')" class="btn-shimmer w-full py-3.5 px-5 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-2xl flex items-center justify-between text-sm shadow-xl shadow-purple-600/30 transition-all">
-              <span class="flex items-center gap-2">
-                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-                <span>Check Best Price & Order Direct</span>
-              </span>
-              <span class="bg-white/20 text-xs px-3 py-1 rounded-lg font-bold">ORDER NOW &rarr;</span>
-            </a>
-          </div>
-
-        </div>
-
-        <!-- ========================================================
+</div><div class="prose prose-purple dark:prose-invert max-w-none space-y-6 text-sm sm:text-base leading-relaxed">
+           [FEATURED IMAGE]  ========================================================
+             [STEP 2]: PRODUCT CARD &amp; AFFILIATE LINK
+             ========================================================  ========================================================
              [STEP 3]: EXCLUSIVE PROMO CODE
-             ======================================================== -->
-        <div class="coupon-box p-5 rounded-3xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
-              <i data-lucide="tag" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Exclusive Promo Code</span>
-                <span class="text-[10px] bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full font-bold">2026 ACTIVE</span>
-              </div>
-              <p class="text-sm font-extrabold text-slate-900 dark:text-white mt-0.5">Save 15% on your first order</p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2 w-full sm:w-auto">
-            <div class="bg-white dark:bg-[#120a26] px-3.5 py-2 rounded-xl border border-purple-300 font-mono font-black text-purple-700 dark:text-purple-300 text-sm tracking-wider">
-              DISCOUNT15
-            </div>
-            <button data-coupon="DISCOUNT15" data-store-url="https://example.com/?ref=YOUR_CODE" data-store-name="Official Store" class="btn-copy-coupon px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md transition-all flex-shrink-0">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-              <span>Copy Code & Open Store</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- ========================================================
+             ========================================================  ========================================================
              [STEP 4]: DETAILED REVIEW BODY CONTENT
-             ======================================================== -->
-        <h2 id="gioi-thieu">1. Overview & First Impressions</h2>
-        <p>
+             ======================================================== <h2 id="gioi-thieu">1. Overview &amp; First Impressions</h2><p>
           Introduce the product background, manufacturing origin, target audience, and why this gear is currently trending in its category.
-        </p>
-
-        <h2 id="danh-gia-chat-luong">2. Quality Assessment & Daily Ergonomics</h2>
-        <p>
+        </p><h2 id="danh-gia-chat-luong">2. Quality Assessment &amp; Daily Ergonomics</h2><p>
           Detail your testing findings after multi-week real-world evaluation: tactile finish, ergonomics, build quality, thermal performance, and response latency.
-        </p>
-
-        <!-- Pros & Cons Matrix -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
-          <div class="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 rounded-3xl p-5">
-            <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-sm mb-3">
-              <i data-lucide="thumbs-up" class="w-4 h-4"></i>
-              <span>KEY ADVANTAGES (PROS)</span>
-            </div>
-            <ul class="space-y-2 text-xs text-slate-700 dark:text-purple-200/80">
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
-                <span>Premium build materials and tight manufacturing tolerances.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
-                <span>Exceptional value-to-performance ratio in its price tier.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
-                <span>Fast worldwide shipping with secure protective packaging.</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="bg-pink-50/50 dark:bg-pink-950/20 border border-pink-200 dark:border-pink-800/60 rounded-3xl p-5">
-            <div class="flex items-center gap-2 text-pink-600 dark:text-pink-400 font-bold text-sm mb-3">
-              <i data-lucide="thumbs-down" class="w-4 h-4"></i>
-              <span>POINTS TO CONSIDER (CONS)</span>
-            </div>
-            <ul class="space-y-2 text-xs text-slate-700 dark:text-purple-200/80">
-              <li class="flex items-start gap-2">
-                <i data-lucide="x" class="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5"></i>
-                <span>Verify measurements and sizing chart carefully prior to checkout.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <h2 id="ket-luan">3. Final Verdict & Buying Advice</h2>
-        <p>
+        </p> Pros &amp; Cons Matrix <h2 id="ket-luan">3. Final Verdict &amp; Buying Advice</h2><p>
           Summarize testing benchmarks, real-world longevity expectations, and provide a clear final buying recommendation for prospective purchasers.
-        </p>
-
-        <!-- Final CTA Banner -->
-        <div class="mt-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-purple-900 via-violet-900 to-pink-950 text-white text-center shadow-2xl relative overflow-hidden">
-          <div class="relative z-10 max-w-xl mx-auto space-y-4">
-            <span class="px-3 py-1 bg-pink-500/30 border border-pink-400/50 rounded-full text-xs font-bold text-pink-300">
+        </p> Final CTA Banner <div class="mt-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-purple-900 via-violet-900 to-pink-950 text-white text-center shadow-2xl relative overflow-hidden">
+<div class="relative z-10 max-w-xl mx-auto space-y-4">
+<span class="px-3 py-1 bg-pink-500/30 border border-pink-400/50 rounded-full text-xs font-bold text-pink-300">
               EXCLUSIVE VERIFIED DEAL
             </span>
-            <h3 class="text-2xl sm:text-3xl font-black font-display">Ready to Upgrade Your Gear?</h3>
-            <p class="text-xs sm:text-sm text-pink-200/80">
+<h3 class="text-2xl sm:text-3xl font-black font-display">Ready to Upgrade Your Gear?</h3>
+<p class="text-xs sm:text-sm text-pink-200/80">
               Order directly via our official partner link below to secure maximum discount pricing and manufacturer warranty.
             </p>
-            <div class="pt-2">
-              <a href="https://example.com/?ref=YOUR_CODE" target="_blank" rel="noopener noreferrer" onclick="handleAffiliateClick('Official Store', 'https://example.com/?ref=YOUR_CODE')" class="btn-shimmer inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-black rounded-2xl shadow-xl shadow-pink-500/40 text-sm transition-all">
-                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-                <span>ORDER NOW WITH PROMO CODE &rarr;</span>
-              </a>
-            </div>
-          </div>
+<div class="pt-2">
+<a class="btn-shimmer inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-black rounded-2xl shadow-xl shadow-pink-500/40 text-sm transition-all" href="https://example.com/?ref=YOUR_CODE" onclick="handleAffiliateClick('Official Store', 'https://example.com/?ref=YOUR_CODE')" rel="noopener noreferrer" target="_blank">
+<i class="w-4 h-4" data-lucide="shopping-bag"></i>
+<span>ORDER NOW WITH PROMO CODE →</span>
+</a>
+</div>
+</div>
+</div>
+</div>
         </div>
 
+        
       </div>
-
-      <!-- Right Column: Sticky Sidebar -->
-      <aside class="lg:col-span-4 self-start">
-        <div class="sticky top-24 space-y-6">
-          <div id="toc-card" class="bg-white dark:bg-[#120a26] p-5 sm:p-6 rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-lg">
-            <div class="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/60">
-              <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
-                <i data-lucide="list" class="w-4 h-4"></i>
-                <span>Table of Contents</span>
-              </div>
-              <span class="text-[10px] bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 font-bold px-2 py-0.5 rounded-full">Live</span>
-            </div>
-            <ul id="toc-list" class="mt-3 space-y-1"></ul>
-          </div>
-        </div>
-      </aside>
-
     </div>
 
   </main>
