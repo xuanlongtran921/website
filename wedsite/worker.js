@@ -1120,6 +1120,7 @@ export default {
     // 4. API: GET /data/posts.json & /api/posts (MERGED CATALOG)
     // -------------------------------------------------------------
     if (url.pathname === '/data/posts.json' || url.pathname === '/api/posts') {
+      try {
       let basePosts = [];
 
       // Fetch base posts from static asset
@@ -1193,8 +1194,6 @@ export default {
 
       customPosts = (customPosts || []).filter(isPostNotDeleted);
       basePosts = (basePosts || []).filter(isPostNotDeleted);
-
-      const normSlug = s => (s || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
       
       // Build lookup map from basePosts for static images & normalized fields
       const baseMap = new Map();
@@ -1248,6 +1247,17 @@ export default {
           'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
       });
+      } catch (postsErr) {
+        console.error('Fatal error in /data/posts.json handler:', postsErr);
+        if (env.ASSETS) {
+          try {
+            return await env.ASSETS.fetch(new Request(new URL('/data/posts.json', request.url)));
+          } catch (e) {}
+        }
+        return new Response(JSON.stringify([], null, 2), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
     }
 
     // -------------------------------------------------------------
@@ -1255,11 +1265,11 @@ export default {
     // -------------------------------------------------------------
     // GET /api/products & /data/products.json (ALWAYS 100% SYNCHRONIZED WITH POSTS)
     if ((url.pathname === '/api/products' || url.pathname === '/data/products.json') && request.method === 'GET') {
+      try {
       let baseProducts = [];
       let basePosts = [];
 
       // Helper slug normalizers
-      const normSlug = s => (s || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
 
       // Fetch base products & posts from static asset
       if (env.ASSETS) {
@@ -1413,6 +1423,17 @@ export default {
           'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
       });
+      } catch (prodErr) {
+        console.error('Fatal error in /data/products.json handler:', prodErr);
+        if (env.ASSETS) {
+          try {
+            return await env.ASSETS.fetch(new Request(new URL('/data/products.json', request.url)));
+          } catch (e) {}
+        }
+        return new Response(JSON.stringify([], null, 2), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' }
+        });
+      }
     }
 
     // POST /api/save-product (Add or update product)
