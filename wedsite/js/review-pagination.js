@@ -617,6 +617,9 @@
       const cardImgFit = isPackshot ? 'w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-500' : 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500';
       const cardBg = isPackshot ? 'bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318]' : 'bg-purple-950/20';
 
+      const rawCardImg = post.image || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80';
+      const cardImg = (rawCardImg && !rawCardImg.startsWith('http') && !rawCardImg.startsWith('data:') && !rawCardImg.startsWith('/')) ? ('/' + rawCardImg) : rawCardImg;
+
       return `
         <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col justify-between group">
           
@@ -624,7 +627,7 @@
           <div>
             <div class="relative overflow-hidden aspect-[16/10] ${cardBg} flex items-center justify-center">
               <img 
-                src="${post.image}" 
+                src="${cardImg}" 
                 alt="${escapeHtml(title)}" 
                 class="${cardImgFit}" 
                 loading="lazy"
@@ -853,13 +856,15 @@
     const isPackshot = true;
     const spotImgFit = 'w-full h-full object-contain p-3.5 transition-transform duration-500 group-hover:scale-105';
     const spotBg = 'bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318]';
+    const rawSpotImg = spotlight.image || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80';
+    const spotImg = (rawSpotImg && !rawSpotImg.startsWith('http') && !rawSpotImg.startsWith('data:') && !rawSpotImg.startsWith('/')) ? ('/' + rawSpotImg) : rawSpotImg;
 
     container.innerHTML = `
       <div class="bg-gradient-to-r from-purple-950 via-[#1a0f35] to-indigo-950 text-white rounded-3xl p-5 sm:p-7 lg:p-8 border border-purple-500/40 shadow-xl relative overflow-hidden">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center relative z-10">
           
           <div class="lg:col-span-5 relative rounded-2xl overflow-hidden aspect-[16/10] shadow-2xl border border-purple-500/30 ${spotBg} flex items-center justify-center">
-            <img src="${spotlight.image}" alt="${escapeHtml(title)}" class="${spotImgFit}" loading="lazy">
+            <img src="${spotImg}" alt="${escapeHtml(title)}" class="${spotImgFit}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80'">
             <span class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] sm:text-xs font-black px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
               ${dict.spotlightBadge}
             </span>

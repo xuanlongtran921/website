@@ -588,16 +588,25 @@ export default {
     }
 
     // -------------------------------------------------------------
-    // API: SERVE IMAGES FROM KV
+    // API: SERVE IMAGES (FROM KV OR STATIC ASSETS)
     // -------------------------------------------------------------
-    if (url.pathname.startsWith('/api/images/')) {
-      const imgSlug = normSlug(url.pathname.replace(/^\/api\/images\//, '').replace(/\.(png|jpg|jpeg|webp)$/i, ''));
+    const isPostImgRequest = url.pathname.startsWith('/images/posts/') || url.pathname.startsWith('/admin-cms/images/posts/') || url.pathname.startsWith('/api/images/');
+    if (isPostImgRequest) {
+      let rawImgName = url.pathname.replace(/^\/admin-cms/, '').replace(/^\/api\/images\//, '').replace(/^\/images\/posts\//, '');
+      const extMatch = rawImgName.match(/\.(png|jpg|jpeg|webp|gif|svg)$/i);
+      const requestedExt = extMatch ? extMatch[1].toLowerCase() : '';
+      const imgSlug = normSlug(rawImgName.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i, ''));
+
+      // 1. First check KV for custom uploaded / dynamic image
       if (env.POSTS_KV && imgSlug) {
         try {
-          const rawImg = await env.POSTS_KV.get('post_img:' + imgSlug);
+          let rawImg = await env.POSTS_KV.get('post_img:' + imgSlug);
+          if (!rawImg && !imgSlug.startsWith('post-')) {
+            rawImg = await env.POSTS_KV.get('post_img:post-' + imgSlug);
+          }
           if (rawImg && rawImg.startsWith('data:image')) {
             const parts = rawImg.split(',', 2);
-            const mime = (parts[0].match(/:(.*?);/) || [])[1] || 'image/png';
+            const mime = (parts[0].match(/:(.*?);/) || [])[1] || (requestedExt === 'png' ? 'image/png' : 'image/jpeg');
             const binaryStr = atob(parts[1]);
             const bytes = new Uint8Array(binaryStr.length);
             for (let i = 0; i < binaryStr.length; i++) {
@@ -613,10 +622,27 @@ export default {
           }
         } catch (e) {}
       }
+
+      // 2. If not found in KV, attempt to serve static asset from disk
       if (env.ASSETS) {
-        return env.ASSETS.fetch(new Request(new URL('/images/posts/' + imgSlug + '.jpg', request.url)));
+        try {
+          const staticReq = new Request(new URL('/images/posts/' + rawImgName, request.url));
+          const assetRes = await env.ASSETS.fetch(staticReq);
+          if (assetRes.ok) {
+            return assetRes;
+          }
+          // Try alternative extension if .jpg/.png
+          if (requestedExt === 'jpg') {
+            const altRes = await env.ASSETS.fetch(new Request(new URL('/images/posts/' + imgSlug + '.png', request.url)));
+            if (altRes.ok) return altRes;
+          } else if (requestedExt === 'png') {
+            const altRes = await env.ASSETS.fetch(new Request(new URL('/images/posts/' + imgSlug + '.jpg', request.url)));
+            if (altRes.ok) return altRes;
+          }
+        } catch (e) {}
       }
-      return new Response('Image not found', { status: 404 });
+
+      return new Response('Image not found', { status: 404, headers: CORS_HEADERS });
     }
 
     // API: ADMIN PRICE REPAIR & SANITIZATION
@@ -856,8 +882,14 @@ export default {
           });
         }
 
-        const slugClean = (data.slug || 'post-' + Date.now()).replace(/\.html$/, '');
-        const fileName = slugClean + '.html';
+        const isEdit = !!(data.isEdit || data.originalSlug || data.originalId);
+        const originalSlug = (data.originalSlug || '').trim();
+        const originalId = (data.originalId || '').trim();
+        const origNormSlug = normSlug(originalSlug || originalId);
+        const origFileName = origNormSlug ? ('post-' + origNormSlug + '.html') : '';
+
+        const slugClean = normSlug(data.slug || data.fileName || ('post-' + Date.now()));
+        const fileName = 'post-' + slugClean + '.html';
 
         const priceParsed = parsePrices(
           data.vndPrice || data.priceVnd,
@@ -865,6 +897,23 @@ export default {
           data.originalPrice || data.priceOrig,
           data.originalPriceUsd || data.priceOrigUsd
         );
+
+        // Process image: if base64, save immediately to KV post_img:
+        let postImageUrl = (data.image || '').trim();
+        if (postImageUrl && postImageUrl.startsWith('data:image')) {
+          const ext = postImageUrl.includes('image/png') ? 'png' : 'jpg';
+          if (env.POSTS_KV && slugClean) {
+            try {
+              await env.POSTS_KV.put('post_img:' + slugClean, postImageUrl);
+              if (origNormSlug && origNormSlug !== slugClean) {
+                await env.POSTS_KV.delete('post_img:' + origNormSlug);
+              }
+            } catch (e) {}
+          }
+          postImageUrl = 'images/posts/' + slugClean + '.' + ext;
+        } else if (!postImageUrl) {
+          postImageUrl = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800';
+        }
 
         // Format post entry for posts.json catalog
         const newPostEntry = {
@@ -885,7 +934,7 @@ export default {
           excerptZh: data.excerptZh || data.excerpt || '',
           rating: data.rating || '9.6',
           date: data.date || new Date().toLocaleDateString('vi-VN'),
-          image: data.image || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800',
+          image: postImageUrl,
           isFeatured: true,
           affiliateCount: 1,
           brand: data.brand || 'Merchant Partner',
@@ -908,7 +957,10 @@ export default {
           updatedAt: new Date().toISOString()
         };
 
-        const postHtmlContent = data.contentHtml || '';
+        let postHtmlContent = data.contentHtml || '';
+        if (data.image && data.image.startsWith('data:image') && postImageUrl.startsWith('images/posts/')) {
+          postHtmlContent = postHtmlContent.split(data.image).join(postImageUrl);
+        }
 
         // Save to Cloudflare KV if bound
         if (env.POSTS_KV) {
@@ -920,20 +972,48 @@ export default {
             customPosts = [];
           }
 
-          // Prepend new post (or replace existing if editing)
-          customPosts = [newPostEntry, ...customPosts.filter(p => p.slug !== fileName && p.id !== slugClean)];
+          // Prepend new post (cleanly replace existing post matching current or original slug/id)
+          customPosts = (customPosts || []).filter(p => {
+            if (!p) return false;
+            const pNorm = normSlug(p.slug || p.id);
+            if (pNorm === slugClean || p.slug === fileName || p.id === slugClean) return false;
+            if (origNormSlug && (pNorm === origNormSlug || p.slug === origFileName || p.id === origNormSlug)) return false;
+            if (originalSlug && p.slug === originalSlug) return false;
+            if (originalId && p.id === originalId) return false;
+            return true;
+          });
+          customPosts = [newPostEntry, ...customPosts];
 
           await env.POSTS_KV.put('custom_posts_list', JSON.stringify(customPosts));
           if (postHtmlContent) {
             await env.POSTS_KV.put('post_html:' + fileName, postHtmlContent);
             await env.POSTS_KV.put('post_html:' + slugClean, postHtmlContent);
+            await env.POSTS_KV.put('post_html:post-' + slugClean + '.html', postHtmlContent);
+          }
+
+          // If editing and slug changed, clean up old HTML and mark old base post deleted if needed
+          if (origNormSlug && origNormSlug !== slugClean) {
+            try {
+              await env.POSTS_KV.delete('post_html:' + origFileName);
+              await env.POSTS_KV.delete('post_html:' + origNormSlug);
+              await env.POSTS_KV.delete('post_html:post-' + origNormSlug + '.html');
+              if (originalSlug) await env.POSTS_KV.delete('post_html:' + originalSlug);
+
+              let deletedPosts = [];
+              const rawDel = await env.POSTS_KV.get('deleted_posts_list');
+              if (rawDel) deletedPosts = safeJsonParse(rawDel, []);
+              if (!deletedPosts.includes(origFileName)) deletedPosts.push(origFileName);
+              if (!deletedPosts.includes(origNormSlug)) deletedPosts.push(origNormSlug);
+              if (originalSlug && !deletedPosts.includes(originalSlug)) deletedPosts.push(originalSlug);
+              await env.POSTS_KV.put('deleted_posts_list', JSON.stringify(deletedPosts));
+            } catch (dErr) {}
           }
 
           // Auto-sync store product to KV
           try {
-            const cleanSlug = (data.slug || fileName).toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
-            const postFileName = 'post-' + cleanSlug + '.html';
-            const newProdEntry = createProductFromPostData(data, cleanSlug, postFileName);
+            const newProdEntry = createProductFromPostData(data, slugClean, fileName);
+            newProdEntry.image = postImageUrl;
+
             let customProducts = [];
             const rawProds = await env.POSTS_KV.get('custom_products_list');
             if (rawProds) customProducts = safeJsonParse(rawProds, []);
@@ -941,14 +1021,16 @@ export default {
             // Remove from deleted list if present
             const rawDeleted = await env.POSTS_KV.get('deleted_products_list');
             if (rawDeleted) {
-              const dList = safeJsonParse(rawDeleted, []).filter(id => id !== newProdEntry.id && id !== ('prod-post-' + cleanSlug) && id !== cleanSlug);
+              const dList = safeJsonParse(rawDeleted, []).filter(id => id !== newProdEntry.id && id !== ('prod-post-' + slugClean) && id !== slugClean && (!origNormSlug || (id !== ('prod-post-' + origNormSlug) && id !== ('prod-' + origNormSlug))));
               await env.POSTS_KV.put('deleted_products_list', JSON.stringify(dList));
             }
 
             const filteredProds = (customProducts || []).filter(p => {
               if (!p) return false;
-              const pClean = (p.reviewUrl || p.id || '').toString().trim().replace(/^[\s/]+/, '').replace(/^post-/, '').replace(/\.html$/, '');
-              return pClean !== cleanSlug && p.id !== newProdEntry.id && p.id !== ('prod-post-' + cleanSlug);
+              const pClean = normSlug(p.reviewUrl || p.id || '');
+              if (pClean === slugClean || p.id === newProdEntry.id || p.id === ('prod-post-' + slugClean)) return false;
+              if (origNormSlug && (pClean === origNormSlug || p.id === ('prod-' + origNormSlug) || p.id === ('prod-post-' + origNormSlug))) return false;
+              return true;
             });
             customProducts = [newProdEntry, ...filteredProds];
             await env.POSTS_KV.put('custom_products_list', JSON.stringify(customProducts));
@@ -957,19 +1039,27 @@ export default {
           }
         } else {
           // Fallback to in-memory store
-          inMemoryPosts = [newPostEntry, ...inMemoryPosts.filter(p => p.slug !== fileName && p.id !== slugClean)];
+          inMemoryPosts = [newPostEntry, ...inMemoryPosts.filter(p => {
+            const pNorm = normSlug(p.slug || p.id);
+            if (pNorm === slugClean || p.slug === fileName || p.id === slugClean) return false;
+            if (origNormSlug && (pNorm === origNormSlug || p.slug === origFileName || p.id === origNormSlug)) return false;
+            return true;
+          })];
           if (postHtmlContent) {
             inMemoryHtml.set(fileName, postHtmlContent);
             inMemoryHtml.set(slugClean, postHtmlContent);
+            inMemoryHtml.set('post-' + slugClean + '.html', postHtmlContent);
           }
 
           try {
             const newProdEntry = createProductFromPostData(data, slugClean, fileName);
-            inMemoryProducts = [newProdEntry, ...(inMemoryProducts || []).filter(p => 
-              p.id !== newProdEntry.id && 
-              p.reviewUrl !== fileName && 
-              !(data.affiliateLink && data.affiliateLink !== '#' && p.affiliateUrl === data.affiliateLink)
-            )];
+            newProdEntry.image = postImageUrl;
+            inMemoryProducts = [newProdEntry, ...(inMemoryProducts || []).filter(p => {
+              const pClean = normSlug(p.reviewUrl || p.id || '');
+              if (pClean === slugClean || p.id === newProdEntry.id) return false;
+              if (origNormSlug && (pClean === origNormSlug || p.id === ('prod-' + origNormSlug))) return false;
+              return true;
+            })];
           } catch (pErr) {}
         }
 
@@ -1202,18 +1292,18 @@ export default {
         if (c) baseMap.set(c, bp);
       }
 
-      // Sanitize custom posts against basePosts static images
+      // Preserve custom posts and fill missing fields only if completely missing
       for (const cp of (customPosts || [])) {
         const c = normSlug(cp.slug || cp.id);
         if (c && baseMap.has(c)) {
           const bp = baseMap.get(c);
-          if (bp.image && !bp.image.startsWith('data:image') && cp.image !== bp.image) {
+          if (!cp.image && bp.image) {
             cp.image = bp.image;
             customPostsNeedSave = true;
           }
-          if (bp.categorySlug && (!cp.categorySlug || cp.categorySlug === 'tech')) {
-            cp.categorySlug = bp.categorySlug;
+          if (!cp.category && bp.category) {
             cp.category = bp.category;
+            cp.categorySlug = bp.categorySlug || 'tech';
             cp.categoryEn = bp.categoryEn;
             cp.categoryVi = bp.categoryVi;
             cp.categoryZh = bp.categoryZh;
@@ -2617,15 +2707,29 @@ export default {
 
       // Check KV for saved HTML
       if (env.POSTS_KV) {
-        const savedHtml = await env.POSTS_KV.get('post_html:' + cleanPath);
+        const savedHtml = await env.POSTS_KV.get('post_html:' + cleanPath) || 
+                          await env.POSTS_KV.get('post_html:post-' + cleanPath) ||
+                          (!cleanPath.endsWith('.html') ? await env.POSTS_KV.get('post_html:' + cleanPath + '.html') : null);
         if (savedHtml) {
           return new Response(savedHtml, {
-            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+            headers: {
+              'Content-Type': 'text/html; charset=utf-8',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0',
+              ...CORS_HEADERS
+            }
           });
         }
       } else if (inMemoryHtml.has(cleanPath)) {
         return new Response(inMemoryHtml.get(cleanPath), {
-          headers: { 'Content-Type': 'text/html; charset=utf-8' }
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            ...CORS_HEADERS
+          }
         });
       }
 

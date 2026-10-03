@@ -291,6 +291,14 @@ function getLiveBaseUrl() {
   return PRIMARY_DOMAIN;
 }
 
+function resolveAdminImageUrl(img) {
+  if (!img) return 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=80';
+  img = String(img).trim();
+  if (img.startsWith('http://') || img.startsWith('https://') || img.startsWith('data:')) return img;
+  if (img.startsWith('/')) return img;
+  return '/' + img;
+}
+
 function initDynamicOriginLinks() {
   const targetLiveUrl = getLiveBaseUrl();
   const liveLink = document.getElementById('header-live-site-link');
@@ -532,7 +540,8 @@ function updatePreview() {
   if (pRating && pRating.textContent !== rating) pRating.textContent = rating;
 
   const pImg = document.getElementById('prev-img');
-  if (pImg && pImg.getAttribute('src') !== imgUrl) pImg.src = imgUrl;
+  const resolvedPreviewImg = resolveAdminImageUrl(imgUrl);
+  if (pImg && pImg.getAttribute('src') !== resolvedPreviewImg) pImg.src = resolvedPreviewImg;
 
   const pUsd = document.getElementById('prev-price-usd');
   if (pUsd && pUsd.textContent !== priceUsd) pUsd.textContent = priceUsd;
@@ -645,11 +654,18 @@ window.editPost = function(postIdOrSlug) {
   document.getElementById('input-slug').value = slugClean;
   document.getElementById('input-slug').dataset.manual = 'true';
 
-  if (post.category) {
+  if (post.category || post.categorySlug) {
     const catSelect = document.getElementById('input-category');
     let matched = false;
+    const targetSlug = (post.categorySlug || '').toLowerCase();
+    const targetCat = (post.category || '').toLowerCase();
+
     for (let opt of catSelect.options) {
-      if (opt.value.toLowerCase().includes(post.category.toLowerCase()) || post.category.toLowerCase().includes(opt.value.toLowerCase())) {
+      const optSlug = (opt.getAttribute('data-slug') || '').toLowerCase();
+      const optVal = (opt.value || '').toLowerCase();
+      if ((targetSlug && optSlug === targetSlug) ||
+          optVal === targetCat ||
+          (targetCat && (optVal.includes(targetCat) || targetCat.includes(optVal)))) {
         catSelect.value = opt.value;
         matched = true;
         break;
@@ -658,8 +674,9 @@ window.editPost = function(postIdOrSlug) {
     if (!matched) {
       // Append option if custom
       const newOpt = document.createElement('option');
-      newOpt.value = post.category;
-      newOpt.textContent = post.category;
+      newOpt.value = post.category || 'Tech Gear';
+      newOpt.textContent = post.category || 'Tech Gear';
+      newOpt.setAttribute('data-slug', post.categorySlug || slugify(post.category || 'tech'));
       newOpt.selected = true;
       catSelect.appendChild(newOpt);
     }
@@ -2078,7 +2095,9 @@ function initPublishSystem() {
         return;
       }
 
-      const isEditAction = window.isEditing;
+      const isEditAction = !!window.isEditing;
+      const originalSlug = window.editingSlug || data.fileName;
+      const originalId = window.editingId || data.slug;
 
       btnPublish.disabled = true;
       btnPublish.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Publishing to live site...</span>';
@@ -2092,6 +2111,9 @@ function initPublishSystem() {
       const cardHtml = generateCardHtml(data);
 
       const payload = {
+        isEdit: isEditAction,
+        originalSlug: originalSlug,
+        originalId: originalId,
         fileName: data.fileName,
         slug: data.slug,
         title: data.title,
@@ -2164,7 +2186,7 @@ function initPublishSystem() {
             ? result.url
             : `${getLiveBaseUrl()}/${data.fileName}`;
           showSuccessModal(data.fileName, liveUrl, isEditAction);
-          loadPostsList();
+          loadPostsList(true);
           if (typeof loadProductsList === 'function') loadProductsList(true);
           exitEditMode();
         } else {
@@ -3051,7 +3073,7 @@ function renderPostsTable(posts) {
     tr.innerHTML = `
       <td class="px-5 py-4">
         <div class="flex items-center gap-3">
-          <img src="${p.image || 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=100&q=80'}" loading="lazy" class="w-10 h-10 rounded-xl object-cover border border-purple-800 flex-shrink-0">
+          <img src="${resolveAdminImageUrl(p.image)}" onerror="this.src='https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=100&q=80'" loading="lazy" class="w-10 h-10 rounded-xl object-cover border border-purple-800 flex-shrink-0">
           <div>
             <a href="${viewUrl}" target="_blank" class="font-bold text-white hover:text-pink-400 transition-colors line-clamp-1">${escapeHtml(p.title)}</a>
             <span class="text-[11px] text-purple-400 block">${p.date || 'Recent'}</span>
