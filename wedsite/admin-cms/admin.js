@@ -914,6 +914,11 @@ function initSampleDataFiller() {
 // 4B. AI ARTICLE GENERATOR STUDIO (ƯU TIÊN TIẾNG ANH / ENGLISH PRIORITY)
 // -------------------------------------------------------------
 const AI_IMAGE_PRESETS = {
+  beauty: [
+    'https://images.unsplash.com/photo-1596462502278-27bf85033e5a?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1200&q=80'
+  ],
   tech_audio: [
     'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1200&q=80',
@@ -1832,7 +1837,7 @@ While the requirement for a permanent USB-C power cable requires tidy wire routi
     return {
       title: `${cleanKw} In-Depth Review: Lab Benchmarks, Real-World Testing & Buying Advice (2026)`,
       slug: cleanSlug,
-      category: niche === 'auto' ? 'Automotive & Performance' : (niche === 'fashion' ? 'Fashion & Apparel' : (niche === 'watches' ? 'Watches & Accessories' : (niche === 'smarthome' ? 'Smart Home & IoT' : 'Tech Hardware'))),
+      category: niche === 'auto' ? 'Automotive & Performance' : (niche === 'fashion' ? 'Fashion & Apparel' : (niche === 'watches' ? 'Watches & Accessories' : (niche === 'smarthome' ? 'Smart Home & IoT' : (niche === 'beauty' ? 'Beauty & Personal Care' : 'Tech Hardware')))),
       excerpt: `An exhaustive technical evaluation of the ${cleanKw}. We break down industrial build quality, day-to-day ergonomic tolerances, benchmark performance, and long-term durability to see if it justifies its price point in 2026.`,
       brand: brandName,
       btnText: 'ORDER NOW',
@@ -1989,6 +1994,7 @@ function buildMultilingualFields(data) {
   }
 
   const catDict = {
+    'beauty': { en: 'Beauty & Personal Care', vi: 'Làm Đẹp & Chăm Sóc Cá Nhân', zh: '美容与个人护理' },
     'audio': { en: 'Audio', vi: 'Thiết Bị Âm Thanh', zh: '音频降噪耳机' },
     'robotics': { en: 'Robotics & Outdoor Tech', vi: 'Robot & Thiết Bị Ngoài Trời', zh: '机器人与户外自动化装备' },
     'fashion': { en: 'Alt & Gothic Fashion', vi: 'Thời Trang Thiết Kế', zh: '小众暗黑女装' },

@@ -35,7 +35,8 @@
         courses: 'Khóa Học Video',
         saas: 'SaaS & AI Tools'
       },
-      catPills: {
+      \1
+        beauty: '✨ Beauty & Care',
         all: '🌟 Tất Cả',
         physical: '📦 Đồ Vật Lý',
         digital: '⚡ Sản Phẩm Số',
@@ -90,7 +91,8 @@
         courses: 'Video Masterclasses',
         saas: 'SaaS & AI Tools'
       },
-      catPills: {
+      \1
+        beauty: '✨ Beauty & Care',
         all: '🌟 All Reviews',
         physical: '📦 Physical Gear',
         digital: '⚡ Digital Downloads',
@@ -145,7 +147,8 @@
         courses: '视频实战大课',
         saas: 'SaaS与AI云工具'
       },
-      catPills: {
+      \1
+        beauty: '✨ Beauty & Care',
         all: '🌟 全部评测',
         physical: '📦 实体硬件',
         digital: '⚡ 数字下载',

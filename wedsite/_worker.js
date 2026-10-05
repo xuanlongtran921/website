@@ -94,6 +94,8 @@ function mapCategoryToKeyAndNames(category, categorySlug) {
     catKey = 'courses';
   } else if (/saas|cloud subscription|ai studio|phần mềm|phan mem/.test(catLower)) {
     catKey = 'saas';
+  } else if (/beauty|personal care|làm đẹp|lam dep|chăm sóc|cham soc|skincare|makeup|cosmetics|美容|护理|化妆/.test(catLower)) {
+    catKey = 'beauty';
   } else if (/watch|horology|đồng hồ|dong ho|tissot|seagull|st1901|powermatic|cơ khí|co khi|cổ điển|co dien|vintage|trang sức|trang suc|腕表|手表/.test(catLower)) {
     catKey = 'watches';
   } else if (/skirt|dress|bag|sweater|cashmere|velvet|lolita|gothic|thời trang|thoi trang|fashion|supreme|lilyvow|aero|leather|coat|jacket|đầm|dam|váy|vay|áo|ao|suuksess|robinpiccone|matein|sling bag|phụ kiện|phu kien|服饰|时装/.test(catLower)) {
@@ -118,7 +120,9 @@ function mapCategoryToKeyAndNames(category, categorySlug) {
   let catVi = 'Âm Thanh & Công Nghệ';
   let catZh = '音频与科技数码';
 
-  if (catKey === 'watches') {
+  if (catKey === 'beauty') {
+    catEn = 'Beauty & Personal Care'; catVi = 'Làm Đẹp & Chăm Sóc Cá Nhân'; catZh = '美容与个人护理';
+  } else if (catKey === 'watches') {
     catEn = 'Watches & Horology'; catVi = 'Đồng Hồ Cơ & Trang Sức'; catZh = '机械腕表与珠宝';
   } else if (catKey === 'fashion') {
     catEn = 'Alt & Gothic Fashion'; catVi = 'Thời Trang Thiết Kế'; catZh = '小众暗黑女装';

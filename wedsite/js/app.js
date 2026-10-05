@@ -444,6 +444,7 @@ function initSearch() {
   // Helper: Category badge styling
   function getCategoryBadgeClass(slug) {
     const s = (slug || '').toLowerCase();
+    if (s.includes('beauty')) return 'bg-rose-400 text-white';
     if (s.includes('fashion')) return 'bg-pink-600 text-white';
     if (s.includes('watch')) return 'bg-indigo-600 text-white';
     if (s.includes('auto')) return 'bg-amber-600 text-white';
@@ -463,6 +464,7 @@ function initSearch() {
   // Helper: Category icon
   function getCategoryIcon(slug) {
     const s = (slug || '').toLowerCase();
+    if (s.includes('beauty')) return 'sparkles';
     if (s.includes('fashion')) return 'sparkles';
     if (s.includes('watch')) return 'watch';
     if (s.includes('auto')) return 'gauge';
@@ -2252,6 +2254,7 @@ function initIndexCategoryPills() {
         all: products.length,
         physical: 0,
         digital: 0,
+        beauty: 0,
         fashion: 0,
         watches: 0,
         automotive: 0,
@@ -2273,7 +2276,8 @@ function initIndexCategoryPills() {
         else counts.digital++;
 
         const cat = (p.categoryKey || '').toLowerCase();
-        if (cat === 'fashion') counts.fashion++;
+        if (cat === 'beauty') counts.beauty++;
+        else if (cat === 'fashion') counts.fashion++;
         else if (cat === 'watches' || cat === 'watch') counts.watches++;
         else if (cat === 'automotive' || cat === 'auto') counts.automotive++;
         else if (cat === 'tech' || cat === 'audio') counts.tech++;
@@ -2289,7 +2293,8 @@ function initIndexCategoryPills() {
         else if (cat === 'saas' || cat === 'ai') counts.saas++;
         else {
           const txt = ((p.category || '') + ' ' + (p.categoryEn || '') + ' ' + (p.categoryVi || '')).toLowerCase();
-          if (txt.includes('fashion') || txt.includes('thời trang') || txt.includes('gothic') || txt.includes('lolita')) counts.fashion++;
+          if (txt.includes('beauty') || txt.includes('skincare') || txt.includes('làm đẹp')) counts.beauty++;
+          else if (txt.includes('fashion') || txt.includes('thời trang') || txt.includes('gothic') || txt.includes('lolita')) counts.fashion++;
           else if (txt.includes('watch') || txt.includes('đồng hồ')) counts.watches++;
           else if (txt.includes('auto') || txt.includes('xe') || txt.includes('phụ tùng')) counts.automotive++;
           else if (txt.includes('camera') || txt.includes('máy ảnh')) counts.cameras++;
@@ -2311,6 +2316,7 @@ function initIndexCategoryPills() {
         updateCountEl('home-count-all', counts.all);
         updateCountEl('home-count-physical', counts.physical);
         updateCountEl('home-count-digital', counts.digital);
+        updateCountEl('home-count-beauty', counts.beauty);
         updateCountEl('home-count-fashion', counts.fashion);
         updateCountEl('home-count-watches', counts.watches);
         updateCountEl('home-count-auto', counts.automotive);

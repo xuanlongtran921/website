@@ -1797,6 +1797,7 @@ function updateCategoryCounts() {
     all: allProducts.length,
     physical: 0,
     digital: 0,
+    beauty: 0,
     fashion: 0,
     watches: 0,
     automotive: 0,
@@ -1825,6 +1826,8 @@ function updateCategoryCounts() {
       counts.tech++;
     } else if (key === 'watches' || key === 'watch') {
       counts.watches++;
+    } else if (key === 'beauty') {
+      counts.beauty++;
     } else if (key === 'fashion') {
       counts.fashion++;
     } else if (key === 'auto' || key === 'automotive') {
@@ -1852,7 +1855,8 @@ function updateCategoryCounts() {
     } else {
       // Fallback matching by category name
       const catLower = ((p.category || '') + ' ' + (p.categoryEn || '') + ' ' + (p.categoryVi || '')).toLowerCase();
-      if (catLower.includes('watch') || catLower.includes('đồng hồ')) counts.watches++;
+      if (catLower.includes('beauty') || catLower.includes('skincare') || catLower.includes('làm đẹp')) counts.beauty++;
+      else if (catLower.includes('watch') || catLower.includes('đồng hồ')) counts.watches++;
       else if (catLower.includes('fashion') || catLower.includes('thời trang') || catLower.includes('gothic') || catLower.includes('lolita')) counts.fashion++;
       else if (catLower.includes('auto') || catLower.includes('xe') || catLower.includes('phụ tùng')) counts.automotive++;
       else if (catLower.includes('desk') || catLower.includes('bàn') || catLower.includes('edc') || catLower.includes('keyboard')) counts['desk-setup']++;
@@ -1875,7 +1879,7 @@ function updateCategoryCounts() {
 
     // Automatically hide empty category pills so they don't clutter the UI with (0)
     const btn = document.querySelector(`#filter-tabs button[data-cat="${key}"]`);
-    if (btn && key !== 'all' && key !== 'physical' && key !== 'digital') {
+    if (btn && key !== 'all' && key !== 'physical' && key !== 'digital' && key !== 'beauty') {
       if (counts[key] === 0) {
         btn.classList.add('hidden');
       } else {
