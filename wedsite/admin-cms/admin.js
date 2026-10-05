@@ -1652,265 +1652,139 @@ async function generateArticleWithAi() {
 
 function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customImage) {
   const kwLower = keyword.toLowerCase();
+  const cleanKw = keyword.replace(/[^\w\s\-\.\+]/g, '').trim() || 'Product';
   const brandName = brand || (keyword.split(' ')[0] + ' Official');
-  const brandSlug = slugify(brandName || 'smartpicks');
+  const brandSlug = (brandName || 'smartpicks').toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
   const isEn = lang !== 'vi' && lang !== 'zh'; // Priority: English default
+  const cleanSlug = 'post-' + cleanKw.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '') + '-review';
 
   const resolveAffLink = (defaultUrl) => customAffLink && customAffLink.trim() ? customAffLink.trim() : defaultUrl;
   const resolveImage = (defaultImg) => customImage && customImage.trim() ? customImage.trim() : defaultImg;
 
-  // 0. RC, Robotics, All-Terrain Mowers & Smart Hardware Preset
-  if (kwLower.includes('mowrator') || kwLower.includes('mower') || kwLower.includes('rc car') || kwLower.includes('robot') || kwLower.includes('robotics') || kwLower.includes('drone') || kwLower.includes('crawler') || kwLower.includes('4wd') || kwLower.includes('all-terrain') || (niche === 'auto' && (kwLower.includes('mow') || kwLower.includes('rc') || kwLower.includes('robot')))) {
+  // 1. RC, Robotics, All-Terrain Mowers Preset (Hardcoded override)
+  if (kwLower.includes('mowrator') || kwLower.includes('mower') || kwLower.includes('rc car') || kwLower.includes('robot') || kwLower.includes('robotics') || kwLower.includes('crawler') || kwLower.includes('4wd') || kwLower.includes('all-terrain')) {
     if (isEn) {
       return {
-        title: `${brandName.includes('Mowrator') ? 'Mowrator S1 4WD Smart Remote Control Mower' : keyword} In-Depth Review: 45° All-Terrain Performance Tested (2026)`,
-        slug: 'post-' + slugify(keyword) + '-review',
+        title: ${brandName.includes('Mowrator') ? 'Mowrator S1 4WD Smart Remote Control Mower' : keyword} In-Depth Review: 45° All-Terrain Performance Tested (2026),
+        slug: cleanSlug,
         category: 'Robotics & Outdoor Tech',
-        excerpt: 'Featuring quad independent brushless hub motors, military-grade 2.4GHz remote telemetry, and 80% grade slope climbing, the Mowrator S1 4WD permanently eliminates the physical dangers of steep-terrain lawn maintenance.',
-        brand: brandName.includes('Mowrator') ? 'Mowrator Official' : brandName,
+        excerpt: 'Featuring quad independent brushless hub motors, military-grade 2.4GHz remote telemetry, and 80% grade slope climbing, this machine permanently eliminates the physical dangers of steep-terrain lawn maintenance.',
+        brand: brandName,
         btnText: 'ORDER NOW',
-        affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=LONGXUANTRAN`),
+        affiliateLink: resolveAffLink(https://.com/?ref=SMARTPICKS),
         image: resolveImage('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80'),
-        priceUsd: '$1,499.00',
-        priceVnd: '37.475.000₫',
-        priceOrig: '$1,799.00',
-        coupon: 'MOWRATOR100',
-        couponDiscount: '$100 OFF All-Terrain 4WD Series',
-        couponExpiry: '12/31/2026',
+        priceUsd: ',499.00', priceVnd: '37.475.000₫', priceOrig: ',799.00',
+        coupon: 'SMARTPICKS100', couponDiscount: ' OFF', couponExpiry: '12/31/2026',
         rating: 9.8,
-        pros: `Full 4WD brushless hub-motor drivetrain delivers 160Nm of instant torque to tackle 45-degree (80%) slopes with zero wheel slip
-Ergonomic 2.4GHz remote controller with real-time telemetry screen operates reliably past 250 meters
-Heavy-gauge stamped steel cutting deck with 1.5-inch to 4.5-inch electronic height adjustment via handlebar controls
-High-capacity swap-and-go 56V lithium battery architecture delivers 2.2 to 2.8 hours of uninterrupted slope cutting
-Triple-redundant safety protocols: automatic electromagnetic downhill braking, emergency remote kill-switch, and 50° rollover cutoff sensors`,
-        cons: `Hefty 115-lb chassis requires heavy-duty loading ramps for pickup truck or trailer transport
-Substantial upfront prosumer investment compared to conventional manual walk-behind mowers
-Wide 28-inch wheelbase is optimized for open slopes and fields rather than tight suburban flower beds`,
-        intro: `Steep embankments, retention basins, ditch banks, and overgrown orchard slopes have historically been among the most hazardous environments in landscaping. Every year, commercial operators and rural property owners suffer severe injuries from rollover incidents with conventional ride-on and walk-behind mowers. The Mowrator S1 4WD was engineered from the ground up to eradicate this occupational hazard by taking the operator completely out of harm's way.
-
-From the moment you uncrate the S1, its industrial DNA is unmistakable. Built on a reinforced tubular steel roll-cage with aggressive tractor-tread pneumatic tires, this machine resembles an exploration rover rather than a suburban yard tool. The fit and finish feature IPX5 weatherproofing, sealed electrical conduits, and industrial-grade powder coating designed to resist acidic sap and stone strikes. Linking the 2.4GHz handheld controller takes less than 10 seconds, providing immediate dual-stick proportional throttle and skid-steer navigation.`,
-        body: `We subjected the Mowrator S1 4WD to 30 days of punishment across a 4-acre property featuring 40-degree clay embankments, thick fescue, wet riverbank Bermuda grass, and rocky uneven ditch slopes. Where commercial zero-turn mowers would spin their drive wheels and risk sliding sideways, the S1's independent all-wheel brushless motors distributed torque flawlessly. The onboard digital inclinometer automatically modulated wheel speeds, preventing turf tear while climbing damp 42-degree inclines effortlessly.
-
-Cutting performance is anchored by dual high-lift mulching blades spinning at 3,200 RPM. We tackled 18-inch overgrown scrub, wild brambles, and brush saplings up to 1 inch thick. The mower mulched everything down to fine organic matter without bogging down the electric motor. Remote control latency was tested through dense tree foliage at distances exceeding 200 meters: response times remained razor-sharp with sub-30ms control input, and the automated fail-safe triggered a complete electromagnetic halt whenever the controller was powered off.
-
-Battery endurance under sustained slope-climbing and dense brush mulching averaged 2 hours and 15 minutes on a single 56V pack. For commercial operations, the quick-latch battery bay allows swapping in a fresh pack in under 45 seconds, enabling continuous all-day field operation when paired with a dual-bay fast charger.`,
-        verdict: `For homesteaders, solar farm maintenance crews, highway embankment contractors, and acreage owners with treacherous terrain, the Mowrator S1 4WD is not an extravagance—it is essential personal safety equipment. It transforms an exhausting, life-threatening weekend chore into a precise, remote-controlled operation.
-
-If your property is flat and under half an acre, a standard push mower remains the pragmatic choice. But if you maintain retaining walls, pond banks, or steep grades that make your stomach drop, the Mowrator S1 4WD is our undisputed Best-in-Class recommendation for 2026. Use coupon code MOWRATOR100 at checkout to claim your exclusive \$100 discount.`
+        pros: Full 4WD brushless hub-motor drivetrain delivers 160Nm of instant torque to tackle 45-degree (80%) slopes\nErgonomic 2.4GHz remote controller with real-time telemetry screen operates reliably past 250 meters\nHeavy-gauge stamped steel cutting deck with electronic height adjustment\nHigh-capacity swap-and-go 56V lithium battery architecture delivers 2.2 to 2.8 hours of uninterrupted cutting,
+        cons: Hefty chassis requires heavy-duty loading ramps for pickup truck or trailer transport\nSubstantial upfront prosumer investment compared to conventional manual walk-behind mowers,
+        intro: Steep embankments, retention basins, and overgrown orchard slopes have historically been among the most hazardous environments in landscaping. Every year, commercial operators and rural property owners suffer severe injuries from rollover incidents. The  was engineered from the ground up to eradicate this occupational hazard by taking the operator completely out of harm's way.\n\nFrom the moment you uncrate it, its industrial DNA is unmistakable. Built on a reinforced tubular steel roll-cage with aggressive tractor-tread pneumatic tires, this machine resembles an exploration rover rather than a suburban yard tool.,
+        body: We subjected the  to 30 days of punishment across a 4-acre property featuring 40-degree clay embankments, thick fescue, wet riverbank Bermuda grass, and rocky uneven ditch slopes. Where commercial zero-turn mowers would spin their drive wheels and risk sliding sideways, the independent all-wheel brushless motors distributed torque flawlessly.\n\nThe onboard digital inclinometer automatically modulated wheel speeds, preventing turf tear while climbing damp 42-degree inclines effortlessly. Operating via the 2.4GHz remote felt intuitive, providing immediate dual-stick proportional throttle and skid-steer navigation with zero latency.,
+        verdict: The  isn't just a luxury gadget—it is a critical safety upgrade for anyone managing difficult, uneven terrain. By removing the human operator from the physical risks of rollovers and blade accidents, it pays for itself in peace of mind alone. If you have steep ditches, rough pastures, or uneven acreage, this is the ultimate technological solution.
       };
     }
   }
 
-  // 1. Sony / Audio / ANC Preset
-  const isExplicitAudio = kwLower.includes('sony') || kwLower.includes('headphone') || kwLower.includes('earphone') || kwLower.includes('earbuds') || kwLower.includes('wh-1000') || kwLower.includes('xm5') || kwLower.includes('bose') || kwLower.includes('airpod') || kwLower.includes('audio');
-  const isGenericAudioNiche = niche === 'tech_audio' && !kwLower.includes('keyboard') && !kwLower.includes('watch') && !kwLower.includes('dress') && !kwLower.includes('car') && !kwLower.includes('mow') && !kwLower.includes('robot') && !kwLower.includes('camera') && !kwLower.includes('coffee') && !kwLower.includes('gaming');
+  // Define Niche Templates
+  let catName = 'Tech Hardware';
+  let t_title, t_excerpt, t_img, t_pros, t_cons, t_intro, t_body, t_verdict;
+  let priceU = '.00', priceV = '3.750.000₫', priceO = '.00';
 
-  if (isExplicitAudio || isGenericAudioNiche) {
-    if (isEn) {
-      return {
-        title: isExplicitAudio ? `${brandName.includes('Sony') ? 'Sony WH-1000XM5' : keyword} In-Depth Review: The Undisputed King of Noise-Canceling in 2026` : `${keyword} In-Depth Acoustic Review & Lab Testing (2026)`,
-        slug: 'post-' + slugify(keyword) + '-review',
-        category: 'Audio',
-        excerpt: 'Featuring 8 precision microphones, dual V1/QN1 dedicated noise-canceling processors, and newly engineered 30mm carbon-fiber composite drivers, this flagship creates an impenetrable auditory sanctuary for daily commuters and audiophiles alike.',
-        brand: brandName.includes('Sony') ? 'Sony Official Store' : brandName,
-        btnText: 'ORDER NOW',
-        affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=PETEONPURPOSE`),
-        image: resolveImage('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80'),
-        priceUsd: '$298.00',
-        priceVnd: '7.490.000₫',
-        priceOrig: '$399.00',
-        coupon: 'SONYWH15',
-        couponDiscount: '15% OFF Global Order',
-        couponExpiry: '12/31/2026',
-        rating: 9.7,
-        pros: `Industry-leading Active Noise Cancellation powered by dual V1 and HD QN1 processors with 8 active microphones
-Re-engineered 30mm carbon-fiber composite dome driver delivers tighter acoustic response and immaculate midrange detail
-Exceptional 30-hour battery life with ANC active, plus 3-minute USB-PD quick charge delivering 3 full hours of playback
-Ultra-lightweight 250g chassis lined with synthetic soft-fit leather virtually eliminates crown headband fatigue
-Flawless AI beamforming call quality with 4 bone-conduction and microphone sensors isolating speech from 60dB café chatter`,
-        cons: `Non-folding headband design requires a larger footprint carrying case compared to legacy XM4
-Synthetic leather ear cushions retain body heat during outdoor summer walking sessions
-Touch-capacitive ear cup controls require dry fingertips and a slight muscle-memory learning curve`,
-        intro: `In the ultra-competitive premium noise-canceling headphone market, resting on previous laurels is a recipe for irrelevance. When Sony unveiled the WH-1000XM5, they abandoned the folding hinge design that defined their lineup for four generations in favor of a sleek, aerodynamic silhouette dubbed 'noiseless design.' After six months of daily cross-country flights, open-office typing, and late-night studio mixing, we can definitively state that this radical rethink was worth every engineering risk.
-
-Holding the XM5, the weight distribution immediately impresses. At just 250 grams, it shaves noticeable grams off competitors like the AirPods Max (385g) and Bose QuietComfort Ultra (253g). The headband adjustment mechanism now slides continuously without stepped clicks, engineered from durable ABS-polycarbonate with synthetic soft-fit leather that contours seamlessly over eyeglass frames without creating acoustic seal leaks.`,
-        body: `Acoustic performance is anchored by Sony's dual-chip architecture: the Integrated Processor V1 manages the HD Noise Canceling Processor QN1, orchestrating eight microphones to sample ambient frequencies thousands of times per second. In our controlled decibel tests, low-frequency engine rumbles on Boeing 777 flights were reduced by an astonishing 32dB. Even more impressively, human vocal chatter in crowded co-working spaces—traditionally the Achilles' heel of ANC—was suppressed by over 24dB in the critical 1kHz–3kHz spectrum.
-
-Sound quality represents a noticeable shift toward neutral audiophile accuracy. The 30mm carbon-fiber dome features a softer TPU edge that allows deep, articulate sub-bass extensions down to 4Hz without muddling acoustic guitar strums or vocal sibilance. Streaming via Sony's proprietary LDAC codec at 990kbps 24-bit/96kHz reveals micro-details in lossless FLAC recordings that standard SBC/AAC codecs simply discard. Multipoint Bluetooth 5.2 enables instantaneous automatic switching between our MacBook Pro workstation and an iPhone when phone calls interrupt a Zoom meeting.
-
-Battery testing exceeded Sony's official ratings: with ANC running continuously at 65% volume, our unit lasted 31 hours and 42 minutes. When running on fumes, a standard 30W USB-PD brick provided 3 hours of listening time from a 3-minute pit stop.`,
-        verdict: `For business travelers, remote workers, students in noisy dormitories, and discerning music lovers, the Sony WH-1000XM5 remains the benchmark by which all wireless headphones are judged. While the larger travel case takes up marginally more backpack space, the combination of class-leading noise cancellation, featherweight all-day comfort, and pristine LDAC acoustics make it the easiest 9.7/10 recommendation in consumer tech.
-
-Apply promo code SONYWH15 at checkout to unlock your exclusive 15% discount with worldwide expedited delivery.`
-      };
-    }
+  if (niche === 'beauty') {
+    catName = 'Beauty & Skincare';
+    t_img = 'https://images.unsplash.com/photo-1596462502278-27bf85033e5a?auto=format&fit=crop&w=1200&q=80';
+    t_title = ${cleanKw} Review: The Skincare Science & Real Results (2026);
+    t_excerpt = We tested the  for 4 weeks to evaluate its active ingredients, skin barrier benefits, and daily application feel. Here is our honest, unsponsored verdict on whether it's worth the hype.;
+    t_pros = Dermatologically tested formula with high-concentration active ingredients\nLightweight, non-comedogenic texture that absorbs quickly without greasy residue\nNoticeable improvements in skin hydration and texture within the first 14 days\nCruelty-free formulation free from harsh parabens and synthetic fragrances;
+    t_cons = Premium price point compared to drugstore alternatives\nMay require a patch test for extremely sensitive skin types\nGlass packaging is beautiful but fragile for frequent travel;
+    t_intro = In an industry flooded with miracle claims and viral TikTok trends, separating genuine dermatological breakthroughs from clever marketing is increasingly difficult. The  has recently dominated social media feeds, promising transformative results. But does the science back up the hype? We acquired it for our testing lab to conduct a rigorous, independent 30-day evaluation.\n\nFirst impressions matter, and the packaging immediately signals a premium experience. The minimalist glass vessel protects the active compounds from UV degradation while dispensing precisely the right amount of product. The texture is elegant—neither too heavy nor watery—striking a perfect balance for layering under makeup or SPF.;
+    t_body = During our 4-week clinical trial phase, our testers applied the  twice daily. Unlike many aggressive treatments that compromise the skin barrier, this formulation prioritizes cellular hydration and gentle barrier repair. By day 14, our hydration sensors measured a 42% increase in moisture retention, and visible redness in our rosacea-prone testers had significantly diminished.\n\nThe ingredient list reads like a masterclass in modern cosmetic chemistry. By combining bio-compatible peptides with varying molecular weights of hyaluronic acid, the product penetrates multiple dermal layers rather than just sitting on the surface. We were particularly impressed by the complete lack of pilling when layered with silicone-based primers and sunscreens.;
+    t_verdict = The  is that rare viral product that actually over-delivers on its promises. While the initial investment is steep, the concentrated formula means a single bottle lasts months. For those serious about investing in their skin barrier health and long-term anti-aging prevention, this earns our highest recommendation.;
+  } else if (niche === 'fashion') {
+    catName = 'Fashion & Apparel';
+    t_img = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80';
+    t_title = ${cleanKw} Hands-On Review: Fit, Fabric & Styling Guide;
+    t_excerpt = A comprehensive look at the . We evaluate the garment's stitching quality, fabric drape, sizing accuracy, and versatility to see if this piece deserves a spot in your capsule wardrobe.;
+    t_pros = Exceptional tailoring with reinforced seams and high stitch density for longevity\nPremium, breathable fabric blend that drapes beautifully and resists severe wrinkling\nTrue-to-size fit that flatters multiple body types without restrictive pulling\nHighly versatile design that easily transitions from day-wear to evening elegance;
+    t_cons = Requires delicate washing or dry-cleaning to maintain pristine fabric condition\nLimited colorways currently available from the manufacturer\nSlightly restrictive return policy for international orders;
+    t_intro = Building a sustainable, versatile wardrobe requires investing in pieces that transcend seasonal micro-trends. The  has caught the attention of fashion editors and style influencers alike for its striking silhouette and premium construction. We ordered a sample directly from  to evaluate whether this garment justifies its luxury positioning.\n\nStraight out of the eco-friendly packaging, the tactile quality of the fabric is undeniable. The weight of the material provides a structured yet fluid drape, immediately distinguishing it from fast-fashion alternatives. The hardware—from the subtle zippers to the reinforced buttons—feels bespoke and substantial.;
+    t_body = Fit and proportion are where the  truly excels. Our sizing tests across three different body types revealed that the garment is cut with an expert understanding of human anatomy. The tailoring allows for comfortable articulation of the arms and torso without the fabric bunching awkwardly or losing its shape after hours of wear.\n\nWe also conducted stress tests on the seams and ran the piece through standard care cycles. While it requires gentle handling, the color retention and structural integrity remained flawless. The styling versatility is perhaps its strongest asset—it pairs just as effortlessly with casual vintage denim as it does with tailored evening trousers, making it a true chameleon in any closet.;
+    t_verdict = If you are looking to elevate your wardrobe with a foundational piece that speaks quiet luxury, the  is a masterful execution of modern tailoring. It bridges the gap between avant-garde design and daily wearability perfectly.;
+  } else if (niche === 'watches') {
+    catName = 'Watches & Horology';
+    t_img = 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80';
+    t_title = ${cleanKw} Review: A Masterclass in Modern Horology?;
+    t_excerpt = We spent two weeks on the wrist with the . From dial finishing and movement accuracy to case ergonomics, here is our definitive enthusiast review.;
+    t_pros = Impeccable dial finishing with applied indices and flawless handset polishing\nReliable, heavily regulated automatic movement with excellent power reserve\nSuperb case ergonomics that wear much slimmer than the spec sheet suggests\nHigh-quality bracelet with micro-adjustment clasp for perfect daily comfort;
+    t_cons = The lug-to-lug distance might overhang on wrists smaller than 6.25 inches\nLume application, while adequate, fades quicker than dedicated dive watches\nRetail availability is heavily waitlisted in major boutiques;
+    t_intro = In the crowded landscape of modern watchmaking, finding a timepiece that balances heritage aesthetics with cutting-edge manufacturing is rare. The  has generated massive buzz in the enthusiast community, promising luxury finishing at a competitive price point. We managed to secure a production model to see if it lives up to the lofty expectations on the wrist.\n\nUnboxing the  reveals a timepiece that punches significantly above its weight class. The interplay between the brushed and polished surfaces on the stainless steel case catches the light brilliantly. The dial, viewed under a macro loupe, shows zero dust, and the applied markers exhibit a level of sharpness usually reserved for watches triple the price.;
+    t_body = Strapping it onto the wrist, the first thing you notice is the ergonomics. Despite the listed dimensions, the dramatically downward-curving lugs allow the watch to hug the wrist securely, eliminating any top-heavy wobble. The bracelet articulates smoothly without pulling arm hair, and the on-the-fly micro-adjustable clasp ensures comfort as your wrist expands throughout the day.\n\nOn the timegrapher, the movement performed admirably, running at a consistent +3 seconds per day across five positions. The winding action is buttery smooth, and the date snaps crisply exactly at midnight. While it may lack the prestige of haute horlogerie in-house calibers, the robust architecture means servicing will be affordable and reliable for decades to come.;
+    t_verdict = The  represents a sweet spot in the current watch market. It offers enough horological pedigree and finishing prowess to satisfy hardcore collectors, while remaining accessible enough for someone buying their first serious watch. Highly recommended.;
+  } else if (niche === 'ebooks' || niche === 'courses') {
+    catName = 'Digital Education';
+    t_img = 'https://images.unsplash.com/photo-1513185041617-8ab03f83d6c5?auto=format&fit=crop&w=1200&q=80';
+    t_title = ${cleanKw} Review: Is This Masterclass Worth Your Time? (2026);
+    t_excerpt = We purchased and completed the entire  curriculum. Here is our brutally honest review of the actionable strategies, production value, and overall ROI.;
+    t_pros = Highly actionable, step-by-step frameworks that bypass theoretical fluff\nExcellent production quality with crystal-clear audio and screen recordings\nAccess to a private, active community of like-minded students and direct Q&A\nRegularly updated curriculum reflecting 2026's latest algorithms and strategies;
+    t_cons = Requires significant time commitment to actually implement the teachings\nSome beginner modules may feel slow to advanced practitioners\nPremium pricing makes it a serious investment rather than an impulse buy;
+    t_intro = The internet is saturated with "gurus" selling courses and ebooks that amount to nothing more than repackaged Wikipedia articles. When the  launched, it promised a genuinely different approach: no fluff, no fake lifestyle marketing, just hard tactical frameworks. We paid full price for access, went incognito, and completed every single module to bring you this unbiased breakdown.\n\nThe onboarding process is seamless. The learning management platform is intuitively designed, tracking your progress and providing easy access to downloadable PDF worksheets, Notion templates, and resource lists. The instructor’s delivery is concise, energetic, and completely focused on actionable execution rather than motivational speaking.;
+    t_body = Diving into the core curriculum, the true value of the  becomes apparent. Instead of vague theory, the instructor breaks down complex systems into repeatable daily SOPs (Standard Operating Procedures). We particularly appreciated the "over-the-shoulder" screen capture sessions, where you literally watch the instructor execute the strategies live on real accounts without any editing magic.\n\nThe private community aspect is arguably worth the price of admission alone. Unlike dead Discord servers, this cohort is highly active. We posted a technical question regarding Module 4 and received a detailed, personalized response from the instructor's core team within 3 hours. Furthermore, the material is entirely up-to-date with 2026's AI integrations and algorithm changes, completely avoiding outdated tactics.;
+    t_verdict = If you are willing to put in the hours and execute, the  provides an exceptional ROI. It bridges the gap between knowing what to do and actually knowing HOW to do it step-by-step. This is one of the few digital products we confidently endorse.;
+  } else {
+    // General Tech / Hardware / Others
+    catName = 'Tech & Hardware';
+    t_img = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80';
+    t_title = ${cleanKw} In-Depth Review: Lab Benchmarks, Real-World Testing & Buying Advice (2026);
+    t_excerpt = An exhaustive technical evaluation of the . We break down industrial build quality, day-to-day ergonomic tolerances, benchmark performance, and long-term durability.;
+    t_pros = Precision-engineered industrial chassis utilizing aerospace-grade materials for structural rigidity\nClass-leading processing architecture delivers blazing-fast rendering and compute times\nExcellent heat dissipation and stable performance under load without thermal throttling\nComprehensive software ecosystem with seamless cross-platform synchronization;
+    t_cons = Premium pricing places it strictly in the enthusiast/prosumer category\nProprietary accessories required to unlock the full ecosystem potential\nSlight learning curve for users migrating from older legacy platforms;
+    t_intro = In an era of iterative yearly updates that barely move the needle, the  represents a genuine generational leap. Engineered to push the boundaries of what consumers expect in this category, it has dominated tech headlines since its announcement. We secured a retail unit to bypass the cherry-picked review samples and subjected it to two weeks of grueling lab benchmarks and real-world stress tests.\n\nOut of the box, the industrial design commands attention. The seamless integration of glass and precision-milled alloy feels incredibly dense and premium in the hand. The manufacturer clearly obsessed over the micro-details: the tactile feedback of the physical interfaces, the satisfying resistance of the hinges, and the absolute lack of chassis flex.;
+    t_body = Booting up our synthetic benchmark suite, the  immediately began breaking records. Under sustained multi-core workloads, where competitors rapidly succumb to thermal throttling, this unit maintained 96% of its peak clock speeds thanks to an entirely redesigned vapor-chamber cooling matrix. We measured a maximum external chassis temperature of just 41°C, even after hours of continuous stress.\n\nBut synthetic numbers only tell half the story. In real-world daily usage, the fluid responsiveness of the custom silicon translates to zero micro-stutters. Connectivity is equally robust, featuring the latest wireless protocols that maintained rock-solid latency even in our interference-heavy office environment. The battery efficiency is perhaps the unsung hero, intelligently gating power consumption during idle states to effortlessly deliver all-day endurance.;
+    t_verdict = The  is a triumph of modern engineering that definitively justifies its flagship price tag. It doesn't just iterate; it redefines the baseline expectations for this product category. For power users and enthusiasts unwilling to compromise, this is the current gold standard.;
   }
 
-  // 2. Keyboard / Mechanical Custom Preset
-  if (kwLower.includes('keychron') || kwLower.includes('keyboard') || kwLower.includes('bàn phím') || niche === 'tech_keyboard') {
-    if (isEn) {
-      return {
-        title: `${brandName.includes('Keychron') ? 'Keychron Q1 Pro' : keyword} In-Depth Review: The Pinnacle of Wireless Custom Mechanical Keyboards`,
-        slug: 'post-' + slugify(keyword) + '-review',
-        category: 'Keyboards',
-        excerpt: 'Engineered with a solid 6063 CNC aluminum chassis, acoustic double-gasket mounting, wireless Bluetooth 5.1, and open-source QMK/VIA key remapping, this 75% flagship delivers the ultimate tactile typing experience.',
-        brand: brandName.includes('Keychron') ? 'Keychron Official' : brandName,
-        btnText: 'ORDER NOW',
-        affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=PETEONPURPOSE`),
-        image: resolveImage('https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80'),
-        priceUsd: '$198.00',
-        priceVnd: '4.950.000₫',
-        priceOrig: '$229.00',
-        coupon: 'KEYPRO10',
-        couponDiscount: '10% OFF Storewide',
-        couponExpiry: '12/31/2026',
-        rating: 9.6,
-        pros: `Machined from solid 6063 billet aluminum with sandblasted anodized finish that weighs 1.7kg for absolute desk stability
-Double-gasket acoustic mounting isolates internal switch plates with silicone buffers to create a deep, marbled acoustic profile
-Seamless tri-device Bluetooth 5.1 wireless pairing with instant 1000Hz polling-rate USB-C wired toggle
-Full open-source QMK/VIA web configurator allows real-time remapping of all keys, macros, and rotary encoder functions
-Factory pre-lubed mechanical switches with gold-plated screw-in PCB stabilizers provide buttery keystrokes right out of the box`,
-        cons: `Substantial 3.75-lb total weight makes it strictly an immovable desktop centerpiece, not portable
-Tall front chin profile (22.6mm) necessitates a dedicated walnut or silicone wrist rest for ergonomic typing angles
-South-facing RGB LEDs are optimized for mechanical enthusiast keycaps but dim shine-through legends slightly`,
-        intro: `For years, entering the world of high-end custom mechanical keyboards was an exercise in frustration. Enthusiasts had to participate in precarious year-long group buys, solder delicate surface-mount diodes onto raw PCBs, hand-lube hundreds of tiny switch stems, and spend upwards of \$500 for a barebones kit. The Keychron Q1 Pro shattered this gatekeeping barrier by delivering enthusiast-grade acoustic craftsmanship, solid CNC aluminum heft, and wireless Bluetooth freedom in a pre-assembled, factory-tuned package.
-
-Lifting the keyboard out of its foam-lined packaging is a visceral experience. Weighing in at 1,735 grams (nearly 4 pounds), the chassis is carved from aviation-grade 6063 aluminum, precision-milled across 24 separate CNC machining steps, sandblasted, and anodized. There is zero flex, zero hollow ringing, and zero squeaking. The 75% exploded layout preserves dedicated arrow keys, navigational column buttons, and a tactile rotary knob while reclaiming 25% of your desk space for fluid mouse sweeps.`,
-        body: `The magic of the Q1 Pro lies within its internal double-gasket acoustic architecture. Unlike conventional tray-mount boards where the switch plate is screwed directly into the metal shell, Keychron suspends the flexible polycarbonate plate between custom silicone dampening pads. Combined with case sound-absorbing foam and an IXPE switch pad, every keystroke delivers a plush, cushioned bottom-out followed by an intoxicating, deep 'clack' that makes typing 5,000 words a day an absolute sensory addiction.
-
-Underneath the thick OSA-profile double-shot PBT keycaps lie hot-swappable switch sockets compatible with both 3-pin and 5-pin MX mechanical switches (Cherry, Gateron, Kailh, Glorious). Upgrading or experimenting with tactile or clicky switches takes seconds using the included wire puller—no soldering required. In our latency testing, USB-C wired mode registered a flawless 1ms response (1000Hz polling rate) for competitive gaming, while Bluetooth 5.1 delivered rock-solid 90Hz polling with sub-15ms input across three paired workstations.
-
-Battery longevity is powered by a massive 4,000mAh lithium cell. With south-facing RGB backlighting turned off, the keyboard ran for an astonishing 280 hours of continuous typing on our test bench, translating to roughly five to six weeks of heavy workday use between charges.`,
-        verdict: `If you spend 8 to 12 hours every day writing code, authoring articles, or managing projects at a desk, your keyboard is your primary instrument of livelihood. The Keychron Q1 Pro transforms that daily digital interaction into a tactile masterpiece.
-
-While its considerable weight and tall typing angle require a dedicated desk setup and a comfortable wrist rest, its acoustic superiority, open-source QMK programmability, and wireless versatility crush anything produced by legacy gaming brands. Use discount code KEYPRO10 for an instant 10% discount on your order.`
-      };
-    }
-  }
-
-  // 9. Smart Home, Matter, IoT & Presence Sensors Preset (Deep Upgrade)
-  if (kwLower.includes('smart') || kwLower.includes('aqara') || kwLower.includes('homekit') || kwLower.includes('matter') || kwLower.includes('sensor') || kwLower.includes('radar') || kwLower.includes('fp2') || niche === 'smarthome') {
-    if (isEn) {
-      return {
-        title: `${brandName.includes('Aqara') ? 'Aqara Presence Sensor FP2' : keyword} In-Depth Review: The Millimeter-Wave Radar Upgrade Smart Homes Needed (2026)`,
-        slug: 'post-' + slugify(keyword) + '-review',
-        category: 'Smart Home & IoT',
-        excerpt: 'Powered by 60GHz millimeter-wave radar, multi-zone spatial positioning for up to 30 custom areas, and local Matter/HomeKit integration, this sensor permanently eliminates the frustration of false-off lights.',
-        brand: brandName.includes('Aqara') ? 'Aqara Official' : brandName,
-        btnText: 'ORDER NOW',
-        affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=PETEONPURPOSE`),
-        image: resolveImage('https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80'),
-        priceUsd: '$82.99',
-        priceVnd: '2.075.000₫',
-        priceOrig: '$99.99',
-        coupon: 'SMARTPMM15',
-        couponDiscount: '15% OFF Multi-Pack Sensors',
-        couponExpiry: '12/31/2026',
-        rating: 9.8,
-        pros: `Advanced 60GHz mmWave radar detects sub-millimeter thoracic micro-movements, tracking living occupants even while sitting motionless or sleeping
-Spatial grid mapping partitions up to 430 sq ft (40 m²) into 30 independently programmable automation zones in a single room
-Multi-target concurrent tracking detects entry, exit, and exact real-time 2D coordinates for up to 5 occupants simultaneously
-Built-in illuminance light sensor with high-precision lux readings enables intelligent ambient light threshold triggers
-100% local automation execution across Apple HomeKit, Home Assistant, Google Home, and Matter ecosystems with sub-180ms latency`,
-        cons: `Requires continuous USB-C wired power delivery (continuous radar scanning wattage exceeds battery storage limits)
-Initial spatial zone configuration in the Aqara Home app requires 15 to 20 minutes of precise walking calibration
-Can occasionally register false targets if placed directly facing oscillating ceiling fans, flutter curtains, or heavy AC vents`,
-        intro: `Anyone who has invested in smart home lighting has experienced the infuriating limitation of traditional Passive Infrared (PIR) motion detectors: sit still on the sofa reading a book, focus quietly at your computer keyboard, or step behind a shower curtain, and your smart lights abruptly plunge you into darkness. You wave your arms like an orchestra conductor to reactivate the PIR sensor, feeling more like a tech beta-tester than someone living in the future. The Aqara Presence Sensor FP2 was engineered to bury this irritation forever by replacing optical infrared lenses with high-frequency 60GHz millimeter-wave radar.
-
-Out of the box, the FP2 exudes thoughtful industrial minimalism. Compact and disc-shaped with a matte white finish, it includes a magnetic ball-joint metal mounting plate that articulates 360 degrees horizontally and 90 degrees vertically, allowing mounting on drywall, steel doorframes, or ceiling corners. Unlike older Zigbee accessories that required proprietary bridge hardware, the FP2 connects directly to your 2.4GHz Wi-Fi network and pairs natively into Apple HomeKit via a printed QR code.`,
-        body: `The operational leap of millimeter-wave radar cannot be overstated. Operating at 60GHz, the sensor emits high-frequency radio pulses that bounce off physical matter, detecting Doppler micro-shifts caused by the involuntary expansion of your ribcage as you breathe. In our rigorous 30-day testing across a 400-square-foot open-concept living room, we sat completely motionless in a recliner reading a novel for 45 minutes straight: the FP2 never once lost tracking, maintaining our 'Occupancy: Detected' status continuously.
-
-Where the FP2 truly crushes every competitor on the market is its spatial grid mapping. Through the Aqara Home companion app, the sensor visualizes your room as a 16x20 matrix grid. By walking into your room, your real-time position appears as a glowing blue dot on your phone screen. We carved our space into five discrete zones: Desk Workstation, TV Sofa, Dining Table, Kitchen Island, and Entryway. Each individual zone surfaces inside Apple HomeKit and Home Assistant as an independent occupancy sensor! Walking to the kitchen island turns on task counter pendants, while sitting on the sofa automatically dims ambient sconces—all driven by a single physical sensor.
-
-We benchmarked trigger latency: entering an active zone triggered associated smart relay switches in an astonishing 175 milliseconds over local network communication. Furthermore, the FP2 introduces automated fall detection when ceiling-mounted, sending instant high-priority push notifications to family members if an elderly parent suffers a sudden drop.`,
-        verdict: `The Aqara Presence Sensor FP2 is not just an incremental improvement over legacy motion detectors—it is the foundational cornerstone that allows smart homes to transition from gimmicky voice commands to authentic, invisible ambient intelligence. Replacing four separate PIR sensors and light meters with a single radar unit easily pays for itself in installation time and battery replacement costs.
-
-While the requirement for a permanent USB-C power cable requires tidy wire routing, the peace of mind of never waving your arms at the ceiling again makes this our #1 Smart Home Hardware of the Year. Claim your 15% discount using coupon SMARTPMM15 at checkout.`
-      };
-    }
-  }
-
-  // 15. General Dynamic Fallback for ANY OTHER PRODUCT (Rich, Deep, Authoritative)
   if (isEn) {
-    const cleanKw = keyword.replace(/[^\w\s\-\.\+]/g, '').trim();
-    const cleanSlug = 'post-' + slugify(cleanKw) + '-review';
     return {
-      title: `${cleanKw} In-Depth Review: Lab Benchmarks, Real-World Testing & Buying Advice (2026)`,
+      title: t_title,
       slug: cleanSlug,
-      category: niche === 'auto' ? 'Automotive & Performance' : (niche === 'fashion' ? 'Fashion & Apparel' : (niche === 'watches' ? 'Watches & Accessories' : (niche === 'smarthome' ? 'Smart Home & IoT' : (niche === 'beauty' ? 'Beauty & Personal Care' : 'Tech Hardware')))),
-      excerpt: `An exhaustive technical evaluation of the ${cleanKw}. We break down industrial build quality, day-to-day ergonomic tolerances, benchmark performance, and long-term durability to see if it justifies its price point in 2026.`,
+      category: catName,
+      excerpt: t_excerpt,
       brand: brandName,
       btnText: 'ORDER NOW',
-      affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=PETEONPURPOSE`),
-      image: resolveImage('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80'),
-      priceUsd: '$149.00',
-      priceVnd: '3.750.000₫',
-      priceOrig: '$189.00',
-      coupon: 'PURPOSE15',
-      couponDiscount: '15% OFF Global Order',
-      couponExpiry: '12/31/2026',
+      affiliateLink: resolveAffLink(https://.com/?ref=SMARTPICKS),
+      image: resolveImage(t_img),
+      priceUsd: priceU, priceVnd: priceV, priceOrig: priceO,
+      coupon: 'SMARTPICKS15', couponDiscount: '15% OFF Global Order', couponExpiry: '12/31/2026',
       rating: 9.6,
-      pros: `Precision-engineered industrial chassis utilizing aerospace-grade materials for exceptional structural rigidity
-Benchmark-verified efficiency delivering outstanding consistency under sustained daily workloads
-Intuitive companion ecosystem with zero-friction onboarding and low-latency response times
-Backed by comprehensive official manufacturer warranty coverage and global customer support
-Exceptional price-to-performance ratio that outperforms legacy tier-one competitors in the same bracket`,
-      cons: `Advanced feature configuration involves a mild initial learning curve for first-time adopters
-High market demand can occasionally lead to rolling backorders during peak sales cycles
-Premium prosumer tier pricing requires calculated budget commitment compared to budget entry models`,
-      intro: `In an era where market shelves are flooded with superficial incremental updates and rebadged generic hardware, discovering a product that genuinely redefines its category standard is increasingly rare. Over the past four weeks, our editorial team subjected the ${cleanKw} to rigorous real-world torture tests, measuring thermal dissipation, mechanical tolerances, and workflow efficiency under demanding everyday conditions.
-
-From the moment you break the factory seal, the attention to detail is palpable. Built with high-grade composites and precision-milled structural accents, the chassis exhibits zero creaking or flex under torsional pressure. Every physical interaction point—from port tactile resistance to surface finish texture—conveys deliberate engineering rather than cost-cutting mass manufacture. Pairing and initialization were accomplished in under three minutes, allowing seamless deployment into our testing workspace with zero firmware hiccups.`,
-      body: `Performance evaluation was divided into two distinct benchmark phases: peak stress testing and long-term daily reliability. In peak stress scenarios, the ${cleanKw} sustained continuous operating loads without exhibiting thermal throttling, dropped data packets, or mechanical degradation. Signal stability and processing latency were tracked across extended multi-hour sessions, maintaining rock-solid consistency that comfortably exceeded official manufacturer spec sheets by over 12%.
-
-Comparing the ${cleanKw} head-to-head against its direct market competitors in the same price tier revealed substantial ergonomic and efficiency advantages. Where rival alternatives frequently cut corners on internal component shielding or companion software stability, this unit delivered a whisper-quiet, frictionless user experience. Daily power draw and standby efficiency were notably optimized, ensuring minimal phantom energy consumption when idling between intensive tasks.
-
-The accompanying software/hardware integration deserves specific commendation. Updates install cleanly over-the-air, customizable settings persist reliably across system reboots, and the overall interface avoids intrusive bloatware, focusing strictly on high-impact productivity adjustments that professional users demand.`,
-      verdict: `When evaluating any substantial gear purchase, the ultimate metric is simple: does this product solve real problems and deliver measurable everyday value that outlives its price tag? On every count, the ${cleanKw} answers with an emphatic yes.
-
-If you are seeking a reliable, high-performance solution that balances premium build craftsmanship with benchmark-verified reliability, this model earns our highest 9.6/10 editor recommendation for 2026. Use exclusive voucher code PURPOSE15 at checkout to secure your 15% discount and verified warranty coverage.`
+      pros: t_pros,
+      cons: t_cons,
+      intro: t_intro,
+      body: t_body,
+      verdict: t_verdict
     };
   } else {
-    // Fallback Vietnamese if user explicitly selected 'vi'
-    const cleanKw = keyword.trim();
+    // VIETNAMESE TRANSLATION (Clean, perfectly spelled, professional)
     return {
-      title: `Đánh Giá Chuyên Sâu ${cleanKw} (2026): Kiểm Thử Hiệu Năng Thực Tế & Lời Khuyên Mua Sắm`,
-      slug: 'post-' + slugify(cleanKw) + '-danh-gia-chuyen-sau',
-      category: 'Đánh Giá Công Nghệ',
-      excerpt: `Đánh giá kỹ thuật toàn diện về ${cleanKw} sau 30 ngày thử nghiệm khắc nghiệt: Chất lượng hoàn thiện kim loại, hiệu năng đo đạc thực tế, và phân tích chi phí bỏ ra so với giá trị nhận lại.`,
+      title: Đánh Giá Chuyên Sâu  (2026): Kiểm Chứng Thực Tế & Lời Khuyên Mua Sắm,
+      slug: cleanSlug,
+      category: catName,
+      excerpt: Đánh giá toàn diện về  sau 30 ngày thử nghiệm khắc nghiệt: Chất lượng hoàn thiện, hiệu năng đo đạc thực tế, và phân tích chi phí so với giá trị nhận lại.,
       brand: brandName,
-      btnText: 'ĐẶT HÀNG NGAY',
-      affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=PETEONPURPOSE`),
-      image: resolveImage('https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80'),
-      priceUsd: '$149.00',
-      priceVnd: '3.750.000₫',
-      priceOrig: '$189.00',
-      coupon: 'PURPOSE15',
-      couponDiscount: 'Giảm 15% Toàn Đơn Hàng',
-      couponExpiry: '31/12/2026',
-      rating: 9.7,
-      pros: `Khung vỏ gia công từ vật liệu cao cấp, độ hoàn thiện tỉ mỉ và đầm chắc, loại bỏ hoàn toàn hiện tượng ọp ẹp
-Hiệu năng thực tế đo đạc qua bài kiểm tra chịu tải vượt 15% so với các đối thủ cùng phân khúc
-Độ trễ phản hồi cực thấp, khả năng kết nối không dây ổn định xuyên qua 2 lớp tường bê tông
-Thời lượng pin và hệ thống tản nhiệt tối ưu, duy trì nhiệt độ mát mẻ sau 6 giờ làm việc liên tục
-Chính sách bảo hành chính hãng đổi mới và hỗ trợ kỹ thuật trực tiếp từ nhà phân phối`,
-      cons: `Mức giá đầu tư ban đầu thuộc phân khúc cận cao cấp
-Các tùy chọn nâng cao trong phần mềm cần khoảng 10-15 phút để làm quen và thiết lập tối ưu
-Trọng lượng máy đầm chắc thích hợp đặt cố định hơn là thường xuyên di chuyển bỏ túi`,
-      intro: `Trong một thị trường tràn ngập những sản phẩm nâng cấp nhỏ giọt và sao chép tính năng của nhau, ${cleanKw} nổi lên như một điểm sáng hiếm hoi được đầu tư nghiên cứu kỹ lưỡng từ trong ra ngoài. Đội ngũ đánh giá của chúng tôi đã trực tiếp thử nghiệm thiết bị này liên tục trong suốt một tháng, đặt nó vào các điều kiện sử dụng áp lực cao để đưa ra nhận định chân thực nhất cho bạn đọc.
-
-Ấn tượng đầu tiên khi mở hộp là sự chỉn chu tuyệt đối về mặt cơ khí. Thân máy được hoàn thiện tinh xảo với các đường cắt sắc nét, bề mặt xử lý chống bám vân tay và các khớp nối có dung sai cực nhỏ. Cảm giác cầm trên tay rất đầm, tạo nên độ tin cậy cơ học vượt trội so với các sản phẩm vỏ nhựa phổ thông trên thị trường. Việc kết nối và cài đặt diễn ra nhanh chóng chỉ trong vòng chưa đầy 3 phút mà không gặp bất kỳ lỗi xung đột phần mềm nào.`,
-      body: `Để có cái nhìn chính xác nhất, chúng tôi chia bài kiểm tra hiệu năng thành hai phần: Thử thách áp lực tối đa và Đánh giá độ ổn định dài hạn. Ở điều kiện làm việc tải nặng liên tục trong phòng nhiệt độ 28°C, ${cleanKw} vẫn duy trì hiệu suất hoạt động mượt mà, không hề có hiện tượng sụt giảm xung nhịp (thermal throttling) hay gián đoạn tín hiệu truyền dẫn.
-
-Khi đặt lên bàn cân so sánh trực tiếp với hai đối thủ lớn nhất cùng tầm giá, ${cleanKw} thể hiện rõ ưu thế về độ bền linh kiện và trải nghiệm công thái học. Hệ thống nút bấm và cổng giao tiếp phản hồi xúc giác dứt khoát, độ trễ tín hiệu đo được chỉ dưới 180ms. Khả năng tối ưu năng lượng cũng rất ấn tượng: mức tiêu hao điện năng ở chế độ chờ gần như bằng 0, giúp bạn yên tâm sử dụng cả tuần mà không cần bận tâm về việc sạc hay cắm nguồn liên tục.
-
-Hệ sinh thái phần mềm đi kèm được thiết kế tối giản, tập trung vào các tính năng thực dụng như tự động tối ưu hóa kịch bản làm việc và sao lưu cấu hình cá nhân hóa lên đám mây, hoàn toàn sạch sẽ không dính phần mềm rác hay quảng cáo làm phiền.`,
-      verdict: `Một sản phẩm tốt không chỉ dừng lại ở những con số quảng cáo hào nhoáng trên vỏ hộp, mà phải đem lại giá trị thực tế trong từng giây phút bạn sử dụng nó mỗi ngày. ${cleanKw} đã hoàn thành xuất sắc sứ mệnh này và hoàn toàn xứng đáng với mức giá niêm yết.
-
-Nếu bạn đang tìm kiếm một thiết bị bền bỉ, cao cấp, vừa có hiệu năng thực chiến mạnh mẽ vừa mang lại sự an tâm tuyệt đối về độ bền lâu dài, đây chắc chắn là khoản đầu tư thông minh nhất năm 2026. Nhớ nhập mã giảm giá độc quyền PURPOSE15 để được giảm ngay 15% khi thanh toán.`
+      btnText: 'ĐẶT MUA NGAY',
+      affiliateLink: resolveAffLink(https://.com/?ref=SMARTPICKS),
+      image: resolveImage(t_img),
+      priceUsd: priceU, priceVnd: priceV, priceOrig: priceO,
+      coupon: 'SMARTPICKS15', couponDiscount: 'Giảm 15% Toàn Đơn Hàng', couponExpiry: '31/12/2026',
+      rating: 9.6,
+      pros: Độ hoàn thiện tinh xảo với vật liệu cao cấp, mang lại cảm giác vô cùng chắc chắn\nHiệu năng thực tế xuất sắc, vượt qua các bài kiểm tra áp lực một cách dễ dàng\nThiết kế thông minh, tối ưu hóa trải nghiệm người dùng trong điều kiện sử dụng hàng ngày\nĐộ bền được đánh giá cao, xứng đáng là khoản đầu tư dài hạn,
+      cons: Mức giá khởi điểm thuộc phân khúc cao cấp\nCó thể cần thời gian ngắn để làm quen và tối ưu hóa các tính năng nâng cao\nTình trạng khan hàng có thể xảy ra ở một số đại lý bán lẻ,
+      intro: Trong một thị trường tràn ngập những sản phẩm nâng cấp nhỏ giọt,  nổi lên như một điểm sáng hiếm hoi được đầu tư nghiên cứu kỹ lưỡng từ trong ra ngoài. Đội ngũ đánh giá của chúng tôi đã trực tiếp thử nghiệm thiết bị này liên tục trong suốt một tháng, đặt nó vào các điều kiện áp lực cao để đưa ra nhận định chân thực nhất cho bạn đọc.\n\nẤn tượng đầu tiên khi mở hộp là sự chỉn chu tuyệt đối về mặt hoàn thiện. Sản phẩm được chế tác tinh xảo với các đường cắt sắc nét, bề mặt xử lý chống bám vân tay và các khớp nối có dung sai cực nhỏ. Cảm giác cầm trên tay rất đầm, tạo nên độ tin cậy vượt trội so với các sản phẩm phổ thông trên thị trường.,
+      body: Để có cái nhìn chính xác nhất, chúng tôi chia bài kiểm tra hiệu năng thành hai phần: Thử thách áp lực tối đa và Đánh giá độ ổn định dài hạn. Ở điều kiện làm việc tải nặng liên tục,  vẫn duy trì hiệu suất hoạt động mượt mà, không hề có hiện tượng sụt giảm hiệu năng do quá nhiệt hay gián đoạn tín hiệu.\n\nKhi đặt lên bàn cân so sánh trực tiếp với các đối thủ lớn nhất cùng tầm giá,  thể hiện rõ ưu thế về độ bền linh kiện và trải nghiệm công thái học. Khả năng tối ưu năng lượng cũng rất ấn tượng, giúp bạn yên tâm sử dụng thời gian dài mà không cần bận tâm về việc sạc hay cắm nguồn liên tục. Hệ sinh thái đi kèm được thiết kế tối giản, tập trung vào các tính năng thực dụng.,
+      verdict: Một sản phẩm tốt không chỉ dừng lại ở những con số quảng cáo hào nhoáng, mà phải đem lại giá trị thực tế trong từng giây phút bạn sử dụng nó mỗi ngày.  đã hoàn thành xuất sắc sứ mệnh này và hoàn toàn xứng đáng với mức giá niêm yết. Nếu bạn đang tìm kiếm một sự lựa chọn cao cấp, bền bỉ và mạnh mẽ, đây chắc chắn là khoản đầu tư thông minh nhất năm 2026.
     };
   }
 }
+
 
 // Multilingual Translation Builder for Article Publishing
 function translateBullet(text, lang) {
@@ -2449,6 +2323,10 @@ function generateFullPostHtml(data) {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['"Outfit"', '"Be Vietnam Pro"', 'sans-serif']
+          },
           colors: {
             purple: {
               50: '#faf5ff', 100: '#f3e8ff', 200: '#e9d5ff', 300: '#d8b4fe',
@@ -2792,8 +2670,8 @@ function generateFullPostHtml(data) {
               <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">3</span>
               Price Comparison & Where to Buy
             </h2>
-            <div class="comparison-table-wrapper rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm overflow-x-auto bg-white dark:bg-[#120a26]">
-              <table class="comparison-table text-xs text-left w-full">
+            <div class="comparison-table-wrapper w-full max-w-full rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm overflow-x-auto bg-white dark:bg-[#120a26]">
+              <table class="comparison-table text-xs text-left w-full min-w-[600px]">
                 <thead class="bg-purple-50 dark:bg-purple-950/70 text-purple-900 dark:text-purple-200 font-bold">
                   <tr>
                     <th class="p-3">Store / Channel</th>
@@ -5010,110 +4888,3 @@ window.sendTestEmail = sendTestEmail;
 window.toggleEmailConfigModal = toggleEmailConfigModal;
 window.loadEmailConfig = loadEmailConfig;
 window.saveEmailConfig = saveEmailConfig;
-window.regenerateAllPosts = async function() {
-  if (!window.allPosts || window.allPosts.length === 0) {
-    console.error('No posts loaded yet!');
-    return;
-  }
-  console.log('Starting regeneration of ' + window.allPosts.length + ' posts...');
-  let successCount = 0;
-  for (let i = 0; i < window.allPosts.length; i++) {
-    const p = window.allPosts[i];
-    console.log('Regenerating ' + (i+1) + '/' + window.allPosts.length + ': ' + p.slug);
-    
-    // Fallback missing arrays
-    if (!p.pros) p.pros = [];
-    if (!p.cons) p.cons = [];
-    
-    // Add multi fields
-    const multi = buildMultilingualFields(p);
-    Object.assign(p, multi);
-    
-    const fullHtml = generateFullPostHtml(p);
-    const cardHtml = generateCardHtml(p);
-    
-    const payload = {
-      isEdit: true,
-      originalSlug: p.slug,
-      originalId: p.slug,
-      fileName: p.slug.endsWith('.html') ? p.slug : (p.slug + '.html'),
-      slug: p.slug.replace('.html', ''),
-      title: p.title,
-      titleEn: p.titleEn || p.title,
-      titleVi: p.titleVi || p.title,
-      titleZh: p.titleZh || p.title,
-      category: p.category,
-      categoryEn: p.categoryEn || p.category,
-      categoryVi: p.categoryVi || p.category,
-      categoryZh: p.categoryZh || p.category,
-      categorySlug: p.categorySlug || 'tech',
-      excerpt: p.excerpt,
-      excerptEn: p.excerptEn || p.excerpt,
-      excerptVi: p.excerptVi || p.excerpt,
-      excerptZh: p.excerptZh || p.excerpt,
-      brand: p.brand,
-      affiliateLink: p.affiliateLink,
-      affiliateBtnText: p.btnText,
-      image: p.image,
-      usdPrice: p.priceUsd,
-      vndPrice: p.priceVnd,
-      originalPrice: p.priceOrig,
-      couponCode: p.coupon,
-      couponDiscount: p.couponDiscount,
-      couponExpiry: p.couponExpiry,
-      rating: p.rating,
-      pros: p.pros,
-      prosEn: p.prosEn || p.pros,
-      prosVi: p.prosVi || p.pros,
-      prosZh: p.prosZh || p.pros,
-      cons: p.cons,
-      consEn: p.consEn || p.cons,
-      consVi: p.consVi || p.cons,
-      consZh: p.consZh || p.cons,
-      intro: p.intro,
-      introEn: p.introEn || p.intro,
-      introVi: p.introVi || p.intro,
-      introZh: p.introZh || p.intro,
-      body: p.body,
-      bodyEn: p.bodyEn || p.body,
-      bodyVi: p.bodyVi || p.body,
-      bodyZh: p.bodyZh || p.body,
-      verdict: p.verdict,
-      verdictEn: p.verdictEn || p.verdict,
-      verdictVi: p.verdictVi || p.verdict,
-      verdictZh: p.verdictZh || p.verdict,
-      contentHtml: fullHtml,
-      cardHtml: cardHtml,
-      pinToHero: false,
-      pinToTicker: false,
-      tickerBadge: 'HOT REVIEW',
-      tickerBadgeClass: 'bg-rose-500 text-white',
-      tickerIcon: 'sparkles',
-      tickerTextEn: p.titleEn || p.title,
-      tickerTextVi: p.titleVi || p.title,
-      tickerTextZh: p.titleZh || p.title
-    };
-    
-    try {
-      const res = await fetch('/api/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        successCount++;
-        console.log('Success: ' + p.slug);
-      } else {
-        console.error('Failed: ' + p.slug);
-      }
-    } catch(e) {
-      console.error('Error on ' + p.slug + ': ' + e);
-    }
-    
-    // Small delay
-    await new Promise(r => setTimeout(r, 200));
-  }
-  console.log('DONE! Successfully regenerated ' + successCount + '/' + window.allPosts.length + ' posts.');
-  alert('�� c?p nh?t giao di?n m?i cho ' + successCount + ' b�i vi?t!');
-};
-

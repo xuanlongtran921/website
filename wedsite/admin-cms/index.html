@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -12,6 +12,10 @@
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['"Outfit"', '"Be Vietnam Pro"', 'sans-serif']
+          },
           colors: {
             brand: {
               50: '#fdf4ff',
@@ -81,14 +85,14 @@
               Smart<span class="text-pink-400">Picks</span>
               <span class="text-xs font-black uppercase px-2 py-0.5 rounded-md bg-purple-900/90 text-purple-300 border border-purple-700/60">CMS Studio</span>
             </h2>
-            <p class="text-xs text-purple-300/80 mt-1">Cá»•ng Quáº£n Trá»‹ Ná»™i Dung & Váº­n HÃ nh Há»‡ Thá»‘ng</p>
+            <p class="text-xs text-purple-300/80 mt-1">Cổng Quản Trị Nội Dung & Vận Hành Hệ Thống</p>
           </div>
         </div>
 
         <!-- Alert Error Message -->
         <div id="login-error-alert" class="hidden p-3.5 rounded-2xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs font-semibold flex items-center gap-2.5 animate-shake">
           <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
-          <span id="login-error-text">TÃ i khoáº£n hoáº·c máº­t kháº©u khÃ´ng chÃ­nh xÃ¡c!</span>
+          <span id="login-error-text">Tài khoản hoặc mật khẩu không chính xác!</span>
         </div>
 
         <!-- Login Form -->
@@ -96,7 +100,7 @@
           <!-- Email Input -->
           <div class="space-y-1.5">
             <label for="admin-login-email" class="block text-xs font-bold text-purple-200">
-              TÃ i khoáº£n Email <span class="text-rose-400">*</span>
+              Tài khoản Email <span class="text-rose-400">*</span>
             </label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-purple-400">
@@ -113,10 +117,10 @@
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
               <label for="admin-login-password" class="block text-xs font-bold text-purple-200">
-                Máº­t kháº©u <span class="text-rose-400">*</span>
+                Mật khẩu <span class="text-rose-400">*</span>
               </label>
-              <button type="button" id="btn-quick-fill-creds" class="text-[10px] text-pink-400 hover:text-pink-300 font-bold underline transition-colors cursor-pointer" title="Äiá»n máº­t kháº©u máº·c Ä‘á»‹nh">
-                Äiá»n máº­t kháº©u
+              <button type="button" id="btn-quick-fill-creds" class="text-[10px] text-pink-400 hover:text-pink-300 font-bold underline transition-colors cursor-pointer" title="Điền mật khẩu mặc định">
+                Điền mật khẩu
               </button>
             </div>
             <div class="relative">
@@ -124,9 +128,9 @@
                 <i data-lucide="lock" class="w-4 h-4"></i>
               </div>
               <input id="admin-login-password" type="password" required autocomplete="current-password"
-                placeholder="Nháº­p máº­t kháº©u quáº£n trá»‹..."
+                placeholder="Nhập mật khẩu quản trị..."
                 class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-medium placeholder-purple-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all">
-              <button type="button" id="btn-toggle-password" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-purple-400 hover:text-white transition-colors cursor-pointer" title="áº¨n/hiá»‡n máº­t kháº©u">
+              <button type="button" id="btn-toggle-password" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-purple-400 hover:text-white transition-colors cursor-pointer" title="Ẩn/hiện mật khẩu">
                 <i data-lucide="eye" class="w-4 h-4" id="icon-eye-password"></i>
               </button>
             </div>
@@ -135,20 +139,20 @@
           <!-- Quick Admin Account Selector -->
           <div class="pt-2 pb-1 border-t border-purple-900/60">
             <div class="flex items-center justify-between text-[11px] text-purple-300/80 mb-2">
-              <span class="font-bold text-[10px] uppercase tracking-wider text-purple-300">TÃ i khoáº£n quáº£n trá»‹:</span>
-              <span class="text-[10px] text-pink-400">Chá»n Ä‘iá»n nhanh</span>
+              <span class="font-bold text-[10px] uppercase tracking-wider text-purple-300">Tài khoản quản trị:</span>
+              <span class="text-[10px] text-pink-400">Chọn điền nhanh</span>
             </div>
             <div class="grid grid-cols-3 gap-1.5">
               <button type="button" class="btn-select-account px-2 py-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/80 border border-purple-800 hover:border-pink-500/50 text-left transition-all group cursor-pointer" data-email="xuanlongtran921@gmail.com" data-pass="1532004Long@" title="Xuan Long (Super Admin)">
                 <div class="text-[11px] font-bold text-white group-hover:text-pink-300 truncate">Xuan Long</div>
                 <div class="text-[9px] text-pink-400 font-semibold truncate">Super Admin</div>
               </button>
-              <button type="button" class="btn-select-account px-2 py-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/80 border border-purple-800 hover:border-pink-500/50 text-left transition-all group cursor-pointer" data-email="hocamtuqlhm@gmail.com" data-pass="camtu123@" title="Há»“ Cáº©m TÃº (Admin)">
-                <div class="text-[11px] font-bold text-white group-hover:text-pink-300 truncate">Cáº©m TÃº</div>
+              <button type="button" class="btn-select-account px-2 py-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/80 border border-purple-800 hover:border-pink-500/50 text-left transition-all group cursor-pointer" data-email="hocamtuqlhm@gmail.com" data-pass="camtu123@" title="Hồ Cẩm Tú (Admin)">
+                <div class="text-[11px] font-bold text-white group-hover:text-pink-300 truncate">Cẩm Tú</div>
                 <div class="text-[9px] text-purple-400 truncate">Admin</div>
               </button>
-              <button type="button" class="btn-select-account px-2 py-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/80 border border-purple-800 hover:border-pink-500/50 text-left transition-all group cursor-pointer" data-email="minhthanhcenter@gmail.com" data-pass="thanh123@" title="Minh ThÃ nh (Admin)">
-                <div class="text-[11px] font-bold text-white group-hover:text-pink-300 truncate">Minh ThÃ nh</div>
+              <button type="button" class="btn-select-account px-2 py-2 rounded-xl bg-[#190c3d] hover:bg-purple-800/80 border border-purple-800 hover:border-pink-500/50 text-left transition-all group cursor-pointer" data-email="minhthanhcenter@gmail.com" data-pass="thanh123@" title="Minh Thành (Admin)">
+                <div class="text-[11px] font-bold text-white group-hover:text-pink-300 truncate">Minh Thành</div>
                 <div class="text-[9px] text-purple-400 truncate">Admin</div>
               </button>
             </div>
@@ -158,7 +162,7 @@
           <div class="flex items-center justify-between pt-1">
             <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-purple-300">
               <input type="checkbox" id="admin-remember-me" checked class="w-4 h-4 rounded bg-[#190c3d] border-purple-800 text-pink-500 focus:ring-pink-500 accent-pink-500">
-              <span class="text-[11px] font-semibold">Ghi nhá»› Ä‘Äƒng nháº­p</span>
+              <span class="text-[11px] font-semibold">Ghi nhớ đăng nhập</span>
             </label>
             <span class="text-[10px] font-mono text-purple-400/80 bg-purple-950 px-2 py-0.5 rounded border border-purple-900">v2.8 Auth</span>
           </div>
@@ -166,13 +170,13 @@
           <!-- Submit Button -->
           <button type="submit" id="btn-submit-login" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white text-xs font-black tracking-wide border border-pink-400/40 shadow-xl shadow-pink-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-98">
             <i data-lucide="log-in" class="w-4 h-4"></i>
-            <span id="btn-login-text">ÄÄ‚NG NHáº¬P ADMIN STUDIO</span>
+            <span id="btn-login-text">ĐĂNG NHẬP ADMIN STUDIO</span>
           </button>
         </form>
 
         <!-- Footer Help -->
         <div class="pt-4 border-t border-purple-900/50 text-center text-[11px] text-purple-400/80">
-          <span>Website chÃ­nh:</span>
+          <span>Website chính:</span>
           <a href="http://localhost:3000" target="_blank" class="text-pink-400 hover:underline font-bold ml-1">localhost:3000</a>
         </div>
       </div>
@@ -195,9 +199,6 @@
         </div>
       </div>
 
-      <button type="button" onclick="window.regenerateAllPosts()" class="ml-4 px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 rounded-xl text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition-all flex items-center gap-2 border border-pink-400">
-  <i data-lucide="refresh-cw" class="w-4 h-4"></i> Cập Nhật Giao Diện Toàn Bộ Bài Viết Cũ
-</button>
       <!-- Live Connection Pill -->
       <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -232,9 +233,9 @@
       </button>
 
       <!-- Logout Button -->
-      <button id="btn-admin-logout" class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="ÄÄƒng xuáº¥t khá»i Admin Studio">
+      <button id="btn-admin-logout" class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="Đăng xuất khỏi Admin Studio">
         <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-        <span class="hidden sm:inline">ÄÄƒng xuáº¥t</span>
+        <span class="hidden sm:inline">Đăng xuất</span>
       </button>
     </div>
   </header>
@@ -384,9 +385,9 @@
                   <i data-lucide="globe" class="w-3.5 h-3.5 text-pink-400"></i> Language:
                 </label>
                 <select id="ai-gen-lang" class="bg-[#1c0a3d] text-xs font-bold text-amber-300 border border-purple-700/80 rounded-lg px-2.5 py-1 focus:outline-none focus:border-pink-500">
-                  <option value="en" selected>ðŸ‡ºðŸ‡¸ English (US Default / Recommended)</option>
-                  <option value="vi">ðŸ‡»ðŸ‡³ Vietnamese (Tiáº¿ng Viá»‡t)</option>
-                  <option value="zh">ðŸ‡¨ðŸ‡³ Chinese (ç®€ä½“ä¸­æ–‡)</option>
+                  <option value="en" selected>🇺🇸 English (US Default / Recommended)</option>
+                  <option value="vi">🇻🇳 Vietnamese (Tiếng Việt)</option>
+                  <option value="zh">🇨🇳 Chinese (简体中文)</option>
                 </select>
               </div>
             </div>
@@ -443,12 +444,12 @@
                   <div class="flex items-center justify-between mb-1">
                     <label for="ai-input-price" class="block text-xs font-bold text-emerald-300 flex items-center gap-1">
                       <i data-lucide="tag" class="w-3.5 h-3.5 text-emerald-400"></i>
-                      <span>Price ($ / â‚«)</span>
+                      <span>Price ($ / ₫)</span>
                     </label>
                     <span id="ai-price-calc-hint" class="text-[10px] text-pink-300 font-mono font-bold" title="Auto-calculates exchange rate">Edit Price</span>
                   </div>
                   <div class="relative">
-                    <input id="ai-input-price" type="text" placeholder="e.g. $49.99 / 1tr2" class="w-full pl-7 pr-2 py-2.5 rounded-xl bg-[#110526] border-2 border-emerald-500/70 text-emerald-300 text-xs font-mono font-bold focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all shadow-inner" title="Enter your exact custom price in USD ($) or VND (â‚«). AI will prioritize this exact price!">
+                    <input id="ai-input-price" type="text" placeholder="e.g. $49.99 / 1tr2" class="w-full pl-7 pr-2 py-2.5 rounded-xl bg-[#110526] border-2 border-emerald-500/70 text-emerald-300 text-xs font-mono font-bold focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all shadow-inner" title="Enter your exact custom price in USD ($) or VND (₫). AI will prioritize this exact price!">
                     <i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-400 absolute left-2 top-3"></i>
                   </div>
                 </div>
@@ -690,7 +691,7 @@
                     <label class="block text-xs font-bold text-purple-200">Image URL or Local Upload</label>
                     <label for="form-file-image" class="text-[11px] font-bold text-pink-400 hover:text-white cursor-pointer flex items-center gap-1 transition-all">
                       <i data-lucide="upload" class="w-3.5 h-3.5 text-amber-300"></i>
-                      <span>ðŸ“ Upload image from PC</span>
+                      <span>📁 Upload image from PC</span>
                     </label>
                     <input type="file" id="form-file-image" accept="image/*" class="hidden">
                   </div>
@@ -747,7 +748,7 @@
                   </span>
                 </div>
                 <div class="flex items-center gap-2 text-[10px] text-purple-400 font-mono">
-                  <span>1 USD â‰ˆ 25.000â‚«</span>
+                  <span>1 USD ≈ 25.000₫</span>
                   <span class="px-1.5 py-0.5 rounded bg-purple-900/80 text-pink-300 border border-purple-700/60">Live Formula</span>
                 </div>
               </div>
@@ -762,10 +763,10 @@
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
-                    <span>Sale Price VND (â‚«)</span>
+                    <span>Sale Price VND (₫)</span>
                     <span class="text-[10px] text-emerald-400 font-normal">Auto-Calculated</span>
                   </label>
-                  <input id="input-price-vnd" type="text" placeholder="2,990,000â‚«" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-semibold focus:border-pink-500 focus:outline-none">
+                  <input id="input-price-vnd" type="text" placeholder="2,990,000₫" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs font-semibold focus:border-pink-500 focus:outline-none">
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-purple-200 mb-1 flex items-center justify-between">
@@ -854,7 +855,7 @@
               </div>
             </div>
 
-            <!-- PIN ARTICLE SETTINGS (GHIM BÃ€I VIáº¾T) -->
+            <!-- PIN ARTICLE SETTINGS (GHIM BÀI VIẾT) -->
             <div class="p-5 rounded-2xl bg-[#160b35] border-2 border-purple-700/60 shadow-xl space-y-4">
               <div class="flex items-center justify-between border-b border-purple-800/50 pb-3">
                 <div class="flex items-center gap-2.5">
@@ -862,8 +863,8 @@
                     <i data-lucide="pin" class="w-4 h-4 text-pink-400"></i>
                   </div>
                   <div>
-                    <h3 class="font-extrabold text-white text-sm">CÃ i Äáº·t Ghim BÃ i Viáº¿t (Pin Article Settings)</h3>
-                    <p class="text-[11px] text-purple-300/70">Chá»n vá»‹ trÃ­ hiá»ƒn thá»‹ Æ°u tiÃªn cao nháº¥t trÃªn website khi xuáº¥t báº£n</p>
+                    <h3 class="font-extrabold text-white text-sm">Cài Đặt Ghim Bài Viết (Pin Article Settings)</h3>
+                    <p class="text-[11px] text-purple-300/70">Chọn vị trí hiển thị ưu tiên cao nhất trên website khi xuất bản</p>
                   </div>
                 </div>
                 <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-pink-900/60 text-pink-300 border border-pink-700/60">
@@ -878,11 +879,11 @@
                     <i data-lucide="sparkles" class="w-4 h-4 text-pink-400 mt-0.5 flex-shrink-0"></i>
                     <div>
                       <label for="input-pin-to-ticker" class="text-xs font-black text-white cursor-pointer flex items-center gap-2">
-                        <span>Ghim lÃªn Thanh Cháº¡y Äáº§u Trang (Top Projects Ticker Bar)</span>
+                        <span>Ghim lên Thanh Chạy Đầu Trang (Top Projects Ticker Bar)</span>
                         <span class="px-2 py-0.5 rounded bg-pink-500 text-white text-[9px] font-black">TOP TICKER</span>
                       </label>
                       <p class="text-[11px] text-purple-300/80 mt-0.5">
-                        BÃ i viáº¿t sáº½ xuáº¥t hiá»‡n cháº¡y liÃªn tá»¥c trÃªn thanh thÃ´ng bÃ¡o Ä‘áº§u trang cá»§a toÃ n bá»™ website (<code class="text-pink-300">index.html</code>, <code class="text-pink-300">post.html</code>, <code class="text-pink-300">shop.html</code>).
+                        Bài viết sẽ xuất hiện chạy liên tục trên thanh thông báo đầu trang của toàn bộ website (<code class="text-pink-300">index.html</code>, <code class="text-pink-300">post.html</code>, <code class="text-pink-300">shop.html</code>).
                       </p>
                     </div>
                   </div>
@@ -895,28 +896,28 @@
                 <!-- Ticker Details (Badge, Color, Icon) -->
                 <div id="ticker-config-fields" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-purple-900/50">
                   <div>
-                    <label class="block text-[11px] font-bold text-purple-300 mb-1">NhÃ£n Ticker (Badge)</label>
+                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Nhãn Ticker (Badge)</label>
                     <input id="input-ticker-badge" type="text" value="HOT REVIEW" class="w-full px-3 py-1.5 rounded-lg bg-[#110729] border border-purple-800 text-xs text-white uppercase font-bold focus:outline-none focus:border-pink-500" placeholder="e.g. HOT REVIEW">
                   </div>
                   <div>
-                    <label class="block text-[11px] font-bold text-purple-300 mb-1">MÃ u Sáº¯c NhÃ£n</label>
+                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Màu Sắc Nhãn</label>
                     <select id="input-ticker-badge-color" class="w-full px-3 py-1.5 rounded-lg bg-[#110729] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
-                      <option value="bg-rose-500 text-white" selected>ðŸ”´ Äá» Ná»•i Báº­t (Rose Red)</option>
-                      <option value="bg-pink-600 text-white">ðŸŒ¸ Há»“ng Neon (Pink Neon)</option>
-                      <option value="bg-amber-600 text-white">ðŸŸ  Cam Há»• PhÃ¡ch (Amber Orange)</option>
-                      <option value="bg-emerald-600 text-white">ðŸŸ¢ Xanh LÃ¡ (Emerald Green)</option>
-                      <option value="bg-indigo-600 text-white">ðŸŸ£ TÃ­m Indigo (Indigo Purple)</option>
-                      <option value="bg-teal-600 text-white">ðŸŒŠ Xanh Ngá»c (Teal Cyan)</option>
+                      <option value="bg-rose-500 text-white" selected>🔴 Đỏ Nổi Bật (Rose Red)</option>
+                      <option value="bg-pink-600 text-white">🌸 Hồng Neon (Pink Neon)</option>
+                      <option value="bg-amber-600 text-white">🟠 Cam Hổ Phách (Amber Orange)</option>
+                      <option value="bg-emerald-600 text-white">🟢 Xanh Lá (Emerald Green)</option>
+                      <option value="bg-indigo-600 text-white">🟣 Tím Indigo (Indigo Purple)</option>
+                      <option value="bg-teal-600 text-white">🌊 Xanh Ngọc (Teal Cyan)</option>
                     </select>
                   </div>
                   <div>
-                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Icon Biá»ƒu TÆ°á»£ng</label>
+                    <label class="block text-[11px] font-bold text-purple-300 mb-1">Icon Biểu Tượng</label>
                     <select id="input-ticker-icon" class="w-full px-3 py-1.5 rounded-lg bg-[#110729] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
                       <option value="sparkles" selected>Sparkles</option>
-                      <option value="flame">ðŸ”¥ Hot Flame</option>
+                      <option value="flame">🔥 Hot Flame</option>
                       <option value="zap">Flash / Zap</option>
                       <option value="star">Star Review</option>
-                      <option value="award">ðŸ† Award / Best</option>
+                      <option value="award">🏆 Award / Best</option>
                       <option value="headphones">Headphones</option>
                       <option value="laptop">Laptop / Tech</option>
                       <option value="watch">Watch / Horology</option>
@@ -932,11 +933,11 @@
                     <i data-lucide="bookmark" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
                     <div>
                       <label for="input-pin-to-hero" class="text-xs font-black text-white cursor-pointer flex items-center gap-2">
-                        <span>Ghim lÃ m TiÃªu Äiá»ƒm Trang Chá»§ (Homepage Hero Spotlight)</span>
+                        <span>Ghim làm Tiêu Điểm Trang Chủ (Homepage Hero Spotlight)</span>
                         <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[9px] font-black">HERO PIN</span>
                       </label>
                       <p class="text-[11px] text-purple-300/80 mt-0.5">
-                        BÃ i viáº¿t sáº½ xuáº¥t hiá»‡n trong khung Laptop Mockup táº¡i vá»‹ trÃ­ trung tÃ¢m Ä‘áº§u trang chá»§ (<code class="text-pink-300">index.html</code>) vá»›i nÃºt ORDER NOW trá»±c tiáº¿p.
+                        Bài viết sẽ xuất hiện trong khung Laptop Mockup tại vị trí trung tâm đầu trang chủ (<code class="text-pink-300">index.html</code>) với nút ORDER NOW trực tiếp.
                       </p>
                     </div>
                   </div>
@@ -965,7 +966,7 @@
               <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <button id="btn-publish-main" type="button" class="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-sm shadow-xl shadow-pink-500/30 flex items-center justify-center gap-2 transition-all cursor-pointer">
                   <i data-lucide="rocket" class="w-4 h-4"></i>
-                  <span>ðŸš€ PUBLISH REVIEW TO LIVE STORE</span>
+                  <span>🚀 PUBLISH REVIEW TO LIVE STORE</span>
                 </button>
                 <button id="btn-download-backup" type="button" class="py-3.5 px-4 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 font-bold text-xs border border-purple-700/60 flex items-center justify-center gap-1.5 transition-all" title="Download backup file">
                   <i data-lucide="download" class="w-4 h-4"></i>
@@ -1014,7 +1015,7 @@
                   <div class="flex items-center gap-2">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" class="w-6 h-6 rounded-full border border-pink-400/50">
                     <span class="font-bold text-white">Editorial Staff</span>
-                    <span>â€¢ 8 min read</span>
+                    <span>• 8 min read</span>
                   </div>
                   <span id="prev-badge-rating" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-extrabold text-[11px] flex items-center gap-1">
                     <span id="prev-rating-val">9.6</span>/10
@@ -1036,7 +1037,7 @@
                       <span class="text-[10px] text-purple-400 font-bold uppercase tracking-wider">Exclusive Deal:</span>
                       <div class="flex items-baseline gap-2">
                         <span id="prev-price-usd" class="text-xl font-black text-white font-mono">$119.00</span>
-                        <span id="prev-price-vnd" class="text-xs font-bold text-pink-400 font-mono">(2,990,000â‚«)</span>
+                        <span id="prev-price-vnd" class="text-xs font-bold text-pink-400 font-mono">(2,990,000₫)</span>
                         <span id="prev-price-orig" class="text-xs text-slate-500 line-through font-mono">$149.00</span>
                       </div>
                     </div>
@@ -1059,8 +1060,8 @@
                       <i data-lucide="check" class="w-3 h-3"></i> Pros:
                     </span>
                     <ul id="prev-pros-list" class="space-y-1 text-emerald-200/80">
-                      <li>â€¢ Solid CNC aluminum chassis with heft</li>
-                      <li>â€¢ Crisp, satisfying acoustic typing feel</li>
+                      <li>• Solid CNC aluminum chassis with heft</li>
+                      <li>• Crisp, satisfying acoustic typing feel</li>
                     </ul>
                   </div>
                   <div class="p-3 rounded-xl bg-rose-950/40 border border-rose-800/40">
@@ -1068,7 +1069,7 @@
                       <i data-lucide="x" class="w-3 h-3"></i> Cons:
                     </span>
                     <ul id="prev-cons-list" class="space-y-1 text-rose-200/80">
-                      <li>â€¢ Heavy body not intended for travel</li>
+                      <li>• Heavy body not intended for travel</li>
                     </ul>
                   </div>
                 </div>
@@ -1107,7 +1108,7 @@
                     <div>
                       <div class="flex items-center gap-2 text-xs text-slate-400 mb-1.5">
                         <span id="card-prev-date">Today</span>
-                        <span>â€¢</span>
+                        <span>•</span>
                         <span>8 min read</span>
                       </div>
                       <h3 id="card-prev-title" class="font-bold text-white text-sm line-clamp-2 hover:text-pink-400 transition-colors">
@@ -1124,7 +1125,7 @@
                           <span class="text-slate-400">From:</span>
                           <span id="card-prev-price" class="font-bold text-rose-500 text-sm ml-1 font-mono">$119.00</span>
                         </div>
-                        <span class="text-[10px] text-emerald-400 font-medium">âœ“ Verified Test</span>
+                        <span class="text-[10px] text-emerald-400 font-medium">✓ Verified Test</span>
                       </div>
                       <div class="grid grid-cols-2 gap-2">
                         <span class="py-2 px-2 rounded-xl bg-purple-950/80 text-purple-300 text-xs font-bold flex items-center justify-center gap-1 border border-purple-800/60">
@@ -1220,7 +1221,7 @@
             <input id="input-search-products" type="text" placeholder="Search products by title, category, or affiliate link..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#12082b] border border-purple-900/60 text-xs text-white placeholder-purple-400/60 focus:outline-none focus:border-emerald-500 transition-colors">
           </div>
           <select id="select-category-filter" class="px-3.5 py-2.5 rounded-xl bg-[#12082b] border border-purple-900/60 text-xs text-purple-200 focus:outline-none focus:border-emerald-500 transition-colors">
-            <option value="all">ðŸŒ All Categories (20+ Items)</option>
+            <option value="all">🌐 All Categories (20+ Items)</option>
             <option value="domain_physical">All Physical Gear (15 Items)</option>
             <option value="domain_digital">All Digital Products (5 Items)</option>
             <optgroup label="PHYSICAL GEAR & HARDWARE">
@@ -1277,7 +1278,7 @@
               <span>Pinned Articles & Spotlights Manager</span>
             </h2>
             <p class="text-xs text-purple-300/70 mt-1">
-              Quáº£n lÃ½ cÃ i Ä‘áº·t ghim bÃ i viáº¿t hiá»ƒn thá»‹ trÃªn <strong class="text-pink-400">Thanh Cháº¡y Äáº§u Trang (Top Bar Ticker)</strong> vÃ  <strong class="text-amber-400">TiÃªu Äiá»ƒm Trang Chá»§ (Hero Spotlight Mockup)</strong>.
+              Quản lý cài đặt ghim bài viết hiển thị trên <strong class="text-pink-400">Thanh Chạy Đầu Trang (Top Bar Ticker)</strong> và <strong class="text-amber-400">Tiêu Điểm Trang Chủ (Hero Spotlight Mockup)</strong>.
             </p>
           </div>
           <a href="http://localhost:3000/" target="_blank" class="px-3.5 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all">
@@ -1297,15 +1298,15 @@
               </div>
               <div>
                 <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-                  <span>1. Ghim BÃ i LÃªn Thanh Cháº¡y Äáº§u Trang (Top Projects Bar Ticker)</span>
+                  <span>1. Ghim Bài Lên Thanh Chạy Đầu Trang (Top Projects Bar Ticker)</span>
                   <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/40 font-mono">Continuous Marquee</span>
                 </h3>
-                <p class="text-xs text-purple-300/70">Dáº£i banner tÃ­m cháº¡y xoay vÃ²ng vÃ´ táº­n trÃªn Ä‘áº§u cá»§a má»i trang (<code class="text-pink-300 font-mono">index.html</code>, <code class="text-pink-300 font-mono">post.html</code>, <code class="text-pink-300 font-mono">shop.html</code>)</p>
+                <p class="text-xs text-purple-300/70">Dải banner tím chạy xoay vòng vô tận trên đầu của mọi trang (<code class="text-pink-300 font-mono">index.html</code>, <code class="text-pink-300 font-mono">post.html</code>, <code class="text-pink-300 font-mono">shop.html</code>)</p>
               </div>
             </div>
             <button id="btn-refresh-ticker" type="button" class="px-3.5 py-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/50 flex items-center gap-1.5 transition-all cursor-pointer">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-              <span>LÃ m má»›i danh sÃ¡ch</span>
+              <span>Làm mới danh sách</span>
             </button>
           </div>
 
@@ -1316,69 +1317,69 @@
               <div class="flex items-center justify-between">
                 <h4 class="text-xs font-black text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                   <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                  <span>Ghim ThÃªm BÃ i Viáº¿t VÃ o Thanh Cháº¡y Äáº§u Trang</span>
+                  <span>Ghim Thêm Bài Viết Vào Thanh Chạy Đầu Trang</span>
                 </h4>
               </div>
 
               <!-- Quick Picker from published articles -->
               <div>
-                <label class="block text-[11px] font-bold text-purple-200 mb-1">Chá»n nhanh tá»« bÃ i viáº¿t Ä‘Ã£ Ä‘Äƒng:</label>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Chọn nhanh từ bài viết đã đăng:</label>
                 <select id="select-quick-ticker-post" class="w-full px-3 py-2 rounded-xl bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500 cursor-pointer">
-                  <option value="">-- Chá»n bÃ i viáº¿t Ä‘á»ƒ tá»± Ä‘á»™ng Ä‘iá»n thÃ´ng tin --</option>
+                  <option value="">-- Chọn bài viết để tự động điền thông tin --</option>
                 </select>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label class="block text-[11px] font-bold text-purple-200 mb-1">NhÃ£n Ticker (Badge)</label>
+                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Nhãn Ticker (Badge)</label>
                   <input id="ticker-input-badge" type="text" value="HOT REVIEW" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white uppercase font-bold focus:outline-none focus:border-pink-500" placeholder="HOT REVIEW" required>
                 </div>
                 <div>
-                  <label class="block text-[11px] font-bold text-purple-200 mb-1">MÃ u Sáº¯c NhÃ£n</label>
+                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Màu Sắc Nhãn</label>
                   <select id="ticker-input-badge-color" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
-                    <option value="bg-rose-500 text-white" selected>ðŸ”´ Äá» Ná»•i Báº­t (Rose Red)</option>
-                    <option value="bg-pink-600 text-white">ðŸŒ¸ Há»“ng Neon (Pink Neon)</option>
-                    <option value="bg-amber-600 text-white">ðŸŸ  Cam Há»• PhÃ¡ch (Amber Orange)</option>
-                    <option value="bg-emerald-600 text-white">ðŸŸ¢ Xanh LÃ¡ (Emerald Green)</option>
-                    <option value="bg-indigo-600 text-white">ðŸŸ£ TÃ­m Indigo (Indigo Purple)</option>
-                    <option value="bg-teal-600 text-white">ðŸŒŠ Xanh Ngá»c (Teal Cyan)</option>
+                    <option value="bg-rose-500 text-white" selected>🔴 Đỏ Nổi Bật (Rose Red)</option>
+                    <option value="bg-pink-600 text-white">🌸 Hồng Neon (Pink Neon)</option>
+                    <option value="bg-amber-600 text-white">🟠 Cam Hổ Phách (Amber Orange)</option>
+                    <option value="bg-emerald-600 text-white">🟢 Xanh Lá (Emerald Green)</option>
+                    <option value="bg-indigo-600 text-white">🟣 Tím Indigo (Indigo Purple)</option>
+                    <option value="bg-teal-600 text-white">🌊 Xanh Ngọc (Teal Cyan)</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Icon Biá»ƒu TÆ°á»£ng</label>
+                  <label class="block text-[11px] font-bold text-purple-200 mb-1">Icon Biểu Tượng</label>
                   <select id="ticker-input-icon" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500">
                     <option value="sparkles" selected>Sparkles</option>
-                    <option value="flame">ðŸ”¥ Flame</option>
+                    <option value="flame">🔥 Flame</option>
                     <option value="zap">Zap</option>
                     <option value="star">Star</option>
-                    <option value="award">ðŸ† Award</option>
+                    <option value="award">🏆 Award</option>
                     <option value="headphones">Headphones</option>
                     <option value="laptop">Laptop</option>
                     <option value="watch">Watch</option>
-                    <option value="shield-check">ðŸ›¡ï¸ Shield</option>
+                    <option value="shield-check">🛡️ Shield</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label class="block text-[11px] font-bold text-purple-200 mb-1">Ná»™i dung hiá»ƒn thá»‹ Tiáº¿ng Anh (English Text) <span class="text-pink-400">*</span></label>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Nội dung hiển thị Tiếng Anh (English Text) <span class="text-pink-400">*</span></label>
                 <input id="ticker-input-text-en" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500" placeholder="e.g. Mowrator S1 4WD: World's First Remote Control Slope Mower ($500 Off)" required>
               </div>
 
               <div>
-                <label class="block text-[11px] font-bold text-purple-200 mb-1">Ná»™i dung hiá»ƒn thá»‹ Tiáº¿ng Viá»‡t (Vietnamese Text) <span class="text-pink-400">*</span></label>
-                <input id="ticker-input-text-vi" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500" placeholder="e.g. Mowrator S1 4WD: MÃ¡y Cáº¯t Cá» Äiá»u Khiá»ƒn Tá»« Xa (Giáº£m $500)" required>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Nội dung hiển thị Tiếng Việt (Vietnamese Text) <span class="text-pink-400">*</span></label>
+                <input id="ticker-input-text-vi" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-white focus:outline-none focus:border-pink-500" placeholder="e.g. Mowrator S1 4WD: Máy Cắt Cỏ Điều Khiển Từ Xa (Giảm $500)" required>
               </div>
 
               <div>
-                <label class="block text-[11px] font-bold text-purple-200 mb-1">ÄÆ°á»ng dáº«n bÃ i viáº¿t (Target URL) <span class="text-pink-400">*</span></label>
+                <label class="block text-[11px] font-bold text-purple-200 mb-1">Đường dẫn bài viết (Target URL) <span class="text-pink-400">*</span></label>
                 <input id="ticker-input-url" type="text" class="w-full px-3 py-1.5 rounded-lg bg-[#100726] border border-purple-800 text-xs text-pink-300 font-mono focus:outline-none focus:border-pink-500" placeholder="post-mowrator-s1-4wd.html" required>
               </div>
 
               <div class="pt-2 flex justify-end">
                 <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white text-xs font-black shadow-lg shadow-pink-500/25 flex items-center gap-2 cursor-pointer transition-all">
                   <i data-lucide="pin" class="w-4 h-4"></i>
-                  <span>ðŸ“Œ GHIM LÃŠN THANH CHáº Y Äáº¦U TRANG</span>
+                  <span>📌 GHIM LÊN THANH CHẠY ĐẦU TRANG</span>
                 </button>
               </div>
             </form>
@@ -1388,15 +1389,15 @@
               <div class="flex items-center justify-between">
                 <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
                   <i data-lucide="list" class="w-4 h-4 text-pink-400"></i>
-                  <span>CÃ¡c Má»¥c Äang Ghim TrÃªn Ticker</span>
+                  <span>Các Mục Đang Ghim Trên Ticker</span>
                 </h4>
-                <span id="badge-ticker-count" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300">0 má»¥c</span>
+                <span id="badge-ticker-count" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300">0 mục</span>
               </div>
 
               <div class="overflow-y-auto max-h-[380px] space-y-2 pr-1" id="ticker-items-list-container">
                 <div class="p-4 text-center text-purple-400 text-xs">
                   <i data-lucide="loader-2" class="w-4 h-4 animate-spin mx-auto mb-1"></i>
-                  Äang táº£i danh sÃ¡ch bÃ i ghim...
+                  Đang tải danh sách bài ghim...
                 </div>
               </div>
             </div>
@@ -1412,21 +1413,21 @@
             <div>
               <h3 class="text-base font-extrabold text-white flex items-center gap-2">
                 <i data-lucide="bookmark-check" class="w-5 h-5 text-amber-400"></i>
-                <span>2. Quáº£n LÃ½ Top 3 Sáº£n Pháº©m / BÃ i Viáº¿t Ghim Äáº§u Trang Chá»§ (Hero Spotlight)</span>
+                <span>2. Quản Lý Top 3 Sản Phẩm / Bài Viết Ghim Đầu Trang Chủ (Hero Spotlight)</span>
               </h3>
               <p class="text-xs text-purple-300/70 mt-0.5">
-                Quáº£n lÃ½ 3 vá»‹ trÃ­ ghim hÃ ng Ä‘áº§u hiá»ƒn thá»‹ trÃªn Laptop Mockup trang chá»§. Báº¥m <strong class="text-amber-400">â¬†ï¸ LÃªn / â¬‡ï¸ Xuá»‘ng</strong> Ä‘á»ƒ hoÃ¡n Ä‘á»•i vá»‹ trÃ­ 1-click hoáº·c Ä‘á»•i bÃ i trá»±c tiáº¿p.
+                Quản lý 3 vị trí ghim hàng đầu hiển thị trên Laptop Mockup trang chủ. Bấm <strong class="text-amber-400">⬆️ Lên / ⬇️ Xuống</strong> để hoán đổi vị trí 1-click hoặc đổi bài trực tiếp.
               </p>
             </div>
             <button type="button" onclick="loadHeroPinData()" class="px-3.5 py-1.5 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold flex items-center gap-1.5 border border-purple-700/60 transition-all cursor-pointer">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
-              <span>LÃ m má»›i Top 3</span>
+              <span>Làm mới Top 3</span>
             </button>
           </div>
 
           <!-- TOP 3 PINNED DECK -->
           <div id="hero-top3-deck" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="col-span-3 text-center py-6 text-purple-400 text-xs">Äang táº£i cáº¥u hÃ¬nh Top 3 ghim...</div>
+            <div class="col-span-3 text-center py-6 text-purple-400 text-xs">Đang tải cấu hình Top 3 ghim...</div>
           </div>
         </div>
 
@@ -1453,10 +1454,10 @@
               <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-purple-900/40 pb-3 gap-2">
                 <h3 class="font-bold text-white text-sm flex items-center gap-2">
                   <i data-lucide="edit-3" class="w-4 h-4 text-pink-400"></i>
-                  <span>Chá»‰nh Sá»­a Chi Tiáº¿t Slot</span>
+                  <span>Chỉnh Sửa Chi Tiết Slot</span>
                 </h3>
                 <div class="flex items-center gap-1 bg-[#0e0520] p-1 rounded-xl border border-purple-900/60">
-                  <button type="button" id="tab-edit-slot-0" onclick="switchSlotEditor(0)" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-gradient-to-r from-amber-500 to-pink-500 text-white shadow-xs">ðŸ‘‘ Top 1</button>
+                  <button type="button" id="tab-edit-slot-0" onclick="switchSlotEditor(0)" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-gradient-to-r from-amber-500 to-pink-500 text-white shadow-xs">👑 Top 1</button>
                   <button type="button" id="tab-edit-slot-1" onclick="switchSlotEditor(1)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-purple-300 hover:text-white">Top 2</button>
                   <button type="button" id="tab-edit-slot-2" onclick="switchSlotEditor(2)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-purple-300 hover:text-white">Top 3</button>
                 </div>
@@ -1509,11 +1510,11 @@
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-purple-200 mb-1">Sale Price (VND)</label>
-                  <input id="hero-input-price-vnd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-emerald-400 font-bold focus:outline-none focus:border-amber-400" placeholder="7,490,000â‚«">
+                  <input id="hero-input-price-vnd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-emerald-400 font-bold focus:outline-none focus:border-amber-400" placeholder="7,490,000₫">
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-purple-200 mb-1">Original Price (VND)</label>
-                  <input id="hero-input-orig-vnd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-purple-400 focus:outline-none focus:border-amber-400" placeholder="8,990,000â‚«">
+                  <input id="hero-input-orig-vnd" type="text" class="w-full px-3 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-xs text-purple-400 focus:outline-none focus:border-amber-400" placeholder="8,990,000₫">
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-purple-200 mb-1">Discount %</label>
@@ -1527,7 +1528,7 @@
                 </button>
                 <button type="submit" id="btn-submit-hero-pin" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-pink-500 to-purple-600 hover:from-amber-600 hover:to-purple-700 text-white text-xs font-black shadow-xl shadow-pink-500/25 flex items-center gap-2 transition-all cursor-pointer">
                   <i data-lucide="bookmark" class="w-4 h-4 text-white"></i>
-                  <span id="btn-submit-hero-pin-text">ðŸ“Œ LÆ¯U & GHIM VÃ€O TOP 1</span>
+                  <span id="btn-submit-hero-pin-text">📌 LƯU & GHIM VÀO TOP 1</span>
                 </button>
               </div>
             </form>
@@ -1644,7 +1645,7 @@
       </section>
 
       <!-- ============================================================ -->
-      <!-- TAB 6: CUSTOMER INQUIRIES & EMAIL DISPATCH (HÃ’M THÆ¯ LIÃŠN Há»†) -->
+      <!-- TAB 6: CUSTOMER INQUIRIES & EMAIL DISPATCH (HÒM THƯ LIÊN HỆ) -->
       <!-- ============================================================ -->
       <section id="tab-messages" class="tab-content hidden space-y-6">
 
@@ -1833,7 +1834,7 @@
       </div>
 
       <div class="space-y-2">
-        <h3 class="text-xl font-black text-white">Published Successfully! ðŸŽ‰</h3>
+        <h3 class="text-xl font-black text-white">Published Successfully! 🎉</h3>
         <p class="text-xs text-purple-300/80 leading-relaxed">
           Your review article file has been generated and instantly synchronized with the live website homepage and store catalog.
         </p>
@@ -1911,7 +1912,7 @@
             </div>
             <div>
               <label class="block text-[11px] text-purple-300 mb-1">Gmail App Password (16 characters)</label>
-              <input type="password" id="cfg-smtp-pass" placeholder="â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ (Leave blank to keep existing)" class="w-full px-3 py-2 rounded-lg bg-[#1c0d45] border border-purple-800 text-white" />
+              <input type="password" id="cfg-smtp-pass" placeholder="•••• •••• •••• •••• (Leave blank to keep existing)" class="w-full px-3 py-2 rounded-lg bg-[#1c0d45] border border-purple-800 text-white" />
             </div>
           </div>
         </div>
@@ -1933,29 +1934,29 @@
   <div id="modal-pin-slot" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-[#12082b] border-2 border-amber-500/60 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-center">
       <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-xl">
-        ðŸ“Œ
+        📌
       </div>
       <div>
-        <h3 class="text-base font-extrabold text-white">Chá»n Vá»‹ TrÃ­ Ghim TiÃªu Äiá»ƒm Trang Chá»§</h3>
-        <p id="modal-pin-slot-item-name" class="text-xs text-purple-300 mt-1 font-semibold truncate">TÃªn bÃ i viáº¿t</p>
+        <h3 class="text-base font-extrabold text-white">Chọn Vị Trí Ghim Tiêu Điểm Trang Chủ</h3>
+        <p id="modal-pin-slot-item-name" class="text-xs text-purple-300 mt-1 font-semibold truncate">Tên bài viết</p>
       </div>
       <div class="space-y-2 pt-2">
         <button type="button" onclick="confirmPinSlot(0)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-black flex items-center justify-between shadow-lg shadow-amber-500/20 transition-all cursor-pointer">
-          <span class="flex items-center gap-2"><span>ðŸ‘‘ Vá»Š TRÃ 1 (TOP 1 CHÃNH)</span></span>
+          <span class="flex items-center gap-2"><span>👑 VỊ TRÍ 1 (TOP 1 CHÍNH)</span></span>
           <span class="text-[10px] bg-amber-800/60 px-2 py-0.5 rounded-full uppercase font-mono">Flagship</span>
         </button>
         <button type="button" onclick="confirmPinSlot(1)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-xs font-black flex items-center justify-between shadow-lg shadow-purple-600/20 transition-all cursor-pointer">
-          <span class="flex items-center gap-2"><span>Vá»Š TRÃ 2 (TOP 2)</span></span>
+          <span class="flex items-center gap-2"><span>VỊ TRÍ 2 (TOP 2)</span></span>
           <span class="text-[10px] bg-purple-900/60 px-2 py-0.5 rounded-full uppercase font-mono">Secondary</span>
         </button>
         <button type="button" onclick="confirmPinSlot(2)" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white text-xs font-black flex items-center justify-between shadow-lg shadow-pink-600/20 transition-all cursor-pointer">
-          <span class="flex items-center gap-2"><span>Vá»Š TRÃ 3 (TOP 3)</span></span>
+          <span class="flex items-center gap-2"><span>VỊ TRÍ 3 (TOP 3)</span></span>
           <span class="text-[10px] bg-pink-900/60 px-2 py-0.5 rounded-full uppercase font-mono">Tertiary</span>
         </button>
       </div>
       <div class="pt-2">
         <button type="button" onclick="closePinSlotModal()" class="w-full py-2.5 rounded-xl bg-purple-950 hover:bg-purple-900 text-purple-300 text-xs font-bold transition-all cursor-pointer">
-          ÄÃ³ng
+          Đóng
         </button>
       </div>
     </div>
@@ -1969,5 +1970,3 @@
 </body>
 </html>
 <!-- Cache Buster 20261005 -->
-
-
