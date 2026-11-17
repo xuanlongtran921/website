@@ -1,3 +1,158 @@
+
+// =========================================================================
+// SMART AFFILIATE LINK SCANNER & PARSER (AUTO-FILL & VALIDATION)
+// =========================================================================
+function parseAffiliateUrlSmart(rawUrl) {
+  if (!rawUrl || typeof rawUrl !== 'string') return null;
+  let urlStr = rawUrl.trim();
+  if (!urlStr) return null;
+  if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
+    if (urlStr.includes('.') || urlStr.includes('/')) {
+      urlStr = 'https://' + urlStr;
+    } else {
+      return null;
+    }
+  }
+
+  try {
+    const u = new URL(urlStr);
+    const host = u.hostname.toLowerCase().replace(/^www\./, '');
+    const pathname = decodeURIComponent(u.pathname);
+
+    let brand = '';
+    let productName = '';
+    let niche = 'tech_audio';
+    let suggestedPriceUsd = null;
+
+    // Detect Host/Domain patterns
+    const domainParts = host.split('.');
+    let mainDomain = domainParts.length >= 2 ? domainParts[domainParts.length - 2] : host;
+    if (domainParts.length >= 3 && (domainParts[domainParts.length - 1] === 'vn' || domainParts[domainParts.length - 1] === 'uk' || domainParts[domainParts.length - 1] === 'jp')) {
+      mainDomain = domainParts[domainParts.length - 3];
+    }
+
+    const formatBrand = (str) => {
+      return str.split(/[-_\s]+/)
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+    };
+
+    // Extract product slug from path
+    const pathSegments = pathname.split('/').filter(p => p && !['dp', 'gp', 'product', 'products', 'p', 'item', 'buy', 'shop', 'en', 'en-us', 'en-en', 'vi', 'detail', 'collections', 'frontpage', 'all', 'ref', 'aff', 'affiliate'].includes(p.toLowerCase()) && !/^\d+$/.test(p));
+    let lastSegment = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
+    lastSegment = lastSegment.replace(/\.(html|htm|php|asp)$/i, '');
+
+    let rawSlugWords = lastSegment
+      .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '')
+      .replace(/\b(id|ref|sku|pid|spm|tag|affiliate)\b.*$/i, '')
+      .split(/[-_]+/)
+      .filter(w => w.length > 1 && !/^[0-9]+$/.test(w));
+
+    let slugTitle = rawSlugWords.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+    if (host.includes('amazon.')) {
+      brand = 'Amazon Store';
+      const dpIdx = pathname.indexOf('/dp/');
+      if (dpIdx > 1) {
+        const titlePart = pathname.substring(1, dpIdx).split('/')[0];
+        if (titlePart) {
+          slugTitle = titlePart.split(/[-_]+/).filter(w => w.length > 1 && !/^[0-9]+$/.test(w)).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+      }
+    } else if (host.includes('shopee.')) {
+      brand = 'Shopee Mall';
+      if (pathSegments.length > 0) {
+        slugTitle = pathSegments[0].replace(/-i\.\d+\.\d+$/, '').split(/[-_]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      }
+    } else if (host.includes('lazada.')) {
+      brand = 'LazMall Flagship';
+    } else if (host.includes('tiktok.')) {
+      brand = 'TikTok Shop Verified';
+    } else {
+      brand = formatBrand(mainDomain) + ' Official';
+    }
+
+    if (slugTitle) {
+      const firstWord = slugTitle.split(' ')[0];
+      if (firstWord && firstWord.length >= 3 && !['The', 'New', 'Best', 'Ultra', 'Pro', 'All'].includes(firstWord)) {
+        if (brand.includes('Amazon') || brand.includes('Shopee') || brand.includes('LazMall') || brand.includes('TikTok')) {
+          brand = firstWord + ' (' + brand + ')';
+        }
+      }
+    }
+
+    if (slugTitle && slugTitle.length > 3) {
+      productName = slugTitle;
+    } else if (brand) {
+      const cleanBrandName = brand.replace(/Official|Store|Mall|Flagship|\(.*\)/gi, '').trim();
+      productName = cleanBrandName + ' Complete Health & Wellness Protocol';
+    }
+
+    const combinedText = (urlStr + ' ' + productName).toLowerCase();
+
+    if (/\b(rogershood|parasite|cleanse|parafy|health|wellness|tincture|detox|herb|herbal|supplement|supplements)\b/.test(combinedText)) {
+      niche = 'beauty';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 149.00;
+    } else if (/\b(audio|headphone|headphones|earphone|earphones|earbuds|speaker|speakers|soundbar|mic|microphone|bluetooth|canceling|cancelling|sound|tai nghe|loa)\b/.test(combinedText)) {
+      niche = 'tech_audio';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 298.00;
+    } else if (/\b(keyboard|keyboards|bàn phím|keycap|keycaps|switch|switches|mechanical|deskmat|mouse|chuột|gaming mouse|trackpad)\b/.test(combinedText)) {
+      niche = 'tech_keyboard';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 198.00;
+    } else if (/\b(watch|watches|chronograph|horology|automatic|powermatic|diver|wrist|đồng hồ|seiko|tissot|rolex|casio)\b/.test(combinedText)) {
+      niche = 'watches';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 350.00;
+    } else if (/\b(mower|mowrator|robot|robotic|rc|drone|gimbal|crawler|4wd|all-terrain|chassis|turbo|exhaust|intake|xe|máy bay)\b/.test(combinedText)) {
+      niche = 'auto';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 1299.00;
+    } else if (/\b(camera|cameras|lens|sensor|tripod|dslr|mirrorless|sony a|lumix|canon|fujifilm|ống kính|máy ảnh)\b/.test(combinedText)) {
+      niche = 'cameras';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 1499.00;
+    } else if (/\b(espresso|coffee|grinder|barista|cafe|máy pha cà phê|cà phê|latte|roast)\b/.test(combinedText)) {
+      niche = 'coffee';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 450.00;
+    } else if (/\b(gaming|laptop|laptops|gpu|rtx|geforce|oled|monitor|playstation|xbox|nintendo|steam deck)\b/.test(combinedText)) {
+      niche = 'gaming';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 1299.00;
+    } else if (/\b(matter|zigbee|smart home|hub|sensor|aqara|tuya|smart plug|ổ cắm|nhà thông minh)\b/.test(combinedText)) {
+      niche = 'smarthome';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 82.99;
+    } else if (/\b(skin|skincare|beauty|cream|serum|lotion|glow|cleanser|mask|lipstick|cosmetic|anti-aging|collagen|moisturizer|dưỡng|kem|son)\b/.test(combinedText)) {
+      niche = 'beauty';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 49.00;
+    } else if (/\b(dress|jacket|hoodie|shirt|jeans|coat|boots|outfit|pants|sweater|quần|áo|váy|giày|túi|leather|denim|skirt)\b/.test(combinedText)) {
+      niche = 'fashion';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 89.00;
+    } else if (/\b(ebook|blueprint|guide|playbook|pdf|sách)\b/.test(combinedText)) {
+      niche = 'ebooks';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 29.00;
+    } else if (/\b(course|courses|masterclass|academy|workshop|khoá học|học)\b/.test(combinedText)) {
+      niche = 'courses';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 199.00;
+    } else if (/\b(preset|presets|lut|luts|lightroom|filter)\b/.test(combinedText)) {
+      niche = 'presets';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 39.00;
+    } else if (/\b(notion|template|templates|workspace|dashboard)\b/.test(combinedText)) {
+      niche = 'templates';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 47.00;
+    }
+
+    return {
+      success: true,
+      url: urlStr,
+      host: host,
+      brand: brand,
+      productName: productName,
+      niche: niche,
+      suggestedPriceUsd: suggestedPriceUsd
+    };
+  } catch (e) {
+    console.warn('URL parse error:', e);
+    return null;
+  }
+}
+window.parseAffiliateUrlSmart = parseAffiliateUrlSmart;
+
 // SmartPicks Creator Studio - Admin CMS Logic (With Full Edit, Auth & Delete Support)
 
 window.allPosts = [];
@@ -1433,159 +1588,6 @@ function initAiArticleGenerator() {
 
   // Real-time Auto-fetch when affiliate link changes, pastes, or inputs
   
-// =========================================================================
-// SMART AFFILIATE LINK SCANNER & PARSER (AUTO-FILL & VALIDATION)
-// =========================================================================
-function parseAffiliateUrlSmart(rawUrl) {
-  if (!rawUrl || typeof rawUrl !== 'string') return null;
-  let urlStr = rawUrl.trim();
-  if (!urlStr) return null;
-  if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
-    if (urlStr.includes('.') || urlStr.includes('/')) {
-      urlStr = 'https://' + urlStr;
-    } else {
-      return null;
-    }
-  }
-
-  try {
-    const u = new URL(urlStr);
-    const host = u.hostname.toLowerCase().replace(/^www\./, '');
-    const pathname = decodeURIComponent(u.pathname);
-
-    let brand = '';
-    let productName = '';
-    let niche = 'tech_audio';
-    let suggestedPriceUsd = null;
-
-    // Detect Host/Domain patterns
-    const domainParts = host.split('.');
-    let mainDomain = domainParts.length >= 2 ? domainParts[domainParts.length - 2] : host;
-    if (domainParts.length >= 3 && (domainParts[domainParts.length - 1] === 'vn' || domainParts[domainParts.length - 1] === 'uk' || domainParts[domainParts.length - 1] === 'jp')) {
-      mainDomain = domainParts[domainParts.length - 3];
-    }
-
-    const formatBrand = (str) => {
-      return str.split(/[-_\s]+/)
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-        .join(' ');
-    };
-
-    // Extract product slug from path
-    const pathSegments = pathname.split('/').filter(p => p && !['dp', 'gp', 'product', 'products', 'p', 'item', 'buy', 'shop', 'en', 'en-us', 'en-en', 'vi', 'detail', 'collections', 'frontpage', 'all', 'ref', 'aff', 'affiliate'].includes(p.toLowerCase()) && !/^\d+$/.test(p));
-    let lastSegment = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
-    lastSegment = lastSegment.replace(/\.(html|htm|php|asp)$/i, '');
-
-    let rawSlugWords = lastSegment
-      .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '')
-      .replace(/\b(id|ref|sku|pid|spm|tag|affiliate)\b.*$/i, '')
-      .split(/[-_]+/)
-      .filter(w => w.length > 1 && !/^[0-9]+$/.test(w));
-
-    let slugTitle = rawSlugWords.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-
-    if (host.includes('amazon.')) {
-      brand = 'Amazon Store';
-      const dpIdx = pathname.indexOf('/dp/');
-      if (dpIdx > 1) {
-        const titlePart = pathname.substring(1, dpIdx).split('/')[0];
-        if (titlePart) {
-          slugTitle = titlePart.split(/[-_]+/).filter(w => w.length > 1 && !/^[0-9]+$/.test(w)).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        }
-      }
-    } else if (host.includes('shopee.')) {
-      brand = 'Shopee Mall';
-      if (pathSegments.length > 0) {
-        slugTitle = pathSegments[0].replace(/-i\.\d+\.\d+$/, '').split(/[-_]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-      }
-    } else if (host.includes('lazada.')) {
-      brand = 'LazMall Flagship';
-    } else if (host.includes('tiktok.')) {
-      brand = 'TikTok Shop Verified';
-    } else {
-      brand = formatBrand(mainDomain) + ' Official';
-    }
-
-    if (slugTitle) {
-      const firstWord = slugTitle.split(' ')[0];
-      if (firstWord && firstWord.length >= 3 && !['The', 'New', 'Best', 'Ultra', 'Pro', 'All'].includes(firstWord)) {
-        if (brand.includes('Amazon') || brand.includes('Shopee') || brand.includes('LazMall') || brand.includes('TikTok')) {
-          brand = firstWord + ' (' + brand + ')';
-        }
-      }
-    }
-
-    if (slugTitle && slugTitle.length > 3) {
-      productName = slugTitle;
-    } else if (brand) {
-      const cleanBrandName = brand.replace(/Official|Store|Mall|Flagship|\(.*\)/gi, '').trim();
-      productName = cleanBrandName + ' Complete Health & Wellness Protocol';
-    }
-
-    const combinedText = (urlStr + ' ' + productName).toLowerCase();
-
-    if (/\b(rogershood|parasite|cleanse|parafy|health|wellness|tincture|detox|herb|herbal|supplement|supplements)\b/.test(combinedText)) {
-      niche = 'beauty';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 149.00;
-    } else if (/\b(audio|headphone|headphones|earphone|earphones|earbuds|speaker|speakers|soundbar|mic|microphone|bluetooth|canceling|cancelling|sound|tai nghe|loa)\b/.test(combinedText)) {
-      niche = 'tech_audio';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 298.00;
-    } else if (/\b(keyboard|keyboards|bàn phím|keycap|keycaps|switch|switches|mechanical|deskmat|mouse|chuột|gaming mouse|trackpad)\b/.test(combinedText)) {
-      niche = 'tech_keyboard';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 198.00;
-    } else if (/\b(watch|watches|chronograph|horology|automatic|powermatic|diver|wrist|đồng hồ|seiko|tissot|rolex|casio)\b/.test(combinedText)) {
-      niche = 'watches';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 350.00;
-    } else if (/\b(mower|mowrator|robot|robotic|rc|drone|gimbal|crawler|4wd|all-terrain|chassis|turbo|exhaust|intake|xe|máy bay)\b/.test(combinedText)) {
-      niche = 'auto';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 1299.00;
-    } else if (/\b(camera|cameras|lens|sensor|tripod|dslr|mirrorless|sony a|lumix|canon|fujifilm|ống kính|máy ảnh)\b/.test(combinedText)) {
-      niche = 'cameras';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 1499.00;
-    } else if (/\b(espresso|coffee|grinder|barista|cafe|máy pha cà phê|cà phê|latte|roast)\b/.test(combinedText)) {
-      niche = 'coffee';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 450.00;
-    } else if (/\b(gaming|laptop|laptops|gpu|rtx|geforce|oled|monitor|playstation|xbox|nintendo|steam deck)\b/.test(combinedText)) {
-      niche = 'gaming';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 1299.00;
-    } else if (/\b(matter|zigbee|smart home|hub|sensor|aqara|tuya|smart plug|ổ cắm|nhà thông minh)\b/.test(combinedText)) {
-      niche = 'smarthome';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 82.99;
-    } else if (/\b(skin|skincare|beauty|cream|serum|lotion|glow|cleanser|mask|lipstick|cosmetic|anti-aging|collagen|moisturizer|dưỡng|kem|son)\b/.test(combinedText)) {
-      niche = 'beauty';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 49.00;
-    } else if (/\b(dress|jacket|hoodie|shirt|jeans|coat|boots|outfit|pants|sweater|quần|áo|váy|giày|túi|leather|denim|skirt)\b/.test(combinedText)) {
-      niche = 'fashion';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 89.00;
-    } else if (/\b(ebook|blueprint|guide|playbook|pdf|sách)\b/.test(combinedText)) {
-      niche = 'ebooks';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 29.00;
-    } else if (/\b(course|courses|masterclass|academy|workshop|khoá học|học)\b/.test(combinedText)) {
-      niche = 'courses';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 199.00;
-    } else if (/\b(preset|presets|lut|luts|lightroom|filter)\b/.test(combinedText)) {
-      niche = 'presets';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 39.00;
-    } else if (/\b(notion|template|templates|workspace|dashboard)\b/.test(combinedText)) {
-      niche = 'templates';
-      if (!suggestedPriceUsd) suggestedPriceUsd = 47.00;
-    }
-
-    return {
-      success: true,
-      url: urlStr,
-      host: host,
-      brand: brand,
-      productName: productName,
-      niche: niche,
-      suggestedPriceUsd: suggestedPriceUsd
-    };
-  } catch (e) {
-    console.warn('URL parse error:', e);
-    return null;
-  }
-}
-
 let affFetchDebounce = null;
   const triggerBrandPriceFetch = (rawUrl, isSilent = true) => {
     let url = (rawUrl || '').trim();
