@@ -1233,6 +1233,370 @@ function parseUserCustomPrice(raw) {
   };
 }
 
+// Canonical 13 Niches Taxonomy & Real-Time Auto-Detection Engine
+const NICHE_CANONICAL_MAP = {
+  'audio': { name: 'Audio & Sound', group: 'physical' },
+  'smarthome': { name: 'Smart Home & IoT', group: 'physical' },
+  'edc': { name: 'Desk Setup & EDC', group: 'physical' },
+  'wearables': { name: 'Smart Wearables', group: 'physical' },
+      'beauty': 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80',
+    'fashion': 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80',
+    'watches': 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1200&q=80',
+    'coffee': 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=1200&q=80',
+    'auto': 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
+    'robotics': { name: 'Robotics & Drones', group: 'physical' },
+  'cameras': { name: 'Cameras & Creator Gear', group: 'physical' },
+  'computing': { name: 'Computing & Gaming', group: 'physical' },
+  'power': { name: 'Power & GaN Charging', group: 'physical' },
+  'saas': { name: 'SaaS & AI Tools', group: 'digital' },
+  'ebooks': { name: 'Ebooks & Playbooks', group: 'digital' },
+  'presets': { name: 'Presets & LUTs', group: 'digital' },
+  'templates': { name: 'Notion OS', group: 'digital' },
+  'courses': { name: 'Video Courses', group: 'digital' }
+};
+
+function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand = '') {
+  const combined = `${url} ${keyword} ${title} ${brand}`.toLowerCase().replace(/[-_]/g, ' ');
+
+  // 0. Beauty & Personal Care / Wellness / Cleanses (RogersHood, ParaFy, Skincare, Supplements)
+  if (/cleanse|parasite|herbal|tincture|parafy|apothecary|rogershood|detox|skincare|skin care|serum|cream|lotion|collagen|wellness|beauty|supplement|gut health|holistic|cosmetic|anti aging|shampoo|cleanser|moisturizer|spf|sunscreen/.test(combined)) {
+    return { slug: 'beauty', name: 'Beauty & Personal Care' };
+  }
+
+  // 0b. Alt & Gothic Fashion
+  if (/fashion|skirt|pleated|dress|sweater|hoodie|jacket|clothing|apparel|goth|grunge|corset|boots|streetwear/.test(combined)) {
+    return { slug: 'fashion', name: 'Alt & Gothic Fashion' };
+  }
+
+  // 0c. Watches & Horology
+  if (/watch|watches|chronograph|automatic watch|horology|seagull|tissot|seiko|rolex|omega|timepiece/.test(combined)) {
+    return { slug: 'watches', name: 'Watches & Horology' };
+  }
+
+  // 0d. Espresso & Coffee
+  if (/coffee|espresso|gaggia|breville|barista|grinder|portafilter|cappuccino|latte|roast/.test(combined)) {
+    return { slug: 'coffee', name: 'Espresso & Coffee' };
+  }
+
+  // 0e. Auto Performance
+  if (/auto|intake|exhaust|turbo|tuning|bullboost|brembo|brake|racing|motor|engine|coilover/.test(combined)) {
+    return { slug: 'auto', name: 'Auto Performance' };
+  }
+
+
+  // 1. Robotics & Drones (RC gliders, airplanes, drones, mavic, flycam, robot mowers, uav)
+  if (/mowrator|mower|lawnmower|lawn mower|navimow|luba|drone|drones|flycam|fly cam|quadcopter|uav|dji|mini 4|mavic|avata|phantom|air 3|rc car|rc plane|rc glider|rc boat|rc jet|rc aircraft|rc flight|volantex|exhobby|xpilot|glider|airplane|aircraft|aerobatic|stunt plane|fixed wing|propeller|flight controller|crawler|4wd robot|telemetry|unmanned|patrol vehicle|robotics|robot\b/.test(combined)) {
+    return { slug: 'robotics', name: 'Robotics & Drones' };
+  }
+
+  // 2. Cameras & Creator Gear (osmo pocket, action cams, mirrorless, gimbals, mics)
+  if (/osmo pocket|pocket 3|pocket 2|action cam|action camera|insta360|gopro|vlog camera|creator combo|mirrorless|sony a7|a7iv|a7m4|alpha 7|lumix|fujifilm|eos r|canon|nikon|gimbal|ronin|tripod|teleprompter|shotgun mic|rode wireless|rode mic|video rig|nd filter|camera lens|cinematic camera/.test(combined)) {
+    return { slug: 'cameras', name: 'Cameras & Creator Gear' };
+  }
+
+  // 3. Smart Home & IoT (robovacs, roborock, dreame, matter, aqara, projectors)
+  if (/roborock|dreame|ecovacs|roomba|vacuum|robot vacuum|robot mop|smart mop|aqara|matter|smart home|smarthome|smart lock|smart plug|mmwave|presence sensor|smart bulb|smart curtain|thermostat|magcubic|projector|hy350|video doorbell|home assistant|zigbee|thread hub|sliding gate/.test(combined)) {
+    return { slug: 'smarthome', name: 'Smart Home & IoT' };
+  }
+
+  // 4. Smart Wearables (smartwatches, apple watch, garmin, smart rings)
+  if (/apple watch|apple\.com\/watch|galaxy watch|pixel watch|garmin|fenix|forerunner|smartwatch|smart watch|smart ring|galaxy ring|oura|whoop|fitbit|amazfit|smart band|fitness tracker|wearable|wearables|horology/.test(combined)) {
+    return { slug: 'wearables', name: 'Smart Wearables' };
+  }
+
+  // 5. Desk Setup & EDC (keyboards, keychron, mx master, desk mats, slings, backpacks)
+  if (/keychron|keyboard|keyboards|mechanical keyboard|custom keyboard|qmk|via|key switch|keycap|mx master|logitech mx|trackball|desk mat|deskmat|stream deck|elgato|wrist rest|monitor arm|pegboard|desk shelf|sling bag|sling|matein|everyday carry|edc|multitool|screen protector/.test(combined)) {
+    return { slug: 'edc', name: 'Desk Setup & EDC' };
+  }
+
+  // 6. Computing & Gaming (rog ally, steam deck, laptops, mini pcs, gpus)
+  if (/rog ally|ally x|steam deck|legion go|handheld gaming|razer blade|blade 16|alienware|gaming laptop|macbook|geforce|rtx 40|rtx 50|mini pc|geekom|beelink|mechanical gaming|handheld pc|gaming pc|graphics card/.test(combined)) {
+    return { slug: 'computing', name: 'Computing & Gaming' };
+  }
+
+  // 7. Power & GaN Charging (ugreen, nexode, anker, power banks, fast chargers)
+  if (/ugreen|nexode|anker|anker 737|baseus|blade hd|power bank|powerbank|gan charger|gan |fast charger|desktop charger|usb c charger|portable power|power station|ecoflow|jackery|anker solix|charging station|magsafe charger|e marker|watt\b|140w|100w|65w|300w/.test(combined)) {
+    return { slug: 'power', name: 'Power & GaN Charging' };
+  }
+
+  // 8. Audio & Sound (headphones, sony xm5, bose, sennheiser, iem, dac, speakers)
+  if (/(sony.*(wh|wf|xm|headphone))|wh 1000xm|wf 1000xm|bose|quietcomfort|qc ultra|sennheiser|momentum|shure|sm7b|devialet|phantom|airpods|headphone|headphones|earbud|earbuds|earphone|headset|audiophile|dac|amp|iem|soundbar|studio monitor|noise canceling|anc/.test(combined)) {
+    return { slug: 'audio', name: 'Audio & Sound' };
+  }
+
+  // 9. SaaS & AI Tools (perplexity, chatgpt, midjourney, cursor, cloud tools)
+  if (/perplexity|chatgpt|openai|claude|anthropic|midjourney|cursor|menthor|saas|ai tool|ai assistant|cloud license|api token|copy ai|jasper|notion ai|elevenlabs|runway|automation tool|productivity app/.test(combined)) {
+    return { slug: 'saas', name: 'SaaS & AI Tools' };
+  }
+
+  // 10. Notion OS & Digital Workspaces (notion templates, workspace os)
+  if (/notion\.so|notion template|notion workspace|notion os|notion dashboard|workspace template|content os|creator os|second brain/.test(combined)) {
+    return { slug: 'templates', name: 'Notion OS' };
+  }
+
+  // 11. Presets & LUTs (lightroom presets, lut, color grading)
+  if (/preset|presets|lut|luts|lightroom|lightroom preset|color grading|cube file|davinci lut|photoshop action|cyberpunk lut|camera profile/.test(combined)) {
+    return { slug: 'presets', name: 'Presets & LUTs' };
+  }
+
+  // 12. Ebooks & Playbooks (gumroad ebook, playbook, pdf guides)
+  if (/gumroad.*ebook|ebook|playbook|blueprint|guide book|pdf guide|kindle|epub|whitepaper|digital guide|cheatsheet/.test(combined)) {
+    return { slug: 'ebooks', name: 'Ebooks & Playbooks' };
+  }
+
+  // 13. Video Courses (masterclasses, video workshops, academy)
+  if (/course|courses|masterclass|video workshop|video training|academy|bootcamp|curriculum|udemy|coursera|skool|teachable|lesson|tutorials bundle/.test(combined)) {
+    return { slug: 'courses', name: 'Video Courses' };
+  }
+
+  return null;
+}
+
+function applyAutoDetectedNiche(detected, sourceUrl = '') {
+  if (!detected || !detected.slug) return;
+
+  const selectAiNiche = document.getElementById('ai-input-niche');
+  const selectFormCategory = document.getElementById('input-category');
+  const badgeIndicator = document.getElementById('ai-niche-auto-indicator');
+  const badgeText = document.getElementById('ai-niche-auto-text');
+
+  // Update AI select
+  if (selectAiNiche) {
+    selectAiNiche.value = detected.slug;
+    selectAiNiche.classList.add('border-cyan-400', 'ring-2', 'ring-cyan-500/30');
+    setTimeout(() => {
+      selectAiNiche.classList.remove('ring-2', 'ring-cyan-500/30');
+    }, 2500);
+  }
+
+  // Update Section 1 / Section 2 manual category select
+  if (selectFormCategory) {
+    let matchedOption = false;
+    for (let opt of selectFormCategory.options) {
+      if (opt.value === detected.slug || opt.text.toLowerCase().includes(detected.name.toLowerCase()) || detected.name.toLowerCase().includes(opt.text.toLowerCase())) {
+        selectFormCategory.value = opt.value;
+        matchedOption = true;
+        break;
+      }
+    }
+    if (!matchedOption) {
+      selectFormCategory.value = detected.name;
+    }
+  }
+
+  // Show visual auto-detected badge
+  if (badgeIndicator && badgeText) {
+    badgeText.textContent = `Auto: ${detected.name}`;
+    badgeIndicator.classList.remove('hidden');
+    badgeIndicator.classList.add('inline-flex');
+    if (sourceUrl) {
+      try {
+        const u = new URL(sourceUrl.startsWith('http') ? sourceUrl : 'https://' + sourceUrl);
+        badgeIndicator.title = `Auto-detected from ${u.hostname}`;
+      } catch (e) {
+        badgeIndicator.title = `Auto-detected from product link`;
+      }
+    }
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
+  // Auto-assign category-specific stock thumbnail if empty or default
+  const aiImgInput = document.getElementById('ai-input-image');
+  const aiImgThumb = document.getElementById('ai-img-thumb');
+  const NICHE_DEFAULT_IMAGES = {
+    'robotics': 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80',
+    'cameras': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80',
+    'smarthome': 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80',
+    'wearables': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80',
+    'edc': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80',
+    'computing': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80',
+    'power': 'https://images.unsplash.com/photo-1622445262464-84b14e3295b6?auto=format&fit=crop&w=1200&q=80',
+    'audio': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80',
+    'saas': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+    'templates': 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80',
+    'presets': 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80',
+    'ebooks': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80',
+    'courses': 'https://images.unsplash.com/photo-1513185041617-8ab03f83d6c5?auto=format&fit=crop&w=1200&q=80'
+  };
+
+  if (aiImgInput && (!aiImgInput.value || aiImgInput.value.includes('photo-1505740420928'))) {
+    if (NICHE_DEFAULT_IMAGES[detected.slug]) {
+      aiImgInput.value = NICHE_DEFAULT_IMAGES[detected.slug];
+      if (aiImgThumb) aiImgThumb.src = NICHE_DEFAULT_IMAGES[detected.slug];
+      const formImage = document.getElementById('input-image');
+      if (formImage && (!formImage.value || formImage.value.includes('photo-1505740420928'))) {
+        formImage.value = NICHE_DEFAULT_IMAGES[detected.slug];
+      }
+    }
+  }
+}
+
+
+// =============================================================
+// AI ARTICLE AUTO-FIX & REPAIR SYSTEM (Self-Healing AI)
+// =============================================================
+function autoFixCurrentArticle(isSilent = false) {
+  const titleEl = document.getElementById('input-title');
+  const kwEl = document.getElementById('ai-input-keyword');
+  const categoryEl = document.getElementById('input-category');
+  const aiNicheEl = document.getElementById('ai-input-niche');
+  const affLinkEl = document.getElementById('input-aff-url');
+  const aiAffEl = document.getElementById('ai-input-aff-link');
+  const brandEl = document.getElementById('input-brand');
+  const aiBrandEl = document.getElementById('ai-input-brand');
+  const priceUsdEl = document.getElementById('input-price-usd');
+  const priceVndEl = document.getElementById('input-price-vnd');
+  const priceOrigEl = document.getElementById('input-price-orig');
+  const imageEl = document.getElementById('input-image');
+  const aiImageEl = document.getElementById('ai-input-image');
+  const introEl = document.getElementById('input-intro');
+  const bodyEl = document.getElementById('input-body');
+  const verdictEl = document.getElementById('input-verdict');
+  const excerptEl = document.getElementById('input-excerpt');
+  const prosEl = document.getElementById('input-pros');
+  const consEl = document.getElementById('input-cons');
+  const couponDiscountEl = document.getElementById('input-coupon-discount');
+
+  let fixes = [];
+
+  // A. Clean Mojibake / Corrupted UTF-8 across all editor inputs
+  const textInputs = [titleEl, kwEl, introEl, bodyEl, verdictEl, excerptEl, prosEl, consEl, couponDiscountEl];
+  let mojibakeCount = 0;
+  textInputs.forEach(el => {
+    if (!el || !el.value) return;
+    const oldVal = el.value;
+    let newVal = oldVal
+      .replace(/45Â°/g, '45°')
+      .replace(/Â°/g, '°')
+      .replace(/â‚«/g, '₫')
+      .replace(/â€™/g, "'")
+      .replace(/â€“/g, '–')
+      .replace(/â€”/g, '—')
+      .replace(/Ä áº¶T HÃ€NG NGAY/g, 'ĐẶT HÀNG NGAY')
+      .replace(/Ä áº¶T/g, 'ĐẶT')
+      .replace(/HÃ€NG/g, 'HÀNG')
+      .replace(/NGÃ€Y/g, 'NGÀY')
+      .replace(/Ã©/g, 'é')
+      .replace(/Ã /g, 'à')
+      .replace(/Ã¡/g, 'á')
+      .replace(/â€¦/g, '...')
+      .replace(/Â/g, '');
+    if (newVal !== oldVal) {
+      el.value = newVal;
+      mojibakeCount++;
+    }
+  });
+  if (mojibakeCount > 0) {
+    fixes.push(`Đã sửa ${mojibakeCount} lỗi font/ký tự lạ (mojibake)`);
+  }
+
+  // B. Remove Mower contamination in Title
+  let curTitle = titleEl ? titleEl.value.trim() : '';
+  if (curTitle) {
+    const isGliderOrPlane = /glider|plane|airplane|volantex|exhobby|drone|keyboard|audio|watch|camera/i.test(curTitle);
+    if (isGliderOrPlane && /45° All-Terrain Performance Tested/i.test(curTitle)) {
+      if (/glider|plane|airplane|volantex|exhobby/i.test(curTitle)) {
+        curTitle = curTitle.replace(/45° All-Terrain Performance Tested/gi, 'Aerobatic Flight & XPilot Gyro Tested');
+      } else {
+        curTitle = curTitle.replace(/:s*45° All-Terrain Performance Tested.*$/gi, ' In-Depth Lab Review (2026)');
+      }
+      titleEl.value = curTitle;
+      fixes.push('Đã loại bỏ hậu tố máy cắt cỏ "45° All-Terrain" khỏi tiêu đề sản phẩm');
+    }
+  }
+
+  // C. Category Mismatch Detection & Auto-Correction
+  const curAffLink = (affLinkEl?.value || aiAffEl?.value || '').trim();
+  const curBrand = (brandEl?.value || aiBrandEl?.value || '').trim();
+  const detectedNiche = detectNicheFromUrlAndKeyword(curAffLink, kwEl?.value || '', curTitle, curBrand);
+  if (detectedNiche) {
+    const curCatVal = categoryEl ? categoryEl.value : '';
+    if (curCatVal && curCatVal !== detectedNiche.name && curCatVal !== detectedNiche.slug) {
+      const oldCat = curCatVal;
+      applyAutoDetectedNiche(detectedNiche, curAffLink);
+      fixes.push(`Đã tự động khớp danh mục chuẩn: từ "${oldCat}" sang "${detectedNiche.name}"`);
+    }
+  }
+
+  // D. Content Mower Infection Check
+  const isActualMower = /mowrator|lawnmower|lawn[- ]*mower|navimow|luba/i.test(curTitle);
+  const fullContent = `${introEl?.value || ''} ${bodyEl?.value || ''} ${excerptEl?.value || ''} ${prosEl?.value || ''}`.toLowerCase();
+  const hasMowerInfection = !isActualMower && (
+    fullContent.includes('mowrator') ||
+    fullContent.includes('slope mower') ||
+    fullContent.includes('cutting deck') ||
+    fullContent.includes('retention basins') ||
+    fullContent.includes('steep embankments') ||
+    fullContent.includes('bermuda grass') ||
+    fullContent.includes('blade accidents') ||
+    fullContent.includes('brushless hub motors')
+  );
+
+  if (hasMowerInfection) {
+    // Regenerate authentic content for this product!
+    const activeNiche = (detectedNiche ? detectedNiche.slug : (aiNicheEl ? aiNicheEl.value : 'robotics'));
+    const lang = document.getElementById('ai-gen-lang')?.value || 'en';
+    const cleanKw = (kwEl?.value || curTitle.split(':')[0] || 'Hardware Product').trim();
+    const regenerated = buildAiArticleData(cleanKw, activeNiche, curBrand, lang, curAffLink, imageEl?.value || '');
+
+    if (introEl) introEl.value = regenerated.intro;
+    if (bodyEl) bodyEl.value = regenerated.body;
+    if (verdictEl) verdictEl.value = regenerated.verdict;
+    if (excerptEl) excerptEl.value = regenerated.excerpt;
+    if (prosEl) prosEl.value = regenerated.pros;
+    if (consEl) consEl.value = regenerated.cons;
+
+    fixes.push('Đã loại bỏ sạch văn bản máy cắt cỏ lạc đề & phục hồi nội dung đánh giá chính xác cho sản phẩm');
+  }
+
+  // E. Price formatting & Currency validation
+  if (priceUsdEl) {
+    let usd = priceUsdEl.value.trim();
+    if (usd && !usd.startsWith('$')) {
+      const num = parseFloat(usd.replace(/[^0-9.]/g, ''));
+      if (!isNaN(num)) {
+        priceUsdEl.value = '$' + num.toFixed(2);
+        fixes.push('Đã định dạng chuẩn tiền tệ USD ($)');
+      }
+    }
+    const numUsd = parseFloat((priceUsdEl.value || '').replace(/[^0-9.]/g, ''));
+    if (!isNaN(numUsd) && numUsd > 0 && priceVndEl && (!priceVndEl.value || priceVndEl.value === '0₫')) {
+      const rawVnd = numUsd * 25000;
+      const rounded = Math.round(rawVnd / 1000) * 1000;
+      priceVndEl.value = rounded.toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+      fixes.push('Đã tự động tính và điền giá VNĐ quy đổi');
+    }
+  }
+
+  // F. Update Preview & Re-render
+  updatePreview();
+  lucide.createIcons();
+
+  if (fixes.length > 0) {
+    if (!isSilent) {
+      showToast(`🪄 AI Đã Tự Động Sửa ${fixes.length} Lỗi Bài Viết:\n• ${fixes.join('\n• ')}`, 'success');
+    }
+    return { fixed: true, fixes };
+  } else {
+    if (!isSilent) {
+      showToast('✓ Bài viết đã hoàn toàn chuẩn xác! Không phát hiện lỗi danh mục hay nội dung lệch lạc.', 'info');
+    }
+    return { fixed: false, fixes: [] };
+  }
+}
+
+function initAiAutoFix() {
+  window.autoFixCurrentArticle = autoFixCurrentArticle;
+  const btnAutoFix = document.getElementById('btn-ai-autofix');
+  if (btnAutoFix) {
+    btnAutoFix.addEventListener('click', () => {
+      autoFixCurrentArticle(false);
+    });
+  }
+}
+
 function initAiArticleGenerator() {
   const btnGenerate = document.getElementById('btn-ai-generate');
   const btnOpenTop = document.getElementById('btn-open-ai-generator');
@@ -1408,85 +1772,6 @@ function initAiArticleGenerator() {
     });
   }
 
-  // Scan Link Button ("Quét Link")
-  const btnScanLink = document.getElementById('btn-ai-scan-link');
-  const btnScanLabel = document.getElementById('btn-ai-scan-label');
-
-  if (btnScanLink) {
-    btnScanLink.addEventListener('click', async () => {
-      let url = (aiAffInput?.value || formAffInput?.value || '').trim();
-      if (!url) {
-        showToast('Vui lòng dán link sản phẩm/affiliate vào ô trước khi quét!', 'error');
-        if (aiAffInput) {
-          aiAffInput.focus();
-        }
-        return;
-      }
-
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        if (url.includes('.') || url.includes('/')) {
-          url = 'https://' + url;
-          if (aiAffInput) aiAffInput.value = url;
-          if (formAffInput) formAffInput.value = url;
-        } else {
-          showToast('Link không đúng định dạng website (ví dụ: https://...)', 'error');
-          return;
-        }
-      }
-
-      btnScanLink.disabled = true;
-      if (btnScanLabel) btnScanLabel.textContent = 'Đang quét link...';
-
-      try {
-        // 1. Quét thông minh URL để trích xuất tên sản phẩm, thương hiệu, danh mục và link chuẩn
-        const parsed = parseAffiliateUrlSmart(url);
-        if (parsed && parsed.success) {
-          const kwInput = document.getElementById('ai-input-keyword');
-          const nicheSelect = document.getElementById('ai-input-niche');
-          const brandInput = document.getElementById('ai-input-brand');
-          const formBrandInput = document.getElementById('input-brand');
-
-          if (kwInput && parsed.productName) {
-            kwInput.value = parsed.productName;
-          }
-
-          if (nicheSelect && parsed.niche) {
-            nicheSelect.value = parsed.niche;
-          }
-
-          if (parsed.brand) {
-            if (brandInput) brandInput.value = parsed.brand;
-            if (formBrandInput) formBrandInput.value = parsed.brand;
-          }
-
-          if (aiAffInput) aiAffInput.value = parsed.url;
-          if (formAffInput) formAffInput.value = parsed.url;
-
-          // Gợi ý hình ảnh theo danh mục nếu chưa có ảnh
-          const niche = parsed.niche || 'tech_audio';
-          const list = AI_IMAGE_PRESETS[niche] || AI_IMAGE_PRESETS.tech_audio;
-          if (list && list.length > 0 && aiImgThumb) {
-            aiImgThumb.src = list[0];
-            if (aiImgInput) aiImgInput.value = list[0];
-          }
-
-          showToast(`⚡ Đã quét link thành công! AI đang tự động viết bài review chi tiết...`);
-        }
-
-        // 2. Kích hoạt AI viết toàn bộ bài viết, tạo tiêu đề, thông số, bảng so sánh và gắn đúng link
-        await generateArticleWithAi();
-      } catch (err) {
-        console.error('Lỗi quét link:', err);
-        showToast('Lỗi: ' + (err && err.message ? err.message : 'Vui lòng kiểm tra lại đường link!'), 'error');
-      } finally {
-        btnScanLink.disabled = false;
-        if (btnScanLabel) btnScanLabel.textContent = '⚡ Quét Link';
-        lucide.createIcons();
-      }
-    });
-  }
-
-
   // Auto-Fetch Brand Price Button & Live Inputs Integration
   const btnFetchPriceBrand = document.getElementById('btn-fetch-price-brand');
   if (btnFetchPriceBrand) {
@@ -1587,8 +1872,7 @@ function initAiArticleGenerator() {
   }
 
   // Real-time Auto-fetch when affiliate link changes, pastes, or inputs
-  
-let affFetchDebounce = null;
+  let affFetchDebounce = null;
   const triggerBrandPriceFetch = (rawUrl, isSilent = true) => {
     let url = (rawUrl || '').trim();
     if (!url) return;
@@ -1603,53 +1887,12 @@ let affFetchDebounce = null;
     if (aiAffInput && aiAffInput.value.trim() !== url) aiAffInput.value = url;
     if (formAffInput && formAffInput.value.trim() !== url) formAffInput.value = url;
 
-    // SMART AUTO-SCAN & FILL FROM LINK
-    const parsed = parseAffiliateUrlSmart(url);
-    if (parsed && parsed.success) {
-      const kwInput = document.getElementById('ai-input-keyword');
-      const nicheSelect = document.getElementById('ai-input-niche');
-      const brandInput = document.getElementById('ai-input-brand');
-      const formBrandInput = document.getElementById('input-brand');
-
-      // Auto-fill Product Name if currently empty or default
-      if (kwInput && (!kwInput.value.trim() || kwInput.value.includes('Sony WH-1000XM5') || kwInput.value.includes('Keychron Q1') || kwInput.value.includes('Mowrator S1'))) {
-        if (parsed.productName) {
-          kwInput.value = parsed.productName;
-        }
-      }
-
-      // Auto-select Niche Category
-      if (nicheSelect && parsed.niche) {
-        let optExists = false;
-        for (let opt of nicheSelect.options) {
-          if (opt.value === parsed.niche) {
-            nicheSelect.value = parsed.niche;
-            optExists = true;
-            break;
-          }
-        }
-      }
-
-      // Auto-fill Brand Name
-      if (brandInput && (!brandInput.value.trim() || brandInput.value.includes('Official') || brandInput.value.includes('Store'))) {
-        brandInput.value = parsed.brand;
-      }
-      if (formBrandInput && (!formBrandInput.value.trim() || formBrandInput.value.includes('Official') || formBrandInput.value.includes('Store'))) {
-        formBrandInput.value = parsed.brand;
-      }
-
-      // Auto-calculate suggested price if price inputs are empty
-      const aiPriceInput = document.getElementById('ai-input-price');
-      if (aiPriceInput && !aiPriceInput.value.trim() && parsed.suggestedPriceUsd) {
-        aiPriceInput.value = '$' + parsed.suggestedPriceUsd.toFixed(2);
-        const aiHintEl = document.getElementById('ai-price-calc-hint');
-        if (aiHintEl) {
-          const rawVnd = parsed.suggestedPriceUsd * 25000;
-          const rounded = Math.round(rawVnd / 1000) * 1000;
-          aiHintEl.textContent = `≈ ${rounded.toLocaleString('vi-VN').replace(/,/g, '.')}₫`;
-          aiHintEl.className = 'text-[10px] text-emerald-400 font-mono font-bold';
-        }
-      }
+    // Real-Time 0ms Auto-Detect Category / Niche from entered or pasted link
+    const kw = document.getElementById('ai-input-keyword')?.value || '';
+    const brand = document.getElementById('ai-input-brand')?.value || '';
+    const detected = detectNicheFromUrlAndKeyword(url, kw, '', brand);
+    if (detected) {
+      applyAutoDetectedNiche(detected, url);
     }
 
     clearTimeout(affFetchDebounce);
@@ -1667,6 +1910,87 @@ let affFetchDebounce = null;
     formAffInput.addEventListener('input', () => triggerBrandPriceFetch(formAffInput.value, true));
     formAffInput.addEventListener('paste', () => setTimeout(() => triggerBrandPriceFetch(formAffInput.value, false), 50));
     formAffInput.addEventListener('change', () => triggerBrandPriceFetch(formAffInput.value, false));
+  }
+
+  // 1-Click Explicit Scan Link Button (Supports both button IDs)
+  const btnScanLink = document.getElementById('ai-btn-scan-link') || document.getElementById('btn-ai-scan-link');
+  if (btnScanLink) {
+    btnScanLink.addEventListener('click', async () => {
+      let url = (aiAffInput?.value || formAffInput?.value || '').trim();
+      if (!url) {
+        showToast('Vui lòng dán link sản phẩm/affiliate vào ô trước khi bấm quét!', 'error');
+        if (aiAffInput) aiAffInput.focus();
+        return;
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+        if (aiAffInput) aiAffInput.value = url;
+        if (formAffInput) formAffInput.value = url;
+      }
+      btnScanLink.disabled = true;
+      btnScanLink.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-amber-300"></i><span>Đang quét...</span>';
+      if (window.lucide) window.lucide.createIcons();
+      try {
+        const res = await fetchAndApplyBrandPrice(url, false);
+        if (res && res.success) {
+          showToast(`⚡ Đã quét thông tin: "${res.productTitle || res.brand}" - Giá: ${res.salePriceUsd} (${res.salePriceVnd})!`);
+          // Automatically write full review article with this scraped product!
+          await generateArticleWithAi();
+        }
+      } catch (err) {
+        console.error('Lỗi quét link:', err);
+        showToast('Không thể quét link. Vui lòng kiểm tra lại URL hoặc nhập thủ công.', 'error');
+      } finally {
+        btnScanLink.disabled = false;
+        btnScanLink.innerHTML = '<i data-lucide="scan" class="w-3.5 h-3.5 text-amber-300"></i><span>⚡ Quét Link</span>';
+        if (window.lucide) window.lucide.createIcons();
+      }
+    });
+  }
+
+  // Keyword-based auto-niche detection when no link is provided yet
+  const aiKwInput = document.getElementById('ai-input-keyword');
+  if (aiKwInput) {
+    aiKwInput.addEventListener('input', () => {
+      const kw = aiKwInput.value.trim();
+      const currentUrl = (aiAffInput?.value || formAffInput?.value || '').trim();
+      const detected = detectNicheFromUrlAndKeyword(currentUrl, kw);
+      if (detected) {
+        applyAutoDetectedNiche(detected, currentUrl);
+      }
+    });
+  }
+
+  // Two-way sync when user manually selects a Category / Niche
+  const selectAiNiche = document.getElementById('ai-input-niche');
+  const selectFormCategory = document.getElementById('input-category');
+  if (selectAiNiche) {
+    selectAiNiche.addEventListener('change', () => {
+      const chosen = selectAiNiche.value;
+      if (selectFormCategory) {
+        for (let opt of selectFormCategory.options) {
+          if (opt.value === chosen || opt.text.toLowerCase().includes(chosen)) {
+            selectFormCategory.value = opt.value;
+            break;
+          }
+        }
+      }
+      const indicator = document.getElementById('ai-niche-auto-indicator');
+      if (indicator) indicator.classList.add('hidden');
+    });
+  }
+  if (selectFormCategory) {
+    selectFormCategory.addEventListener('change', () => {
+      const chosen = selectFormCategory.value;
+      if (selectAiNiche) {
+        for (let opt of selectAiNiche.options) {
+          if (opt.value === chosen || opt.text.toLowerCase().includes(chosen)) {
+            selectAiNiche.value = opt.value;
+            break;
+          }
+        }
+      }
+    });
   }
 }
 
@@ -1703,8 +2027,35 @@ async function fetchAndApplyBrandPrice(targetUrl, silent = false) {
     if (res.ok) {
       const data = await res.json();
       if (data && data.success) {
+        window.lastScrapedProductData = data;
+
+        // Auto-fill Product Title & Keyword if extracted from merchant link
+        if (data.productTitle) {
+          const aiKw = document.getElementById('ai-input-keyword');
+          const inputTitle = document.getElementById('input-title');
+          if (aiKw) {
+            aiKw.value = data.productTitle;
+          }
+          if (inputTitle && (!inputTitle.value.trim() || inputTitle.value.includes('Sony WH-1000XM5') || inputTitle.value.includes('Sample') || inputTitle.value.includes('Mowrator'))) {
+            inputTitle.value = data.productTitle;
+          }
+        }
+
+        // Auto-fill Product Packshot Image if extracted from link
+        if (data.image) {
+          const formImg = document.getElementById('input-image');
+          const aiImg = document.getElementById('ai-input-image');
+          const aiThumb = document.getElementById('ai-img-thumb');
+          if (formImg) formImg.value = data.image;
+          if (aiImg) aiImg.value = data.image;
+          if (aiThumb) aiThumb.src = data.image;
+        }
+
+        // Auto-fill Exact Live Prices
         if (data.salePriceUsd && data.salePriceUsd !== '.00') {
           document.getElementById('input-price-usd').value = data.salePriceUsd;
+          const aiPrice = document.getElementById('ai-input-price');
+          if (aiPrice) aiPrice.value = data.salePriceUsd;
         }
         if (data.salePriceVnd) {
           document.getElementById('input-price-vnd').value = data.salePriceVnd;
@@ -1722,27 +2073,33 @@ async function fetchAndApplyBrandPrice(targetUrl, silent = false) {
           document.getElementById('input-coupon-expiry').value = data.couponExpiry;
         }
 
-        // Also update brand name in forms if available
+        // Auto-fill Brand
         if (data.brand) {
           const formBrand = document.getElementById('input-brand');
           const aiBrand = document.getElementById('ai-input-brand');
-          if (formBrand && (!formBrand.value.trim() || formBrand.value.includes('Official') || formBrand.value.includes('Store'))) {
-            formBrand.value = data.brand;
-          }
-          if (aiBrand && (!aiBrand.value.trim() || aiBrand.value.includes('Official'))) {
-            aiBrand.value = data.brand;
+          if (formBrand) formBrand.value = data.brand;
+          if (aiBrand) aiBrand.value = data.brand;
+        }
+
+        // Apply auto-detected category from server response or URL
+        if (data.categorySlug && data.category) {
+          applyAutoDetectedNiche({ slug: data.categorySlug, name: data.category }, url);
+        } else {
+          const detectedFromFetch = detectNicheFromUrlAndKeyword(url, data.productTitle || '', data.productTitle || '', data.brand || '');
+          if (detectedFromFetch) {
+            applyAutoDetectedNiche(detectedFromFetch, url);
           }
         }
 
         if (statusText) {
-          statusText.innerHTML = `<span class="text-emerald-400 font-bold">✓ Synced with Brand Link:</span> <strong class="text-white">${data.salePriceUsd}</strong> <span class="text-emerald-300">(${data.salePriceVnd})</span> • Orig: ${data.originalPriceUsd} • Brand: <span class="text-pink-300 font-bold">${data.brand || 'Merchant'}</span>`;
+          statusText.innerHTML = `<span class="text-emerald-400 font-bold">✓ Synced with Brand Link:</span> <strong class="text-white">${data.productTitle || data.brand}</strong> • <span class="text-emerald-300 font-bold">${data.salePriceUsd} (${data.salePriceVnd})</span> • Brand: <span class="text-pink-300 font-bold">${data.brand || 'Merchant'}</span>`;
         }
 
         updatePreview();
         lucide.createIcons();
 
         if (!silent) {
-          showToast(`⚡ Auto-fetched brand price: ${data.salePriceUsd} (${data.salePriceVnd}) from ${data.brand || 'Merchant'}!`);
+          showToast(`⚡ Đã quét sản phẩm: "${data.productTitle || data.brand}" - Giá: ${data.salePriceUsd} (${data.salePriceVnd})!`);
         }
         return data;
       }
@@ -1778,42 +2135,11 @@ async function generateArticleWithAi() {
   const btnGenerate = document.getElementById('btn-ai-generate');
   const btnLabel = document.getElementById('ai-btn-label');
 
-  let customAffLink = aiAffInput ? aiAffInput.value.trim() : '';
-  if (!customAffLink) {
-    customAffLink = (document.getElementById('input-aff-url')?.value || '').trim();
-  }
-
-  // Auto-scan link first if provided
-  let linkScanInfo = null;
-  if (customAffLink && (customAffLink.startsWith('http://') || customAffLink.startsWith('https://') || customAffLink.includes('.'))) {
-    linkScanInfo = parseAffiliateUrlSmart(customAffLink);
-    if (linkScanInfo && linkScanInfo.url) {
-      customAffLink = linkScanInfo.url;
-      if (aiAffInput && aiAffInput.value.trim() !== customAffLink) aiAffInput.value = customAffLink;
-      const formAff = document.getElementById('input-aff-url');
-      if (formAff && formAff.value.trim() !== customAffLink) formAff.value = customAffLink;
-    }
-  }
-
   let keyword = inputKw ? inputKw.value.trim() : '';
-  if (!keyword && linkScanInfo && linkScanInfo.productName) {
-    keyword = linkScanInfo.productName;
-    if (inputKw) inputKw.value = keyword;
-  }
-
-  let niche = selectNiche ? selectNiche.value : 'tech_audio';
-  if ((!niche || niche === 'tech_audio') && linkScanInfo && linkScanInfo.niche) {
-    niche = linkScanInfo.niche;
-    if (selectNiche) selectNiche.value = niche;
-  }
-
+  const niche = selectNiche ? selectNiche.value : 'tech_audio';
   let brand = inputBrand ? inputBrand.value.trim() : '';
-  if (!brand && linkScanInfo && linkScanInfo.brand) {
-    brand = linkScanInfo.brand;
-    if (inputBrand) inputBrand.value = brand;
-  }
-
   const lang = selectLang ? selectLang.value : 'en'; // Priority: English default
+  const customAffLink = aiAffInput ? aiAffInput.value.trim() : '';
   const customImage = aiImgInput ? aiImgInput.value.trim() : '';
   const customPriceRaw = document.getElementById('ai-input-price') ? document.getElementById('ai-input-price').value.trim() : '';
   let userOverriddenPrice = null;
@@ -1852,16 +2178,21 @@ async function generateArticleWithAi() {
   if (statusText) statusText.textContent = 'Synthesizing SEO headline, balanced pros/cons & comparison matrix...';
   await new Promise(r => setTimeout(r, 200));
 
+  // Pre-generation check: Re-verify category from link & keyword
+  const linkToInspect = customAffLink || (document.getElementById('input-aff-url')?.value || '').trim();
+  const detectedBeforeGen = detectNicheFromUrlAndKeyword(linkToInspect, keyword, '', brand);
+  let activeNiche = selectNiche ? selectNiche.value : 'audio';
+  if (detectedBeforeGen && (!selectNiche || selectNiche.value === 'audio' || selectNiche.value === detectedBeforeGen.slug)) {
+    activeNiche = detectedBeforeGen.slug;
+    applyAutoDetectedNiche(detectedBeforeGen, linkToInspect);
+  }
+
   // Auto-fetch price from merchant brand link if provided and user did NOT specify custom price
   let fetchedBrandPrice = userOverriddenPrice;
-  const linkToInspect = customAffLink || (document.getElementById('input-aff-url')?.value || '').trim();
   if (!userOverriddenPrice && linkToInspect && (linkToInspect.startsWith('http://') || linkToInspect.startsWith('https://'))) {
     if (statusText) statusText.textContent = '⚡ AI inspecting brand link & auto-fetching exact price from merchant...';
     try {
-      // Set 3.5s timeout for brand price inspection to prevent hanging
-      const fetchPromise = fetchAndApplyBrandPrice(linkToInspect, true);
-      const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 3500));
-      fetchedBrandPrice = await Promise.race([fetchPromise, timeoutPromise]);
+      fetchedBrandPrice = await fetchAndApplyBrandPrice(linkToInspect, true);
     } catch (e) {
       console.warn('AI link price inspection failed:', e);
     }
@@ -1870,34 +2201,19 @@ async function generateArticleWithAi() {
   }
 
   try {
-    const generated = buildAiArticleData(keyword, niche, brand, lang, customAffLink, customImage);
+    const generated = buildAiArticleData(keyword, (typeof activeNiche !== "undefined" ? activeNiche : niche), brand, lang, customAffLink, customImage);
 
     exitEditMode();
 
     // Populate form fields
     document.getElementById('input-title').value = generated.title;
     document.getElementById('input-slug').value = generated.slug;
-        const formCatSelect = document.getElementById('input-category');
-    if (formCatSelect) {
-      let matched = false;
-      const targetCat = (generated.category || '').toLowerCase();
-      for (let opt of formCatSelect.options) {
-        if (opt.value.toLowerCase() === targetCat || opt.value.toLowerCase().includes(targetCat) || targetCat.includes(opt.value.toLowerCase())) {
-          formCatSelect.value = opt.value;
-          matched = true;
-          break;
-        }
-      }
-      if (!matched && formCatSelect.options.length > 0) {
-        formCatSelect.value = formCatSelect.options[0].value;
-      }
-    }
+    document.getElementById('input-category').value = generated.category;
     document.getElementById('input-excerpt').value = generated.excerpt;
     document.getElementById('input-brand').value = (fetchedBrandPrice && fetchedBrandPrice.brand) ? fetchedBrandPrice.brand : generated.brand;
     document.getElementById('input-btn-text').value = generated.btnText;
-    const finalAffLink = customAffLink || generated.affiliateLink;
-    document.getElementById('input-aff-url').value = finalAffLink;
-    if (aiAffInput) aiAffInput.value = finalAffLink;
+    document.getElementById('input-aff-url').value = generated.affiliateLink;
+    if (aiAffInput && !aiAffInput.value) aiAffInput.value = generated.affiliateLink;
 
     document.getElementById('input-image').value = generated.image;
     if (aiImgInput) aiImgInput.value = generated.image;
@@ -1970,8 +2286,7 @@ async function generateArticleWithAi() {
     }
   } catch (err) {
     console.error('Error generating AI article:', err);
-    showToast('Lỗi AI viết bài: ' + (err && err.message ? err.message : String(err)), 'error');
-    throw err;
+    showToast('Error generating AI review. Please retry!', 'error');
   } finally {
     if (btnGenerate) {
       btnGenerate.disabled = false;
@@ -1995,130 +2310,278 @@ function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customIm
   const resolveAffLink = (defaultUrl) => customAffLink && customAffLink.trim() ? customAffLink.trim() : defaultUrl;
   const resolveImage = (defaultImg) => customImage && customImage.trim() ? customImage.trim() : defaultImg;
 
-    // 1. RC, Robotics, All-Terrain Mowers Preset (Specific to Mowrator/Mower ONLY if keyword matches)
-  if (kwLower.includes('mowrator') || (kwLower.includes('mower') && (niche === 'auto' || kwLower.includes('rc')))) {
-    if (isEn) {
-      return {
-        title: `${brandName.includes('Mowrator') ? 'Mowrator S1 4WD Smart Remote Control Mower' : cleanKw} In-Depth Review: 45° All-Terrain Performance Tested (2026)`,
-        slug: cleanSlug,
-        category: 'Robotics & Outdoor Tech',
-        excerpt: 'Featuring quad independent brushless hub motors, military-grade 2.4GHz remote telemetry, and 80% grade slope climbing, this machine permanently eliminates the physical dangers of steep-terrain lawn maintenance.',
-        brand: brandName,
-        btnText: 'ORDER NOW',
-        affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=SMARTPICKS`),
-        image: resolveImage('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80'),
-        priceUsd: '$1,499.00', priceVnd: '37.475.000₫', priceOrig: '$1,799.00',
-        coupon: 'SMARTPICKS100', couponDiscount: '$100 OFF', couponExpiry: '12/31/2026',
-        rating: 9.8,
-        pros: `Full 4WD brushless hub-motor drivetrain delivers 160Nm of instant torque to tackle 45-degree (80%) slopes\nErgonomic 2.4GHz remote controller with real-time telemetry screen operates reliably past 250 meters\nHeavy-gauge stamped steel cutting deck with electronic height adjustment\nHigh-capacity swap-and-go 56V lithium battery architecture delivers 2.2 to 2.8 hours of uninterrupted cutting`,
-        cons: `Hefty chassis requires heavy-duty loading ramps for pickup truck or trailer transport\nSubstantial upfront prosumer investment compared to conventional manual walk-behind mowers`,
-        intro: `Steep embankments, retention basins, and overgrown orchard slopes have historically been among the most hazardous environments in landscaping. Every year, commercial operators and rural property owners suffer severe injuries from rollover incidents. The ${cleanKw} was engineered from the ground up to eradicate this occupational hazard by taking the operator completely out of harm\'s way.\n\nFrom the moment you uncrate it, its industrial DNA is unmistakable. Built on a reinforced tubular steel roll-cage with aggressive tractor-tread pneumatic tires, this machine resembles an exploration rover rather than a suburban yard tool.`,
-        body: `We subjected the ${cleanKw} to 30 days of punishment across a 4-acre property featuring 40-degree clay embankments, thick fescue, wet riverbank Bermuda grass, and rocky uneven ditch slopes. Where commercial zero-turn mowers would spin their drive wheels and risk sliding sideways, the independent all-wheel brushless motors distributed torque flawlessly.\n\nThe onboard digital inclinometer automatically modulated wheel speeds, preventing turf tear while climbing damp 42-degree inclines effortlessly. Operating via the 2.4GHz remote felt intuitive, providing immediate dual-stick proportional throttle and skid-steer navigation with zero latency.`,
-        verdict: `The ${cleanKw} isn\'t just a luxury gadget—it is a critical safety upgrade for anyone managing difficult, uneven terrain. By removing the human operator from the physical risks of rollovers and blade accidents, it pays for itself in peace of mind alone. If you have steep ditches, rough pastures, or uneven acreage, this is the ultimate technological solution.`
-      };
-    }
-  }
+    // Specialized Hardware & Digital Generators
+  const isRcPlaneGlider = /rc[- ]*(plane|glider|jet|airplane|aircraft|flight)|glider|airplane|aircraft|aerobatic|stunt[- ]*plane|volantex|ranger[- ]*600|xpilot|fixed[- ]*wing/i.test(kwLower);
+  const isActualMower = (/mowrator|lawnmower|lawn[- ]*mower|navimow|luba|mower/i.test(kwLower)) && !/plane|glider|drone|flycam/i.test(kwLower);
+  const isDroneFlycam = /drone|drones|flycam|quadcopter|uav|dji|mavic|avata|phantom|betafpv|mini[- ]*4/i.test(kwLower);
+  const isRobotVacuum = /roborock|dreame|ecovacs|roomba|vacuum|robot[- ]*vacuum|robot[- ]*mop/i.test(kwLower);
+  const isMechanicalKeyboard = /keychron|keyboard|keyboards|mechanical[- ]*keyboard|qmk|via|keycap|mx[- ]*master|logitech[- ]*mx/i.test(kwLower) || niche === 'edc';
 
-  // Define Niche Templates
-  let catName = 'Tech Hardware';
-  let t_title, t_excerpt, t_img, t_pros, t_cons, t_intro, t_body, t_verdict;
-  let priceU = '$149.00', priceV = '3.750.000₫', priceO = '$189.00';
+  // 0. Beauty & Personal Care / Wellness / Cleanses (RogersHood Parafy / Herbal cleanse / Skincare)
+  const isBeautyWellness = /cleanse|parasite|herbal|tincture|parafy|apothecary|rogershood|detox|skin|serum|cream|wellness|supplement|beauty|health|cosmetic/i.test(kwLower) || niche === 'beauty';
+  const isFashionStyle = /skirt|pleated|dress|sweater|hoodie|jacket|clothing|apparel|goth|grunge|corset|boots|fashion/i.test(kwLower) || niche === 'fashion';
+  const isHorologyWatch = /watch|watches|chronograph|seagull|tissot|seiko|rolex|horology/i.test(kwLower) || niche === 'watches';
+  const isCoffeeGear = /coffee|espresso|gaggia|breville|barista|grinder|portafilter/i.test(kwLower) || niche === 'coffee';
+  const isAutoRacing = /intake|exhaust|turbo|tuning|bullboost|brembo|brake|racing|auto/i.test(kwLower) || niche === 'auto';
 
-  if (niche === 'beauty') {
-    catName = 'Beauty & Skincare';
-    t_img = 'https://images.unsplash.com/photo-1596462502278-27bf85033e5a?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: The Skincare Science & Real Results (2026)`;
-    t_excerpt = `We tested the ${cleanKw} for 4 weeks to evaluate its active ingredients, skin barrier benefits, and daily application feel. Here is our honest, unsponsored verdict on whether it's worth the hype.`;
-    t_pros = `Dermatologically tested formula with high-concentration active ingredients\nLightweight, non-comedogenic texture that absorbs quickly without greasy residue\nNoticeable improvements in skin hydration and texture within the first 14 days\nCruelty-free formulation free from harsh parabens and synthetic fragrances`;
-    t_cons = `Premium price point compared to drugstore alternatives\nMay require a patch test for extremely sensitive skin types\nGlass packaging is beautiful but fragile for frequent travel`;
-    t_intro = `In an industry flooded with miracle claims and viral TikTok trends, separating genuine dermatological breakthroughs from clever marketing is increasingly difficult. The ${cleanKw} has recently dominated social media feeds, promising transformative results. But does the science back up the hype? We acquired it for our testing lab to conduct a rigorous, independent 30-day evaluation.\n\nFirst impressions matter, and the packaging immediately signals a premium experience. The minimalist glass vessel protects the active compounds from UV degradation while dispensing precisely the right amount of product. The texture is elegant—neither too heavy nor watery—striking a perfect balance for layering under makeup or SPF.`;
-    t_body = `During our 4-week clinical trial phase, our testers applied the ${cleanKw} twice daily. Unlike many aggressive treatments that compromise the skin barrier, this formulation prioritizes cellular hydration and gentle barrier repair. By day 14, our hydration sensors measured a 42% increase in moisture retention, and visible redness in our rosacea-prone testers had significantly diminished.\n\nThe ingredient list reads like a masterclass in modern cosmetic chemistry. By combining bio-compatible peptides with varying molecular weights of hyaluronic acid, the product penetrates multiple dermal layers rather than just sitting on the surface. We were particularly impressed by the complete lack of pilling when layered with silicone-based primers and sunscreens.`;
-    t_verdict = `The ${cleanKw} is that rare viral product that actually over-delivers on its promises. While the initial investment is steep, the concentrated formula means a single bottle lasts months. For those serious about investing in their skin barrier health and long-term anti-aging prevention, this earns our highest recommendation.`;
-  } else if (niche === 'fashion') {
-    catName = 'Fashion & Apparel';
-    t_img = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Hands-On Review: Fit, Fabric & Styling Guide`;
-    t_excerpt = `A comprehensive look at the ${cleanKw}. We evaluate the garment's stitching quality, fabric drape, sizing accuracy, and versatility to see if this piece deserves a spot in your capsule wardrobe.`;
-    t_pros = `Exceptional tailoring with reinforced seams and high stitch density for longevity\nPremium, breathable fabric blend that drapes beautifully and resists severe wrinkling\nTrue-to-size fit that flatters multiple body types without restrictive pulling\nHighly versatile design that easily transitions from day-wear to evening elegance`;
-    t_cons = `Requires delicate washing or dry-cleaning to maintain pristine fabric condition\nLimited colorways currently available from the manufacturer\nSlightly restrictive return policy for international orders`;
-    t_intro = `Building a sustainable, versatile wardrobe requires investing in pieces that transcend seasonal micro-trends. The ${cleanKw} has caught the attention of fashion editors and style influencers alike for its striking silhouette and premium construction. We ordered a sample directly from ${brandName} to evaluate whether this garment justifies its luxury positioning.\n\nStraight out of the eco-friendly packaging, the tactile quality of the fabric is undeniable. The weight of the material provides a structured yet fluid drape, immediately distinguishing it from fast-fashion alternatives. The hardware—from the subtle zippers to the reinforced buttons—feels bespoke and substantial.`;
-    t_body = `Fit and proportion are where the ${cleanKw} truly excels. Our sizing tests across three different body types revealed that the garment is cut with an expert understanding of human anatomy. The tailoring allows for comfortable articulation of the arms and torso without the fabric bunching awkwardly or losing its shape after hours of wear.\n\nWe also conducted stress tests on the seams and ran the piece through standard care cycles. While it requires gentle handling, the color retention and structural integrity remained flawless. The styling versatility is perhaps its strongest asset—it pairs just as effortlessly with casual vintage denim as it does with tailored evening trousers, making it a true chameleon in any closet.`;
-    t_verdict = `If you are looking to elevate your wardrobe with a foundational piece that speaks quiet luxury, the ${cleanKw} is a masterful execution of modern tailoring. It bridges the gap between avant-garde design and daily wearability perfectly.`;
-  } else if (niche === 'watches') {
+  if (isBeautyWellness) {
+    catName = 'Beauty & Personal Care';
+    priceU = '$265.00'; priceV = '6.625.000₫'; priceO = '$331.25';
+    t_img = resolveImage('https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} In-Depth Review: Full-Body Detox Protocol Tested (2026)`;
+    t_excerpt = `A comprehensive 30-day clinical & experiential evaluation of ${cleanKw} by ${brandName}: Ingredients breakdown, digestive benefits, detox timeline, and long-term vitality analysis.`;
+    t_pros = `100% all-natural wildcrafted herbal formulation with organic tinctures and zero synthetic fillers\nComprehensive multi-stage protocol targeting microbiome balance, gut health, and systemic detoxification\nGentle on digestion without harsh chemical laxatives or artificial binders\nBacked by transparent batch sourcing and verified customer wellness transformations`;
+    t_cons = `Natural botanical taste is earthy and pungent, best consumed diluted in juice or smoothies\nRequires consistent daily adherence over the full 30-day protocol for peak outcomes`;
+    t_intro = `Gut wellness and systemic cleansing have emerged as the cornerstone of modern preventative health. Among the myriad of detox regimens on the market, ${cleanKw} from ${brandName} has garnered widespread acclaim across holistic wellness communities for its potent botanical formulation.\n\nUnlike harsh synthetic cleanses that deplete essential flora, this protocol utilizes time-tested herbs—including sweet wormwood, organic clove, black walnut hull, and lymphatic support botanicals. Upon unboxing, the presentation is immaculate: tinted amber glass bottles with measured glass droppers to protect volatile plant compounds from UV degradation.`;
+    t_body = `Our editorial wellness team followed the complete recommended protocol over a rigorous 30-day evaluation. During the initial week, the herbal drops integrated smoothly into daily morning routines. By week two, noticeable improvements in digestive regularity, reduced bloating, and sustained mid-day energy levels were consistently recorded.\n\nThe inclusion of comprehensive dietary guidelines and hydration recommendations ensures users can optimize their cleanse while minimizing typical detox fatigue. Compared to generic supermarket cleanses, the high concentration and bio-availability of the liquid tinctures provide noticeably superior assimilation.`;
+    t_verdict = `The ${cleanKw} stands out as a gold standard in holistic wellness. If you are seeking to reset your digestive system, combat sluggishness, and support your natural microbiome, ${brandName}'s formula delivers verified results. It earns our highest editorial recommendation for 2026.`;
+  } else if (isFashionStyle) {
+    catName = 'Alt & Gothic Fashion';
+    priceU = '$89.00'; priceV = '2.225.000₫'; priceO = '$119.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Review: Premium Silhouette & Styling Tested (2026)`;
+    t_excerpt = `Our hands-on fashion review of ${cleanKw}: Fabric durability, cut precision, drape dynamics, and all-season versatility.`;
+    t_pros = `Tailored silhouette with reinforced stitching and premium drape\nBreathable all-season fabric blend with luxurious hand-feel\nVersatile styling options from everyday streetwear to elevated evening aesthetics\nColor-fast dyes that resist fading through repeated gentle wash cycles`;
+    t_cons = `Delicate care instructions recommend gentle cycle or hand washing\nLimited seasonal production batches may sell out quickly`;
+    t_intro = `Fashion that bridges expressive aesthetics with wearable comfort is rare. The ${cleanKw} by ${brandName} achieves this balance through meticulous pattern-making and fabric selection.\n\nThe garment arrives beautifully packaged. The stitching along the hems and seams is remarkably uniform, with zero loose threads or uneven tension.`;
+    t_body = `Over four weeks of styling across varied weather conditions, the fabric retained its drape and structural integrity without wrinkling excessively. The fit strikes the ideal balance between structured elegance and relaxed mobility.`;
+    t_verdict = `The ${cleanKw} is an exceptional wardrobe addition that elevates personal style effortlessly. Highly recommended for fashion-forward wardrobes in 2026.`;
+  } else if (isHorologyWatch) {
     catName = 'Watches & Horology';
-    t_img = 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: A Masterclass in Modern Horology?`;
-    t_excerpt = `We spent two weeks on the wrist with the ${cleanKw}. From dial finishing and movement accuracy to case ergonomics, here is our definitive enthusiast review.`;
-    t_pros = `Impeccable dial finishing with applied indices and flawless handset polishing\nReliable, heavily regulated automatic movement with excellent power reserve\nSuperb case ergonomics that wear much slimmer than the spec sheet suggests\nHigh-quality bracelet with micro-adjustment clasp for perfect daily comfort`;
-    t_cons = `The lug-to-lug distance might overhang on wrists smaller than 6.25 inches\nLume application, while adequate, fades quicker than dedicated dive watches\nRetail availability is heavily waitlisted in major boutiques`;
-    t_intro = `In the crowded landscape of modern watchmaking, finding a timepiece that balances heritage aesthetics with cutting-edge manufacturing is rare. The ${cleanKw} has generated massive buzz in the enthusiast community, promising luxury finishing at a competitive price point. We managed to secure a production model to see if it lives up to the lofty expectations on the wrist.\n\nUnboxing the ${cleanKw} reveals a timepiece that punches significantly above its weight class. The interplay between the brushed and polished surfaces on the stainless steel case catches the light brilliantly. The dial, viewed under a macro loupe, shows zero dust, and the applied markers exhibit a level of sharpness usually reserved for watches triple the price.`;
-    t_body = `Strapping it onto the wrist, the first thing you notice is the ergonomics. Despite the listed dimensions, the dramatically downward-curving lugs allow the watch to hug the wrist securely, eliminating any top-heavy wobble. The bracelet articulates smoothly without pulling arm hair, and the on-the-fly micro-adjustable clasp ensures comfort as your wrist expands throughout the day.\n\nOn the timegrapher, the movement performed admirably, running at a consistent +3 seconds per day across five positions. The winding action is buttery smooth, and the date snaps crisply exactly at midnight. While it may lack the prestige of haute horlogerie in-house calibers, the robust architecture means servicing will be affordable and reliable for decades to come.`;
-    t_verdict = `The ${cleanKw} represents a sweet spot in the current watch market. It offers enough horological pedigree and finishing prowess to satisfy hardcore collectors, while remaining accessible enough for someone buying their first serious watch. Highly recommended.`;
-  } else if (niche === 'ebooks' || niche === 'courses') {
-    catName = 'Digital Education';
-    t_img = 'https://images.unsplash.com/photo-1513185041617-8ab03f83d6c5?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: Is This Masterclass Worth Your Time? (2026)`;
-    t_excerpt = `We purchased and completed the entire ${cleanKw} curriculum. Here is our brutally honest review of the actionable strategies, production value, and overall ROI.`;
-    t_pros = `Highly actionable, step-by-step frameworks that bypass theoretical fluff\nExcellent production quality with crystal-clear audio and screen recordings\nAccess to a private, active community of like-minded students and direct Q&A\nRegularly updated curriculum reflecting 2026's latest algorithms and strategies`;
-    t_cons = `Requires significant time commitment to actually implement the teachings\nSome beginner modules may feel slow to advanced practitioners\nPremium pricing makes it a serious investment rather than an impulse buy`;
-    t_intro = `The internet is saturated with "gurus" selling courses and ebooks that amount to nothing more than repackaged Wikipedia articles. When the ${cleanKw} launched, it promised a genuinely different approach: no fluff, no fake lifestyle marketing, just hard tactical frameworks. We paid full price for access, went incognito, and completed every single module to bring you this unbiased breakdown.\n\nThe onboarding process is seamless. The learning management platform is intuitively designed, tracking your progress and providing easy access to downloadable PDF worksheets, Notion templates, and resource lists. The instructor’s delivery is concise, energetic, and completely focused on actionable execution rather than motivational speaking.`;
-    t_body = `Diving into the core curriculum, the true value of the ${cleanKw} becomes apparent. Instead of vague theory, the instructor breaks down complex systems into repeatable daily SOPs (Standard Operating Procedures). We particularly appreciated the "over-the-shoulder" screen capture sessions, where you literally watch the instructor execute the strategies live on real accounts without any editing magic.\n\nThe private community aspect is arguably worth the price of admission alone. Unlike dead Discord servers, this cohort is highly active. We posted a technical question regarding Module 4 and received a detailed, personalized response from the instructor's core team within 3 hours. Furthermore, the material is entirely up-to-date with 2026's AI integrations and algorithm changes, completely avoiding outdated tactics.`;
-    t_verdict = `If you are willing to put in the hours and execute, the ${cleanKw} provides an exceptional ROI. It bridges the gap between knowing what to do and actually knowing HOW to do it step-by-step. This is one of the few digital products we confidently endorse.`;
-  } else if (niche === 'tech_audio') {
-    catName = 'Audio & Tech';
+    priceU = '$219.00'; priceV = '5.475.000₫'; priceO = '$279.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Review: Mechanical Horology & Movement Tested (2026)`;
+    t_excerpt = `A deep-dive horological review of ${cleanKw}: Movement accuracy, sapphire crystal clarity, column-wheel action, and wrist presence.`;
+    t_pros = `Authentic mechanical caliber with visible exhibition caseback\nCrisp pusher engagement and tactile winding sensation\nVintage-inspired dial typography with warm domed crystal\nOutstanding value-to-craftsmanship ratio in mechanical horology`;
+    t_cons = `Manual wind caliber requires regular winding routine\nWater resistance is intended for splash protection rather than diving`;
+    t_intro = `In an age dominated by disposable digital wearables, mechanical horology offers an enduring connection to physical micro-engineering. The ${cleanKw} from ${brandName} celebrates this heritage with timeless proportion and mechanical authenticity.`;
+    t_body = `On the wrist, the watch commands understated presence. Running on our digital timing machine, the movement exhibited an impressive daily rate deviation well within +6 to +9 seconds per day, rivaling calibers costing three times as much.`;
+    t_verdict = `For watch collectors and style purists, the ${cleanKw} delivers immense horological charm and mechanical soul. A stellar addition to any timepiece collection.`;
+  } else if (isCoffeeGear) {
+    catName = 'Espresso & Coffee';
+    priceU = '$449.00'; priceV = '11.225.000₫'; priceO = '$549.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} In-Depth Review: Temperature Stability & Extraction Tested (2026)`;
+    t_excerpt = `We extracted over 100 espresso shots with the ${cleanKw}: Boiler recovery time, steam wand power, and shot consistency bench-tested.`;
+    t_pros = `Commercial-grade 58mm portafilter for optimal espresso extraction\nSolid stainless-steel housing built for decades of reliable use\nPowerful commercial steam wand produces velvety microfoam for latte art\nExpansive aftermarket modding ecosystem for coffee enthusiasts`;
+    t_cons = `Requires a quality burr grinder to achieve optimal extraction pressure\nSingle-boiler design requires brief transition between brewing and steaming`;
+    t_intro = `Achieving true café-quality espresso at home requires commercial hydraulic engineering. The ${cleanKw} from ${brandName} has long served as the benchmark for aspiring home baristas seeking uncompromised espresso extraction.`;
+    t_body = `Testing with light and medium roast specialty beans, the brass boiler maintained stable brewing temperatures across back-to-back shots. Crema was dense and aromatic, unlocking rich chocolate and stone fruit tasting notes.`;
+    t_verdict = `The ${cleanKw} remains the gold standard in entry-to-intermediate home espresso, delivering café-quality results in a bulletproof chassis.`;
+  } else if (isAutoRacing) {
+    catName = 'Auto Performance';
+    priceU = '$169.00'; priceV = '4.225.000₫'; priceO = '$219.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Review: Dyno Gains & Thermal Resistance Benchmarked (2026)`;
+    t_excerpt = `Dyno testing and track evaluation of ${cleanKw}: Airflow CFM gains, throttle response improvements, and build precision.`;
+    t_pros = `Precision CNC-machined from aircraft-grade aluminum alloy\nProven dyno horsepower and torque improvements across mid-to-high RPM range\nEnhanced acoustic signature with intoxicating intake sound\nDirect bolt-on installation with factory mounting provisions`;
+    t_cons = `Requires basic automotive mechanical aptitude for DIY installation\nECU tune recommended to unlock 100% of available performance gains`;
+    t_intro = `Extracting maximum volumetric efficiency from modern powertrains requires precision induction engineering. The ${cleanKw} engineered by ${brandName} is specifically designed to eliminate restrictive factory airflow bottlenecks.`;
+    t_body = `Installed on our test mule, dyno verification showed a repeatable +8 to +12 HP gain across the 3,500 - 6,000 RPM range, paired with noticeably sharper throttle tip-in response during spirited track lapping.`;
+    t_verdict = `For automotive enthusiasts looking to sharpen throttle response and add genuine performance gains, the ${cleanKw} is an exceptional hardware upgrade.`;
+  } else if (isRcPlaneGlider) {
+    catName = 'Robotics & Drones';
+    priceU = '$109.99'; priceV = '2.750.000₫'; priceO = '$139.99';
+    t_img = resolveImage('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Review: Aerobatic Flight & XPilot Gyro Tested (2026)`;
+    t_excerpt = `We put the ${cleanKw} through 25 flight sorties across variable wind conditions. Featuring multi-mode gyro flight stabilization, ultra-resilient EPP foam airframe, and responsive 2.4GHz multi-channel control.`;
+    t_pros = `Multi-axis flight gyro stabilization provides hands-free self-leveling and aerobatic assist for beginner pilots\nCrash-resistant EPP composite foam airframe absorbs rough grass landings and minor impacts without cracking\nEfficient coreless motor paired with high-discharge LiPo battery delivers 14 to 18 minutes of flight endurance per charge\nErgonomic 2.4GHz multi-channel transmitter offers reliable telemetry and responsive proportional stick inputs`;
+    t_cons = `Lightweight airframe requires calm to moderate wind (< 15 km/h) for optimal beginner flight stability\nSpare LiPo flight batteries and propeller replacements recommended for continuous flying club sessions`;
+    t_intro = `Remote-controlled fixed-wing aviation has historically presented a daunting learning curve, where a single orientation error could instantly shatter a delicate airframe. The ${cleanKw} eliminates that intimidation factor with modern flight avionics. Engineered by ${brandName}, this Ready-To-Fly (RTF) aircraft combines forgiving multi-axis gyro assistance with spirited aerobatic capability.\n\nUnboxing the aircraft, the aerodynamic geometry is striking. The high-density EPP foam construction offers tactile resilience, and all pushrods, control horns, and servos arrive factory-centered and calibrated.`;
+    t_body = `We logged over 25 flight sorties at open aeromodelling grounds in winds gusting between 8 and 14 km/h. Hand-launching into the wind with 60% throttle, the aircraft climbed out with authority. In Beginner Mode, releasing the sticks triggers instantaneous 6-axis gyro leveling, recovering from steep bank angles and preventing unintentional stalls.\n\nFlipping the transmitter toggle into Aerobatic Mode allows continuous barrel rolls, loops, and sustained inverted passes with razor-sharp rudder and elevator response. Flight times consistently averaged 15 minutes per 1S/2S LiPo pack, making it an extraordinarily fun and accessible park flyer.`;
+    t_verdict = `The ${cleanKw} is one of the most delightful and confidence-inspiring RC airplanes on the market. Whether you are stepping into RC aviation for the very first time or want a durable park flyer for weekend aerobatics, it earns our highest recommendation.`;
+  } else if (isActualMower) {
+    // Genuine Lawn Mower Only
+    catName = 'Robotics & Drones';
+    priceU = '$1,499.00'; priceV = '37.475.000₫'; priceO = '$1,799.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${brandName.includes('Mowrator') ? 'Mowrator S1 4WD Smart Remote Control Mower' : cleanKw} In-Depth Review: 45° All-Terrain Performance Tested (2026)`;
+    t_excerpt = 'Featuring quad independent brushless hub motors, military-grade 2.4GHz remote telemetry, and 80% grade slope climbing, this machine permanently eliminates the physical dangers of steep-terrain lawn maintenance.';
+    t_pros = `Full 4WD brushless hub-motor drivetrain delivers 160Nm of instant torque to tackle 45-degree (80%) slopes\nErgonomic 2.4GHz remote controller with real-time telemetry screen operates reliably past 250 meters\nHeavy-gauge stamped steel cutting deck with electronic height adjustment\nHigh-capacity swap-and-go 56V lithium battery architecture delivers 2.2 to 2.8 hours of uninterrupted cutting`;
+    t_cons = `Hefty chassis requires heavy-duty loading ramps for pickup truck or trailer transport\nSubstantial upfront prosumer investment compared to conventional manual walk-behind mowers`;
+    t_intro = `Steep embankments, retention basins, and overgrown orchard slopes have historically been among the most hazardous environments in landscaping. Every year, commercial operators and rural property owners suffer severe injuries from rollover incidents. The ${cleanKw} was engineered from the ground up to eradicate this occupational hazard by taking the operator completely out of harm's way.\n\nFrom the moment you uncrate it, its industrial DNA is unmistakable. Built on a reinforced tubular steel roll-cage with aggressive tractor-tread pneumatic tires, this machine resembles an exploration rover rather than a suburban yard tool.`;
+    t_body = `We subjected the ${cleanKw} to 30 days of punishment across a 4-acre property featuring 40-degree clay embankments, thick fescue, wet riverbank Bermuda grass, and rocky uneven ditch slopes. Where commercial zero-turn mowers would spin their drive wheels and risk sliding sideways, the independent all-wheel brushless motors distributed torque flawlessly.\n\nThe onboard digital inclinometer automatically modulated wheel speeds, preventing turf tear while climbing damp 42-degree inclines effortlessly. Operating via the 2.4GHz remote felt intuitive, providing immediate dual-stick proportional throttle and skid-steer navigation with zero latency.`;
+    t_verdict = `The ${cleanKw} isn't just a luxury gadget—it is a critical safety upgrade for anyone managing difficult, uneven terrain. By removing the human operator from the physical risks of rollovers and blade accidents, it pays for itself in peace of mind alone.`;
+  } else if (isDroneFlycam || (niche === 'robotics' && !isRcPlaneGlider && !isActualMower)) {
+    // Drones & Flycams
+    catName = 'Robotics & Drones';
+    t_img = resolveImage('https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} In-Depth Review: Flight Telemetry & 4K Imaging (2026)`;
+    t_excerpt = `We logged over 40 hours of flight testing across coastal high winds and tight wooded terrain with the ${cleanKw}. Here is our complete hardware and camera teardown.`;
+    t_pros = `Omnidirectional optical obstacle avoidance sensors provide 360-degree crash protection\nStunning 4K/60fps HDR video capture with true vertical shooting mode for creators\nUltralight chassis stays comfortably below regional regulatory registration limits\nRock-solid 1080p/60fps video transmission range exceeding 10 kilometers`;
+    t_cons = `High-wind stability requires sport mode in gusts exceeding 32 km/h\nAdditional flight battery pack recommended for extended field shoots`;
+    t_intro = `Autonomous robotics and aerial imaging have witnessed exponential leaps in miniaturization. The ${cleanKw} combines prosumer cinema camera quality with palm-sized portability.\n\nFrom the moment the brushless motors spin up, the precision stabilization is apparent. Even in gusty coastal winds, the mechanical 3-axis gimbal keeps the camera rock-steady like a tripod in the sky.`;
+    t_body = `Dynamic range from the 1/1.3-inch dual-native ISO sensor is breathtaking, resolving intricate shadow detail without clipping bright sunset highlights. The autonomous subject-tracking algorithms locked onto trail runners and mountain bikes through dense tree canopies without losing tracking focus.`;
+    t_verdict = `For content creators, travel filmmakers, and drone enthusiasts, the ${cleanKw} is an indispensable creative tool that punches far above its weight class.`;
+  } else if (isRobotVacuum) {
+    // Robot Vacuums & Mops
+    catName = 'Smart Home & IoT';
+    priceU = '$899.00'; priceV = '22.475.000₫'; priceO = '$1,199.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Review: LiDAR Navigation & Deep Cleaning Benchmarks (2026)`;
+    t_excerpt = `We subjected the ${cleanKw} to 4 weeks of intensive debris, pet hair, and dried stain testing across hardwood, tile, and medium-pile carpets.`;
+    t_pros = `Massive suction power with dual anti-tangle rubber roller brushes eliminates pet hair wrap\nVibraRise sonic mopping scrub system lifts stubborn dried coffee and syrup stains effortlessly\nPrecision LDS LiDAR mapping navigates complex chair legs and cables without getting stranded\nAll-in-one hands-free dock washes mops with hot water, self-empties dust, and hot-air dries`;
+    t_cons = `Large multifunction dock footprint requires dedicated floor space near a power outlet\nReplacement dust bags and specialized cleaning detergent require minor recurring upkeep`;
+    t_intro = `Robotic floor cleaning has evolved from random bumper cars to intelligent autonomous maintenance systems. The ${cleanKw} represents the pinnacle of autonomous floor care, designed to keep large multi-room households spotless with zero manual intervention.\n\nInitial mapping took under 8 minutes for a 120-square-meter floor plan. The high-precision LiDAR scanner generated an accurate 3D map identifying carpet zones, furniture boundaries, and no-go areas.`;
+    t_body = `In standardized lab tests, the vacuum collected 98.4% of fine sand and pet dander from deep carpet fibers. The dual rotating and vibrating mop pads lifted dried barbecue sauce and mud footprints in a single pass without streaking glossy tiles.`;
+    t_verdict = `The ${cleanKw} sets the reference standard for fully autonomous residential cleaning in 2026. A transformative home appliance that gives you back hours of your life every week.`;
+  } else if (isMechanicalKeyboard) {
+    // Mechanical Keyboards
+    catName = 'Desk Setup & EDC';
+    priceU = '$199.00'; priceV = '4.975.000₫'; priceO = '$229.00';
+    t_img = resolveImage('https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Hands-On Review: Ergonomics & Tactile Perfection (2026)`;
+    t_excerpt = `An exhaustive teardown of the ${cleanKw}. We evaluate structural chassis acoustics, ergonomic tolerances, switch feel, and daily productivity enhancements.`;
+    t_pros = `Solid CNC anodized aluminum enclosure provides weight, acoustic dampening, and zero desk slippage\nGasket-mounted acoustic dampening produces a deeply satisfying, creamy sound signature\nHot-swappable PCB supports both 3-pin and 5-pin mechanical switches without soldering\nFull QMK/VIA keymap customizability across macOS, Windows, and Linux`;
+    t_cons = `Heavyweight chassis makes it strictly a stationary battlestation centerpiece\nPremium mechanical hardware investment compared to mass-market plastic peripherals`;
+    t_intro = `Your primary desk peripherals directly dictate your posture, comfort, and productivity throughout the workday. The ${cleanKw} was meticulously designed to elevate the desktop typing experience into an art form.\n\nWeighing in with substantial aluminum heft, the keyboard sits anchored to the desk mat. The custom keycap profiles cup the fingertips naturally, drastically reducing wrist strain during lengthy coding and writing sprints.`;
+    t_body = `Typing on the lubricated mechanical switches feels buttery smooth with zero pinging or spring crunch. The multi-layer sound dampening absorbs harsh frequencies, generating a refined, deep acoustic response that is an absolute joy to use for 8+ hours a day.`;
+    t_verdict = `The ${cleanKw} transforms everyday computer interaction into a luxurious tactile experience. Built like an heirloom and infinitely customizable, it is an essential investment for any serious workspace.`;
+  } else if (niche === 'audio') {
+    catName = 'Audio & Sound';
     t_img = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: Noise Canceling, Soundstage & Audiophile Verdict (2026)`;
-    t_excerpt = `An in-depth acoustic evaluation of the ${cleanKw}. We test active noise cancellation attenuation, wireless latency, DAC resolution, and all-day comfort.`;
-    priceU = '$298.00'; priceV = '7.450.000₫'; priceO = '$399.00';
-    t_pros = `Industry-leading Active Noise Cancellation (ANC) with multi-microphone ambient isolation\nAudiophile-grade acoustic drivers tuned for balanced bass extension and crystalline highs\nPlush memory-foam ear cushions providing fatigue-free comfort for 8+ hour sessions\nExceptional battery endurance exceeding 30 hours on a single rapid charge`;
-    t_cons = `Premium pricing places it in direct competition with studio monitors\nNon-folding travel hinge requires larger storage footprint\nTouch control gestures may require slight acclimation period`;
-    t_intro = `In premium wireless audio, benchmark expectations have escalated beyond mere sound reproduction. The ${cleanKw} enters the arena promising unmatched acoustic fidelity and silence in chaotic environments. We subjected this pair to extensive studio testing and high-noise commutes.\n\nFrom first touch, the minimalist acoustic design exudes quality. The silent stepless slider, lightweight ergonomic headband, and whisper-soft ear cups create a gentle acoustic seal without excessive clamping force.`;
-    t_body = `Testing ANC performance on busy public transit and high-speed rail, the multi-microphone array virtually eradicated low-frequency rumble and engine drone. High-frequency chatter was attenuated with surprising efficiency.\n\nAcoustically, frequency response remains neutral and transparent. Bass response is tight with sub-bass authority, midrange vocals are textured without sibilance, and high frequencies sparkle without harshness. Multi-point Bluetooth switching performed without dropped packets.`;
-    t_verdict = `The ${cleanKw} sets the definitive gold standard for noise-canceling headphones in 2026. For frequent travelers, commuters, and audio purists seeking serenity, it is worth every penny.`;
-  } else if (niche === 'tech_keyboard') {
-    catName = 'Keyboards & Desk Setup';
-    t_img = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Hands-On Review: Custom Typing Feel, Acoustics & Build Quality (2026)`;
-    t_excerpt = `We tested the ${cleanKw} mechanical keyboard for tactile responsiveness, double-gasket acoustic dampening, QMK/VIA programmability, and wireless stability.`;
-    priceU = '$198.00'; priceV = '4.950.000₫'; priceO = '$229.00';
-    t_pros = `Precision CNC-machined aluminum body with satisfying heft and zero desk slip\nDouble-gasket acoustic mounting delivering a deep, marbled sound signature\nSeamless wireless multi-device switching with ultra-low latency\nFull open-source QMK/VIA key remapping and macro customizability`;
-    t_cons = `Heavy aluminum chassis is not designed for mobile commuting\nFactory stabilizers benefit from fine-tuning for enthusiast perfection\nRGB backlighting drains battery faster in high-brightness mode`;
-    t_intro = `The custom mechanical keyboard enthusiast scene has exploded into the mainstream. The ${cleanKw} aims to offer custom enthusiast quality straight out of the box with zero assembly required.\n\nLifting it from the box reveals genuine heft. The CNC anodized aluminum chassis feels rock-solid, and double-shot PBT keycaps offer a silky, oil-resistant matte texture.`;
-    t_body = `Typing on the ${cleanKw} is immensely satisfying. The double-gasket suspension system flexes subtly with each keystroke, softening bottom-out harshness and creating a deep, resonant acoustic profile.\n\nWhether gaming over 2.4GHz wireless or programming via Bluetooth across macOS and Windows, latency was undetectable. Key remapping via VIA worked instantaneously without installing bloatware.`;
-    t_verdict = `The ${cleanKw} bridges the gap between boutique custom builds and accessible consumer hardware. An incredible productivity investment for writers, coders, and desk setup enthusiasts.`;
+    t_title = `${cleanKw} In-Depth Review: Audiophile Benchmarks & ANC Tested (2026)`;
+    t_excerpt = `We put the ${cleanKw} through rigorous acoustic laboratory testing. From frequency response neutrality to active noise cancellation attenuation, here is our definitive review.`;
+    t_pros = `Remarkable acoustic fidelity with tight sub-bass extension and transparent midrange\nIndustry-leading active noise cancellation attenuates ambient chatter and engine drone by up to 34dB\nPlush, breathable ear cushion memory foam engineered for fatigue-free all-day wear\nLow-latency Bluetooth 5.4 with high-resolution LDAC and aptX Lossless codec support`;
+    t_cons = `Companion equalizer application requires account registration for cloud custom profiles\nFolding hinges require deliberate care when packing into the included travel hardshell`;
+    t_intro = `Finding headphones that effortlessly bridge the gap between studio-grade sonic resolution and daily commuter practicality is rare. The ${cleanKw} promises exactly that balance. We ordered a retail unit directly from ${brandName} to conduct extensive frequency sweeps, multi-point stress tests, and microphone noise-rejection benchmarks.\n\nOut of the box, the industrial engineering inspires immediate confidence. The weight distribution across the headband eliminates localized crown pressure, and the matte texture resists oily fingerprints brilliantly.`;
+    t_body = `In listening tests spanning lossless FLAC orchestral arrangements, modern electronic tracks, and podcast voice work, the custom tuned dynamic drivers delivered sublime instrument separation. Active noise cancellation effortlessly silenced subway roar and mechanical office HVAC hum without introducing noticeable high-frequency hiss or eardrum pressure.\n\nBattery endurance exceeded expectations, logging 32 continuous hours with ANC engaged before needing a recharge via USB-C fast charging.`;
+    t_verdict = `The ${cleanKw} establishes a new reference benchmark for premium audio hardware in 2026. For discerning listeners who demand top-tier sound quality paired with bulletproof noise isolation, it is an unequivocal winner.`;
+  } else if (niche === 'wearables') {
+    catName = 'Smart Wearables';
+    t_img = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Review: Biometric Precision & Battery Endurance`;
+    t_excerpt = `We spent 30 days testing the ${cleanKw} during backcountry trails, open water swims, and daily sleep cycles. Here is our lab report on sensor accuracy and build durability.`;
+    t_pros = `Aerospace-grade titanium chassis with scratch-resistant sapphire crystal lens\nUltra-bright 3000-nit AMOLED display remains effortlessly legible under direct harsh sunlight\nMultiband dual-frequency GPS delivers pinpoint accuracy even under dense forest canopy\nComprehensive health telemetry tracking ECG, SpO2, HRV, and skin temperature trends`;
+    t_cons = `Rugged 49mm case footprint may feel substantial on more slender wrists\nFull feature suite requires companion mobile operating system pairing`;
+    t_intro = `Modern smart wearables have transitioned from simple step counters to life-saving biometric telemetry hubs. The ${cleanKw} positions itself as the apex explorer companion. We strapped it on for 30 consecutive days of mountain trekking, high-altitude running, and recovery tracking.\n\nThe build quality is uncompromising. The tactile button travel is crisp enough to operate with winter gloves, and the raised titanium bezel shields the sapphire display against direct rock strikes.`;
+    t_body = `During dual-frequency GNSS testing against a dedicated handheld Garmin receiver, track accuracy was virtually identical with zero GPS drift across narrow city streets and canyon valleys. Sleep tracking algorithms demonstrated exceptional fidelity when correlated with medical-grade EEG sleep monitors.\n\nBattery life easily clears multiple days of intensive GPS workout logging on a single charge.`;
+    t_verdict = `The ${cleanKw} is quite simply the most complete, durable, and reliable outdoor biometric timepiece available today. A triumphant achievement for athletes and adventurers alike.`;
   } else if (niche === 'smarthome') {
     catName = 'Smart Home & IoT';
     t_img = 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Matter, Thread & Home Automation (2026)`;
-    t_excerpt = `A deep dive into the ${cleanKw}. We evaluate local automation latency, Matter & Thread mesh stability, sensor sensitivity, and cross-platform ecosystem harmony.`;
-    priceU = '$82.99'; priceV = '2.075.000₫'; priceO = '$99.99';
-    t_pros = `Universal Matter & Thread border router support connecting Apple Home, Alexa, and Google\nZero-cloud local automation execution ensures blazing-fast responses and privacy\nRobust RF range with stable mesh networking through walls\nCompact, unobtrusive aesthetic that blends seamlessly into any modern room`;
-    t_cons = `Requires modern Matter-compatible hub architecture for advanced routines\nInitial multi-protocol pairing flow requires following on-screen instructions closely\nSpecialized sensors sold separately`;
-    t_intro = `Smart homes often suffer from fragmented ecosystems and cloud outages. The ${cleanKw} solves this by acting as a universal, local bridge powered by Matter and Thread protocols.\n\nSetup took less than five minutes using QR code onboarding into Apple Home and Home Assistant simultaneously.`;
-    t_body = `Testing automated routines over several weeks, the device executed trigger events in sub-50 milliseconds. Because logic runs locally on-device, complex lighting and sensor chains operated flawlessly even when our home internet was severed.\n\nSignal stability was rock solid across multi-story coverage without dropped packets or phantom triggers.`;
-    t_verdict = `The ${cleanKw} is an essential cornerstone for reliable, future-proof smart home automation. Fast, private, and effortless to integrate.`;
-  } else if (niche === 'gaming') {
-    catName = 'Gaming & Battlestations';
-    t_img = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: Esports Benchmarks, Framerates & Thermals (2026)`;
-    t_excerpt = `We benchmarked the ${cleanKw} across AAA ray-traced titles and competitive shooters. Here is our full report on framerates, display latency, and cooling architecture.`;
-    priceU = '$1,299.00'; priceV = '32.475.000₫'; priceO = '$1,599.00';
-    t_pros = `Blistering GPU compute power capable of maxing out modern AAA titles at high refresh rates\nSuperb high-refresh display with razor-sharp response times and deep contrast\nAdvanced dual-fan vapor chamber thermals keep components stable under long sessions\nPremium tactile inputs with customizable RGB sync`;
-    t_cons = `Power-hungry performance demands high-wattage charging bricks\nFan acoustics become audible during extreme benchmark stress tests\nHefty chassis best suited for dedicated desk setups`;
-    t_intro = `For serious gamers and creators, cutting corners on hardware means lost frames and thermal throttling. The ${cleanKw} was designed to deliver uncompromised desktop-tier performance.\n\nFrom its aggressive yet sophisticated silhouette to the precision thermal exhaust venting, every design choice prioritizes maximum sustained throughput.`;
-    t_body = `In our benchmarking gauntlet, the ${cleanKw} delivered buttery smooth 1% low frame rates in Cyberpunk 2077 and Counter-Strike 2. Ray-tracing and AI frame generation operated without artifacting.\n\nThermal management performed admirably, maintaining keyboard surface temperatures comfortably below 38°C throughout extended 3-hour gaming marathons.`;
-    t_verdict = `The ${cleanKw} is an absolute powerhouse engineered for discerning esports competitors and content creators who demand zero compromises.`;
-  } else {
-    // General Tech / Hardware / Others
-    catName = 'Tech & Hardware';
+    t_title = `${cleanKw} Review: True Automation for the Modern Connected Home`;
+    t_excerpt = `We integrated the ${cleanKw} into a 45-device Matter & HomeKit smart home testbed for 4 weeks. Here is our hands-on review of reliability and ease of use.`;
+    t_pros = `Native Matter & Thread support ensures seamless cross-ecosystem synchronization\nUltra-low idle power consumption with instant millisecond local network response\nIntuitive zero-code automation scripting within the companion application\nSolid industrial enclosure with concealed cable management channels`;
+    t_cons = `Initial firmware update requires 2.4GHz Wi-Fi network initialization\nAdvanced automation logic has a slight learning curve for smart home novices`;
+    t_intro = `The true promise of the smart home is invisible convenience: technology that works reliably without constant manual tinkering or dropped connections. The ${cleanKw} brings enterprise-grade automation reliability into residential environments.\n\nSetup was remarkably frictionless thanks to Matter QR onboarding. Within two minutes, the device was recognized across Apple Home, Google Home, and Home Assistant simultaneously.`;
+    t_body = `Over four weeks of continuous torture testing, we observed zero dropped packets or offline states. Automations triggered with sub-50ms latency entirely over local Thread mesh networks, ensuring privacy and offline resiliency even during internet ISP blackouts.`;
+    t_verdict = `The ${cleanKw} delivers on the long-promised dream of hassle-free smart home automation. Robust, interoperable, and future-proof.`;
+  } else if (niche === 'robotics') {
+    catName = 'Robotics & Drones';
+    t_img = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} In-Depth Review: Flight Telemetry & 4K Imaging`;
+    t_excerpt = `We logged over 40 hours of flight testing across coastal high winds and tight wooded terrain with the ${cleanKw}. Here is our complete hardware and camera teardown.`;
+    t_pros = `Omnidirectional optical obstacle avoidance sensors provide 360-degree crash protection\nStunning 4K/60fps HDR video capture with true vertical shooting mode for creators\nUltralight chassis stays comfortably below regional regulatory registration limits\nRock-solid 1080p/60fps video transmission range exceeding 10 kilometers`;
+    t_cons = `High-wind stability requires sport mode in gusts exceeding 32 km/h\nAdditional flight battery pack recommended for extended field shoots`;
+    t_intro = `Autonomous robotics and aerial imaging have witnessed exponential leaps in miniaturization. The ${cleanKw} combines prosumer cinema camera quality with palm-sized portability.\n\nFrom the moment the brushless motors spin up, the precision stabilization is apparent. Even in gusty coastal winds, the mechanical 3-axis gimbal keeps the camera rock-steady like a tripod in the sky.`;
+    t_body = `Dynamic range from the 1/1.3-inch dual-native ISO sensor is breathtaking, resolving intricate shadow detail without clipping bright sunset highlights. The autonomous subject-tracking algorithms locked onto trail runners and mountain bikes through dense tree canopies without losing tracking focus.`;
+    t_verdict = `For content creators, travel filmmakers, and drone enthusiasts, the ${cleanKw} is an indispensable creative tool that punches far above its weight class.`;
+  } else if (niche === 'edc') {
+    catName = 'Desk Setup & EDC';
+    t_img = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Hands-On Review: Ergonomics & Tactile Perfection`;
+    t_excerpt = `An exhaustive teardown of the ${cleanKw}. We evaluate structural chassis acoustics, ergonomic tolerances, switch feel, and daily productivity enhancements.`;
+    t_pros = `Solid CNC anodized aluminum enclosure provides weight, acoustic dampening, and zero desk slippage\nGasket-mounted acoustic dampening produces a deeply satisfying, creamy sound signature\nHot-swappable PCB supports both 3-pin and 5-pin mechanical switches without soldering\nFull QMK/VIA keymap customizability across macOS, Windows, and Linux`;
+    t_cons = `Heavyweight chassis makes it strictly a stationary battlestation centerpiece\nPremium mechanical hardware investment compared to mass-market plastic peripherals`;
+    t_intro = `Your primary desk peripherals directly dictate your posture, comfort, and productivity throughout the workday. The ${cleanKw} was meticulously designed to elevate the desktop typing experience into an art form.\n\nWeighing in with substantial aluminum heft, the keyboard sits anchored to the desk mat. The custom keycap profiles cup the fingertips naturally, drastically reducing wrist strain during lengthy coding and writing sprints.`;
+    t_body = `Typing on the lubricated mechanical switches feels buttery smooth with zero pinging or spring crunch. The multi-layer sound dampening absorbs harsh frequencies, generating a refined, deep acoustic response that is an absolute joy to use for 8+ hours a day.`;
+    t_verdict = `The ${cleanKw} transforms everyday computer interaction into a luxurious tactile experience. Built like an heirloom and infinitely customizable, it is an essential investment for any serious workspace.`;
+  } else if (niche === 'cameras') {
+    catName = 'Cameras & Creator Gear';
+    t_img = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Review: The Ultimate Pocket Cinema Creator Tool`;
+    t_excerpt = `We tested the ${cleanKw} across low-light night vlogs, fast-paced action sports, and talking-head studio setups. Here is our lab benchmark report.`;
+    t_pros = `Large 1-inch CMOS sensor delivers cinema-grade low-light performance and shallow depth of field\nMechanical 3-axis gimbal stabilization eliminates micro-jitters without cropping image sensors\nRotatable 2-inch touchscreen with rapid horizontal and vertical shooting orientation switching\nFast and accurate dual-pixel autofocus with intelligent face and object tracking`;
+    t_cons = `Non-removable internal battery requires an external battery grip or power bank for all-day recording\nFixed focal length lens requires physical positioning for tight framing`;
+    t_intro = `For modern digital creators, speed of deployment is everything. The ${cleanKw} empowers solo creators to shoot production-ready, stabilized 4K footage within 2 seconds of pulling it from a pocket.\n\nThe 1-inch sensor is a game changer for compact creator gear, providing rich dynamic range, natural skin tone reproduction, and gorgeous optical background separation.`;
+    t_body = `In low-light street tests, noise suppression was stellar with clean shadow details up to ISO 3200. The mechanical gimbal outclasses electronic EIS stabilization entirely, preserving maximum sensor resolution while walking and running.`;
+    t_verdict = `The ${cleanKw} is easily the most capable, versatile, and friction-free video creation tool on the market. A must-have for vloggers and professional filmmakers alike.`;
+  } else if (niche === 'computing') {
+    catName = 'Computing & Gaming';
     t_img = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Lab Benchmarks, Real-World Testing & Buying Advice (2026)`;
+    t_title = `${cleanKw} In-Depth Review: Handheld Benchmarks & AAA Gaming (2026)`;
+    t_excerpt = `We benchmarked the ${cleanKw} across 15 demanding AAA titles at 1080p and 1440p. From thermal dissipation to battery curve analysis, here is our full lab review.`;
+    t_pros = `Blazing processing architecture with high-bandwidth memory crushes modern AAA titles with smooth frame rates\nVibrant high-refresh VRR display delivers fluid gameplay with zero tearing or stuttering\nRedesigned ergonomic grips with zero hand fatigue during extended gaming sessions\nAdvanced dual-fan vapor chamber thermal management keeps chassis cool under sustained 30W load`;
+    t_cons = `Demanding AAA gaming at full power envelope drains the battery in approximately 2.5 to 3 hours\nRequires high-capacity 65W+ GaN power brick for maximum turbo dock performance`;
+    t_intro = `Handheld PC gaming has fundamentally disrupted how enthusiasts experience AAA gaming. The ${cleanKw} builds upon previous generation feedback to deliver an uncompromising portable workstation and gaming machine.\n\nThe ergonomic refinements are immediately apparent: contoured palm grips, responsive hall-effect analog sticks, and tactile shoulder triggers give complete precision control.`;
+    t_body = `Running demanding 2026 titles like Cyberpunk and Black Myth: Wukong, the system sustained over 60 FPS at 1080p with optimized settings. Thermals remained comfortably below 72°C internal core temp with whisper-quiet fan acoustics.`;
+    t_verdict = `The ${cleanKw} is the current undisputed champion of portable computing and handheld gaming. Unmatched power, gorgeous display, and superb ergonomics.`;
+  } else if (niche === 'power') {
+    catName = 'Power & GaN Charging';
+    t_img = 'https://images.unsplash.com/photo-1622445262464-84b14e3295b6?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} In-Depth Review: Charging Efficiency & Thermal Tests`;
+    t_excerpt = `We hooked the ${cleanKw} to precision digital power meters and thermal imaging cameras. Here is our teardown of power delivery curves and multi-device charging.`;
+    t_pros = `Massive multi-port GaN output capable of fast-charging two laptops and multiple smartphones simultaneously\nNext-gen Gallium Nitride (GaN III) components maximize electrical conversion efficiency while minimizing heat\nIntelligent dynamic power allocation adjusts wattage on the fly based on connected device protocols\nCompact footprint with foldable prongs and universal 100-240V international voltage support`;
+    t_cons = `High wattage output demands included or certified 100W+ 5A E-marker cables for peak speeds\nSlightly heavier than standard single-port phone chargers due to heavy-duty thermal heat sinks`;
+    t_intro = `In an era where remote professionals carry multiple high-drain laptops, tablets, and phones, carrying a nest of individual power bricks is an obsolete frustration. The ${cleanKw} consolidates your entire charging station into a single ultra-efficient GaN device.\n\nPlugging in our digital power analyzer, the charger immediately negotiated full USB Power Delivery 3.1 protocols at peak wattage without dropping power to existing connected devices.`;
+    t_body = `Under continuous maximum wattage load testing for 3 continuous hours, thermal imaging revealed a peak exterior temperature of just 44°C—far cooler than legacy silicon power supplies. Voltage ripple was exceptionally tight, safeguarding delicate smartphone and laptop lithium battery chemistries.`;
+    t_verdict = `The ${cleanKw} is an indispensable travel and desktop charging cornerstone. Safe, blazingly fast, and impeccably engineered.`;
+  } else if (niche === 'saas' || niche === 'ai') {
+    catName = 'SaaS & AI Tools';
+    t_img = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Hands-On Review: 10X Workflow Productivity Tested`;
+    t_excerpt = `We deployed ${cleanKw} across daily developer, research, and writing workflows for 30 days. Here is our quantitative ROI breakdown.`;
+    t_pros = `Advanced AI reasoning models synthesize complex technical queries with cited sources instantly\nIntuitive interface with powerful keyboard shortcuts and seamless team collaboration spaces\nRobust API integration options for automating repetitive data processing and report drafting\nStrict enterprise data privacy guarantees with zero model training on customer data`;
+    t_cons = `Advanced reasoning modes incur rate limits during peak global traffic hours\nRequires precise prompting to extract maximum depth on niche domain topics`;
+    t_intro = `AI productivity tools have become the dividing line between efficient modern creators and those bogged down in manual busywork. ${cleanKw} represents the leading edge of automated research and workflow acceleration.\n\nThe user interface is clean, distraction-free, and blazingly fast. Queries that previously required scouring dozens of outdated forum posts are summarized with verifiable citations in seconds.`;
+    t_body = `Across 30 days of real-world project deadlines, our team shaved an estimated 12 hours per week off competitive research and code synthesis tasks. The time savings alone easily justified the annual subscription tier within the first week of deployment.`;
+    t_verdict = `${cleanKw} is an essential tool in any digital professional's stack. It doesn't just save time; it fundamentally expands what a solo operator can accomplish.`;
+  } else if (niche === 'ebooks') {
+    catName = 'Ebooks & Playbooks';
+    priceU = '$29.00'; priceV = '725.000₫'; priceO = '$49.00';
+    t_img = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Blueprint: Actionable Monetization & Strategy Playbook (2026)`;
+    t_excerpt = `An exhaustive breakdown of the ${cleanKw} digital guide. We evaluate real-world frameworks, conversion benchmarks, downloadable cheatsheets, and tangible monetization ROI.`;
+    t_pros = `Distills complex monetization strategies into crystal-clear step-by-step execution phases\nIncludes battle-tested pitch decks, outreach email templates, and rate card benchmarks\nInstant DRM-free PDF, EPUB, and Kindle downloads with lifetime version updates\nDense, fluff-free reference manual engineered for immediate execution within 72 hours`;
+    t_cons = `Requires genuine consistency to implement frameworks to achieve sustainable revenue\nAssumes basic operational familiarity with digital affiliate and creator platforms`;
+    t_intro = `The digital publishing arena is crowded with superficial regurgitations and generic advice. When ${cleanKw} was released, it distinguished itself by offering unsparingly detailed, data-backed operational blueprints. We acquired a verified copy to test its systems firsthand.\n\nRight from the preface, the analytical rigor is refreshing. Key concepts are accompanied by real traffic telemetry, revenue conversion screenshots, and exact contract clauses.`;
+    t_body = `Putting the recommendations into practice across our publishing workflows streamlined partnership outreach within the first week. The chapters detailing affiliate negotiation structures and legal FTC compliance protocols are worth several times the guide's modest price tag alone.`;
+    t_verdict = `For creators, indie publishers, and digital operators aiming to build resilient, high-converting revenue channels, ${cleanKw} is an indispensable strategic asset.`;
+  } else if (niche === 'presets') {
+    catName = 'Presets & LUTs';
+    priceU = '$19.00'; priceV = '475.000₫'; priceO = '$39.00';
+    t_img = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Color Grading Pack: 35 Cinematic LUTs & Lightroom Presets`;
+    t_excerpt = `We graded over 80 hours of mixed log footage across Sony, Canon, DJI, and Apple ProRes with ${cleanKw}. Here is our definitive report on highlight rolloff, skin tones, and color accuracy.`;
+    t_pros = `Crafted specifically for wide dynamic range log gamuts (S-Log3, D-Log M, Apple Log, C-Log3)\nFlawless skin tone preservation with natural tonal warmth and zero harsh color clipping\nIncludes universal 33x and 65x .CUBE files for DaVinci Resolve, Premiere Pro, and Final Cut\nComprehensive desktop and mobile XMP/DNG Lightroom presets for one-click photo matching`;
+    t_cons = `High-contrast looks require basic exposure balancing before LUT application for optimal results\nRequires camera log profiles to unlock maximum cinematic latitude`;
+    t_intro = `In cinematic video production, consistent color science separates amateur hobbyists from studio-grade filmmakers. The ${cleanKw} pack was designed to bring moody, timeless film aesthetics into modern creator workflows without tedious manual node rebuilding.\n\nWe loaded the 33x .CUBE profiles into DaVinci Resolve Studio to evaluate stress behavior across overexposed bright skies, low-light neon shadows, and mixed indoor lighting.`;
+    t_body = `Tonal rolloff across highlights was exceptionally smooth, mimicking analog photochemical film stocks without ugly digital banding. Skin tones maintained natural organic peach and amber hues without color shifts even when pushing contrast curves.`;
+    t_verdict = `The ${cleanKw} color grading suite is a triumph of thoughtful color science. For videographers seeking a coherent, cinematic look across YouTube, commercial shoots, and social reels, it is an unbeatable value.`;
+  } else if (niche === 'templates') {
+    catName = 'Notion OS';
+    priceU = '$39.00'; priceV = '975.000₫'; priceO = '$69.00';
+    t_img = 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw}: The Ultimate All-in-One Notion Operating System`;
+    t_excerpt = `We stress-tested the ${cleanKw} workspace across 60 days of intensive editorial sprints, sprint boards, brand CRM pipelines, and financial tracking. Here is our hands-on review.`;
+    t_pros = `Interconnected relational databases link projects, daily tasks, content calendars, and invoices seamlessly\nClean, distraction-free aesthetic with intuitive toggle menus and customizable views\nAutomated formula-driven progress bars, priority scores, and deadline notifications\nOne-click duplicate into your personal or team Notion workspace with zero technical setup`;
+    t_cons = `Feature-packed architecture requires 20-30 minutes of orientation for complete Notion beginners\nAdvanced database customization requires familiarity with Notion formula 2.0 properties`;
+    t_intro = `Disorganized digital workflows kill productivity faster than almost anything else. ${cleanKw} was architected to replace scattered apps, endless browser tabs, and messy spreadsheets with a unified, elegant command center.\n\nDuplicating the workspace into our Notion account took under 10 seconds. The onboarding dashboard provides clear video walkthroughs explaining the database architecture and relation properties.`;
+    t_body = `During two months of continuous daily use, the project sprint pipeline and CRM tracker eliminated dropped balls across brand sponsorship deals. The automated status rollups kept our entire content queue moving like a well-oiled machine.`;
+    t_verdict = `${cleanKw} is quite simply one of the most thoughtfully engineered Notion systems on the market. An essential upgrade for anyone serious about reclaiming their daily time and sanity.`;
+  } else if (niche === 'courses') {
+    catName = 'Video Courses';
+    priceU = '$79.00'; priceV = '1.975.000₫'; priceO = '$149.00';
+    t_img = 'https://images.unsplash.com/photo-1513185041617-8ab03f83d6c5?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} Masterclass: 42-Lesson Hands-On Curriculum & Frameworks`;
+    t_excerpt = `We purchased and completed the entire ${cleanKw} system. Here is our brutally honest review of the actionable video modules, production quality, community access, and overall return on investment.`;
+    t_pros = `Highly actionable, step-by-step video frameworks that bypass theoretical fluff and filler\nIncludes production-ready Notion systems, downloadable cheatsheets, and SOP templates\nDirect access to lifetime updates reflecting 2026 algorithms and industry shifts\nClear, concise modular format engineered for immediate execution within 48 hours`;
+    t_cons = `Requires genuine commitment to implement the systems to see measurable results\nNot suitable for complete beginners looking for passive overnight miracles`;
+    t_intro = `The digital product space is flooded with repackaged blog posts and theoretical filler. When ${cleanKw} launched, it claimed to deliver concrete, proven blueprints for hardware testers, affiliate publishers, and content creators. We purchased access to find out if it lives up to the hype.\n\nThe curriculum structure is immediately impressive. Every single module links directly to usable Notion templates, copy-paste automation scripts, and workflow diagrams.`;
+    t_body = `Implementing the recommended framework yielded tangible workflow optimizations by day three. The step-by-step guidance on structuring high-converting tech reviews and negotiation frameworks with hardware brands is worth the price of entry by itself.`;
+    t_verdict = `If you are serious about accelerating your digital workflow and monetizing authority content, ${cleanKw} is one of the highest ROI investments you can make in 2026.`;
+  } else {
+    // General Tech / Hardware fallback
+    catName = 'Audio & Sound';
+    t_img = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80';
+    t_title = `${cleanKw} In-Depth Review: Lab Benchmarks & Real-World Testing (2026)`;
     t_excerpt = `An exhaustive technical evaluation of the ${cleanKw}. We break down industrial build quality, day-to-day ergonomic tolerances, benchmark performance, and long-term durability.`;
-    t_pros = `Precision-engineered industrial chassis utilizing aerospace-grade materials for structural rigidity\nClass-leading processing architecture delivers blazing-fast rendering and compute times\nExcellent heat dissipation and stable performance under load without thermal throttling\nComprehensive software ecosystem with seamless cross-platform synchronization`;
-    t_cons = `Premium pricing places it strictly in the enthusiast/prosumer category\nProprietary accessories required to unlock the full ecosystem potential\nSlight learning curve for users migrating from older legacy platforms`;
-    t_intro = `In an era of iterative yearly updates that barely move the needle, the ${cleanKw} represents a genuine generational leap. Engineered to push the boundaries of what consumers expect in this category, it has dominated tech headlines since its announcement. We secured a retail unit to bypass the cherry-picked review samples and subjected it to two weeks of grueling lab benchmarks and real-world stress tests.\n\nOut of the box, the industrial design commands attention. The seamless integration of glass and precision-milled alloy feels incredibly dense and premium in the hand. The manufacturer clearly obsessed over the micro-details: the tactile feedback of the physical interfaces, the satisfying resistance of the hinges, and the absolute lack of chassis flex.`;
-    t_body = `Booting up our synthetic benchmark suite, the ${cleanKw} immediately began breaking records. Under sustained multi-core workloads, where competitors rapidly succumb to thermal throttling, this unit maintained 96% of its peak clock speeds thanks to an entirely redesigned vapor-chamber cooling matrix. We measured a maximum external chassis temperature of just 41°C, even after hours of continuous stress.\n\nBut synthetic numbers only tell half the story. In real-world daily usage, the fluid responsiveness of the custom silicon translates to zero micro-stutters. Connectivity is equally robust, featuring the latest wireless protocols that maintained rock-solid latency even in our interference-heavy office environment. The battery efficiency is perhaps the unsung hero, intelligently gating power consumption during idle states to effortlessly deliver all-day endurance.`;
-    t_verdict = `The ${cleanKw} is a triumph of modern engineering that definitively justifies its flagship price tag. It doesn't just iterate; it redefines the baseline expectations for this product category. For power users and enthusiasts unwilling to compromise, this is the current gold standard.`;
+    t_pros = `Precision-engineered industrial chassis utilizing aerospace-grade materials for structural rigidity\nClass-leading processing architecture delivers blazing-fast performance and compute times\nExcellent heat dissipation and stable performance under load without thermal throttling\nComprehensive software ecosystem with seamless cross-platform synchronization`;
+    t_cons = `Premium pricing places it strictly in the enthusiast/prosumer category\nProprietary accessories required to unlock the full ecosystem potential`;
+    t_intro = `In an era of iterative yearly updates that barely move the needle, the ${cleanKw} represents a genuine generational leap. Engineered to push the boundaries of what consumers expect in this category, it has dominated tech headlines since its announcement.\n\nOut of the box, the industrial design commands attention. The seamless integration of glass and precision-milled alloy feels incredibly dense and premium in the hand.`;
+    t_body = `Booting up our synthetic benchmark suite, the ${cleanKw} immediately began breaking records. Under sustained multi-core workloads, where competitors rapidly succumb to thermal throttling, this unit maintained 96% of its peak performance thanks to an entirely redesigned vapor-chamber cooling matrix.`;
+    t_verdict = `The ${cleanKw} is a triumph of modern engineering that definitively justifies its flagship price tag. For power users and enthusiasts unwilling to compromise, this is the current gold standard.`;
   }
 
   if (isEn) {
@@ -2164,6 +2627,30 @@ function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customIm
 }
 
 // Multilingual Translation Builder for Article Publishing
+
+// Global scope export for window
+window.parseAffiliateUrlSmart = function(url) {
+  if (!url) return null;
+  const detected = detectNicheFromUrlAndKeyword(url);
+  const parts = url.replace(/^https?:\/\//, '').replace(/^www\./, '').split(/[\/?#]/)[0].split('.');
+  const brandRaw = parts[0] ? parts[0].charAt(0).toUpperCase() + parts[0].slice(1) : 'Official Brand';
+  return {
+    success: true,
+    url: url,
+    brand: brandRaw + ' Official',
+    productName: brandRaw + ' Verified Edition',
+    niche: detected ? detected.slug : 'beauty'
+  };
+};
+window.detectNicheFromUrlAndKeyword = detectNicheFromUrlAndKeyword;
+window.applyAutoDetectedNiche = applyAutoDetectedNiche;
+window.parseUserCustomPrice = parseUserCustomPrice;
+window.autoFixCurrentArticle = autoFixCurrentArticle;
+window.fetchAndApplyBrandPrice = fetchAndApplyBrandPrice;
+window.generateArticleWithAi = generateArticleWithAi;
+window.buildAiArticleData = buildAiArticleData;
+
+
 function translateBullet(text, lang) {
   if (!text) return '';
   let str = text.replace(/^[•\-\*]\s*/, '').trim();

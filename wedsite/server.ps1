@@ -114,6 +114,23 @@ function Extract-BrandPriceInfo([string]$TargetUrl) {
     $cleanUrl = $TargetUrl.Trim()
     $lowerUrl = $cleanUrl.ToLower()
 
+    # 0. Live Universal Node.js Product & Metadata Scraper
+    $nodeScraperPath = Join-Path $PSScriptRoot "product-scraper.js"
+    if (Test-Path $nodeScraperPath) {
+        $scrapedRaw = & node $nodeScraperPath $cleanUrl 2>$null
+        if (-not [string]::IsNullOrWhiteSpace($scrapedRaw)) {
+            $firstBrace = $scrapedRaw.IndexOf('{')
+            $lastBrace = $scrapedRaw.LastIndexOf('}')
+            if ($firstBrace -ge 0 -and $lastBrace -gt $firstBrace) {
+                $jsonSub = $scrapedRaw.Substring($firstBrace, $lastBrace - $firstBrace + 1)
+                $scrapedObj = $jsonSub | ConvertFrom-Json
+                if ($scrapedObj -and $scrapedObj.success) {
+                    return $scrapedObj
+                }
+            }
+        }
+    }
+
     # 1. Aqara / Smart Home Matter (matches user screenshot exactly: $82.99 / 2.075.000â‚«)
     if ($lowerUrl -match "aqara|smartpmm|hub-m3|sensor-fp2") {
         return [PSCustomObject]@{
