@@ -1253,6 +1253,85 @@ function initAiArticleGenerator() {
     });
   }
 
+  // Scan Link Button ("Quét Link")
+  const btnScanLink = document.getElementById('btn-ai-scan-link');
+  const btnScanLabel = document.getElementById('btn-ai-scan-label');
+
+  if (btnScanLink) {
+    btnScanLink.addEventListener('click', async () => {
+      let url = (aiAffInput?.value || formAffInput?.value || '').trim();
+      if (!url) {
+        showToast('Vui lòng dán link sản phẩm/affiliate vào ô trước khi quét!', 'error');
+        if (aiAffInput) {
+          aiAffInput.focus();
+        }
+        return;
+      }
+
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        if (url.includes('.') || url.includes('/')) {
+          url = 'https://' + url;
+          if (aiAffInput) aiAffInput.value = url;
+          if (formAffInput) formAffInput.value = url;
+        } else {
+          showToast('Link không đúng định dạng website (ví dụ: https://...)', 'error');
+          return;
+        }
+      }
+
+      btnScanLink.disabled = true;
+      if (btnScanLabel) btnScanLabel.textContent = 'Đang quét link...';
+
+      try {
+        // 1. Quét thông minh URL để trích xuất tên sản phẩm, thương hiệu, danh mục và link chuẩn
+        const parsed = parseAffiliateUrlSmart(url);
+        if (parsed && parsed.success) {
+          const kwInput = document.getElementById('ai-input-keyword');
+          const nicheSelect = document.getElementById('ai-input-niche');
+          const brandInput = document.getElementById('ai-input-brand');
+          const formBrandInput = document.getElementById('input-brand');
+
+          if (kwInput && parsed.productName) {
+            kwInput.value = parsed.productName;
+          }
+
+          if (nicheSelect && parsed.niche) {
+            nicheSelect.value = parsed.niche;
+          }
+
+          if (parsed.brand) {
+            if (brandInput) brandInput.value = parsed.brand;
+            if (formBrandInput) formBrandInput.value = parsed.brand;
+          }
+
+          if (aiAffInput) aiAffInput.value = parsed.url;
+          if (formAffInput) formAffInput.value = parsed.url;
+
+          // Gợi ý hình ảnh theo danh mục nếu chưa có ảnh
+          const niche = parsed.niche || 'tech_audio';
+          const list = AI_IMAGE_PRESETS[niche] || AI_IMAGE_PRESETS.tech_audio;
+          if (list && list.length > 0 && aiImgThumb) {
+            aiImgThumb.src = list[0];
+            if (aiImgInput) aiImgInput.value = list[0];
+          }
+
+          showToast(`⚡ Đã quét link thành công! AI đang tự động viết bài review chi tiết...`);
+        }
+
+        // 2. Kích hoạt AI viết toàn bộ bài viết, tạo tiêu đề, thông số, bảng so sánh và gắn đúng link
+        await generateArticleWithAi();
+      } catch (err) {
+        console.error('Lỗi quét link:', err);
+        showToast('Có lỗi khi quét link. Vui lòng thử lại!', 'error');
+      } finally {
+        btnScanLink.disabled = false;
+        if (btnScanLabel) btnScanLabel.textContent = '⚡ Quét Link';
+        lucide.createIcons();
+      }
+    });
+  }
+
+
   // Auto-Fetch Brand Price Button & Live Inputs Integration
   const btnFetchPriceBrand = document.getElementById('btn-fetch-price-brand');
   if (btnFetchPriceBrand) {
