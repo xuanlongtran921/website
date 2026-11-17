@@ -1856,7 +1856,10 @@ async function generateArticleWithAi() {
   if (!userOverriddenPrice && linkToInspect && (linkToInspect.startsWith('http://') || linkToInspect.startsWith('https://'))) {
     if (statusText) statusText.textContent = '⚡ AI inspecting brand link & auto-fetching exact price from merchant...';
     try {
-      fetchedBrandPrice = await fetchAndApplyBrandPrice(linkToInspect, true);
+      // Set 3.5s timeout for brand price inspection to prevent hanging
+      const fetchPromise = fetchAndApplyBrandPrice(linkToInspect, true);
+      const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 3500));
+      fetchedBrandPrice = await Promise.race([fetchPromise, timeoutPromise]);
     } catch (e) {
       console.warn('AI link price inspection failed:', e);
     }
@@ -1965,7 +1968,8 @@ async function generateArticleWithAi() {
     }
   } catch (err) {
     console.error('Error generating AI article:', err);
-    showToast('Error generating AI review. Please retry!', 'error');
+    showToast('Lỗi AI viết bài: ' + (err && err.message ? err.message : String(err)), 'error');
+    throw err;
   } finally {
     if (btnGenerate) {
       btnGenerate.disabled = false;
