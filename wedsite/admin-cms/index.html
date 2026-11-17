@@ -413,7 +413,13 @@
 
                 <!-- Niche Select -->
                 <div class="md:col-span-3">
-                  <label class="block text-xs font-bold text-purple-200 mb-1">Category / Niche</label>
+                                    <div class="flex items-center justify-between mb-1">
+                    <label for="ai-input-niche" class="block text-xs font-bold text-slate-300">Category / Niche</label>
+                    <span id="ai-niche-auto-indicator" class="hidden text-[10px] font-bold text-cyan-300 bg-cyan-950/90 border border-cyan-500/50 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm transition-all duration-300">
+                      <i data-lucide="sparkles" class="w-3 h-3 text-cyan-400"></i>
+                      <span id="ai-niche-auto-text">Auto-Detected</span>
+                    </span>
+                  </div>
                   <select id="ai-input-niche" class="w-full px-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-purple-200 text-xs font-semibold focus:border-pink-500 focus:outline-none">
                     <optgroup label="PHYSICAL GEAR & HARDWARE">
                       <option value="beauty">Beauty & Personal Care (Beauty & Skincare)</option>
@@ -1974,7 +1980,7 @@
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 pointer-events-none space-y-2"></div>
 
   <!-- Script logic -->
-  <script src="admin.js?v=1794903800"></script>
+  <script src="admin.js?v=1794905000"></script>
 </body>
 </html>
 <!-- Cache Buster 20261005 -->
