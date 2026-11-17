@@ -1322,7 +1322,7 @@ function initAiArticleGenerator() {
         await generateArticleWithAi();
       } catch (err) {
         console.error('Lỗi quét link:', err);
-        showToast('Có lỗi khi quét link. Vui lòng thử lại!', 'error');
+        showToast('Lỗi: ' + (err && err.message ? err.message : 'Vui lòng kiểm tra lại đường link!'), 'error');
       } finally {
         btnScanLink.disabled = false;
         if (btnScanLabel) btnScanLabel.textContent = '⚡ Quét Link';
@@ -1455,7 +1455,7 @@ function parseAffiliateUrlSmart(rawUrl) {
 
     let brand = '';
     let productName = '';
-    let niche = 'tech_hardware';
+    let niche = 'tech_audio';
     let suggestedPriceUsd = null;
 
     // Detect Host/Domain patterns
@@ -1472,7 +1472,7 @@ function parseAffiliateUrlSmart(rawUrl) {
     };
 
     // Extract product slug from path
-    const pathSegments = pathname.split('/').filter(p => p && !['dp', 'gp', 'product', 'products', 'p', 'item', 'buy', 'shop', 'en', 'en-us', 'en-en', 'vi', 'detail', 'collections', 'frontpage', 'all'].includes(p.toLowerCase()));
+    const pathSegments = pathname.split('/').filter(p => p && !['dp', 'gp', 'product', 'products', 'p', 'item', 'buy', 'shop', 'en', 'en-us', 'en-en', 'vi', 'detail', 'collections', 'frontpage', 'all', 'ref', 'aff', 'affiliate'].includes(p.toLowerCase()) && !/^\d+$/.test(p));
     let lastSegment = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
     lastSegment = lastSegment.replace(/\.(html|htm|php|asp)$/i, '');
 
@@ -1518,12 +1518,16 @@ function parseAffiliateUrlSmart(rawUrl) {
     if (slugTitle && slugTitle.length > 3) {
       productName = slugTitle;
     } else if (brand) {
-      productName = brand.replace(/Official|Store|Mall|Flagship|\(.*\)/gi, '').trim() + ' Flagship Edition';
+      const cleanBrandName = brand.replace(/Official|Store|Mall|Flagship|\(.*\)/gi, '').trim();
+      productName = cleanBrandName + ' Complete Health & Wellness Protocol';
     }
 
     const combinedText = (urlStr + ' ' + productName).toLowerCase();
 
-    if (/\b(audio|headphone|headphones|earphone|earphones|earbuds|speaker|speakers|soundbar|mic|microphone|bluetooth|canceling|cancelling|sound|tai nghe|loa)\b/.test(combinedText)) {
+    if (/\b(rogershood|parasite|cleanse|parafy|health|wellness|tincture|detox|herb|herbal|supplement|supplements)\b/.test(combinedText)) {
+      niche = 'beauty';
+      if (!suggestedPriceUsd) suggestedPriceUsd = 149.00;
+    } else if (/\b(audio|headphone|headphones|earphone|earphones|earbuds|speaker|speakers|soundbar|mic|microphone|bluetooth|canceling|cancelling|sound|tai nghe|loa)\b/.test(combinedText)) {
       niche = 'tech_audio';
       if (!suggestedPriceUsd) suggestedPriceUsd = 298.00;
     } else if (/\b(keyboard|keyboards|bàn phím|keycap|keycaps|switch|switches|mechanical|deskmat|mouse|chuột|gaming mouse|trackpad)\b/.test(combinedText)) {
@@ -1868,7 +1872,21 @@ async function generateArticleWithAi() {
     // Populate form fields
     document.getElementById('input-title').value = generated.title;
     document.getElementById('input-slug').value = generated.slug;
-    document.getElementById('input-category').value = generated.category;
+        const formCatSelect = document.getElementById('input-category');
+    if (formCatSelect) {
+      let matched = false;
+      const targetCat = (generated.category || '').toLowerCase();
+      for (let opt of formCatSelect.options) {
+        if (opt.value.toLowerCase() === targetCat || opt.value.toLowerCase().includes(targetCat) || targetCat.includes(opt.value.toLowerCase())) {
+          formCatSelect.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched && formCatSelect.options.length > 0) {
+        formCatSelect.value = formCatSelect.options[0].value;
+      }
+    }
     document.getElementById('input-excerpt').value = generated.excerpt;
     document.getElementById('input-brand').value = (fetchedBrandPrice && fetchedBrandPrice.brand) ? fetchedBrandPrice.brand : generated.brand;
     document.getElementById('input-btn-text').value = generated.btnText;
