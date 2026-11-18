@@ -10,7 +10,7 @@
   let allReviews = [];
   let filteredReviews = [];
   let currentPage = 1;
-  let itemsPerPage = 6;
+  let itemsPerPage = 8;
   let currentCategory = 'all';
   let searchQuery = '';
   let currentSort = 'newest';
@@ -624,11 +624,11 @@
       const cardImg = (rawCardImg && !rawCardImg.startsWith('http') && !rawCardImg.startsWith('data:') && !rawCardImg.startsWith('/')) ? ('/' + rawCardImg) : rawCardImg;
 
       return `
-        <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col justify-between group">
+        <article class="bg-white dark:bg-[#120a26] rounded-2xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col justify-between group">
           
           <!-- Image & Badges -->
           <div>
-            <div class="relative overflow-hidden aspect-[16/10] ${cardBg} flex items-center justify-center">
+            <div class="relative overflow-hidden h-44 w-full ${cardBg} flex items-center justify-center">
               <img 
                 src="${cardImg}" 
                 alt="${escapeHtml(title)}" 
@@ -638,40 +638,40 @@
               >
               
               <!-- Category Badge -->
-              <span class="absolute top-3 left-3 bg-purple-900/90 backdrop-blur-md text-purple-200 text-[10px] font-extrabold px-3 py-1 rounded-full border border-purple-700/50 shadow-md uppercase tracking-wider">
+              <span class="absolute top-2.5 left-2.5 bg-purple-900/90 backdrop-blur-md text-purple-200 text-[9.5px] font-extrabold px-2.5 py-0.5 rounded-full border border-purple-700/50 shadow-md uppercase tracking-wider">
                 ${escapeHtml(category)}
               </span>
 
               <!-- Star Rating Badge -->
-              <span class="absolute top-3 right-3 bg-black/80 backdrop-blur-md text-amber-300 text-xs font-black px-2.5 py-1 rounded-xl flex items-center gap-1 border border-amber-400/30 shadow-md">
+              <span class="absolute top-2.5 right-2.5 bg-black/80 backdrop-blur-md text-amber-300 text-[11px] font-black px-2 py-0.5 rounded-xl flex items-center gap-1 border border-amber-400/30 shadow-md">
                 <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> ${rating}
               </span>
 
               ${post.coupon ? `
-                <div class="absolute bottom-3 left-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow-md flex items-center gap-1">
+                <div class="absolute bottom-2.5 left-2.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white text-[9.5px] font-black px-2 py-0.5 rounded-lg shadow-md flex items-center gap-1">
                   <i data-lucide="tag" class="w-3 h-3"></i> ${dict.couponLabel}: ${post.coupon}
                 </div>
               ` : ''}
             </div>
 
             <!-- Content -->
-            <div class="p-5 sm:p-6">
+            <div class="p-4 sm:p-4.5 flex-1 flex flex-col justify-between">
               
               <!-- Meta Row -->
-              <div class="flex items-center gap-2 text-[11px] text-slate-400 dark:text-purple-300/60 mb-2.5">
+              <div class="flex items-center gap-2 text-[10.5px] text-slate-400 dark:text-purple-300/60 mb-1.5">
                 <span>${post.date || '11/09/2026'}</span>
                 <span>•</span>
                 <span>${post.readTime || '8 min read'}</span>
-                ${post.brand ? `<span>•</span> <span class="font-bold text-purple-600 dark:text-purple-400 truncate max-w-[130px]">${post.brand}</span>` : ''}
+                ${post.brand ? `<span>•</span> <span class="font-bold text-purple-600 dark:text-purple-400 truncate max-w-[120px]">${post.brand}</span>` : ''}
               </div>
 
               <!-- Title -->
-              <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+              <h3 class="text-sm sm:text-[15px] font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
                 <a href="${detailUrl}">${escapeHtml(title)}</a>
               </h3>
 
               <!-- Excerpt -->
-              <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2.5 line-clamp-2 leading-relaxed">
+              <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2 leading-relaxed">
                 ${escapeHtml(excerpt)}
               </p>
 
@@ -679,24 +679,24 @@
           </div>
 
           <!-- Bottom Footer Card: Price & 2 Conversion Buttons -->
-          <div class="p-5 sm:p-6 pt-0 mt-auto">
+          <div class="p-4 sm:p-4.5 pt-0 mt-auto">
             
             <!-- Price Row -->
-            <div class="pt-3.5 border-t border-purple-100 dark:border-purple-900/50 flex items-baseline justify-between mb-3.5">
+            <div class="pt-2.5 border-t border-purple-100 dark:border-purple-900/50 flex items-baseline justify-between mb-2.5">
               <div>
-                <span class="text-[10px] text-slate-400 uppercase font-bold block">${dict.priceLabel}</span>
-                <span class="text-lg sm:text-xl font-black text-purple-600 dark:text-purple-400 price-val font-display" data-usd="${safeUsd}" data-vnd="${safeVnd}">
+                <span class="text-[9.5px] text-slate-400 uppercase font-bold block">${dict.priceLabel}</span>
+                <span class="text-sm sm:text-base font-black text-purple-600 dark:text-purple-400 price-val font-display" data-usd="${safeUsd}" data-vnd="${safeVnd}">
                   ${priceDisplay}
                 </span>
               </div>
-              <span class="text-xs text-slate-400 line-through strike-val" data-usd="${safeOrigUsd}" data-vnd="${safeOrigVnd}">${origDisplay}</span>
+              <span class="text-[11px] text-slate-400 line-through strike-val" data-usd="${safeOrigUsd}" data-vnd="${safeOrigVnd}">${origDisplay}</span>
             </div>
 
             <!-- Action Buttons Grid: Read Review & Direct Affiliate Order Now -->
             <div class="grid grid-cols-2 gap-2">
               <a 
                 href="${detailUrl}" 
-                class="py-2.5 px-2.5 rounded-xl bg-purple-100/80 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-bold flex items-center justify-center gap-1 transition-all border border-purple-300/60 dark:border-purple-800/60 text-center min-h-[42px]"
+                class="py-2 px-2 rounded-xl bg-purple-100/80 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-bold flex items-center justify-center gap-1 transition-all border border-purple-300/60 dark:border-purple-800/60 text-center min-h-[38px]"
               >
                 <span>${dict.readReview}</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
@@ -706,7 +706,7 @@
                 href="${affLink}" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                class="py-2.5 px-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-black flex items-center justify-center gap-1 shadow-md shadow-purple-500/25 transition-all text-center group/btn min-h-[42px] whitespace-nowrap"
+                class="py-2 px-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-black flex items-center justify-center gap-1 shadow-md shadow-purple-500/25 transition-all text-center group/btn min-h-[38px] whitespace-nowrap"
                 title="ORDER NOW - Mở trang đặt hàng chính hãng"
               >
                 <span class="font-black uppercase tracking-wide">ORDER NOW</span>

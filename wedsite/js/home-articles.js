@@ -12,7 +12,7 @@
 
   let allHomeArticles = [];
   let currentHomePage = 1;
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   // Trilingual UI strings
   const homeI18n = {
@@ -272,16 +272,16 @@
       // Packshot vs Hero Photo detection
       const isPackshot = post.image && (post.image.startsWith('data:') || post.imageFit === 'contain' || post.image.includes('mowrator') || post.image.includes('bag') || post.image.includes('skirt') || post.image.includes('product'));
       const cardImgFit = isPackshot 
-        ? 'max-h-48 w-auto max-w-full h-auto object-contain drop-shadow-md rounded-xl transition-transform duration-300 group-hover:scale-105'
+        ? 'max-h-38 w-auto max-w-full h-auto object-contain drop-shadow-md rounded-xl transition-transform duration-300 group-hover:scale-105'
         : 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-105';
       const cardBg = isPackshot
-        ? 'bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318] flex items-center justify-center p-3'
+        ? 'bg-gradient-to-b from-slate-100 via-white to-slate-200 dark:from-[#190a36] dark:via-[#110424] dark:to-[#0a0318] flex items-center justify-center p-2.5'
         : 'bg-purple-950/20';
 
       return `
-        <article class="bg-white dark:bg-[#120a26] rounded-3xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col justify-between group">
+        <article class="bg-white dark:bg-[#120a26] rounded-2xl border border-purple-200/80 dark:border-purple-800/60 overflow-hidden shadow-sm card-hover flex flex-col justify-between group">
           <div>
-            <div class="relative h-52 w-full ${cardBg} overflow-hidden">
+            <div class="relative h-44 w-full ${cardBg} overflow-hidden">
               <img 
                 src="${post.image}" 
                 alt="${escapeHtml(title)}" 
@@ -291,35 +291,35 @@
               >
               
               <!-- Category Badge -->
-              <span class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+              <span class="absolute top-2.5 left-2.5 bg-pink-600 text-white text-[9.5px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">
                 ${escapeHtml(category)}
               </span>
 
               <!-- Star Rating Badge -->
-              <span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-amber-300 text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+              <span class="absolute top-2.5 right-2.5 bg-black/70 backdrop-blur-md text-amber-300 text-[11px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
                 <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> ${rating}
               </span>
 
               ${post.coupon ? `
-                <div class="absolute bottom-3 left-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow-md flex items-center gap-1">
+                <div class="absolute bottom-2.5 left-2.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white text-[9.5px] font-black px-2 py-0.5 rounded-lg shadow-md flex items-center gap-1">
                   <i data-lucide="tag" class="w-3 h-3"></i> ${dict.couponLabel || 'Code'}: ${post.coupon}
                 </div>
               ` : ''}
             </div>
 
             <!-- Content -->
-            <div class="p-6 flex-1 flex flex-col justify-between">
+            <div class="p-4 sm:p-4.5 flex-1 flex flex-col justify-between">
               <div>
-                <div class="flex items-center gap-2.5 text-xs text-slate-400 mb-2">
+                <div class="flex items-center gap-2 text-[10.5px] text-slate-400 mb-1.5">
                   <span>${date}</span>
                   <span>•</span>
                   <span>${readTime}</span>
-                  ${brand ? `<span>•</span> <span class="font-bold text-purple-600 dark:text-purple-400 truncate max-w-[130px]">${brand}</span>` : ''}
+                  ${brand ? `<span>•</span> <span class="font-bold text-purple-600 dark:text-purple-400 truncate max-w-[120px]">${brand}</span>` : ''}
                 </div>
-                <h3 class="font-bold text-slate-900 dark:text-white text-base line-clamp-2 hover:text-pink-500 transition-colors">
+                <h3 class="font-bold text-slate-900 dark:text-white text-sm sm:text-[15px] leading-snug line-clamp-2 hover:text-pink-500 transition-colors">
                   <a href="${detailUrl}">${escapeHtml(title)}</a>
                 </h3>
-                <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-2 line-clamp-3">
+                <p class="text-xs text-slate-600 dark:text-purple-300/70 mt-1.5 line-clamp-2 leading-relaxed">
                   ${escapeHtml(excerpt)}
                 </p>
               </div>
@@ -327,26 +327,26 @@
           </div>
 
           <!-- Bottom Footer Card: Price & 2 Conversion Buttons -->
-          <div class="p-6 pt-0 mt-auto">
-            <div class="mt-5 pt-4 border-t border-purple-100 dark:border-purple-900/60">
-              <div class="flex items-baseline justify-between mb-3 text-xs">
+          <div class="p-4 sm:p-4.5 pt-0 mt-auto">
+            <div class="pt-3 border-t border-purple-100 dark:border-purple-900/60">
+              <div class="flex items-baseline justify-between mb-2.5 text-xs">
                 <div>
                   <span class="text-slate-400">${dict.priceFrom}</span>
-                  <span class="font-bold text-rose-600 dark:text-rose-400 text-base ml-1 price-val font-display" data-vnd="${safeVnd}" data-usd="${safeUsd}">${priceDisplay}</span>
+                  <span class="font-bold text-rose-600 dark:text-rose-400 text-sm sm:text-[15px] ml-1 price-val font-display" data-vnd="${safeVnd}" data-usd="${safeUsd}">${priceDisplay}</span>
                 </div>
                 ${origDisplay ? `
-                  <span class="text-xs text-slate-400 line-through strike-val" data-usd="${safeOrigUsd}" data-vnd="${safeOrigVnd}">${origDisplay}</span>
+                  <span class="text-[11px] text-slate-400 line-through strike-val" data-usd="${safeOrigUsd}" data-vnd="${safeOrigVnd}">${origDisplay}</span>
                 ` : `
-                  <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span class="text-[10.5px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                     <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> ${dict.verified}
                   </span>
                 `}
               </div>
               <div class="grid grid-cols-2 gap-2">
-                <a href="${detailUrl}" class="py-2.5 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
+                <a href="${detailUrl}" class="py-2 px-2 rounded-xl bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-1 transition-all border border-purple-200/80 dark:border-purple-800/60 shadow-2xs text-center">
                   <span>${dict.readReview}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
                 </a>
-                <a href="${affLink}" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
+                <a href="${affLink}" target="_blank" rel="noopener noreferrer" class="py-2 px-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white font-extrabold text-xs flex items-center justify-center gap-1 shadow-md shadow-pink-500/20 active:scale-95 whitespace-nowrap transition-all text-center">
                   <span>${dict.orderNow}</span> <i data-lucide="external-link" class="w-3.5 h-3.5 flex-shrink-0"></i>
                 </a>
               </div>

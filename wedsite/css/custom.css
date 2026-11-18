@@ -476,6 +476,8 @@ h1, h2, h3, .font-display {
 .grid-transition-in > article:nth-child(4), .grid-transition-in > div:nth-child(4) { animation-delay: 60ms; }
 .grid-transition-in > article:nth-child(5), .grid-transition-in > div:nth-child(5) { animation-delay: 80ms; }
 .grid-transition-in > article:nth-child(6), .grid-transition-in > div:nth-child(6) { animation-delay: 100ms; }
+.grid-transition-in > article:nth-child(7), .grid-transition-in > div:nth-child(7) { animation-delay: 120ms; }
+.grid-transition-in > article:nth-child(8), .grid-transition-in > div:nth-child(8) { animation-delay: 140ms; }
 
 /* Interactive Tactile Pill and Button Click Feedback */
 .cat-pill, .spotlight-filter-btn {
