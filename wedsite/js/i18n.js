@@ -1,4 +1,4 @@
-// Multilingual (vi, en-US, zh) & Multi-Currency (USD $, VND ₫) Engine for Smart Picks Review
+﻿// Multilingual (vi, en-US, zh) & Multi-Currency (USD $, VND ₫) Engine for Smart Picks Review
 // Authoritative Content Monetization & Conversion Architecture
 
 const translations = {
@@ -192,6 +192,8 @@ const translations = {
     shop_tab_digital: "Sản Phẩm Số",
     shop_tab_tech: "Âm Thanh & Tech",
     shop_tab_watches: "Đồng Hồ Cơ",
+
+    shop_tab_beauty: "Làm Đẹp & Skincare",
     shop_tab_fashion: "Thời Trang Thiết Kế",
     shop_tab_auto: "Phụ Tùng Xe Hơi",
     shop_tab_desk: "Bàn Làm Việc & EDC",
@@ -265,6 +267,8 @@ const translations = {
     shop_tab_all: "🛍️ Tất Cả",
     shop_tab_tech: "Âm Thanh & Tech",
     shop_tab_watches: "Đồng Hồ Cơ",
+
+    shop_tab_beauty: "Làm Đẹp & Skincare",
     shop_tab_fashion: "Thời Trang Thiết Kế",
     shop_tab_auto: "Phụ Tùng Xe Hơi",
     shop_tab_desk: "Bàn Làm Việc & EDC",
@@ -624,6 +628,8 @@ const translations = {
     shop_tab_digital: "Digital Downloads",
     shop_tab_tech: "Audio & Tech",
     shop_tab_watches: "Mechanical Watches",
+
+    shop_tab_beauty: "Beauty & Skincare",
     shop_tab_fashion: "Alt Fashion",
     shop_tab_auto: "Auto Performance",
     shop_tab_desk: "Desk Setup & EDC",
@@ -697,6 +703,8 @@ const translations = {
     shop_tab_all: "🛍️ All Gear",
     shop_tab_tech: "Audio & Tech",
     shop_tab_watches: "Watches & Horology",
+
+    shop_tab_beauty: "Beauty & Personal Care",
     shop_tab_fashion: "Alt & Gothic Fashion",
     shop_tab_auto: "Auto Performance",
     shop_tab_desk: "Desk Setup & EDC",
@@ -1056,6 +1064,7 @@ const translations = {
     shop_tab_digital: "数字资产与软件",
     shop_tab_tech: "音频与数码",
     shop_tab_watches: "机械腕表",
+    shop_tab_beauty: "美容与个人护理",
     shop_tab_fashion: "暗黑先锋女装",
     shop_tab_auto: "汽车性能改装",
     shop_tab_desk: "桌面搭子 & EDC",
@@ -1129,6 +1138,7 @@ const translations = {
     shop_tab_all: "🛍️ 全部商品",
     shop_tab_tech: "音频与数码",
     shop_tab_watches: "机械腕表",
+    shop_tab_beauty: "美容与个人护理",
     shop_tab_fashion: "小众设计服饰",
     shop_tab_auto: "汽车改装件",
     shop_tab_desk: "桌面搭配与EDC",
@@ -1302,8 +1312,23 @@ const translations = {
 
 // State: Language & Currency (Preserve user's chosen language, fallback to URL param or English)
 const _urlParams = (typeof window !== 'undefined' && window.location) ? new URLSearchParams(window.location.search) : null;
+
+// Automatic migration: Reset legacy 'vi' state from previous template to default English & USD
+try {
+  if (!localStorage.getItem('smartpicks_v3_lang_init')) {
+    localStorage.setItem('smartpicks_v3_lang_init', 'true');
+    if (localStorage.getItem('blog_lang') === 'vi') {
+      localStorage.setItem('blog_lang', 'en');
+    }
+    if (localStorage.getItem('preferred_currency') === 'VND') {
+      localStorage.setItem('preferred_currency', 'USD');
+    }
+  }
+} catch(e) {}
+
 const _langFromUrl = _urlParams ? _urlParams.get('lang') : null;
 let currentLang = (_langFromUrl && translations[_langFromUrl]) ? _langFromUrl : (localStorage.getItem('blog_lang') || 'en');
+if (!translations[currentLang]) currentLang = 'en';
 let currentCurrency = localStorage.getItem('preferred_currency') || ((currentLang === 'vi') ? 'VND' : 'USD');
 
 // Initialize i18n & Currency System
@@ -1526,3 +1551,4 @@ window.getCurrentLanguage = () => currentLang;
 window.getCurrentCurrency = () => currentCurrency;
 
 document.addEventListener('DOMContentLoaded', initI18n);
+

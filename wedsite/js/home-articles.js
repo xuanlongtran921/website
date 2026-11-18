@@ -162,6 +162,16 @@
         }
         if (flat.length > 0) {
           allHomeArticles = flat;
+          const newJson = JSON.stringify(flat);
+          try { localStorage.setItem('smartpicks_home_articles_cache', newJson); } catch (e) {}
+
+          // Only re-render if data has changed compared to cached version
+          if (newJson !== lastRenderedArticlesJson) {
+            lastRenderedArticlesJson = newJson;
+            window.allHomeArticles = allHomeArticles;
+            renderHomePage(currentHomePage, false);
+            preloadAdjacentImages(currentHomePage);
+          }
         }
       }
     } catch (err) {
@@ -173,11 +183,7 @@
       return;
     }
 
-    // Expose for external inspections/hooks
     window.allHomeArticles = allHomeArticles;
-
-    // Render the initial page
-    renderHomePage(currentHomePage, false);
     preloadAdjacentImages(currentHomePage);
 
     // Setup Event Listeners

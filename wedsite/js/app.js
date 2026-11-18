@@ -423,8 +423,13 @@ function initTopBarTicker() {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          tickerProjects = data;
-          renderMarquees();
+          const newStr = JSON.stringify(data);
+          try { localStorage.setItem('smartpicks_ticker_cache', newStr); } catch (e) {}
+          if (newStr !== lastTickerJson) {
+            lastTickerJson = newStr;
+            tickerProjects = data;
+            renderMarquees();
+          }
         }
       }
     } catch (e) {
@@ -1739,8 +1744,8 @@ function updateHeroFloatingProsCons(data, lang) {
   }
 
   const info = (custom && custom[curLang]) ? custom[curLang] :
-               (custom && custom.vi ? custom.vi :
-               (custom && custom.en ? custom.en : null));
+               (custom && custom.en ? custom.en :
+               (custom && custom.vi ? custom.vi : null));
 
   if (!info) return;
 
@@ -1771,6 +1776,19 @@ function initHeroPinnedProject() {
 
   window.heroPinnedList = [];
   window.heroActivePinnedSlot = 0;
+  let lastHeroPinnedJson = null;
+
+  // Instant SWR Hydration: Render cached pinned hardware immediately on reload with 0ms delay
+  try {
+    const cachedPinned = localStorage.getItem('smartpicks_hero_pinned_cache');
+    if (cachedPinned) {
+      const parsed = JSON.parse(cachedPinned);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        window.heroPinnedList = parsed;
+        lastHeroPinnedJson = cachedPinned;
+      }
+    }
+  } catch (e) {}
   let heroRotateTimer = null;
   let isHovered = false;
   let isTransitioning = false;
@@ -2048,7 +2066,12 @@ function initHeroPinnedProject() {
         window.heroPinnedList = [data];
       }
 
-      renderHeroPinnedSlide(window.heroActivePinnedSlot || 0, true);
+      const newStr = JSON.stringify(window.heroPinnedList);
+      try { localStorage.setItem('smartpicks_hero_pinned_cache', newStr); } catch (e) {}
+      if (newStr !== lastHeroPinnedJson) {
+        lastHeroPinnedJson = newStr;
+        renderHeroPinnedSlide(window.heroActivePinnedSlot || 0, true);
+      }
 
       // Bind Pill Clicks
       const pills = document.querySelectorAll('#hero-spotlight-pills .hero-pin-pill');
