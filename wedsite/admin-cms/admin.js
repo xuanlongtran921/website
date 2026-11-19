@@ -4375,6 +4375,10 @@ function generateFullPostHtml(data) {
   <title>${escapeHtml(data.title)} | Smart Picks Review</title>
   <meta name="description" content="${escapeHtml(data.excerpt)}">
   
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -4448,19 +4452,17 @@ function generateFullPostHtml(data) {
 
   <!-- Header Navigation -->
   <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0c071b]/90 backdrop-blur-xl border-b border-purple-200/60 dark:border-purple-900/50 transition-colors">
-    <div class="max-w-[1560px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-20 sm:h-24 py-2 flex items-center justify-between gap-2 sm:gap-3 xl:gap-5">
+    <div class="max-w-[1560px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-16 sm:h-20 py-2 flex items-center justify-between gap-1.5 sm:gap-3 xl:gap-5">
       
       <!-- Brand Logo: Smart Picks Review -->
-      <a href="index.html" class="flex-shrink-0 flex items-center gap-2.5 sm:gap-3.5 group">
-        <div class="w-12 h-12 sm:w-14 sm:h-14 xl:w-16 xl:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-500 flex items-center justify-center text-white font-black text-xl sm:text-2xl xl:text-3xl shadow-xl shadow-purple-500/30 group-hover:scale-105 transition-transform ring-2 sm:ring-4 ring-purple-400/25">
-          SP
-        </div>
-        <div class="flex flex-col justify-center">
-          <div class="flex items-center gap-1.5 sm:gap-2 leading-none">
-            <span class="font-black text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.2rem] tracking-tight text-slate-900 dark:text-white font-display">Smart<span class="text-gradient-purple">Picks</span></span>
-            <span class="font-black text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl bg-purple-100/90 dark:bg-purple-950/90 text-purple-700 dark:text-purple-300 uppercase tracking-wider border border-purple-300/60 dark:border-purple-700/60 shadow-xs">Review</span>
+      <a href="index.html" class="flex-shrink-0 flex items-center gap-2 sm:gap-3.5 group min-w-0">
+        <img src="images/logo.png" alt="Smart Picks Logo" class="w-9 h-9 sm:w-12 sm:h-12 xl:w-14 xl:h-14 rounded-xl sm:rounded-2xl object-cover shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform flex-shrink-0">
+        <div class="flex flex-col justify-center min-w-0">
+          <div class="flex items-center gap-1 sm:gap-2 leading-none">
+            <span class="font-black text-xl sm:text-2xl lg:text-[2rem] xl:text-[2.2rem] tracking-tight text-slate-900 dark:text-white font-display">Smart<span class="text-gradient-purple">Picks</span></span>
+            <span class="font-black text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-xl bg-purple-100/90 dark:bg-purple-950/90 text-purple-700 dark:text-purple-300 uppercase tracking-wider border border-purple-300/60 dark:border-purple-700/60 shadow-xs">Review</span>
           </div>
-          <span class="hidden 2xl:block text-[11px] font-extrabold tracking-[0.18em] text-purple-600 dark:text-purple-400 uppercase mt-1">Curated Tech & Buying Guides</span>
+          <span class="hidden 2xl:block text-[11px] font-extrabold tracking-[0.18em] text-purple-600 dark:text-purple-400 uppercase mt-1" data-i18n="header_subtitle">Curated Reviews & Buying Guides</span>
         </div>
       </a>
 

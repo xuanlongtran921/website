@@ -1642,6 +1642,16 @@ export default {
           postHtmlContent = postHtmlContent.split(data.image).join(postImageUrl);
         }
 
+        // Sanitize legacy SP placeholder logo if present in published post HTML
+        if (postHtmlContent) {
+          const legacyLogoRegex = /<div class="w-12 h-12 sm:w-14 sm:h-14 xl:w-16 xl:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-500 flex items-center justify-center text-white font-black[^"]*">[\s\r\n]*SP[\s\r\n]*<\/div>/g;
+          const standardLogoHtml = '<img src="images/logo.png" alt="Smart Picks Logo" class="w-9 h-9 sm:w-12 sm:h-12 xl:w-14 xl:h-14 rounded-xl sm:rounded-2xl object-cover shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform flex-shrink-0">';
+          if (legacyLogoRegex.test(postHtmlContent)) {
+            postHtmlContent = postHtmlContent.replace(legacyLogoRegex, standardLogoHtml)
+              .replace('h-20 sm:h-24 py-2 flex items-center justify-between gap-2 sm:gap-3 xl:gap-5', 'h-16 sm:h-20 py-2 flex items-center justify-between gap-1.5 sm:gap-3 xl:gap-5');
+          }
+        }
+
         // Save to Cloudflare KV if bound
         if (env.POSTS_KV) {
           let customPosts = [];
@@ -3387,10 +3397,16 @@ export default {
 
       // Check KV for saved HTML
       if (env.POSTS_KV) {
-        const savedHtml = await env.POSTS_KV.get('post_html:' + cleanPath) || 
+        let savedHtml = await env.POSTS_KV.get('post_html:' + cleanPath) || 
                           await env.POSTS_KV.get('post_html:post-' + cleanPath) ||
                           (!cleanPath.endsWith('.html') ? await env.POSTS_KV.get('post_html:' + cleanPath + '.html') : null);
         if (savedHtml) {
+          const legacyLogoRegex = /<div class="w-12 h-12 sm:w-14 sm:h-14 xl:w-16 xl:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-500 flex items-center justify-center text-white font-black[^"]*">[\s\r\n]*SP[\s\r\n]*<\/div>/g;
+          if (legacyLogoRegex.test(savedHtml)) {
+            const standardLogoHtml = '<img src="images/logo.png" alt="Smart Picks Logo" class="w-9 h-9 sm:w-12 sm:h-12 xl:w-14 xl:h-14 rounded-xl sm:rounded-2xl object-cover shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform flex-shrink-0">';
+            savedHtml = savedHtml.replace(legacyLogoRegex, standardLogoHtml)
+              .replace('h-20 sm:h-24 py-2 flex items-center justify-between gap-2 sm:gap-3 xl:gap-5', 'h-16 sm:h-20 py-2 flex items-center justify-between gap-1.5 sm:gap-3 xl:gap-5');
+          }
           return new Response(savedHtml, {
             headers: {
               'Content-Type': 'text/html; charset=utf-8',
@@ -3402,7 +3418,14 @@ export default {
           });
         }
       } else if (inMemoryHtml.has(cleanPath)) {
-        return new Response(inMemoryHtml.get(cleanPath), {
+        let memHtml = inMemoryHtml.get(cleanPath);
+        const legacyLogoRegex = /<div class="w-12 h-12 sm:w-14 sm:h-14 xl:w-16 xl:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-500 flex items-center justify-center text-white font-black[^"]*">[\s\r\n]*SP[\s\r\n]*<\/div>/g;
+        if (legacyLogoRegex.test(memHtml)) {
+          const standardLogoHtml = '<img src="images/logo.png" alt="Smart Picks Logo" class="w-9 h-9 sm:w-12 sm:h-12 xl:w-14 xl:h-14 rounded-xl sm:rounded-2xl object-cover shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform flex-shrink-0">';
+          memHtml = memHtml.replace(legacyLogoRegex, standardLogoHtml)
+            .replace('h-20 sm:h-24 py-2 flex items-center justify-between gap-2 sm:gap-3 xl:gap-5', 'h-16 sm:h-20 py-2 flex items-center justify-between gap-1.5 sm:gap-3 xl:gap-5');
+        }
+        return new Response(memHtml, {
           headers: {
             'Content-Type': 'text/html; charset=utf-8',
             'Cache-Control': 'no-cache, no-store, must-revalidate',
