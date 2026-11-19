@@ -360,12 +360,29 @@
     if (h2s.length >= 3) h2s[2].textContent = dict.section3Title;
     if (h2s.length >= 4) h2s[3].textContent = dict.section4Title;
 
+    function formatParagraphsSafe(el, rawText) {
+      if (!el || !rawText) return;
+      const paras = rawText.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      if (paras.length <= 1) {
+        el.textContent = rawText;
+      } else {
+        el.innerHTML = '';
+        paras.forEach((p, idx) => {
+          const span = document.createElement('span');
+          span.className = 'block' + (idx < paras.length - 1 ? ' mb-3.5 leading-relaxed' : ' leading-relaxed');
+          span.textContent = p;
+          el.appendChild(span);
+        });
+      }
+    }
+
     // Section 1 Paragraph (Intro)
     if (postData && h2s.length >= 1) {
       let p1 = h2s[0].nextElementSibling;
       while (p1 && p1.tagName.toLowerCase() !== 'p') { p1 = p1.nextElementSibling; }
       if (p1) {
-        p1.textContent = lang === 'vi' ? (postData.introVi || postData.intro) : (lang === 'zh' ? (postData.introZh || postData.intro) : (postData.introEn || postData.intro));
+        const text1 = lang === 'vi' ? (postData.introVi || postData.intro) : (lang === 'zh' ? (postData.introZh || postData.intro) : (postData.introEn || postData.intro));
+        formatParagraphsSafe(p1, text1);
       }
     }
 
@@ -374,7 +391,8 @@
       let p2 = h2s[1].nextElementSibling;
       while (p2 && p2.tagName.toLowerCase() !== 'p') { p2 = p2.nextElementSibling; }
       if (p2) {
-        p2.textContent = lang === 'vi' ? (postData.bodyVi || postData.body) : (lang === 'zh' ? (postData.bodyZh || postData.body) : (postData.bodyEn || postData.body));
+        const text2 = lang === 'vi' ? (postData.bodyVi || postData.body) : (lang === 'zh' ? (postData.bodyZh || postData.body) : (postData.bodyEn || postData.body));
+        formatParagraphsSafe(p2, text2);
       }
     }
 
@@ -383,7 +401,8 @@
       let p4 = h2s[3].nextElementSibling;
       while (p4 && p4.tagName.toLowerCase() !== 'p') { p4 = p4.nextElementSibling; }
       if (p4) {
-        p4.textContent = lang === 'vi' ? (postData.verdictVi || postData.verdict) : (lang === 'zh' ? (postData.verdictZh || postData.verdict) : (postData.verdictEn || postData.verdict));
+        const text4 = lang === 'vi' ? (postData.verdictVi || postData.verdict) : (lang === 'zh' ? (postData.verdictZh || postData.verdict) : (postData.verdictEn || postData.verdict));
+        formatParagraphsSafe(p4, text4);
       }
     }
 

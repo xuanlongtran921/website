@@ -2422,9 +2422,9 @@ async function generateArticleWithAi() {
 }
 
 function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customImage) {
-  const kwLower = keyword.toLowerCase();
-  const cleanKw = keyword.replace(/[^\w\s\-\.\+]/g, '').trim() || 'Product';
-  const brandName = brand || (keyword.split(' ')[0] + ' Official');
+  const kwLower = (keyword || '').toLowerCase();
+  const cleanKw = (keyword || 'Product').replace(/[^\w\s\-\.\+]/g, '').trim() || 'Product';
+  const brandName = brand || (cleanKw.split(' ')[0] + ' Official');
   const brandSlug = (brandName || 'smartpicks').toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
   const isEn = lang !== 'vi' && lang !== 'zh'; // Priority: English default
   const cleanSlug = 'post-' + cleanKw.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '') + '-review';
@@ -2432,278 +2432,837 @@ function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customIm
   const resolveAffLink = (defaultUrl) => customAffLink && customAffLink.trim() ? customAffLink.trim() : defaultUrl;
   const resolveImage = (defaultImg) => customImage && customImage.trim() ? customImage.trim() : defaultImg;
 
-    // Specialized Hardware & Digital Generators
+  // Domain & Vertical Detection
   const isRcPlaneGlider = /rc[- ]*(plane|glider|jet|airplane|aircraft|flight)|glider|airplane|aircraft|aerobatic|stunt[- ]*plane|volantex|ranger[- ]*600|xpilot|fixed[- ]*wing/i.test(kwLower);
   const isActualMower = (/mowrator|lawnmower|lawn[- ]*mower|navimow|luba|mower/i.test(kwLower)) && !/plane|glider|drone|flycam/i.test(kwLower);
   const isDroneFlycam = /drone|drones|flycam|quadcopter|uav|dji|mavic|avata|phantom|betafpv|mini[- ]*4/i.test(kwLower);
   const isRobotVacuum = /roborock|dreame|ecovacs|roomba|vacuum|robot[- ]*vacuum|robot[- ]*mop/i.test(kwLower);
   const isMechanicalKeyboard = /keychron|keyboard|keyboards|mechanical[- ]*keyboard|qmk|via|keycap|mx[- ]*master|logitech[- ]*mx/i.test(kwLower) || niche === 'edc';
-
-  // 0. Beauty & Personal Care / Wellness / Cleanses (RogersHood Parafy / Herbal cleanse / Skincare)
   const isBeautyWellness = /cleanse|parasite|herbal|tincture|parafy|apothecary|rogershood|detox|skin|serum|cream|wellness|supplement|beauty|health|cosmetic/i.test(kwLower) || niche === 'beauty';
   const isFashionStyle = /skirt|pleated|dress|sweater|hoodie|jacket|clothing|apparel|goth|grunge|corset|boots|fashion/i.test(kwLower) || niche === 'fashion';
   const isHorologyWatch = /watch|watches|chronograph|seagull|tissot|seiko|rolex|horology/i.test(kwLower) || niche === 'watches';
   const isCoffeeGear = /coffee|espresso|gaggia|breville|barista|grinder|portafilter/i.test(kwLower) || niche === 'coffee';
   const isAutoRacing = /intake|exhaust|turbo|tuning|bullboost|brembo|brake|racing|auto/i.test(kwLower) || niche === 'auto';
 
+  let catName = 'Tech Hardware';
+  let t_title, t_excerpt, t_img, t_pros, t_cons, t_intro, t_body, t_verdict;
+  let priceU = '$199.00', priceV = '4.975.000₫', priceO = '$249.00';
+  let couponCode = 'SMARTPICKS15', couponDisc = '15% OFF Global Order', couponExp = '12/31/2026';
+  let ratingScore = 9.7;
+
+  // 1. Beauty, Wellness, Herbal Cleanses & Skincare (Rogershood Parafy / Herbal Tinctures / Gut Detox)
   if (isBeautyWellness) {
     catName = 'Beauty & Personal Care';
     priceU = '$265.00'; priceV = '6.625.000₫'; priceO = '$331.25';
+    couponCode = 'PARAFY15'; couponDisc = '15% OFF Complete Kit';
     t_img = resolveImage('https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} In-Depth Review: Full-Body Detox Protocol Tested (2026)`;
-    t_excerpt = `A comprehensive 30-day clinical & experiential evaluation of ${cleanKw} by ${brandName}: Ingredients breakdown, digestive benefits, detox timeline, and long-term vitality analysis.`;
-    t_pros = `100% all-natural wildcrafted herbal formulation with organic tinctures and zero synthetic fillers\nComprehensive multi-stage protocol targeting microbiome balance, gut health, and systemic detoxification\nGentle on digestion without harsh chemical laxatives or artificial binders\nBacked by transparent batch sourcing and verified customer wellness transformations`;
-    t_cons = `Natural botanical taste is earthy and pungent, best consumed diluted in juice or smoothies\nRequires consistent daily adherence over the full 30-day protocol for peak outcomes`;
-    t_intro = `Gut wellness and systemic cleansing have emerged as the cornerstone of modern preventative health. Among the myriad of detox regimens on the market, ${cleanKw} from ${brandName} has garnered widespread acclaim across holistic wellness communities for its potent botanical formulation.\n\nUnlike harsh synthetic cleanses that deplete essential flora, this protocol utilizes time-tested herbs—including sweet wormwood, organic clove, black walnut hull, and lymphatic support botanicals. Upon unboxing, the presentation is immaculate: tinted amber glass bottles with measured glass droppers to protect volatile plant compounds from UV degradation.`;
-    t_body = `Our editorial wellness team followed the complete recommended protocol over a rigorous 30-day evaluation. During the initial week, the herbal drops integrated smoothly into daily morning routines. By week two, noticeable improvements in digestive regularity, reduced bloating, and sustained mid-day energy levels were consistently recorded.\n\nThe inclusion of comprehensive dietary guidelines and hydration recommendations ensures users can optimize their cleanse while minimizing typical detox fatigue. Compared to generic supermarket cleanses, the high concentration and bio-availability of the liquid tinctures provide noticeably superior assimilation.`;
-    t_verdict = `The ${cleanKw} stands out as a gold standard in holistic wellness. If you are seeking to reset your digestive system, combat sluggishness, and support your natural microbiome, ${brandName}'s formula delivers verified results. It earns our highest editorial recommendation for 2026.`;
-  } else if (isFashionStyle) {
+    t_title = `${cleanKw} In-Depth Review: Full-Body Detox Protocol & Microbiome Reset Tested (2026)`;
+    t_excerpt = `A comprehensive 30-day clinical & experiential evaluation of ${cleanKw} by ${brandName}: Botanical active ingredients breakdown, digestive transit timeline, bio-availability assays, and long-term vitality outcomes.`;
+    
+    t_pros = `100% all-natural wildcrafted herbal formulation with organic tinctures and zero synthetic fillers or harsh laxatives
+Comprehensive multi-stage protocol targeting gut microbiome equilibrium, liver-kidney drainage, and systemic cellular cleansing
+Pharmaceutical-grade amber glass dropper bottles protect volatile volatile phytochemicals from UV oxidation and allow precise micro-dosing
+Backed by transparent third-party heavy-metal & pesticide lab screening alongside thousands of verified customer transformations
+Includes comprehensive dietary roadmap, gentle fasting schedules, hydration electrolytes, and detailed daily intake calendars`;
+
+    t_cons = `Natural botanical taste is earthy, bitter, and intensely pungent—best consumed diluted in organic juice, warm water, or fruit smoothies
+Demands strict, uninterrupted daily compliance over the entire 30-day cycle to achieve complete biological reset
+Mild initial detox adjustment (slight fatigue or transient digestive shifts) can occur during the first 48 to 72 hours as toxins mobilize`;
+
+    t_intro = `Gut health, microbiome balance, and biological detoxification have taken center stage in modern preventative medicine. In an era dominated by processed diets, environmental pollutants, and ubiquitous micro-stressors, sluggish digestion and chronic fatigue are widespread complaints. Among the myriad of commercial cleanses flooding the wellness space, the ${cleanKw} developed by ${brandName} has earned an authoritative reputation among naturopaths, functional medicine practitioners, and holistic health communities. Unlike commercial drugstore laxative teas that simply flush superficial water weight while stripping the intestinal lining, this protocol claims to target deep systemic biofilm cleansing, microbial balance, and lymphatic drainage.
+
+Upon unboxing the ${cleanKw}, the attention to pharmaceutical detail is immediately apparent. The formulas arrive sealed in thick amber glass bottles fitted with calibrated glass pipettes, protecting delicate volatile phytonutrients from light degradation and plastic leaching. The accompanying documentation is notably thorough: instead of generic marketing platitudes, ${brandName} provides an exhaustive day-by-day protocol guide, including optimal dosing intervals, dietary recommendations for whole-food alkalizing meals, and critical hydration guidelines to support natural emunctory pathways.
+
+Integrating the protocol into daily living proved remarkably structured. Following the recommended morning and evening schedule, the drops are administered sublingually or stirred into 4–6 ounces of filtered water. While the organic botanical concentration possesses a robust, earthy aroma—predominated by the sharp pungency of organic clove buds and the distinctive herbal bitterness of sweet wormwood—the formulation mixes cleanly without oily residue or sediment separation.`;
+
+    t_body = `To evaluate the true efficacy of the ${cleanKw}, our wellness editorial panel followed the manufacturer's complete protocol over an intensive 30-day trial period under controlled lifestyle conditions. The proprietary formulation centers on four cornerstone botanical extracts: Sweet Wormwood (Artemisia annua), Organic Clove (Syzygium aromaticum), Black Walnut Hull (Juglans nigra), and Fulvic/Humic trace mineral complexes. In herbal pharmacognosy, this specific triad is revered for its high concentration of artemisinin, eugenol, and juglone—compounds with well-documented biological mechanisms for supporting balanced intestinal flora and breaking down tenacious biofilm matrices without disturbing beneficial probiotic colonies.
+
+During Week 1 (Days 1–7: Mobilization Phase), participants noted a gradual shift in digestive rhythm. As the botanicals initiated gentle bile stimulation and liver drainage, transient Herxheimer-like sensations—manifesting as mild afternoon fatigue and slight metabolic sluggishness—were documented on Days 3 and 4, subsiding swiftly by Day 5 as cellular elimination kicked in. Adhering to the mandated 2.5 to 3 liters of daily mineralized water was essential during this onboarding phase.
+
+By Week 2 and Week 3 (Days 8–21: Equilibrium & Deep Cleansing), the experiential data demonstrated profound improvements. Standardized digestive comfort metrics revealed an 82% reduction in post-meal bloating and gas, coupled with consistent morning bowel regularity. Panelists reported the total cessation of late-afternoon sugar and refined carbohydrate cravings, a classic biomarker often linked to gut dysbiosis. Sleep tracking data logged via biometric wearables showed a 14% increase in restorative deep sleep phases, attributable to lessened nocturnal gastrointestinal inflammation.
+
+In Week 4 (Days 22–30: Cellular Consolidation & Radiance), the systemic benefits became visually and energetically evident. Skin clarity and luminosity improved noticeably, with a marked reduction in hormonal jawline blemishes. Sustained mid-day mental clarity replaced the typical 3 PM cognitive slump without requiring additional caffeine intake. Crucially, gastrointestinal transit remained smooth and predictable, confirming that the formula relies on botanical nourishment rather than abusive peristaltic stimulants like senna or cascara sagrada.
+
+When stacked against mainstream commercial cleanses, ${cleanKw} stands in an entirely different class. Mass-market detox products invariably rely on harsh chemical bulking agents or dehydrating diuretics that create a temporary illusion of weight loss while decimating mucosal health. In stark contrast, ${brandName}'s cold-extraction organic tincturing preserves living plant enzymes, delivering unmatched bio-availability and enduring biological restoration.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is not a superficial quick fix—it is a masterfully formulated, clinical-grade botanical intervention for anyone serious about resetting their digestive tract, eliminating stubborn internal sluggishness, and revitalizing total cellular energy. By combining time-tested herbal principles with uncompromising batch purity and third-party laboratory verification, it delivers measurable physiological transformations.
+
+For prospective purchasers, we strongly advise ordering exclusively through ${brandName}'s official partner dispensary linked below to guarantee fresh batch provenance, valid tamper seals, and direct access to their dedicated wellness customer support team. With our verified partner discount code applied at checkout, it represents one of the highest-yield investments in holistic health available in 2026.`;
+  }
+  // 2. Alt & Gothic Fashion / Luxury Apparel (Secret Desires, Pleated Skirts, Sweaters, Knitwear)
+  else if (isFashionStyle) {
     catName = 'Alt & Gothic Fashion';
     priceU = '$89.00'; priceV = '2.225.000₫'; priceO = '$119.00';
+    couponCode = 'PURPOSE15'; couponDisc = '15% OFF Global Order';
     t_img = resolveImage('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} Review: Premium Silhouette & Styling Tested (2026)`;
-    t_excerpt = `Our hands-on fashion review of ${cleanKw}: Fabric durability, cut precision, drape dynamics, and all-season versatility.`;
-    t_pros = `Tailored silhouette with reinforced stitching and premium drape\nBreathable all-season fabric blend with luxurious hand-feel\nVersatile styling options from everyday streetwear to elevated evening aesthetics\nColor-fast dyes that resist fading through repeated gentle wash cycles`;
-    t_cons = `Delicate care instructions recommend gentle cycle or hand washing\nLimited seasonal production batches may sell out quickly`;
-    t_intro = `Fashion that bridges expressive aesthetics with wearable comfort is rare. The ${cleanKw} by ${brandName} achieves this balance through meticulous pattern-making and fabric selection.\n\nThe garment arrives beautifully packaged. The stitching along the hems and seams is remarkably uniform, with zero loose threads or uneven tension.`;
-    t_body = `Over four weeks of styling across varied weather conditions, the fabric retained its drape and structural integrity without wrinkling excessively. The fit strikes the ideal balance between structured elegance and relaxed mobility.`;
-    t_verdict = `The ${cleanKw} is an exceptional wardrobe addition that elevates personal style effortlessly. Highly recommended for fashion-forward wardrobes in 2026.`;
-  } else if (isHorologyWatch) {
-    catName = 'Watches & Horology';
-    priceU = '$219.00'; priceV = '5.475.000₫'; priceO = '$279.00';
-    t_img = resolveImage('https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} Review: Mechanical Horology & Movement Tested (2026)`;
-    t_excerpt = `A deep-dive horological review of ${cleanKw}: Movement accuracy, sapphire crystal clarity, column-wheel action, and wrist presence.`;
-    t_pros = `Authentic mechanical caliber with visible exhibition caseback\nCrisp pusher engagement and tactile winding sensation\nVintage-inspired dial typography with warm domed crystal\nOutstanding value-to-craftsmanship ratio in mechanical horology`;
-    t_cons = `Manual wind caliber requires regular winding routine\nWater resistance is intended for splash protection rather than diving`;
-    t_intro = `In an age dominated by disposable digital wearables, mechanical horology offers an enduring connection to physical micro-engineering. The ${cleanKw} from ${brandName} celebrates this heritage with timeless proportion and mechanical authenticity.`;
-    t_body = `On the wrist, the watch commands understated presence. Running on our digital timing machine, the movement exhibited an impressive daily rate deviation well within +6 to +9 seconds per day, rivaling calibers costing three times as much.`;
-    t_verdict = `For watch collectors and style purists, the ${cleanKw} delivers immense horological charm and mechanical soul. A stellar addition to any timepiece collection.`;
-  } else if (isCoffeeGear) {
-    catName = 'Espresso & Coffee';
-    priceU = '$449.00'; priceV = '11.225.000₫'; priceO = '$549.00';
-    t_img = resolveImage('https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} In-Depth Review: Temperature Stability & Extraction Tested (2026)`;
-    t_excerpt = `We extracted over 100 espresso shots with the ${cleanKw}: Boiler recovery time, steam wand power, and shot consistency bench-tested.`;
-    t_pros = `Commercial-grade 58mm portafilter for optimal espresso extraction\nSolid stainless-steel housing built for decades of reliable use\nPowerful commercial steam wand produces velvety microfoam for latte art\nExpansive aftermarket modding ecosystem for coffee enthusiasts`;
-    t_cons = `Requires a quality burr grinder to achieve optimal extraction pressure\nSingle-boiler design requires brief transition between brewing and steaming`;
-    t_intro = `Achieving true café-quality espresso at home requires commercial hydraulic engineering. The ${cleanKw} from ${brandName} has long served as the benchmark for aspiring home baristas seeking uncompromised espresso extraction.`;
-    t_body = `Testing with light and medium roast specialty beans, the brass boiler maintained stable brewing temperatures across back-to-back shots. Crema was dense and aromatic, unlocking rich chocolate and stone fruit tasting notes.`;
-    t_verdict = `The ${cleanKw} remains the gold standard in entry-to-intermediate home espresso, delivering café-quality results in a bulletproof chassis.`;
-  } else if (isAutoRacing) {
-    catName = 'Auto Performance';
-    priceU = '$169.00'; priceV = '4.225.000₫'; priceO = '$219.00';
-    t_img = resolveImage('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} Review: Dyno Gains & Thermal Resistance Benchmarked (2026)`;
-    t_excerpt = `Dyno testing and track evaluation of ${cleanKw}: Airflow CFM gains, throttle response improvements, and build precision.`;
-    t_pros = `Precision CNC-machined from aircraft-grade aluminum alloy\nProven dyno horsepower and torque improvements across mid-to-high RPM range\nEnhanced acoustic signature with intoxicating intake sound\nDirect bolt-on installation with factory mounting provisions`;
-    t_cons = `Requires basic automotive mechanical aptitude for DIY installation\nECU tune recommended to unlock 100% of available performance gains`;
-    t_intro = `Extracting maximum volumetric efficiency from modern powertrains requires precision induction engineering. The ${cleanKw} engineered by ${brandName} is specifically designed to eliminate restrictive factory airflow bottlenecks.`;
-    t_body = `Installed on our test mule, dyno verification showed a repeatable +8 to +12 HP gain across the 3,500 - 6,000 RPM range, paired with noticeably sharper throttle tip-in response during spirited track lapping.`;
-    t_verdict = `For automotive enthusiasts looking to sharpen throttle response and add genuine performance gains, the ${cleanKw} is an exceptional hardware upgrade.`;
-  } else if (isRcPlaneGlider) {
+    t_title = `${cleanKw} In-Depth Review: Fabric Durability, Cut Precision & Styling Tested (2026)`;
+    t_excerpt = `Our hands-on sartorial evaluation of ${cleanKw} by ${brandName}: We analyze textile GSM density, seam reinforcement, drape dynamics, all-season breathability, and styling versatility across 30 days of daily wear.`;
+
+    t_pros = `High-density tailored fabric weave delivers a structured, flattering silhouette with luxurious tactile hand-feel
+Precision double-needle reinforced stitching along high-stress seams prevents fraying, warping, or puckering
+Excellent color-fastness maintains deep, rich dye pigmentation across repeated laundering cycles without fading
+Versatile architectural silhouette bridges effortless everyday streetwear with elevated gothic evening aesthetics
+Custom-contoured ergonomic waistband provides comfortable all-day hold without pinching or uncomfortable bunching`;
+
+    t_cons = `Requires thoughtful garment care—gentle cold machine wash or delicate hand laundering recommended to preserve drape
+Tailored streetwear cut runs true to silhouette; those desiring an oversized or relaxed fit should consider sizing up
+High-demand limited production runs frequently sell out during seasonal capsule drops`;
+
+    t_intro = `Finding contemporary fashion pieces that masterfully bridge expressive alternative aesthetics with premium material longevity is notoriously difficult. Too often, the alternative and gothic fashion landscape is inundated with disposable fast-fashion garments manufactured from flimsy, static-prone polyester that loses all shape after a single laundry cycle. The ${cleanKw} engineered by ${brandName} entered the market promising an uncompromising departure from that paradigm: bespoke-grade pattern drafting, structural textile density, and heirloom-quality craftsmanship.
+
+The unboxing experience immediately sets a luxury tone. Packaged in a protective reusable garment sheath with embossed metal-tipped hardware accents, the piece makes an immediate tactile impression. Holding the ${cleanKw}, the physical heft of the fabric weave is unmistakable. Seam tolerances along every hem, pleat, and pocket seam are razor-sharp, executed with high-tensile bonded thread that resists tension pulls.
+
+Slipping into the garment, the ergonomic precision of ${brandName}'s pattern-making becomes tangible. The waist contouring hugs natural body curves with firm yet forgiving elasticity, eliminating the awkward back-gapping commonly found in off-the-rack tailored pieces. The drape falls cleanly, offering substantial movement without clinging or creating static charge.`;
+
+    t_body = `Our style editorial team subjected the ${cleanKw} to 30 consecutive days of real-world rotation across diverse urban environments, fluctuating temperatures, and prolonged office, transit, and nightlife wear. The centerpiece of this garment is its proprietary textile blend, combining premium combed long-staple fibers with targeted elastane memory yarn. In tactile abrasion tests, the fabric surface demonstrated virtually zero pilling even after intensive friction against coarse outer coats and leather shoulder bags.
+
+Throughout our four-week testing regimen, the structural integrity of the design remained flawless. The pleats and architectural folds maintained their knife-edge definition without requiring daily steaming or tedious ironing. The dye chemistry utilized by ${brandName} proved equally resilient: through 12 controlled cold-water wash cycles, spectrophotometer color analysis confirmed negligible pigment loss, retaining that deep, pitch-black saturation quintessential to premium dark aesthetics.
+
+Thermal regulation was another standout metric. Despite its structured weight, the micro-porous weave permits continuous micro-ventilation, preventing heat entrapment in crowded indoor venues while providing adequate wind resistance during brisk evening commutes. Moving through extended walking strides, climbing stairs, and seated work marathons, the piece adapted dynamically to body motion without creeping upwards or binding at the hip flexors.
+
+From a styling perspective, the versatility of the ${cleanKw} is extraordinary. Paired casually with combat boots and a distressed oversized knit, it projects effortless subcultural edge. Conversely, styled alongside tailored blazers, structured corsets, or minimalist jewelry, it effortlessly elevates into avant-garde high fashion.
+
+Compared directly to ubiquitous fast-fashion alternatives found on generic retail apps, ${cleanKw} justifies its modest premium tenfold. Where mass-market garments fray, pill, and distort within a month, ${brandName}'s thoughtful engineering delivers a timeless staple built to anchor an expressive wardrobe for years.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is a masterclass in modern sartorial execution. By marrying subversive, architectural aesthetics with robust fabric construction and impeccable tailoring, it proves that alternative fashion can be both breathtakingly stylish and deeply enduring.
+
+Whether you are curating a dedicated gothic capsule wardrobe or seeking an iconic statement piece that turns heads in any room, this garment earns our highest editorial marks. Order directly through the official partner link below to guarantee authentic original garment tags, full exchange guarantees, and exclusive promotional pricing.`;
+  }
+  // 3. RC Aircraft, Gliders, Stunt Planes & Flight Avionics (Volantex Ranger, XPilot Gyro, RTF Planes)
+  else if (isRcPlaneGlider) {
     catName = 'Robotics & Drones';
     priceU = '$109.99'; priceV = '2.750.000₫'; priceO = '$139.99';
+    couponCode = 'RANGER15'; couponDisc = '15% OFF RTF Bundle';
     t_img = resolveImage('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} Review: Aerobatic Flight & XPilot Gyro Tested (2026)`;
-    t_excerpt = `We put the ${cleanKw} through 25 flight sorties across variable wind conditions. Featuring multi-mode gyro flight stabilization, ultra-resilient EPP foam airframe, and responsive 2.4GHz multi-channel control.`;
-    t_pros = `Multi-axis flight gyro stabilization provides hands-free self-leveling and aerobatic assist for beginner pilots\nCrash-resistant EPP composite foam airframe absorbs rough grass landings and minor impacts without cracking\nEfficient coreless motor paired with high-discharge LiPo battery delivers 14 to 18 minutes of flight endurance per charge\nErgonomic 2.4GHz multi-channel transmitter offers reliable telemetry and responsive proportional stick inputs`;
-    t_cons = `Lightweight airframe requires calm to moderate wind (< 15 km/h) for optimal beginner flight stability\nSpare LiPo flight batteries and propeller replacements recommended for continuous flying club sessions`;
-    t_intro = `Remote-controlled fixed-wing aviation has historically presented a daunting learning curve, where a single orientation error could instantly shatter a delicate airframe. The ${cleanKw} eliminates that intimidation factor with modern flight avionics. Engineered by ${brandName}, this Ready-To-Fly (RTF) aircraft combines forgiving multi-axis gyro assistance with spirited aerobatic capability.\n\nUnboxing the aircraft, the aerodynamic geometry is striking. The high-density EPP foam construction offers tactile resilience, and all pushrods, control horns, and servos arrive factory-centered and calibrated.`;
-    t_body = `We logged over 25 flight sorties at open aeromodelling grounds in winds gusting between 8 and 14 km/h. Hand-launching into the wind with 60% throttle, the aircraft climbed out with authority. In Beginner Mode, releasing the sticks triggers instantaneous 6-axis gyro leveling, recovering from steep bank angles and preventing unintentional stalls.\n\nFlipping the transmitter toggle into Aerobatic Mode allows continuous barrel rolls, loops, and sustained inverted passes with razor-sharp rudder and elevator response. Flight times consistently averaged 15 minutes per 1S/2S LiPo pack, making it an extraordinarily fun and accessible park flyer.`;
-    t_verdict = `The ${cleanKw} is one of the most delightful and confidence-inspiring RC airplanes on the market. Whether you are stepping into RC aviation for the very first time or want a durable park flyer for weekend aerobatics, it earns our highest recommendation.`;
-  } else if (isActualMower) {
-    // Genuine Lawn Mower Only
+    t_title = `${cleanKw} Comprehensive Review: 25 Flight Sorties & XPilot Gyro Benchmarked (2026)`;
+    t_excerpt = `We logged over 25 flight sorties across gusty winds and open aeromodelling fields with the ${cleanKw} by ${brandName}: Multi-axis XPilot gyro stabilization, crash-resilient EPP foam airframe, aerobatic agility, and battery endurance tested.`;
+
+    t_pros = `Advanced 6-axis flight gyro stabilization provides instantaneous auto-leveling and wind compensation for novice pilots
+Crash-resistant high-density EPP composite foam airframe absorbs rough turf landings and nose-in impacts without cracking
+Propeller saver quick-release mechanism automatically detaches blades upon ground impact to safeguard motor shaft and gearbox
+Efficient coreless powertrain paired with high-discharge LiPo cell delivers 14 to 18 minutes of sustained flight endurance
+Ergonomic 2.4GHz multi-channel transmitter offers responsive proportional stick control and reliable telemetry beyond 200 meters`;
+
+    t_cons = `Ultralight aerodynamic weight requires wind speeds under 15 km/h for the most confidence-inspiring beginner learning curve
+Additional 1S/2S flight battery packs recommended to sustain continuous flying sessions without downtime
+Miniature tricycle landing gear performs best on smooth asphalt or short putting greens; hand-launching is optimal for tall grass`;
+
+    t_intro = `Fixed-wing remote-controlled aviation has historically intimidated aspiring hobbyists with its unforgiving physics: a split-second of spatial disorientation or a sudden wind shear could instantly disintegrate a delicate balsa wood or hard-plastic fuselage into expensive kindling. The ${cleanKw} from ${brandName} arrived with the bold ambition to completely eliminate that beginner anxiety through smart autonomous flight assistance. Engineered as a true Ready-To-Fly (RTF) platform, it bridges the gap between gentle, hands-off trainer stability and exhilarating aerobatic aerobatics.
+
+Unboxing the ${cleanKw}, the engineering refinement is immediately obvious. Rather than requiring messy epoxy adhesives, delicate soldering, or complex servo rigging, the aircraft arrives 95% pre-assembled. The high-density Expanded Polypropylene (EPP) foam airframe exhibits impressive memory resilience, flexing under pressure and snapping cleanly back into its aerodynamically true camber. Control linkages, micro linear servos, and motor mounts come pre-aligned and zeroed from the factory, allowing enthusiasts to go from unboxing to flight line within ten minutes.
+
+The included 2.4GHz transmitter features full-sized, ball-bearing-style proportional gimbals that offer smooth spring resistance and precise centering. The intuitive three-position toggle switch on the shoulder allows pilots to transition instantaneously between three distinct flight modes: Beginner (full gyro self-leveling), Intermediate (gentle bank limits with wind assist), and Expert (manual unassisted flight for unrestricted 3D aerobatics).`;
+
+    t_body = `Our flight evaluation team put the ${cleanKw} through an exhaustive 25-sortie testing program at open aeromodelling grounds across varying wind profiles, from dead-calm morning air to choppy 15 km/h gusting conditions. Hand-launching the aircraft into a light breeze at 60% throttle, the coreless propulsion unit pulled the model skyward with authoritative climb authority. The flight acoustics are whisper-quiet, making it ideal for neighborhood parks without causing community annoyance.
+
+In Beginner Mode, the onboard 6-axis gyro system acts as an invisible co-pilot. When intentional control stick inputs are released, the aircraft snaps back into perfectly level flight within a fraction of a second, even when tossed into a high-bank stall or inverted spiral. During turbulent crosswinds that would send conventional RC trainers tumbling, the gyro actively counter-steers the ailerons, rudder, and elevator micro-servos, maintaining a rock-steady flight corridor.
+
+Switching into Intermediate Mode opens up tighter banked turns, high-speed low-passes, and lazy eight maneuvers while still enforcing an electronic safety envelope that prevents unintentional tip stalls. For experienced flyers, flipping into Expert Mode unleashes the aircraft's full acrobatic potential: crisp axial rolls, inside and outside loops, sustained inverted flight, and hammerhead stall turns are executed with surgeon-like stick responsiveness. The one-key U-turn feature proved flawlessly reliable, automatically swinging the aircraft 180 degrees back toward the pilot with a single button press.
+
+Endurance testing with the supplied lithium-polymer battery pack yielded exceptional flight times, averaging 15 minutes of mixed throttle cruising per charge. Under full-throttle vertical climb stress, flight time remained comfortably above 11 minutes. Thermal inspection following back-to-back sorties showed the coreless motor and speed controller running well within safe temperature thresholds.
+
+Durability testing was conducted with real-world enthusiasm. During intentional high-speed nose dives into damp turf to evaluate structural crashworthiness, the ingenious propeller saver mechanism functioned flawlessly—ejecting the propeller blade upon impact to absorb rotational kinetic energy without bending the motor driveshaft. Snapping the propeller back onto its hex collar took under fifteen seconds, allowing the model to return to the air immediately without structural repairs.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} represents an absolute triumph in modern accessible aeromodelling. It effortlessly removes the barrier of fear that has kept so many enthusiasts from experiencing the pure joy of fixed-wing flight, while packing enough aerobatic capability to keep seasoned pilots smiling on weekend park excursions.
+
+For anyone seeking a rugged, confidence-inspiring, and endlessly entertaining RC aircraft for themselves or as an unforgettable gift, it earns our highest editorial recommendation. Order through the verified manufacturer link below to ensure genuine factory spares, warranty coverage, and exclusive discount pricing.`;
+  }
+  // 4. Heavy-Duty All-Terrain Remote Mowers (Mowrator S1 4WD Pro)
+  else if (isActualMower) {
     catName = 'Robotics & Drones';
     priceU = '$1,499.00'; priceV = '37.475.000₫'; priceO = '$1,799.00';
+    couponCode = 'MOWRATOR100'; couponDisc = '$100 OFF All-Terrain 4WD Series';
     t_img = resolveImage('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80');
     t_title = `${brandName.includes('Mowrator') ? 'Mowrator S1 4WD Smart Remote Control Mower' : cleanKw} In-Depth Review: 45° All-Terrain Performance Tested (2026)`;
-    t_excerpt = 'Featuring quad independent brushless hub motors, military-grade 2.4GHz remote telemetry, and 80% grade slope climbing, this machine permanently eliminates the physical dangers of steep-terrain lawn maintenance.';
-    t_pros = `Full 4WD brushless hub-motor drivetrain delivers 160Nm of instant torque to tackle 45-degree (80%) slopes\nErgonomic 2.4GHz remote controller with real-time telemetry screen operates reliably past 250 meters\nHeavy-gauge stamped steel cutting deck with electronic height adjustment\nHigh-capacity swap-and-go 56V lithium battery architecture delivers 2.2 to 2.8 hours of uninterrupted cutting`;
-    t_cons = `Hefty chassis requires heavy-duty loading ramps for pickup truck or trailer transport\nSubstantial upfront prosumer investment compared to conventional manual walk-behind mowers`;
-    t_intro = `Steep embankments, retention basins, and overgrown orchard slopes have historically been among the most hazardous environments in landscaping. Every year, commercial operators and rural property owners suffer severe injuries from rollover incidents. The ${cleanKw} was engineered from the ground up to eradicate this occupational hazard by taking the operator completely out of harm's way.\n\nFrom the moment you uncrate it, its industrial DNA is unmistakable. Built on a reinforced tubular steel roll-cage with aggressive tractor-tread pneumatic tires, this machine resembles an exploration rover rather than a suburban yard tool.`;
-    t_body = `We subjected the ${cleanKw} to 30 days of punishment across a 4-acre property featuring 40-degree clay embankments, thick fescue, wet riverbank Bermuda grass, and rocky uneven ditch slopes. Where commercial zero-turn mowers would spin their drive wheels and risk sliding sideways, the independent all-wheel brushless motors distributed torque flawlessly.\n\nThe onboard digital inclinometer automatically modulated wheel speeds, preventing turf tear while climbing damp 42-degree inclines effortlessly. Operating via the 2.4GHz remote felt intuitive, providing immediate dual-stick proportional throttle and skid-steer navigation with zero latency.`;
-    t_verdict = `The ${cleanKw} isn't just a luxury gadget—it is a critical safety upgrade for anyone managing difficult, uneven terrain. By removing the human operator from the physical risks of rollovers and blade accidents, it pays for itself in peace of mind alone.`;
-  } else if (isDroneFlycam || (niche === 'robotics' && !isRcPlaneGlider && !isActualMower)) {
-    // Drones & Flycams
-    catName = 'Robotics & Drones';
-    t_img = resolveImage('https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} In-Depth Review: Flight Telemetry & 4K Imaging (2026)`;
-    t_excerpt = `We logged over 40 hours of flight testing across coastal high winds and tight wooded terrain with the ${cleanKw}. Here is our complete hardware and camera teardown.`;
-    t_pros = `Omnidirectional optical obstacle avoidance sensors provide 360-degree crash protection\nStunning 4K/60fps HDR video capture with true vertical shooting mode for creators\nUltralight chassis stays comfortably below regional regulatory registration limits\nRock-solid 1080p/60fps video transmission range exceeding 10 kilometers`;
-    t_cons = `High-wind stability requires sport mode in gusts exceeding 32 km/h\nAdditional flight battery pack recommended for extended field shoots`;
-    t_intro = `Autonomous robotics and aerial imaging have witnessed exponential leaps in miniaturization. The ${cleanKw} combines prosumer cinema camera quality with palm-sized portability.\n\nFrom the moment the brushless motors spin up, the precision stabilization is apparent. Even in gusty coastal winds, the mechanical 3-axis gimbal keeps the camera rock-steady like a tripod in the sky.`;
-    t_body = `Dynamic range from the 1/1.3-inch dual-native ISO sensor is breathtaking, resolving intricate shadow detail without clipping bright sunset highlights. The autonomous subject-tracking algorithms locked onto trail runners and mountain bikes through dense tree canopies without losing tracking focus.`;
-    t_verdict = `For content creators, travel filmmakers, and drone enthusiasts, the ${cleanKw} is an indispensable creative tool that punches far above its weight class.`;
-  } else if (isRobotVacuum) {
-    // Robot Vacuums & Mops
-    catName = 'Smart Home & IoT';
-    priceU = '$899.00'; priceV = '22.475.000₫'; priceO = '$1,199.00';
-    t_img = resolveImage('https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} Review: LiDAR Navigation & Deep Cleaning Benchmarks (2026)`;
-    t_excerpt = `We subjected the ${cleanKw} to 4 weeks of intensive debris, pet hair, and dried stain testing across hardwood, tile, and medium-pile carpets.`;
-    t_pros = `Massive suction power with dual anti-tangle rubber roller brushes eliminates pet hair wrap\nVibraRise sonic mopping scrub system lifts stubborn dried coffee and syrup stains effortlessly\nPrecision LDS LiDAR mapping navigates complex chair legs and cables without getting stranded\nAll-in-one hands-free dock washes mops with hot water, self-empties dust, and hot-air dries`;
-    t_cons = `Large multifunction dock footprint requires dedicated floor space near a power outlet\nReplacement dust bags and specialized cleaning detergent require minor recurring upkeep`;
-    t_intro = `Robotic floor cleaning has evolved from random bumper cars to intelligent autonomous maintenance systems. The ${cleanKw} represents the pinnacle of autonomous floor care, designed to keep large multi-room households spotless with zero manual intervention.\n\nInitial mapping took under 8 minutes for a 120-square-meter floor plan. The high-precision LiDAR scanner generated an accurate 3D map identifying carpet zones, furniture boundaries, and no-go areas.`;
-    t_body = `In standardized lab tests, the vacuum collected 98.4% of fine sand and pet dander from deep carpet fibers. The dual rotating and vibrating mop pads lifted dried barbecue sauce and mud footprints in a single pass without streaking glossy tiles.`;
-    t_verdict = `The ${cleanKw} sets the reference standard for fully autonomous residential cleaning in 2026. A transformative home appliance that gives you back hours of your life every week.`;
-  } else if (isMechanicalKeyboard) {
-    // Mechanical Keyboards
+    t_excerpt = `Featuring quad independent brushless hub motors, military-grade 2.4GHz remote telemetry, and 80% grade slope climbing, this machine permanently eliminates the physical dangers of steep-terrain lawn maintenance.`;
+
+    t_pros = `Full 4WD brushless hub-motor drivetrain delivers 160Nm of instant torque to conquer treacherous 45-degree (80%) slopes without slippage
+Ergonomic 2.4GHz remote controller with real-time telemetry screen keeps the operator safe from hazardous hills, dust, and flying debris up to 250 meters
+Heavy-duty stamped steel cutting deck with electronic multi-level blade height adjustment from 1.2 to 4.5 inches
+High-capacity swap-and-go 56V lithium battery architecture delivers up to 2.8 hours of heavy continuous cutting per charge
+Triple redundant safety fail-safes including electronic slope auto-braking, instant tilt-stop gyros, and physical emergency stop switch`;
+
+    t_cons = `Substantial machine chassis weight requires heavy-duty loading ramps for pickup truck or trailer transportation
+Prosumer upfront capital investment compared to conventional manual walk-behind push mowers
+Demands dry, covered storage or a dedicated weatherproof garden shed to preserve sensitive telemetry electronics`;
+
+    t_intro = `Steep highway embankments, retention basins, overgrown orchard slopes, and rocky ditch banks have historically represented some of the most dangerous work environments in commercial and residential groundskeeping. Every single year, hundreds of property owners and commercial operators suffer catastrophic injuries or fatal rollovers attempting to navigate conventional riding or walk-behind mowers across severe inclines. The ${cleanKw} engineered by ${brandName} was built from a clean sheet of paper to permanently eradicate this occupational hazard by removing the human operator entirely from the danger zone.
+
+From the second the transport crate is opened, the machine's uncompromising industrial pedigree is unmistakable. Rather than resembling a fragile consumer appliance, the ${cleanKw} looks and feels like an armored military exploration rover. The chassis is built upon a heavy-gauge tubular steel roll cage, welded to perfection and coated in corrosion-resistant industrial enamel. Massive chevron-tread pneumatic tractor tires provide substantial ground clearance and an intimidating stance capable of straddling exposed tree roots and embedded boulders.
+
+Operating the unit centers on an ergonomic 2.4GHz handheld controller with dual proportional gimbals and an integrated backlit telemetry display. Pairing is instantaneous upon powering the vehicle. The thumb sticks provide butter-smooth proportional control, allowing micro-millimeter precision maneuvering around delicate landscaping borders as easily as wide-open field cruising.`;
+
+    t_body = `We put the ${cleanKw} through 30 days of punishment across a demanding 4.5-acre property featuring 40-to-45-degree clay embankments, thick fescue, wet riverbank Bermuda grass, and rocky overgrown drainage ditches. While commercial zero-turn mowers spin their drive wheels and slide dangerously downhill on wet grass, the ${cleanKw}'s four independent brushless hub motors distribute torque with telepathic precision.
+
+Under full incline load on a damp 42-degree bank, the vehicle showed zero hesitation. The onboard electronic inclinometer actively calculates slope angle and modulates individual wheel RPMs, generating 160Nm of instant traction that prevents turf tearing while maintaining straight-line tracking. If you release the controller sticks on a steep 45-degree bank, the electromagnetic braking system engages automatically within 5 milliseconds, locking the vehicle motionless in place without slipping an inch.
+
+The cutting architecture is equally formidable. Powered by a dedicated high-torque electric motor, the reinforced steel mulching blades spin at 3,200 RPM, vaporizing waist-high weeds, wild blackberry brambles, and thick field brush into nutrient-rich organic mulch in a single pass. Adjusting the cutting height requires zero wrenches—a simple toggle on the remote electronically adjusts the deck actuator between 1.2 and 4.5 inches on the fly.
+
+Battery runtime exceeded manufacturer specifications. Across our mixed terrain cycles, the 56V high-capacity lithium battery consistently delivered 2 hours and 35 minutes of aggressive cutting before triggering the low-voltage warning. The swap-and-go battery latching mechanism allows commercial operators to drop in a fresh battery pack in under 30 seconds for uninterrupted all-day property maintenance.
+
+From a commercial Return on Investment (ROI) perspective, the machine pays for itself rapidly. Eliminating the need for dangerous two-man weed-whacker crews on steep hillsides saves dozens of labor hours weekly while completely eliminating worker compensation liability risks.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is not an indulgence—it is a lifesaving, revolutionary commercial-grade productivity tool that completely redefines how difficult property is maintained. By taking the operator off the slope and placing total control in the palm of their hand from 250 meters away, it delivers immense power, supreme safety, and absolute peace of mind.
+
+For rural acreage owners, solar farm managers, municipal landscapers, and safety-conscious property managers, it earns our highest editorial recommendation for 2026. Order directly through the official partner link below to secure authentic manufacturer warranty protection, rapid freight shipping, and exclusive promotional pricing.`;
+  }
+  // 5. Mechanical Keyboards & Desk Setup EDC (Keychron Q1 Pro / Custom Peripherals)
+  else if (isMechanicalKeyboard) {
     catName = 'Desk Setup & EDC';
     priceU = '$199.00'; priceV = '4.975.000₫'; priceO = '$229.00';
+    couponCode = 'KEYCHRON10'; couponDisc = '10% OFF Mechanical Essentials';
     t_img = resolveImage('https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80');
-    t_title = `${cleanKw} Hands-On Review: Ergonomics & Tactile Perfection (2026)`;
-    t_excerpt = `An exhaustive teardown of the ${cleanKw}. We evaluate structural chassis acoustics, ergonomic tolerances, switch feel, and daily productivity enhancements.`;
-    t_pros = `Solid CNC anodized aluminum enclosure provides weight, acoustic dampening, and zero desk slippage\nGasket-mounted acoustic dampening produces a deeply satisfying, creamy sound signature\nHot-swappable PCB supports both 3-pin and 5-pin mechanical switches without soldering\nFull QMK/VIA keymap customizability across macOS, Windows, and Linux`;
-    t_cons = `Heavyweight chassis makes it strictly a stationary battlestation centerpiece\nPremium mechanical hardware investment compared to mass-market plastic peripherals`;
-    t_intro = `Your primary desk peripherals directly dictate your posture, comfort, and productivity throughout the workday. The ${cleanKw} was meticulously designed to elevate the desktop typing experience into an art form.\n\nWeighing in with substantial aluminum heft, the keyboard sits anchored to the desk mat. The custom keycap profiles cup the fingertips naturally, drastically reducing wrist strain during lengthy coding and writing sprints.`;
-    t_body = `Typing on the lubricated mechanical switches feels buttery smooth with zero pinging or spring crunch. The multi-layer sound dampening absorbs harsh frequencies, generating a refined, deep acoustic response that is an absolute joy to use for 8+ hours a day.`;
-    t_verdict = `The ${cleanKw} transforms everyday computer interaction into a luxurious tactile experience. Built like an heirloom and infinitely customizable, it is an essential investment for any serious workspace.`;
-  } else if (niche === 'audio') {
+    t_title = `${cleanKw} Comprehensive Review: Acoustic Teardown & Daily Ergonomics Benchmarked (2026)`;
+    t_excerpt = `An exhaustive teardown of ${cleanKw} by ${brandName}: We evaluate CNC anodized aluminum rigidity, double-gasket acoustic isolation, lubricated switch tolerances, QMK/VIA keymap flexibility, and wireless battery performance.`;
+
+    t_pros = `Solid CNC 6063 anodized aluminum chassis provides exceptional structural rigidity, heft, and zero desktop slippage
+Double-gasket acoustic mounting architecture delivers a deep, creamy sound profile devoid of harsh resonance or case ping
+Hot-swappable PCB supports both 3-pin and 5-pin mechanical switches for effortless solder-free switch customization
+Full open-source QMK and VIA programmability enables infinite keymapping, macro layers, and rotary encoder customization
+Seamless dual-connectivity via low-latency Bluetooth 5.1 across 3 devices alongside reliable wired Type-C 1000Hz polling`;
+
+    t_cons = `Heavyweight all-metal construction (approx 1.8 kg) makes it strictly a permanent desk centerpiece rather than a travel board
+South-facing RGB backlighting, while optimal for cherry-profile keycaps, yields subtle legends on side-engraved keycaps
+Substantial initial investment compared to mass-market plastic membrane office keyboards`;
+
+    t_intro = `Your primary computer keyboard is the physical tactile interface through which you channel every line of code, every strategic email, and every creative thought throughout your working life. In an era where cheap plastic peripherals dominate corporate workspaces, the mechanical keyboard renaissance has elevated desk hardware from utilitarian tools into bespoke artisan instruments. The ${cleanKw} engineered by ${brandName} stands at the pinnacle of this movement, bringing custom enthusiast-tier keyboard features into a refined, factory-assembled package.
+
+The moment you unpack the ${cleanKw}, its industrial presence is commanding. Milled from a solid block of 6063 aerospace-grade aluminum, the chassis possesses a substantial 1.8-kilogram heft that sits firmly anchored to your desk mat. The anodized finish is velvety to the touch, with chamfered bevels that reflect light with subtle elegance. There is zero flex, zero creaking, and zero hollow rattle anywhere on the body.
+
+The typing angle is ergonomically dialed at a natural 5.2 degrees, naturally aligning with the wrist and carpal tunnel during marathon typing sprints. The custom PBT double-shot keycaps feature an authentic spherical profile that gently cups the fingertips, drastically reducing mistypes and muscular strain compared to flat laptop chiclet keyboards.`;
+
+    t_body = `To measure the mechanical tolerances and acoustic profile of the ${cleanKw}, we deployed it across our developer and editorial workstations for 30 consecutive days of continuous 8-hour typing loads. The centerpiece of this board is its double-gasket acoustic suspension. By sandwiching silicone gaskets between the CNC aluminum top/bottom housings and the FR4 switch plate, typing impacts are dampened gracefully, imparting a flexible, cushioned keystroke feel that completely absorbs finger joint shock.
+
+Acoustic spectrum analysis conducted in our testing room confirmed a rich, deep "thock" sound profile across all keystrokes. The pre-lubricated mechanical switches glide with zero scratchiness or spring crunch, while the screw-in PCB stabilizers keep large modifiers (Spacebar, Enter, Backspace) rock-solid without any of the loose, hollow rattle typical of factory boards.
+
+On the electronics front, ${brandName}'s integration of open-source QMK/VIA firmware is a game changer for power users. Opening the browser-based VIA interface, every single key, modifier layer, and rotary encoder knob function can be remapped on the fly without downloading bloated background software suites. Setting up custom window-snapping shortcuts, audio control macros, and vim navigation layers takes seconds and is stored directly in onboard EEPROM memory across macOS, Windows, and Linux.
+
+Wireless performance over Bluetooth 5.1 remained rock-solid during our multi-device testing. Toggling between an Apple MacBook Pro, an iPad, and a Windows gaming rig was seamless with a sub-second reconnection latency. In wired Type-C mode, the board supports a native 1,000Hz polling rate, making it equally formidable for competitive esports gaming.
+
+Battery endurance easily cleared our expectations: powered by a 4,000mAh internal lithium cell, the keyboard delivered over 280 hours of continuous typing with the RGB backlight turned off, and approximately 85 hours with vibrant ambient lighting engaged.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is a towering achievement in modern peripheral engineering. It successfully bridges the gap between intimidating, expensive custom DIY keyboard kits and convenient, out-of-the-box daily productivity. Built like an heirloom and infinitely customizable, it transforms daily computer interaction into an absolute sensory joy.
+
+For software developers, creative writers, and workstation connoisseurs seeking the ultimate typing instrument, this is our top-ranked mechanical keyboard of 2026. Order through the verified official link below to receive genuine manufacturer switch options, regional layout support, and exclusive partner discount codes.`;
+  }
+  // 6. Audio & Audiophile Sound (Sony WH-1000XM5, Devialet Phantom, ANC Headphones)
+  else if (niche === 'audio') {
     catName = 'Audio & Sound';
-    t_img = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Audiophile Benchmarks & ANC Tested (2026)`;
-    t_excerpt = `We put the ${cleanKw} through rigorous acoustic laboratory testing. From frequency response neutrality to active noise cancellation attenuation, here is our definitive review.`;
-    t_pros = `Remarkable acoustic fidelity with tight sub-bass extension and transparent midrange\nIndustry-leading active noise cancellation attenuates ambient chatter and engine drone by up to 34dB\nPlush, breathable ear cushion memory foam engineered for fatigue-free all-day wear\nLow-latency Bluetooth 5.4 with high-resolution LDAC and aptX Lossless codec support`;
-    t_cons = `Companion equalizer application requires account registration for cloud custom profiles\nFolding hinges require deliberate care when packing into the included travel hardshell`;
-    t_intro = `Finding headphones that effortlessly bridge the gap between studio-grade sonic resolution and daily commuter practicality is rare. The ${cleanKw} promises exactly that balance. We ordered a retail unit directly from ${brandName} to conduct extensive frequency sweeps, multi-point stress tests, and microphone noise-rejection benchmarks.\n\nOut of the box, the industrial engineering inspires immediate confidence. The weight distribution across the headband eliminates localized crown pressure, and the matte texture resists oily fingerprints brilliantly.`;
-    t_body = `In listening tests spanning lossless FLAC orchestral arrangements, modern electronic tracks, and podcast voice work, the custom tuned dynamic drivers delivered sublime instrument separation. Active noise cancellation effortlessly silenced subway roar and mechanical office HVAC hum without introducing noticeable high-frequency hiss or eardrum pressure.\n\nBattery endurance exceeded expectations, logging 32 continuous hours with ANC engaged before needing a recharge via USB-C fast charging.`;
-    t_verdict = `The ${cleanKw} establishes a new reference benchmark for premium audio hardware in 2026. For discerning listeners who demand top-tier sound quality paired with bulletproof noise isolation, it is an unequivocal winner.`;
-  } else if (niche === 'wearables') {
-    catName = 'Smart Wearables';
-    t_img = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: Biometric Precision & Battery Endurance`;
-    t_excerpt = `We spent 30 days testing the ${cleanKw} during backcountry trails, open water swims, and daily sleep cycles. Here is our lab report on sensor accuracy and build durability.`;
-    t_pros = `Aerospace-grade titanium chassis with scratch-resistant sapphire crystal lens\nUltra-bright 3000-nit AMOLED display remains effortlessly legible under direct harsh sunlight\nMultiband dual-frequency GPS delivers pinpoint accuracy even under dense forest canopy\nComprehensive health telemetry tracking ECG, SpO2, HRV, and skin temperature trends`;
-    t_cons = `Rugged 49mm case footprint may feel substantial on more slender wrists\nFull feature suite requires companion mobile operating system pairing`;
-    t_intro = `Modern smart wearables have transitioned from simple step counters to life-saving biometric telemetry hubs. The ${cleanKw} positions itself as the apex explorer companion. We strapped it on for 30 consecutive days of mountain trekking, high-altitude running, and recovery tracking.\n\nThe build quality is uncompromising. The tactile button travel is crisp enough to operate with winter gloves, and the raised titanium bezel shields the sapphire display against direct rock strikes.`;
-    t_body = `During dual-frequency GNSS testing against a dedicated handheld Garmin receiver, track accuracy was virtually identical with zero GPS drift across narrow city streets and canyon valleys. Sleep tracking algorithms demonstrated exceptional fidelity when correlated with medical-grade EEG sleep monitors.\n\nBattery life easily clears multiple days of intensive GPS workout logging on a single charge.`;
-    t_verdict = `The ${cleanKw} is quite simply the most complete, durable, and reliable outdoor biometric timepiece available today. A triumphant achievement for athletes and adventurers alike.`;
-  } else if (niche === 'smarthome') {
-    catName = 'Smart Home & IoT';
-    t_img = 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: True Automation for the Modern Connected Home`;
-    t_excerpt = `We integrated the ${cleanKw} into a 45-device Matter & HomeKit smart home testbed for 4 weeks. Here is our hands-on review of reliability and ease of use.`;
-    t_pros = `Native Matter & Thread support ensures seamless cross-ecosystem synchronization\nUltra-low idle power consumption with instant millisecond local network response\nIntuitive zero-code automation scripting within the companion application\nSolid industrial enclosure with concealed cable management channels`;
-    t_cons = `Initial firmware update requires 2.4GHz Wi-Fi network initialization\nAdvanced automation logic has a slight learning curve for smart home novices`;
-    t_intro = `The true promise of the smart home is invisible convenience: technology that works reliably without constant manual tinkering or dropped connections. The ${cleanKw} brings enterprise-grade automation reliability into residential environments.\n\nSetup was remarkably frictionless thanks to Matter QR onboarding. Within two minutes, the device was recognized across Apple Home, Google Home, and Home Assistant simultaneously.`;
-    t_body = `Over four weeks of continuous torture testing, we observed zero dropped packets or offline states. Automations triggered with sub-50ms latency entirely over local Thread mesh networks, ensuring privacy and offline resiliency even during internet ISP blackouts.`;
-    t_verdict = `The ${cleanKw} delivers on the long-promised dream of hassle-free smart home automation. Robust, interoperable, and future-proof.`;
-  } else if (niche === 'robotics') {
+    priceU = '$399.00'; priceV = '9.975.000₫'; priceO = '$449.00';
+    couponCode = 'AUDIOVIP15'; couponDisc = '15% OFF Studio Sound';
+    t_img = resolveImage('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Audiophile Frequency Sweeps & ANC Attenuation Tested (2026)`;
+    t_excerpt = `Our exhaustive acoustic lab evaluation of ${cleanKw} by ${brandName}: Frequency response neutrality, 34dB Active Noise Cancellation attenuation curves, LDAC high-res decoding, microphone beamforming, and 30-hour battery life benchmarked.`;
+
+    t_pros = `Sublime acoustic tuning with tight, authoritative sub-bass extension, transparent midrange, and fatigue-free treble air
+Industry-leading Active Noise Cancellation with dual dedicated audio processors eliminates up to 34dB of low-frequency ambient drone
+Plush, breathable soft-fit synthetic leather ear cushions engineered for zero localized crown pressure during all-day listening
+High-resolution wireless audio streaming powered by LDAC and aptX Lossless codecs with native 24-bit/96kHz playback
+Crystal-clear beamforming microphone array utilizing AI bone-conduction voice extraction isolates speech in noisy environments`;
+
+    t_cons = `Companion equalizer application requires optional user profile registration to synchronize custom cloud EQ presets
+Non-collapsible headband geometry requires using the supplied semi-rigid travel case for transport protection
+Multi-point Bluetooth switching occasionally experiences brief handshake latency between differing mobile operating systems`;
+
+    t_intro = `Finding headphones that effortlessly bridge the chasm between uncompromising audiophile acoustic resolution and daily commuter practicality is the holy grail of personal audio. Mass-market consumer headphones frequently prioritize bloated, muddy bass frequencies that overpower delicate musical nuances, while fragile open-back audiophile studio headphones lack noise cancellation and wireless mobility. The ${cleanKw} engineered by ${brandName} boldly positions itself as the definitive solution to that compromise.
+
+Unboxing the ${cleanKw}, the architectural evolution is striking. Moving away from squeaky plastic hinges, ${brandName} adopted a sleek, stepless friction slider mechanism with seamless matte synthetic polymer earcups. The physical balance across the crown is feather-light: weighing in at barely 250 grams, the headband geometry distributes clamping force with sublime uniformity, entirely eliminating localized pressure hotspots on the temporal bones.
+
+The soft-fit synthetic leather ear cushions cup the ears naturally, creating a passive acoustic seal that immediately isolates the wearer from room reflections. Sliding your fingers across the capacitive touch controls on the right earcup reveals crisp, intuitive gesture tracking for volume adjustment, track skipping, and transparency mode switching.`;
+
+    t_body = `Our acoustic lab evaluated the ${cleanKw} across an intensive 30-day testing regime using our calibrated artificial head measurement rig and hundreds of hours of real-world commuter torture testing. Acoustic frequency sweeps revealed a remarkably balanced signature: sub-bass extends cleanly down to 10Hz without artificial bass bleed into the lower midrange. Vocals and acoustic instruments occupy a transparent, intimate soundstage, while the high-frequency extension sparkles with airy detail without any harsh sibilance or listening fatigue.
+
+Active Noise Cancellation (ANC) performance is where ${cleanKw} establishes absolute market dominance. Leveraging dual dedicated audio processing chipsets and an eight-microphone array, the system dynamically analyzes ambient noise profiles at 700 times per second. In our standardized subway decibel chamber, low-frequency train rumble and cabin engine roar were attenuated by an astonishing 34dB. Crucially, the cancellation algorithms operate without creating that unpleasant sensation of eardrum suction or artificial background hiss.
+
+Testing wireless high-resolution audio using 990kbps LDAC streaming from our reference digital audio player, the resolution of complex orchestral arrangements and live acoustic jazz recordings was breathtaking. Layered instrument separation, subtle room reverberations, and vocal breath intakes were resolved with clinical precision that rivals dedicated wired monitoring gear.
+
+Voice microphone clarity was tested across bustling urban coffee shops and blustery outdoor wind tunnels. The combination of directional beamforming microphones and AI neural voice pick-up algorithms isolated spoken words with pristine intelligibility, cleanly eliminating ambient dish clatter and traffic roar.
+
+Battery endurance logged a remarkable 31 hours of continuous playback with ANC engaged at 70% volume. Fast charging via USB Type-C delivered an impressive 3.5 hours of playback from a quick 3-minute pitstop charge, making dead-battery anxiety a relic of the past.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is an undisputed masterpiece of modern personal audio. By marrying reference-class acoustic fidelity with untouchable active noise cancellation and featherweight luxury ergonomics, it sets the gold standard for premium wireless headphones in 2026.
+
+For discerning music enthusiasts, frequent flyers, and remote professionals who demand the absolute best in sonic isolation and acoustic purity, it is an essential investment. Order through the verified official link below to receive full manufacturer warranty coverage, authenticity certification, and exclusive discount pricing.`;
+  }
+  // 7. Mechanical Watches & Horology (Sea-Gull 1963, Tissot PRX, Automatic Timepieces)
+  else if (isHorologyWatch) {
+    catName = 'Watches & Horology';
+    priceU = '$219.00'; priceV = '5.475.000₫'; priceO = '$279.00';
+    couponCode = 'CHRONO15'; couponDisc = '15% OFF Horology Collection';
+    t_img = resolveImage('https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Mechanical Caliber Accuracy & Finishing Tested (2026)`;
+    t_excerpt = `A deep-dive horological evaluation of ${cleanKw} by ${brandName}: We analyze column-wheel chronograph action, timegrapher daily rate deviations, sapphire crystal optical clarity, case finishing, and wrist presence.`;
+
+    t_pros = `Authentic mechanical caliber features visible column-wheel architecture and swan-neck regulator via exhibition caseback
+Crisp, tactile chronograph pusher actuation delivers satisfying mechanical feedback unmatched by modern quartz modules
+Historic dial typography with heat-blued hands, golden star indices, and vintage warm domed crystal proportions
+Solid 316L stainless steel case finishing with contrasting brushed flanks and mirror-polished bezel bevels
+Unbeatable craftsmanship-to-value ratio, delivering legitimate mechanical horology at an accessible enthusiast price point`;
+
+    t_cons = `Manual-wind mechanical caliber requires a dedicated daily or alternate-day winding ritual to maintain power reserve
+Water resistance is rated for splash and everyday rain protection (30m/50m) rather than aquatic sports or swimming
+Supplied vintage military canvas strap benefits from an aftermarket leather or mesh bracelet upgrade for formal wear`;
+
+    t_intro = `In an increasingly disposable digital era dominated by planned obsolescence, digital smartbands, and buzzing wrist notifications, mechanical horology offers an enduring sanctuary of micro-engineering, historical romance, and physical craftsmanship. A mechanical watch is not merely an instrument for recording hours; it is a living, ticking engine on your wrist that requires zero lithium batteries and can function for generations. The ${cleanKw} from ${brandName} has captivated watch enthusiasts and horological purists globally, promising authentic mechanical heritage and column-wheel chronograph craftsmanship at an astonishingly accessible price point.
+
+Unboxing the timepiece, the vintage aesthetic charms immediately. The watch arrives encased in an archival-style presentation box complete with commemorative documentation. Holding the ${cleanKw}, the interplay of light across the 316L stainless steel case is remarkable. The case sides feature satin-brushed finishing, while the stepped bezel and lug tops are mirror-polished with razor-sharp demarcation lines.
+
+The vintage-inspired champagne dial is an exercise in mid-century typography. Applied golden indices, vintage red star insignia, and vibrant heat-blued chronograph hands create a rich, layered visual texture. Turning the piece over reveals its true masterpiece: a mineral or sapphire exhibition caseback displaying the hand-wound mechanical chronograph caliber in all its glory. Every blued screw, brass wheel, and clicking column-wheel lever is laid bare, inviting endless contemplation through a loupe.`;
+
+    t_body = `We strapped the ${cleanKw} on for four weeks of continuous daily wear and subjected the mechanical movement to standardized laboratory testing on our digital multi-position timegrapher. The heartbeat of this timepiece is its hand-wound mechanical caliber, tracing its direct lineage to historic mid-century Swiss column-wheel chronographs. Unlike cheap modern cam-actuated chronographs that feel mushy or require harsh finger pressure, pressing the 2 o'clock chronograph pusher produces a butter-smooth, crisp mechanical click that instantly starts the central sweep seconds hand with zero stutter.
+
+On our timegrapher across five resting positions (dial up, dial down, crown up, crown down, crown left), the movement demonstrated exceptional regulation out of the box. The daily rate variance averaged a tight +5 to +8 seconds per day, with an amplitude of 295 degrees and near-zero beat error (0.1ms). This performance comfortably rivals Swiss mechanical calibers costing quadruple the price.
+
+Operating the winding crown is a tactile joy. The knurled crown provides positive grip, and winding the mainspring produces a fine, audible click that gradually increases in resistance until reaching its positive mechanical stop. A full manual wind delivered a measured 44 hours of autonomous power reserve with the chronograph disengaged, and 38 hours with the chronograph continuously running.
+
+On the wrist, the proportions are sublime. Whether chosen in its historically faithful 38mm dimension or the modern 40mm case option, the downward-curving lugs hug the wrist securely without top-heavy wobble. The crystal introduces warm, vintage optical distortions at acute angles, evoking the golden era of mid-century aviation.
+
+Compared to generic fashion watches manufactured with cheap quartz modules and pot-metal cases, the ${cleanKw} is authentic horology with genuine soul. It carries legitimate pedigree that sparks instant conversations among seasoned watch collectors and casual style admirers alike.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is quite simply one of the greatest value propositions in modern mechanical watchmaking. It delivers authentic column-wheel chronograph mechanics, gorgeous mid-century dial artistry, and reliable mechanical timekeeping in a durable, timeless package.
+
+For watch collectors looking to add an iconic conversation piece to their collection, or for newcomers purchasing their very first serious mechanical timepiece, it earns our unconditional endorsement. Order through the verified official dealer link below to ensure authentic movement calibration, factory warranty, and exclusive discount pricing.`;
+  }
+  // 8. Commercial Espresso & Coffee Gear (Gaggia Classic Pro, Espresso Machines)
+  else if (isCoffeeGear) {
+    catName = 'Espresso & Coffee';
+    priceU = '$449.00'; priceV = '11.225.000₫'; priceO = '$549.00';
+    couponCode = 'BARISTA15'; couponDisc = '15% OFF Home Barista Gear';
+    t_img = resolveImage('https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Temperature Stability & Espresso Extraction Benchmarked (2026)`;
+    t_excerpt = `We pulled over 120 espresso shots with the ${cleanKw} by ${brandName}: Commercial 58mm brass portafilter ergonomics, boiler recovery times, two-hole commercial steam wand microfoam tests, and maintenance longevity evaluated.`;
+
+    t_pros = `Commercial-standard 58mm chrome-plated brass portafilter matches professional café hydraulic specifications
+Heavy-gauge brushed stainless steel housing built for decades of indestructible domestic countertop use
+Traditional two-hole commercial steam wand generates dense, silky microfoam capable of competition-level latte art
+Independent three-way solenoid valve instantly relieves brew chamber pressure for dry, easy-to-knock coffee pucks
+Enormous aftermarket modding and accessory ecosystem (PID temperature controllers, 9-bar OPV springs, precision baskets)`;
+
+    t_cons = `Single boiler architecture requires a brief 60-second transition wait between pulling espresso shots and steaming milk
+Requires pairing with a dedicated, stepless espresso-capable burr grinder to achieve proper 9-bar extraction pressure
+Narrow clearance between the portafilter spouts and drip tray accommodates standard espresso cups; scales require low-profile cups`;
+
+    t_intro = `Achieving true café-quality espresso at home is widely considered the ultimate milestone in specialty coffee. Most entry-level domestic machines rely on pressurized portafilters and under-powered thermoblocks that merely produce foamy, bitter liquid rather than genuine, syrupy espresso. The ${cleanKw} manufactured by ${brandName} has long served as the benchmark icon for aspiring home baristas seeking uncompromising commercial coffee engineering in a compact domestic footprint.
+
+Unboxing the ${cleanKw}, the industrial presence is unmistakable. Wrapped in a heavy-gauge brushed stainless steel housing made in Italy, the machine weighs in with reassuring heft. There is no cheap plastic plating or fragile touchscreens: control is executed via robust, satisfying industrial rocker switches with dedicated indicator lamps for power, brew readiness, and steam mode.
+
+The defining centerpiece of the machine is its heavy commercial-grade 58mm chrome-plated brass portafilter and group head. Unlike cheap 51mm aluminum toys found on supermarket machines, this 58mm standard mirrors commercial café machinery, providing superior thermal mass retention and compatibility with professional precision baskets, distribution tools, and tampers.`;
+
+    t_body = `Our coffee testing laboratory spent four weeks pulling over 120 double espresso shots across diverse specialty roasts—ranging from complex light-roast Ethiopian geishas to rich, chocolatey medium-dark Italian blends. Thermal stability is the bedrock of consistent espresso extraction. The brass boiler inside the ${cleanKw} demonstrated impressive recovery times, coming up to stable brewing temperature within 12 minutes from a cold start and recovering within 45 seconds between consecutive shots.
+
+Using our digital pressure transducer portafilter, the pump delivered steady, cavitation-free pressure curves. Dialing in a 1:2 extraction ratio (18g ground coffee to 36g liquid espresso in 28 seconds), the resulting shots were exquisite: dense, tiger-striped crema, viscous syrupy body, and vibrant, balanced acidity without any harsh channeling or bitterness. The integrated three-way solenoid valve functions with surgical efficiency, dumping excess brew pressure into the drip tray instantly upon switch deactivation to leave dry, neatly knockable coffee pucks.
+
+Milk steaming performance is another triumph of traditional engineering. The updated commercial steam wand features a two-hole tip powered directly by the boiler. In our latte art trials, steaming 6 ounces of cold whole milk took approximately 35 seconds, creating velvety, wet-paint-like microfoam ideal for pouring rosettas and multi-tiered tulips.
+
+Maintenance and repairability are where the ${cleanKw} truly humbles modern computerized appliances. Built with standard brass plumbing fittings, silicone gaskets, and accessible wiring looms, every single part on the machine can be descaled, serviced, or upgraded by the owner using basic screwdrivers. Enthusiasts can easily install 9-bar overpressure valves or digital PID controllers to tailor the machine into a bespoke extraction titan.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} remains the undisputed gold standard of domestic home espresso machines. It does not hide behind automated gimmicks or fake crema valves—it gives you authentic, café-quality commercial espresso engineering that will reward your barista skills and last for decades.
+
+For serious coffee lovers ready to elevate their daily morning ritual into a luxurious sensory experience, it is an essential investment. Order through the verified official distributor link below to secure authentic Italian manufacturing, official warranty, and exclusive promotional pricing.`;
+  }
+  // 9. Auto Performance, Tuning & Billet Hardware (BullBoost Billet K20, Brembo GT)
+  else if (isAutoRacing) {
+    catName = 'Auto Performance';
+    priceU = '$169.00'; priceV = '4.225.000₫'; priceO = '$219.00';
+    couponCode = 'SPEED15'; couponDisc = '15% OFF Performance Hardware';
+    t_img = resolveImage('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Dyno Verification & Thermal Dissipation Benchmarked (2026)`;
+    t_excerpt = `Dyno horsepower verification and track thermal stress tests of ${cleanKw} by ${brandName}: Aircraft-grade CNC billet aluminum tolerances, CFM induction airflow gains, throttle tip-in response, and direct bolt-on fitment evaluated.`;
+
+    t_pros = `Precision CNC-machined from solid 6061-T6 aircraft-grade billet aluminum for structural rigidity under extreme boost
+Proven dyno horsepower and torque gains across the mid-to-high RPM powerband by eradicating restrictive factory airflow bottlenecks
+Significantly sharpens throttle tip-in responsiveness and acoustics with an intoxicating, aggressive induction sound signature
+Direct OEM bolt-on fitment utilizing factory mounting provisions, O-ring seals, and pre-machined sensor bungs
+Superior thermal dissipation and corrosion resistance finished with durable hard-anodized surface treatment`;
+
+    t_cons = `Requires basic automotive mechanical aptitude, torque wrenches, and basic hand tools for DIY garage installation
+Unlocking 100% of available horsepower potential requires an accompanying ECU flash or custom dyno tune
+Intended strictly for high-performance track, enthusiast, and off-road applications`;
+
+    t_intro = `Extracting maximum volumetric efficiency, throttle responsiveness, and horsepower gains from modern performance powertrains requires uncompromising induction engineering. Stock factory intake manifolds, plumbing, and plastic housings are invariably compromises: designed for muted acoustics, cheap manufacturing costs, and restricted airflow. The ${cleanKw} engineered by ${brandName} was developed specifically for hardcore automotive enthusiasts and motorsport competitors seeking to eliminate restrictive factory bottlenecks through aerospace-grade CNC billet engineering.
+
+Uncrating the hardware, the level of machine precision is immediately breathtaking. Milled from a monolithic billet of 6061-T6 aircraft-grade aluminum alloy, the component exhibits zero casting porosity, zero weld seams, and perfectly uniform wall thicknesses. The hard-anodized exterior surface resists oil, fuel vapor, and road salt corrosion while presenting a show-quality engine bay centerpiece.
+
+Every flange, O-ring groove, and sensor boss is machined to sub-millimeter tolerances. The intake runners feature aerodynamically contoured bellmouth entries, precision-tapered to optimize velocity stack air charge into the combustion chambers.`;
+
+    t_body = `We installed the ${cleanKw} onto our test vehicle and conducted exhaustive chassis dyno testing and track lapping under controlled ambient conditions. Installation took under two hours: the bolt patterns lined up with factory studs perfectly, and the included high-temp Viton O-rings seated without requiring messy liquid gasket compounds.
+
+On our Mustang all-wheel-drive dyno, baseline runs were established prior to installation. Post-installation dyno pulls demonstrated a repeatable, verified gain of +11 to +14 wheel horsepower and +9 lb-ft of torque across the 4,200 to 7,500 RPM powerband. More importantly, throttle tip-in latency was drastically reduced: dipping into the throttle pedal produced immediate, crisp acceleration response without the hesitation typical of restrictive factory plumbing.
+
+Airflow bench testing corroborated the dyno findings, recording a 24% increase in CFM volume compared to the OEM plastic assembly. Under high-boost turbocharger pressure testing up to 35 PSI, the billet construction showed zero expansion or distortion, completely eliminating the catastrophic intake manifold bursting issues that plague plastic OEM units under high boost.
+
+On track during hot lapping sessions, thermal imaging cameras revealed excellent heat-sink dissipation properties. The hard-anodized billet material shed under-hood heat soak rapidly between cooling laps, keeping intake air temperatures significantly lower than stock manifolds. The acoustic transformation under wide-open throttle is intoxicating—unleashing a crisp, deep induction roar that turns every highway on-ramp into a motorsport symphony.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is a triumph of motorsport hardware engineering. It transforms under-hood aesthetics, sharpens throttle response, reliably increases horsepower, and withstands extreme boost pressure without breaking a sweat.
+
+For performance builders, track-day enthusiasts, and tuners refusing to settle for plastic factory compromises, it earns our highest editorial recommendation. Order through the verified official link below to guarantee genuine billet stock, full hardware kits, and exclusive promotional pricing.`;
+  }
+  // 10. Drones & Quadcopters (DJI Mini 4 Pro, Camera Drones)
+  else if (isDroneFlycam || (niche === 'robotics' && !isRcPlaneGlider && !isActualMower)) {
     catName = 'Robotics & Drones';
-    t_img = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Flight Telemetry & 4K Imaging`;
-    t_excerpt = `We logged over 40 hours of flight testing across coastal high winds and tight wooded terrain with the ${cleanKw}. Here is our complete hardware and camera teardown.`;
-    t_pros = `Omnidirectional optical obstacle avoidance sensors provide 360-degree crash protection\nStunning 4K/60fps HDR video capture with true vertical shooting mode for creators\nUltralight chassis stays comfortably below regional regulatory registration limits\nRock-solid 1080p/60fps video transmission range exceeding 10 kilometers`;
-    t_cons = `High-wind stability requires sport mode in gusts exceeding 32 km/h\nAdditional flight battery pack recommended for extended field shoots`;
-    t_intro = `Autonomous robotics and aerial imaging have witnessed exponential leaps in miniaturization. The ${cleanKw} combines prosumer cinema camera quality with palm-sized portability.\n\nFrom the moment the brushless motors spin up, the precision stabilization is apparent. Even in gusty coastal winds, the mechanical 3-axis gimbal keeps the camera rock-steady like a tripod in the sky.`;
-    t_body = `Dynamic range from the 1/1.3-inch dual-native ISO sensor is breathtaking, resolving intricate shadow detail without clipping bright sunset highlights. The autonomous subject-tracking algorithms locked onto trail runners and mountain bikes through dense tree canopies without losing tracking focus.`;
-    t_verdict = `For content creators, travel filmmakers, and drone enthusiasts, the ${cleanKw} is an indispensable creative tool that punches far above its weight class.`;
-  } else if (niche === 'edc') {
-    catName = 'Desk Setup & EDC';
-    t_img = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Hands-On Review: Ergonomics & Tactile Perfection`;
-    t_excerpt = `An exhaustive teardown of the ${cleanKw}. We evaluate structural chassis acoustics, ergonomic tolerances, switch feel, and daily productivity enhancements.`;
-    t_pros = `Solid CNC anodized aluminum enclosure provides weight, acoustic dampening, and zero desk slippage\nGasket-mounted acoustic dampening produces a deeply satisfying, creamy sound signature\nHot-swappable PCB supports both 3-pin and 5-pin mechanical switches without soldering\nFull QMK/VIA keymap customizability across macOS, Windows, and Linux`;
-    t_cons = `Heavyweight chassis makes it strictly a stationary battlestation centerpiece\nPremium mechanical hardware investment compared to mass-market plastic peripherals`;
-    t_intro = `Your primary desk peripherals directly dictate your posture, comfort, and productivity throughout the workday. The ${cleanKw} was meticulously designed to elevate the desktop typing experience into an art form.\n\nWeighing in with substantial aluminum heft, the keyboard sits anchored to the desk mat. The custom keycap profiles cup the fingertips naturally, drastically reducing wrist strain during lengthy coding and writing sprints.`;
-    t_body = `Typing on the lubricated mechanical switches feels buttery smooth with zero pinging or spring crunch. The multi-layer sound dampening absorbs harsh frequencies, generating a refined, deep acoustic response that is an absolute joy to use for 8+ hours a day.`;
-    t_verdict = `The ${cleanKw} transforms everyday computer interaction into a luxurious tactile experience. Built like an heirloom and infinitely customizable, it is an essential investment for any serious workspace.`;
-  } else if (niche === 'cameras') {
+    priceU = '$759.00'; priceV = '18.975.000₫'; priceO = '$899.00';
+    couponCode = 'DRONEVIP15'; couponDisc = '15% OFF Drone Bundles';
+    t_img = resolveImage('https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: 40 Flight Hours & 4K Cinema Imaging Benchmarked (2026)`;
+    t_excerpt = `We logged over 40 flight hours across coastal high winds and tight wooded canopies with ${cleanKw} by ${brandName}: Omnidirectional obstacle avoidance, 4K/60fps HDR camera dynamic range, O4 video telemetry, and battery curves tested.`;
+
+    t_pros = `Omnidirectional binocular optical obstacle avoidance sensors provide 360-degree crash protection in complex environments
+Stunning 4K/60fps HDR video capture with true physical vertical shooting mode for social creator workflows
+Ultralight sub-249g folding chassis stays comfortably below strict regional registration and regulatory licensing requirements
+Rock-solid digital video transmission range exceeding 15 kilometers with crisp 1080p/60fps low-latency live feed
+Intelligent ActiveTrack 360-degree subject following autonomously navigates around trees, buildings, and moving obstacles`;
+
+    t_cons = `High-wind holding stability requires switching to Sport Mode in gusts exceeding 35 km/h due to the ultralight airframe
+Additional intelligent flight batteries and multi-charger hub recommended for extended commercial field shoots
+Internal storage is limited to 2GB emergency cache—high-speed U3 V30 microSD cards required for 4K video recording`;
+
+    t_intro = `Autonomous robotics, aerial cinema, and micro-drone miniaturization have advanced at a breathtaking pace over recent years. Historically, capturing cinema-grade stabilized aerial 4K footage demanded hefty multi-rotor drones requiring commercial pilot licenses, bulky flight cases, and dedicated two-man crews. The ${cleanKw} engineered by ${brandName} shatters that compromise, cramming Hollywood-caliber aerial imaging and omnidirectional collision protection into a featherweight folding chassis that fits inside a jacket pocket.
+
+Unfolding the aircraft arms, the precision tolerances are immediately apparent. Weighing in at exactly 249 grams, the drone is deliberately engineered to exempt recreational pilots from cumbersome FAA and international aviation registration bureaucracies in most jurisdictions. The mechanical 3-axis motorized gimbal is tiny yet rock-solid, protecting a large 1/1.3-inch CMOS camera sensor capable of physical 90-degree vertical rotation for true vertical social video capture.
+
+Powering on the dedicated smart remote controller with its high-brightness 700-nit touchscreen, the startup sequence takes under 30 seconds. Satellite GNSS acquisition locks onto GPS, Galileo, and BeiDou constellations within seconds, providing rock-solid positional hover stability before the propellers even spin.`;
+
+    t_body = `Our flight review crew subjected the ${cleanKw} to 40 flight hours across varied environments: blustery coastal headlands, dense pine forest trails, and nighttime urban cityscapes. The camera performance is nothing short of breathtaking: dynamic range from the dual-native ISO sensor captured intricate shadow detail across coastal sea caves while preventing overexposed highlight blowouts in midday clouds. The 10-bit D-Log M color profile offers immense grading flexibility in post-production, retaining organic skin tones and vibrant foliage.
+
+Obstacle avoidance is where the ${cleanKw} sets a new benchmark in flight safety. Equipped with omnidirectional binocular vision sensors and an infrared 3D ToF sensor underneath, the drone continuously maps its surrounding environment in real time. In our autonomous obstacle-course tests through dense tree branches, the drone autonomously routed around limbs and leafy obstructions without breaking its smooth tracking lock on a moving trail runner.
+
+Transmission stability powered by ${brandName}'s latest digital transmission protocol maintained a crisp 1080p/60fps live feed without stutter, frame drops, or signal degradation even out to extreme distances past dense suburban RF interference. In high-speed Sport Mode, the aircraft reached 58 km/h, exhibiting agile bank angles and thrilling aerobatic responsiveness.
+
+Flight endurance averaged a measured 31 minutes per standard Intelligent Flight Battery under moderate cruising conditions. In our high-wind stress tests with continuous 30 km/h ocean gusts, the drone's brushless propulsion counteracted buffet effortlessly, holding its hover position with sub-centimeter GPS accuracy.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is quite simply the most capable, versatile, and complete ultralight aerial camera system on the market. It offers prosumer filmmakers, travel creators, and hobbyists cinema-grade imagery and cutting-edge crash protection in an unbelievably portable form factor.
+
+For anyone seeking to elevate their visual storytelling with effortless aerial perspective, it is our top-rated drone of 2026. Order through the verified official partner link below to receive full warranty protection, official spares, and exclusive promotional pricing.`;
+  }
+  // 11. Robot Vacuums & Intelligent Smart Home (Roborock S8 Pro Ultra, LiDAR Vacuums)
+  else if (isRobotVacuum) {
+    catName = 'Smart Home & IoT';
+    priceU = '$899.00'; priceV = '22.475.000₫'; priceO = '$1,199.00';
+    couponCode = 'ROBOT15'; couponDisc = '15% OFF Automated Cleaning';
+    t_img = resolveImage('https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: LiDAR Navigation & Deep Cleaning Benchmarks (2026)`;
+    t_excerpt = `We subjected ${cleanKw} by ${brandName} to 4 weeks of intensive debris pickup, pet hair extraction, and dried stain mopping across hardwood, tile, and high-pile carpets: 6000Pa suction curves, VibraRise sonic scrubbing, and self-cleaning dock evaluated.`;
+
+    t_pros = `Massive 6000Pa suction power paired with counter-rotating dual rubber rollers completely eliminates pet hair tangles
+Sonic vibration scrubbing mopping system lifts stubborn dried coffee, syrup, and muddy footprint stains effortlessly
+Automated mop-lifting mechanism automatically raises mopping pads by 5mm when traversing carpets to prevent dampening
+Precision LDS LiDAR paired with 3D structured-light obstacle avoidance navigates around loose cables, socks, and chair legs without getting stranded
+All-in-one hands-free docking station washes mop pads with hot water, self-empties dustbin, refuels water, and hot-air dries mops`;
+
+    t_cons = `Multifunction docking station has a substantial footprint requiring dedicated floor space near a wall outlet
+Replacement disposable dust bags and specialized floor detergent require minor recurring ongoing maintenance
+High-gloss reflective surfaces or floor-to-ceiling mirror walls can occasionally confuse optical LiDAR mapping during initial setup`;
+
+    t_intro = `Robotic floor maintenance has undergone a dramatic technological evolution over the past decade: transforming from blind, bouncing mechanical bumper toys into sophisticated autonomous mobile robots endowed with artificial intelligence, computer vision, and hands-free self-servicing infrastructure. In busy modern households with shedding pets, active children, and sprawling floor plans, vacuuming and mopping floors daily is a grueling chore. The ${cleanKw} engineered by ${brandName} represents the absolute pinnacle of this autonomous revolution, promising to keep your entire living space spotless with zero daily human intervention.
+
+Unpacking the system, the industrial engineering is awe-inspiring. The centerpiece is the automated multifunctional docking station: an elegant, matte-finished monolith housing clean water, dirty water, and dust collection reservoirs. The robot itself feels dense and precision-crafted, crowned by a high-speed rotating LDS LiDAR sensor turret and front-facing 3D structured light optical arrays.
+
+Initial mapping took under 7 minutes for a complex 140-square-meter multi-room floor plan. The laser scanners created an impeccably accurate 3D architectural floor map, automatically identifying rooms, furniture types (beds, sofas, dining tables), and carpet zones without requiring manual boundary drawing.`;
+
+    t_body = `We put the ${cleanKw} through an intensive 30-day torture testing regimen across mixed flooring surfaces: glazed ceramic tiles, sensitive hardwood planks, and plush medium-to-high-pile carpets. In our standardized debris pickup trials using weighed flour, fine sand, rolled oats, and heavy pet hair, the 6,000Pa suction motor and counter-rotating all-rubber brush system collected an astounding 98.6% of debris in a single pass. The dual rubber roller architecture proved completely immune to hair wrap—pet hair was channeled directly into the dust chamber without winding around axles.
+
+Mopping efficacy was tested using dried soy sauce, sticky syrup, and muddy shoe prints left to bake on kitchen tiles for 24 hours. While generic robot mowers simply drag a damp cloth across dirt, ${cleanKw}'s sonic scrub module vibrates at 3,000 times per minute under constant downward pressure, scrubbing away sticky residue in two passes without leaving streaks.
+
+When transitioning from tile onto carpet, the intelligent ultrasonic floor sensor detected fibers within 10 milliseconds, automatically raising the damp mop bracket 5mm off the floor while ramping up suction power to deep-clean carpet roots. In our cable-trap obstacle trials, the 3D structured-light camera reliably recognized scattered sneaker laces, power cords, and pet toys, steering around them with a clean 3-centimeter safety margin without getting stuck or pulling cables down.
+
+The dock automation is where the machine delivers life-changing convenience. Returning to the dock after cleaning, high-pressure water jets scrub the mop pads clean, dirty water is pumped into the sealed waste reservoir, and the dustbin is vacuumed into an allergen-sealed disposable bag. A low-decibel warm-air blower then dries the pads over two hours, preventing any mildew, bacteria, or odor development.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is a transformative domestic luxury appliance that gives you back hours of your life every single week. By delivering flawless debris suction, genuine scrubbing mop power, infallible obstacle avoidance, and true hands-free dock automation, it sets the gold standard for home robotics in 2026.
+
+For busy families, pet owners, and modern homeowners who value spotless floors without daily labor, it is an unequivocal masterpiece. Order through the verified official partner link below to secure authentic manufacturer warranty coverage, spare consumable packs, and exclusive discount pricing.`;
+  }
+  // 12. Smart Wearables & Biometric Telemetry (Apple Watch Ultra, Garmin, Fitness Trackers)
+  else if (niche === 'wearables') {
+    catName = 'Smart Wearables';
+    priceU = '$799.00'; priceV = '19.975.000₫'; priceO = '$899.00';
+    couponCode = 'WATCHVIP15'; couponDisc = '15% OFF Wearable Tech';
+    t_img = resolveImage('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Dual-Frequency GNSS & Biometric Precision Benchmarked (2026)`;
+    t_excerpt = `We spent 30 days testing ${cleanKw} by ${brandName} across backcountry mountain trails, open-water ocean swims, and clinical sleep tracking: Dual-frequency GPS drift, 3000-nit sapphire screen legibility, and ECG sensor accuracy evaluated.`;
+
+    t_pros = `Aerospace-grade natural titanium chassis with raised bezel protects scratch-resistant flat sapphire crystal lens
+Ultra-bright 3,000-nit OLED display remains effortlessly readable under direct blinding desert sunlight and underwater
+Precision dual-frequency L1/L5 GNSS receiver delivers pinpoint track accuracy through dense urban canyons and thick forest canopies
+Exhaustive health telemetry tracking continuous ECG, blood oxygen saturation (SpO2), heart rate variability (HRV), and skin temperature trends
+Rugged 100-meter water resistance with integrated depth gauge and water temperature sensors for recreational scuba diving`;
+
+    t_cons = `Substantial 49mm rugged case footprint and thickness may feel bulky on wrists smaller than 6.2 inches
+Full ecosystem synergy and cellular standalone features require companion mobile platform pairing
+Battery life, while class-leading for a full smartwatch (approx 36–72 hours), requires more frequent charging than dedicated mono-memory sport watches`;
+
+    t_intro = `Modern wrist wearables have completed an astonishing transition over the past decade: evolving from elementary step-counting plastic pedometers into military-grade biometric telemetry suites and emergency survival beacons. In high-stakes outdoor expeditions, endurance athletics, and preventative healthcare monitoring, precision and physical durability are non-negotiable. The ${cleanKw} engineered by ${brandName} positions itself as the apex explorer and athlete companion, designed to withstand punishing environments while providing lab-grade physiological insights.
+
+The physical build quality is uncompromising. Sculpted from aerospace-grade titanium with satin-brushed surfaces and chamfered edges, the chassis balances rugged structural integrity with featherweight wearing comfort. A raised titanium lip wraps securely around the flat sapphire crystal display, shielding the glass against direct rock strikes and door-frame impacts.
+
+The display is an engineering triumph: a massive edge-to-edge OLED panel pumping out an astonishing 3,000 nits of peak brightness. Whether reading complex topographic maps under blinding midday desert glare or checking heart rate zones through ocean spray, legibility is instantaneous and razor-sharp.`;
+
+    t_body = `Our fitness and endurance editorial team strapped on the ${cleanKw} for 30 consecutive days of mountain trekking, high-altitude trail running, open-water ocean swims, and continuous sleep tracking. The dual-frequency L1 and L5 GNSS satellite receiver proved to be a masterclass in navigational telemetry. Comparing route logs against a dedicated survey-grade handheld receiver, track points matched with sub-meter accuracy—entirely eliminating the erratic GPS track drift and jagged route spikes typical of single-band smartwatches when navigating through dense redwood canopies or towering downtown glass skyscrapers.
+
+Biometric sensor accuracy was evaluated against medical-grade chest strap monitors. During high-intensity interval sprints (HIIT) with rapid heart rate spikes between 120 and 185 BPM, optical sensor lag was virtually non-existent, matching chest-strap readings within a 1.2% margin of error. Advanced health algorithms provide continuous monitoring of Heart Rate Variability (HRV), nightly skin temperature baselines, and blood oxygen trends, synthesizing them into actionable daily recovery and training readiness scores.
+
+In open-water ocean testing, the watch automatically engaged its integrated depth gauge upon water entry, displaying real-time depth, water temperature, and dive duration with crisp, high-contrast clarity. The oversized digital crown and tactile action button are specifically engineered for effortless tactile operation with thick neoprene dive gloves or wet hands.
+
+Battery endurance comfortably sustained 38 hours of heavy daily use with continuous heart rate sampling, notifications, and a 90-minute daily GPS workout. Engaging Low Power Mode stretched operational life past 70 hours, making multi-day backcountry trekking without a power bank fully viable.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is quite simply the most complete, durable, and technologically advanced rugged smartwatch on the planet. It bridges the gap between everyday luxury lifestyle connectivity and hardcore backcountry survival with effortless swagger.
+
+For trail runners, mountaineers, divers, and health-conscious professionals who demand uncompromising reliability, it earns our highest editorial recommendation. Order through the verified official partner link below to secure authentic manufacturer warranty coverage, official sport bands, and exclusive promotional pricing.`;
+  }
+  // 13. Smart Home & Connected IoT (Matter Hubs, Thread Ecosystem)
+  else if (niche === 'smarthome') {
+    catName = 'Smart Home & IoT';
+    priceU = '$129.00'; priceV = '3.225.000₫'; priceO = '$159.00';
+    couponCode = 'SMARTHOME15'; couponDisc = '15% OFF Connected Tech';
+    t_img = resolveImage('https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Local Matter & Thread Automation Tested (2026)`;
+    t_excerpt = `We integrated ${cleanKw} by ${brandName} into a 65-device Matter & HomeKit smart home testbed for 4 weeks: Local Thread mesh stability, sub-50ms trigger latency, and cross-ecosystem synchronization evaluated.`;
+
+    t_pros = `Native universal Matter and Thread Border Router support ensures seamless synchronization across Apple Home, Google Home, and Home Assistant
+Ultra-low local network latency executes complex multi-device sensor automations within sub-50ms response times
+True offline local execution guarantees smart home automations continue operating during internet ISP service outages
+Solid compact industrial enclosure with concealed cable management and PoE / USB-C flexible power inputs
+Intuitive zero-code automation scripting engine enables sophisticated presence detection and circadian lighting scenes`;
+
+    t_cons = `Initial setup requires an active 2.4GHz Wi-Fi network connection during firmware onboarding before Thread mesh stabilizes
+Advanced automation logic scripts possess a slight learning curve for smart home novices accustomed to simple on/off timers
+Legacy proprietary Zigbee or Z-Wave peripheral sensors require specific bridge configuration for full Matter exposure`;
+
+    t_intro = `The authentic promise of the modern connected smart home has long been invisible, effortless convenience: ambient technology that anticipates your daily routines and coordinates security, climate, and lighting seamlessly without requiring frantic app toggling or frustrating connectivity drops. Yet for years, fragmented proprietary protocols (Zigbee, Z-Wave, proprietary Bluetooth bridges) forced consumers into walled gardens that broke every time internet service stuttered. The ${cleanKw} engineered by ${brandName} represents the vanguard of the modern smart home era, architected from the silicon up to embrace universal Matter and Thread standards.
+
+Unboxing the hub, its minimalist industrial aesthetic is refreshingly understated. Sized like a compact coaster, the matte enclosure blends unobtrusively into any media console, bookshelf, or wall mount. Connectivity options are comprehensive: offering low-latency gigabit Ethernet, USB-C power delivery, and dual-band Wi-Fi radios alongside dedicated Thread Border Router transmitters.
+
+Onboarding into a multi-ecosystem environment was unprecedentedly frictionless. Scanning the universal Matter QR code on the underside of the device using an iPhone immediately synchronized the hub into Apple HomeKit, Google Home, and Home Assistant simultaneously within two minutes.`;
+
+    t_body = `We integrated the ${cleanKw} as the primary automation brain across a sprawling 65-device smart home testbed comprising smart locks, climate sensors, motorized blinds, and lighting fixtures. For 30 consecutive days, the system was subjected to demanding automated trigger scenarios.
+
+The defining operational breakthrough of this platform is its true local execution. Unlike cloud-dependent smart hubs that ping remote corporate servers before turning on a lamp, the ${cleanKw} processes logic locally on its high-speed dual-core processor over the Thread mesh network. Standardized latency tests recorded an average trigger-to-execution delay of just 38 milliseconds from the moment a motion sensor detected entry to the illumination of ambient room lighting—feeling instantaneous to human perception.
+
+To stress-test operational resiliency, we severed the testbed's external fiber internet connection for 48 continuous hours. While legacy cloud smart devices were rendered completely helpless, the ${cleanKw} continued executing all scheduled security arming routines, presence-based lighting scenes, and climate automations with 100% reliability over local Thread routing.
+
+The companion software application offers immense depth for automation power users. Creating intricate multi-condition conditional automations—such as adjusting motorized window louvers based on solar azimuth, exterior temperature, and room occupancy—is clean, visual, and bug-free. Signal range across our 2,800-square-foot test environment remained rock-solid without requiring secondary range extenders.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} delivers on the long-promised dream of hassle-free, lightning-fast, and future-proof smart home automation. By establishing local offline resiliency and universal cross-platform Matter compatibility, it permanently eradicates the headaches of smart home fragmentation.
+
+For anyone building a modern connected home or upgrading from fragile legacy cloud hubs, it is an essential investment. Order through the verified official link below to secure authentic hardware, full firmware support, and exclusive discount pricing.`;
+  }
+  // 14. Cameras & Creator Gear (Sony A7 IV, DJI Pocket 3, Cinema Tools)
+  else if (niche === 'cameras') {
     catName = 'Cameras & Creator Gear';
-    t_img = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Review: The Ultimate Pocket Cinema Creator Tool`;
-    t_excerpt = `We tested the ${cleanKw} across low-light night vlogs, fast-paced action sports, and talking-head studio setups. Here is our lab benchmark report.`;
-    t_pros = `Large 1-inch CMOS sensor delivers cinema-grade low-light performance and shallow depth of field\nMechanical 3-axis gimbal stabilization eliminates micro-jitters without cropping image sensors\nRotatable 2-inch touchscreen with rapid horizontal and vertical shooting orientation switching\nFast and accurate dual-pixel autofocus with intelligent face and object tracking`;
-    t_cons = `Non-removable internal battery requires an external battery grip or power bank for all-day recording\nFixed focal length lens requires physical positioning for tight framing`;
-    t_intro = `For modern digital creators, speed of deployment is everything. The ${cleanKw} empowers solo creators to shoot production-ready, stabilized 4K footage within 2 seconds of pulling it from a pocket.\n\nThe 1-inch sensor is a game changer for compact creator gear, providing rich dynamic range, natural skin tone reproduction, and gorgeous optical background separation.`;
-    t_body = `In low-light street tests, noise suppression was stellar with clean shadow details up to ISO 3200. The mechanical gimbal outclasses electronic EIS stabilization entirely, preserving maximum sensor resolution while walking and running.`;
-    t_verdict = `The ${cleanKw} is easily the most capable, versatile, and friction-free video creation tool on the market. A must-have for vloggers and professional filmmakers alike.`;
-  } else if (niche === 'computing') {
+    priceU = '$519.00'; priceV = '12.975.000₫'; priceO = '$649.00';
+    couponCode = 'CREATOR15'; couponDisc = '15% OFF Creator Gear';
+    t_img = resolveImage('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: 4K 10-Bit Dynamic Range & Creator Ergonomics Tested (2026)`;
+    t_excerpt = `We tested ${cleanKw} by ${brandName} across low-light street vlogs, run-and-gun documentary shoots, and talking-head studio production: Sensor readout speed, mechanical gimbal stabilization, dual-pixel autofocus, and color science evaluated.`;
+
+    t_pros = `Large 1-inch CMOS sensor delivers cinema-grade low-light performance, natural bokeh, and outstanding highlight rolloff
+Mechanical 3-axis motorized gimbal stabilization completely eliminates camera micro-jitters without electronic sensor cropping
+Rotatable 2-inch OLED touchscreen with rapid one-tap orientation switching between 16:9 widescreen and 9:16 vertical modes
+Blazing-fast dual-pixel phase detection autofocus with intelligent face-priority and continuous eye-tracking lock
+Rich 10-bit D-Log M and HLG color recording preserves 14+ stops of dynamic range for seamless color grading in post-production`;
+
+    t_cons = `Internal non-removable battery requires an external power bank or battery expansion handle for full-day commercial shooting
+Fixed focal length ultra-wide optical lens requires physical positioning adjustments for tight portrait framing
+Built-in microphones, while excellent, require deadcat wind screens in blustery outdoor coastal conditions`;
+
+    t_intro = `For modern digital creators, solo filmmakers, and documentary visual storytellers, speed of deployment is everything. The greatest cinema camera in the world is useless if it takes ten minutes to unpack, balance on a heavy motorized gimbal, and calibrate while a spontaneous, unscripted moment passes by. The ${cleanKw} engineered by ${brandName} was created specifically to eliminate that friction: putting Hollywood-grade motorized 3-axis stabilization and 4K cinema sensor dynamic range into an ultra-compact tool that fits into a pocket.
+
+Unboxing the camera, the industrial refinement is staggering. At barely 180 grams, the unit feels balanced and dense in the hand. The headline feature is the rotating 2-inch OLED touchscreen: rotating the display 90 degrees with a flick of the thumb powers the camera on and unlatches the motorized 3-axis gimbal from its resting lock within 1.8 seconds.
+
+The tactile joystick control beneath the screen provides buttery, proportional panning and tilting. Slipping the device into a pocket, the gimbal automatically parks itself into an ultra-compact resting position with magnetic safety detents, preventing motor strain during transit.`;
+
+    t_body = `Our video production team deployed the ${cleanKw} across 30 days of intensive commercial content creation: capturing nighttime urban street food b-roll, high-speed running sports sequences, and indoor talking-head podcast setups. The 1-inch CMOS sensor is a monumental leap for compact camera gear: in challenging low-light neon street environments, clean shadow details were retained up to ISO 3,200 without ugly chroma noise or digital smearing.
+
+The mechanical 3-axis motorized gimbal outclasses electronic EIS algorithms entirely. Where electronic stabilization crops into your image sensor and produces jittery motion blur artifacts in low light, the physical gimbal absorbs heavy footsteps, stairs, and running strides effortlessly, producing rock-steady cinematic camera motion that looks like it was shot on a professional cinema dolly.
+
+Autofocus reliability was virtually flawless. Powered by full-sensor dual-pixel phase detection, the camera locked onto human eyes, pet faces, and product presentation objects instantly without hunting or pulsing. Moving rapidly between foreground product showcases and background face framing, transition focus pulls were smooth, natural, and cinematic.
+
+In high-frame-rate testing, the camera recorded buttery 4K at 120fps with full autofocus support, opening up jaw-dropping slow-motion possibilities for action b-roll. Audio capture via the onboard three-microphone omnidirectional array captured transparent stereo imaging with intelligent wind noise suppression.
+
+Battery endurance averaged 115 minutes of continuous 4K/60fps recording on a single charge. Charging from 10% to 80% took just 16 minutes via USB-C fast charging, allowing solo creators to keep shooting all day with minimal downtime.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is the undisputed champion of compact creator cameras. By packaging a large 1-inch sensor, flawless autofocus, mechanical gimbal stabilization, and instantaneous deployment into an ultra-portable chassis, it empowers solo operators to produce studio-grade visuals with zero logistical headache.
+
+For vloggers, travel filmmakers, commercial social creators, and documentary storytellers, it is an indispensable creative weapon. Order through the verified official link below to receive full warranty protection, creator accessory bundles, and exclusive promotional pricing.`;
+  }
+  // 15. Computing, Handheld Gaming & Laptops (Razer Blade, ASUS ROG Ally)
+  else if (niche === 'computing') {
     catName = 'Computing & Gaming';
-    t_img = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Handheld Benchmarks & AAA Gaming (2026)`;
-    t_excerpt = `We benchmarked the ${cleanKw} across 15 demanding AAA titles at 1080p and 1440p. From thermal dissipation to battery curve analysis, here is our full lab review.`;
-    t_pros = `Blazing processing architecture with high-bandwidth memory crushes modern AAA titles with smooth frame rates\nVibrant high-refresh VRR display delivers fluid gameplay with zero tearing or stuttering\nRedesigned ergonomic grips with zero hand fatigue during extended gaming sessions\nAdvanced dual-fan vapor chamber thermal management keeps chassis cool under sustained 30W load`;
-    t_cons = `Demanding AAA gaming at full power envelope drains the battery in approximately 2.5 to 3 hours\nRequires high-capacity 65W+ GaN power brick for maximum turbo dock performance`;
-    t_intro = `Handheld PC gaming has fundamentally disrupted how enthusiasts experience AAA gaming. The ${cleanKw} builds upon previous generation feedback to deliver an uncompromising portable workstation and gaming machine.\n\nThe ergonomic refinements are immediately apparent: contoured palm grips, responsive hall-effect analog sticks, and tactile shoulder triggers give complete precision control.`;
-    t_body = `Running demanding 2026 titles like Cyberpunk and Black Myth: Wukong, the system sustained over 60 FPS at 1080p with optimized settings. Thermals remained comfortably below 72°C internal core temp with whisper-quiet fan acoustics.`;
-    t_verdict = `The ${cleanKw} is the current undisputed champion of portable computing and handheld gaming. Unmatched power, gorgeous display, and superb ergonomics.`;
-  } else if (niche === 'power') {
+    priceU = '$699.00'; priceV = '17.475.000₫'; priceO = '$799.00';
+    couponCode = 'TECHPRO15'; couponDisc = '15% OFF High-Performance Computing';
+    t_img = resolveImage('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Thermal Dissipation & AAA Gaming Benchmarked (2026)`;
+    t_excerpt = `We benchmarked ${cleanKw} by ${brandName} across 15 demanding AAA titles at 1080p and 1440p: Frame rate stability, dual-fan vapor chamber thermal curves, ergonomic controller grip fatigue, and battery power curves tested.`;
+
+    t_pros = `Next-gen high-efficiency processor architecture paired with high-bandwidth memory crushes modern AAA titles with fluid frame rates
+Vibrant high-refresh-rate VRR display eliminates screen tearing and micro-stutters during intense, fast-paced action
+Ergonomically contoured palm grips with tactile hall-effect analog sticks and triggers prevent drift and hand cramping
+Advanced dual-fan vapor chamber thermal management keeps internal core temps comfortably cool under sustained 30W turbo loads
+Full desktop operating system flexibility allows playing game libraries across Steam, Epic Games, Xbox Game Pass, and emulation`;
+
+    t_cons = `Demanding AAA gaming at maximum 30W turbo power profile drains internal battery reserves in approximately 2.2 to 2.8 hours
+Requires high-capacity 65W+ GaN power adapters to achieve peak overclocking and simultaneous fast-charging dock performance
+Desktop OS navigation on a portable touchscreen occasionally benefits from pairing an external bluetooth mouse or trackpad`;
+
+    t_intro = `High-performance portable computing and handheld PC gaming have fundamentally disrupted how digital professionals, developers, and gamers interact with their computational libraries. For decades, playing graphically intensive AAA games or compiling complex software required tethering oneself to a bulky multi-kilo desktop battlestation. The ${cleanKw} engineered by ${brandName} shatters that boundary, distilling workstation-class compute throughput, high-refresh graphics, and ergonomic console controls into a sleek, portable powerhouse.
+
+Holding the ${cleanKw}, the ergonomic balance is immediately apparent. Sized to distribute weight naturally across the palms, the sculpted grips cradle the hands without placing localized stress on the ring or pinky fingers. The analog thumbsticks utilize contactless Hall-effect magnetic sensors, permanently eliminating the dreaded potentiometer drift that plagues ordinary console controllers.
+
+The visual centerpiece is a glorious, high-refresh-rate variable refresh rate (VRR) display. Pumping out deep contrast, vivid color gamut saturation, and responsive sub-5ms pixel response times, games look remarkably fluid and lifelike without ugly motion smearing or backlight bleed.`;
+
+    t_body = `Our computing lab subjected the ${cleanKw} to 30 days of intense benchmark testing across 15 demanding modern AAA gaming titles, synthetic 3DMark benchmarks, and heavy code-compilation workflows. Running demanding titles like Cyberpunk 2077 and Black Myth: Wukong at 1080p with optimized settings, the system maintained an astonishingly fluid 60+ FPS average with seamless frame-pacing. The variable refresh rate display synchronized dynamically, making occasional frame dips completely imperceptible to the eye.
+
+Thermal management under sustained load is where ${cleanKw} outclasses competing portable machines. Featuring a custom-engineered dual-fan vapor chamber cooling matrix, the device efficiently pulls heat away from the silicon die and exhausts it through top-mounted vents. Under a grueling 2-hour continuous 30W stress test, internal silicon core temperatures stabilized comfortably below 74°C, while the exterior palm grips remained cool to the touch at a pleasant 32°C. Fan acoustics were remarkably civilized, emitting a gentle, low-frequency whoosh without high-pitched whine.
+
+The software ecosystem offers liberating flexibility. Because the system runs a full, uncompromised operating system, users are not trapped inside a proprietary walled garden. We seamlessly installed Steam, Epic Games Store, Battle.net, GOG, and productivity suites, transforming the device from a handheld gaming console into a full-fledged portable workstation simply by docking it to an external 4K monitor and mechanical keyboard.
+
+Battery longevity tests logged 2.5 hours of continuous high-power AAA gaming at full 25W load, stretching to 5.5 hours during light indie gaming, video playback, and retro emulation. Fast-charging via USB-C replenished 80% battery capacity in just 40 minutes.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is a towering achievement in portable computing and high-performance handheld engineering. It combines desktop-grade horsepower, a magnificent VRR display, and sublime ergonomics into an indispensable device for power users who refuse to compromise between portability and raw compute power.
+
+For mobile gamers, traveling power users, and tech enthusiasts seeking the apex portable computing experience, it earns our highest editorial recommendation. Order through the verified official link below to secure authentic warranty coverage, factory accessories, and exclusive promotional pricing.`;
+  }
+  // 16. GaN Fast Charging & Power (Ugreen 300W GaN, Multi-Port Chargers)
+  else if (niche === 'power') {
     catName = 'Power & GaN Charging';
-    t_img = 'https://images.unsplash.com/photo-1622445262464-84b14e3295b6?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Charging Efficiency & Thermal Tests`;
-    t_excerpt = `We hooked the ${cleanKw} to precision digital power meters and thermal imaging cameras. Here is our teardown of power delivery curves and multi-device charging.`;
-    t_pros = `Massive multi-port GaN output capable of fast-charging two laptops and multiple smartphones simultaneously\nNext-gen Gallium Nitride (GaN III) components maximize electrical conversion efficiency while minimizing heat\nIntelligent dynamic power allocation adjusts wattage on the fly based on connected device protocols\nCompact footprint with foldable prongs and universal 100-240V international voltage support`;
-    t_cons = `High wattage output demands included or certified 100W+ 5A E-marker cables for peak speeds\nSlightly heavier than standard single-port phone chargers due to heavy-duty thermal heat sinks`;
-    t_intro = `In an era where remote professionals carry multiple high-drain laptops, tablets, and phones, carrying a nest of individual power bricks is an obsolete frustration. The ${cleanKw} consolidates your entire charging station into a single ultra-efficient GaN device.\n\nPlugging in our digital power analyzer, the charger immediately negotiated full USB Power Delivery 3.1 protocols at peak wattage without dropping power to existing connected devices.`;
-    t_body = `Under continuous maximum wattage load testing for 3 continuous hours, thermal imaging revealed a peak exterior temperature of just 44°C—far cooler than legacy silicon power supplies. Voltage ripple was exceptionally tight, safeguarding delicate smartphone and laptop lithium battery chemistries.`;
-    t_verdict = `The ${cleanKw} is an indispensable travel and desktop charging cornerstone. Safe, blazingly fast, and impeccably engineered.`;
-  } else if (niche === 'saas' || niche === 'ai') {
+    priceU = '$199.00'; priceV = '4.975.000₫'; priceO = '$249.00';
+    couponCode = 'POWER15'; couponDisc = '15% OFF Charging Essentials';
+    t_img = resolveImage('https://images.unsplash.com/photo-1622445262464-84b14e3295b6?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Thermal Imaging & Power Delivery Benchmarked (2026)`;
+    t_excerpt = `We hooked ${cleanKw} by ${brandName} to precision digital power analyzers and FLIR thermal cameras: Full 140W USB-C PD 3.1 laptop delivery, multi-port dynamic wattage allocation, and continuous full-load efficiency evaluated.`;
+
+    t_pros = `Massive multi-port output capable of simultaneous full-speed fast charging for two power-hungry laptops and multiple smartphones
+Next-gen Gallium Nitride (GaN III) semiconductor architecture maximizes electrical conversion efficiency while minimizing thermal waste
+Intelligent dynamic power allocation continuously modulates wattage curves on the fly based on connected device handshake protocols
+Robust multi-tier electrical safety suite protects against over-voltage, short-circuits, high temperatures, and excessive current
+Compact desktop footprint replaces up to five bulky individual OEM power bricks with a single clean, high-density charging station`;
+
+    t_cons = `Achieving peak 140W single-port charging speeds requires certified 240W 5A E-marker USB Type-C cables
+Substantial internal thermal copper heatsinks make the unit moderately weighty—optimal for desktop and bedside hub setups
+High-wattage multi-device renegotiation briefly cycles power for 1 second when plugging in an additional device`;
+
+    t_intro = `In an era where remote professionals, digital creators, and tech enthusiasts carry an ecosystem of high-drain devices—including power-hungry laptops, tablets, smartphones, and camera batteries—relying on a bird's nest of individual manufacturer power bricks is an obsolete and frustrating logistical headache. Traditional silicon-based chargers are bulky, inefficient, and generate alarming heat when pushed to sustained wattages. The ${cleanKw} engineered by ${brandName} represents the vanguard of modern power electronics, harnessing third-generation Gallium Nitride (GaN III) semiconductors to consolidate your entire charging station into a single high-efficiency powerhouse.
+
+Unboxing the charger, the industrial build quality is immediately apparent. Wrapped in a flame-retardant, matte dark-slate chassis with subtle metallic accents, the device sits firmly on desktop surfaces thanks to non-slip silicone footpads. The port layout is intuitively organized: providing multiple high-wattage USB Type-C ports capable of next-gen Power Delivery 3.1 protocols alongside legacy USB-A ports for accessories.
+
+Plugging our digital oscilloscope and power analyzer into the primary USB-C port, the charger immediately negotiated full 140W PD 3.1 protocol with our test 16-inch MacBook Pro, providing peak charging current with zero handshake stutter.`;
+
+    t_body = `Our electrical engineering lab subjected the ${cleanKw} to continuous torture testing across 30 days under grueling electrical loads. We connected a 140W MacBook Pro, a 100W gaming laptop, an iPad Pro, and two flagship smartphones simultaneously, drawing sustained maximum wattage through the unit for four continuous hours.
+
+Throughout this extreme continuous stress test, FLIR thermal imaging cameras monitored heat dissipation. Where legacy silicon chargers frequently spike past 75°C under heavy loads, the ${cleanKw}'s advanced GaN semiconductors and internal thermal potting compounds kept the exterior casing at an impressively cool 46°C. Electrical conversion efficiency was measured at an outstanding 94.2%, minimizing wasted phantom power draw and drastically reducing electricity heat loss.
+
+Voltage ripple and electrical noise attenuation were tested across full load ranges. The charger exhibited exceptionally tight voltage regulation with less than 35mV of peak-to-peak ripple, safeguarding delicate lithium battery chemistries from thermal degradation and premature capacity loss.
+
+The intelligent dynamic power management chip inside the unit actively communicates with connected devices every millisecond. When devices reach 80% state-of-charge, the charger seamlessly transitions into gentle trickle charging mode, optimizing battery longevity and cell health.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is the definitive benchmark in modern desktop power delivery. By combining enormous multi-device wattage, cutting-edge GaN III thermal efficiency, and impeccable electrical safety into a compact, gorgeous chassis, it permanently cleans up cable clutter while keeping all your vital tech charged at maximum velocity.
+
+For digital professionals, creators, and workstation minimalists who demand the very best in charging infrastructure, it earns our highest editorial recommendation. Order through the verified official link below to receive certified 240W cables, manufacturer warranty, and exclusive promotional pricing.`;
+  }
+  // 17. SaaS, AI Tools & Digital Productivity (Perplexity AI, Software)
+  else if (niche === 'saas' || niche === 'ai') {
     catName = 'SaaS & AI Tools';
-    t_img = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Hands-On Review: 10X Workflow Productivity Tested`;
-    t_excerpt = `We deployed ${cleanKw} across daily developer, research, and writing workflows for 30 days. Here is our quantitative ROI breakdown.`;
-    t_pros = `Advanced AI reasoning models synthesize complex technical queries with cited sources instantly\nIntuitive interface with powerful keyboard shortcuts and seamless team collaboration spaces\nRobust API integration options for automating repetitive data processing and report drafting\nStrict enterprise data privacy guarantees with zero model training on customer data`;
-    t_cons = `Advanced reasoning modes incur rate limits during peak global traffic hours\nRequires precise prompting to extract maximum depth on niche domain topics`;
-    t_intro = `AI productivity tools have become the dividing line between efficient modern creators and those bogged down in manual busywork. ${cleanKw} represents the leading edge of automated research and workflow acceleration.\n\nThe user interface is clean, distraction-free, and blazingly fast. Queries that previously required scouring dozens of outdated forum posts are summarized with verifiable citations in seconds.`;
-    t_body = `Across 30 days of real-world project deadlines, our team shaved an estimated 12 hours per week off competitive research and code synthesis tasks. The time savings alone easily justified the annual subscription tier within the first week of deployment.`;
-    t_verdict = `${cleanKw} is an essential tool in any digital professional's stack. It doesn't just save time; it fundamentally expands what a solo operator can accomplish.`;
-  } else if (niche === 'ebooks') {
+    priceU = '$20.00'; priceV = '500.000₫'; priceO = '$25.00';
+    couponCode = 'AIPRO15'; couponDisc = '15% OFF Pro Subscription';
+    t_img = resolveImage('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: 30-Day Workflow ROI & AI Reasoning Benchmarked (2026)`;
+    t_excerpt = `We deployed ${cleanKw} across daily developer, market research, and editorial workflows for 30 days: Multi-model reasoning synthesis, verifiable source citations, API stability, and team productivity ROI evaluated.`;
+
+    t_pros = `Advanced multi-model AI reasoning engine synthesizes complex research queries with verifiable live citations in seconds
+Intuitive, distraction-free interface with keyboard shortcuts, file uploads, and collaborative team shared spaces
+Native API integration options allow automating repetitive data synthesis, content drafting, and market analysis pipelines
+Enterprise-grade data privacy safeguards guarantee user queries and proprietary data are never used for model training
+Dramatically compresses multi-hour web research tasks into actionable, structured executive summaries within seconds`;
+
+    t_cons = `Advanced reasoning modes encounter hourly usage quotas during global peak traffic hours on standard subscription tiers
+Requires precise, structured prompt engineering to extract maximal technical depth on esoteric, niche domain topics
+Full team workspace sharing requires administrative tier management for multi-seat organizations`;
+
+    t_intro = `Artificial intelligence productivity software and cognitive search engines have fundamentally altered the landscape of modern digital knowledge work. In an era where traditional search engines are congested with sponsored advertisements, low-quality affiliate link farms, and unvetted SEO blog regurgitations, finding accurate, verified technical information consumes hours of valuable professional time. ${cleanKw} emerged with the mission to revolutionize knowledge discovery: combining real-time web indexing with advanced large language reasoning models to deliver factual, synthesized answers with clickable academic citations.
+
+Onboarding into the platform is effortless. The user interface is clean, blazingly fast, and devoid of distracting sidebar clutter. Within five seconds of launching, power users can execute comprehensive technical queries, upload dense 100-page PDF financial reports for instantaneous synthesis, or toggle between premier reasoning models.
+
+The platform's command palette and fluid keyboard shortcuts allow users to navigate between threads, copy formatted markdown tables, and share research collections with team members without lifting their hands from the keyboard.`;
+
+    t_body = `Our editorial and developer teams deployed ${cleanKw} as our primary research intelligence tool across 30 consecutive days of demanding production sprints. We benchmarked its capabilities across three primary disciplines: complex software code synthesis, competitive market intelligence gathering, and technical document extraction.
+
+In complex coding challenges, the platform synthesized multi-file code architectures, identified edge-case bugs, and explained architectural trade-offs with razor-sharp precision. Crucially, unlike generic chat models that hallucinate outdated function libraries, ${cleanKw}'s real-time citation mechanism cross-referenced official 2026 documentation, ensuring all proposed solutions worked flawlessly on the first execution.
+
+In market research and financial analysis, the platform compressed what traditionally required six hours of manual search across regulatory filings, industry whitepapers, and earnings call transcripts into a comprehensive 3-minute executive brief. Every single statistic, claim, and projected percentage was backed by an inline hyperlinked citation, allowing our analysts to verify primary source documents with a single click.
+
+API reliability testing was equally impressive. Hooking the service into our automated data pipelines, the API maintained 99.98% uptime with sub-second response latencies, seamlessly processing batch document summarization requests without dropped connections or rate-limiting crashes.
+
+From a pure financial Return on Investment (ROI) perspective, our team recorded an average savings of 11.5 hours per operator per week. The subscription fee paid for itself within the first 48 hours of deployment alone.`;
+
+    t_verdict = `${cleanKw} is an indispensable, transformative cognitive amplifier for any modern digital operator, software engineer, or researcher. It does not merely save time—it fundamentally expands the depth and velocity of what a solo knowledge worker can accomplish.
+
+For professionals and forward-thinking teams looking to supercharge their daily productivity and eliminate search fatigue, it earns our unconditional recommendation. Subscribe through the verified partner link below to secure official enterprise perks and exclusive promotional subscription pricing.`;
+  }
+  // 18. Digital Products, Ebooks & Playbooks
+  else if (niche === 'ebooks') {
     catName = 'Ebooks & Playbooks';
     priceU = '$29.00'; priceV = '725.000₫'; priceO = '$49.00';
-    t_img = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Blueprint: Actionable Monetization & Strategy Playbook (2026)`;
-    t_excerpt = `An exhaustive breakdown of the ${cleanKw} digital guide. We evaluate real-world frameworks, conversion benchmarks, downloadable cheatsheets, and tangible monetization ROI.`;
-    t_pros = `Distills complex monetization strategies into crystal-clear step-by-step execution phases\nIncludes battle-tested pitch decks, outreach email templates, and rate card benchmarks\nInstant DRM-free PDF, EPUB, and Kindle downloads with lifetime version updates\nDense, fluff-free reference manual engineered for immediate execution within 72 hours`;
-    t_cons = `Requires genuine consistency to implement frameworks to achieve sustainable revenue\nAssumes basic operational familiarity with digital affiliate and creator platforms`;
-    t_intro = `The digital publishing arena is crowded with superficial regurgitations and generic advice. When ${cleanKw} was released, it distinguished itself by offering unsparingly detailed, data-backed operational blueprints. We acquired a verified copy to test its systems firsthand.\n\nRight from the preface, the analytical rigor is refreshing. Key concepts are accompanied by real traffic telemetry, revenue conversion screenshots, and exact contract clauses.`;
-    t_body = `Putting the recommendations into practice across our publishing workflows streamlined partnership outreach within the first week. The chapters detailing affiliate negotiation structures and legal FTC compliance protocols are worth several times the guide's modest price tag alone.`;
-    t_verdict = `For creators, indie publishers, and digital operators aiming to build resilient, high-converting revenue channels, ${cleanKw} is an indispensable strategic asset.`;
-  } else if (niche === 'presets') {
+    couponCode = 'BLUEPRINT15'; couponDisc = '15% OFF Digital Blueprint';
+    t_img = resolveImage('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Actionable Monetization Frameworks Evaluated (2026)`;
+    t_excerpt = `An exhaustive breakdown of ${cleanKw} by ${brandName}: We evaluate real-world frameworks, traffic conversion benchmarks, downloadable SOP cheatsheets, and tangible monetization ROI across 30 days of implementation.`;
+
+    t_pros = `Distills complex digital monetization strategies into crystal-clear, step-by-step sequential execution phases
+Includes battle-tested pitch decks, outreach email swipe files, contract templates, and rate card benchmarks
+Instant DRM-free PDF, EPUB, and Kindle downloads with lifetime version updates reflecting latest 2026 industry shifts
+Dense, fluff-free operational manual engineered for immediate tactical execution within the first 72 hours
+Provides verified telemetry benchmarks and case studies rather than vague, generic motivational advice`;
+
+    t_cons = `Demands genuine consistency and manual execution to implement the frameworks to achieve sustainable revenue
+Assumes basic operational familiarity with digital content platforms and web analytics tools
+Not intended for passive hobbyists seeking overnight miraculous riches without dedicated operational work`;
+
+    t_intro = `The digital publishing arena is unfortunately saturated with superficial regurgitations, outdated blog posts, and generic advice peddled by self-proclaimed "gurus" who have never operated an authentic commercial publication. When ${cleanKw} authored by ${brandName} launched, it distinguished itself immediately by offering unsparingly detailed, data-backed operational blueprints and real-world commercial frameworks. We purchased a verified commercial copy to evaluate its systems firsthand.
+
+Right from the preface, the analytical rigor is refreshing. Key concepts are accompanied by real traffic telemetry, revenue conversion screenshots, exact contract clauses, and copy-paste outreach templates.
+
+Downloading the material is frictionless: readers receive immediate DRM-free access formatted flawlessly across PDF, EPUB, and Kindle formats, alongside a dedicated Notion workspace hub containing all accompanying checklists and financial spreadsheets.`;
+
+    t_body = `Our publishing team spent four weeks actively executing the strategies outlined in ${cleanKw} across our digital operations. The guide is structured into four core phases: Audience Architecture, High-Converting Content Engineering, Direct Brand Sponsorship Negotiation, and Automated Operations.
+
+The chapters detailing affiliate contract negotiation and FTC compliance protocols are worth several times the guide's modest price tag alone. Implementing the recommended email outreach pitch frameworks resulted in an immediate 38% increase in brand sponsor response rates within the very first week of deployment.
+
+Crucially, the curriculum avoids theoretical fluff entirely. Instead of vague encouragement, ${brandName} provides precise mathematical formulas for calculating audience value, structuring tiered commercial rate cards, and optimizing affiliate conversion funnels. The included Standard Operating Procedure (SOP) templates allowed our team to streamline weekly editorial workflows seamlessly.`;
+
+    t_verdict = `For content creators, independent publishers, and digital operators aiming to build resilient, high-converting revenue channels, ${cleanKw} is an indispensable strategic asset. Fluff-free, actionable, and profoundly high-ROI.
+
+Order through the official verified partner link below to receive all downloadable swipe files, Notion templates, and lifetime updates.`;
+  }
+  // 19. Presets, LUTs & Creative Assets
+  else if (niche === 'presets') {
     catName = 'Presets & LUTs';
     priceU = '$19.00'; priceV = '475.000₫'; priceO = '$39.00';
-    t_img = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Color Grading Pack: 35 Cinematic LUTs & Lightroom Presets`;
-    t_excerpt = `We graded over 80 hours of mixed log footage across Sony, Canon, DJI, and Apple ProRes with ${cleanKw}. Here is our definitive report on highlight rolloff, skin tones, and color accuracy.`;
-    t_pros = `Crafted specifically for wide dynamic range log gamuts (S-Log3, D-Log M, Apple Log, C-Log3)\nFlawless skin tone preservation with natural tonal warmth and zero harsh color clipping\nIncludes universal 33x and 65x .CUBE files for DaVinci Resolve, Premiere Pro, and Final Cut\nComprehensive desktop and mobile XMP/DNG Lightroom presets for one-click photo matching`;
-    t_cons = `High-contrast looks require basic exposure balancing before LUT application for optimal results\nRequires camera log profiles to unlock maximum cinematic latitude`;
-    t_intro = `In cinematic video production, consistent color science separates amateur hobbyists from studio-grade filmmakers. The ${cleanKw} pack was designed to bring moody, timeless film aesthetics into modern creator workflows without tedious manual node rebuilding.\n\nWe loaded the 33x .CUBE profiles into DaVinci Resolve Studio to evaluate stress behavior across overexposed bright skies, low-light neon shadows, and mixed indoor lighting.`;
-    t_body = `Tonal rolloff across highlights was exceptionally smooth, mimicking analog photochemical film stocks without ugly digital banding. Skin tones maintained natural organic peach and amber hues without color shifts even when pushing contrast curves.`;
-    t_verdict = `The ${cleanKw} color grading suite is a triumph of thoughtful color science. For videographers seeking a coherent, cinematic look across YouTube, commercial shoots, and social reels, it is an unbeatable value.`;
-  } else if (niche === 'templates') {
+    couponCode = 'CINEMA15'; couponDisc = '15% OFF Creative LUTs';
+    t_img = resolveImage('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: 35 Cinematic LUTs & Highlight Rolloff Tested (2026)`;
+    t_excerpt = `We graded over 80 hours of mixed log footage across Sony, Canon, DJI, and Apple ProRes with ${cleanKw}: Color accuracy, highlight rolloff, skin tone preservation, and universal software compatibility evaluated.`;
+
+    t_pros = `Crafted specifically for wide dynamic range log gamuts including Sony S-Log3, DJI D-Log M, Canon C-Log3, and Apple Log
+Flawless organic skin tone preservation with natural tonal warmth and zero harsh magenta or green color clipping
+Includes universal 33x and 65x .CUBE profiles compatible with DaVinci Resolve, Premiere Pro, Final Cut, and CapCut
+Comprehensive desktop and mobile XMP/DNG Lightroom presets included for instantaneous one-click photo and video matching
+Subtle photochemical film emulation delivers timeless aesthetic grain and smooth highlight halation without digital banding`;
+
+    t_cons = `High-contrast looks require basic exposure and white balance normalization prior to LUT application for optimal results
+Requires camera log recording profiles to unlock maximum cinematic latitude and highlight retention
+Over-applying high-saturation creative looks can produce stylized aesthetics not suited for sterile corporate training videos`;
+
+    t_intro = `In cinematic video production and photography, consistent, evocative color science is what separates amateur home videos from studio-grade visual masterpieces. Too many commercial LUT packs available online simply crush shadows, blow out highlights, and turn human skin tones into radioactive orange carrots. The ${cleanKw} created by ${brandName} was engineered specifically to bring timeless photochemical analog film aesthetics into modern digital creator workflows with scientific precision.
+
+Loading the profiles into DaVinci Resolve Studio and Premiere Pro, the organizational structure is exemplary. The collection provides both 33x and 65x .CUBE profiles meticulously tailored for every major camera log profile—including Sony S-Log3, DJI D-Log M, Canon C-Log, and Apple Log—alongside standard Rec.709 conversion profiles for quick mobile edits.`;
+
+    t_body = `We graded over 80 hours of commercial video footage across demanding lighting scenarios: high-contrast noon sunlight, moody neon nighttime cityscapes, and delicate golden-hour portraiture. Tonal rolloff across highlights was exceptionally smooth, mimicking analog 35mm photochemical film stocks with sublime highlight compression that avoids digital clipping.
+
+Skin tone fidelity was where the pack demonstrated true brilliance. Across diverse skin complexions under mixed indoor tungsten and daylight conditions, the algorithms isolated skin tones cleanly, maintaining natural organic warmth and healthy micro-contrast without unnatural color shifts.
+
+The included Lightroom photo presets matched the video LUTs with 100% color coherence, allowing our team to maintain an identical visual aesthetic across YouTube video thumbnails, Instagram feeds, and editorial photo essays in a single click.`;
+
+    t_verdict = `The ${cleanKw} suite by ${brandName} is a triumph of thoughtful color science. For videographers, travel creators, and photographers seeking a coherent, cinematic aesthetic that elevates their visual portfolio instantly, it is an unbeatable creative investment.
+
+Download through the verified official link below to receive all 35 .CUBE files, Lightroom presets, and comprehensive installation video guides.`;
+  }
+  // 20. Notion OS & Workspace Productivity
+  else if (niche === 'templates') {
     catName = 'Notion OS';
     priceU = '$39.00'; priceV = '975.000₫'; priceO = '$69.00';
-    t_img = 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw}: The Ultimate All-in-One Notion Operating System`;
-    t_excerpt = `We stress-tested the ${cleanKw} workspace across 60 days of intensive editorial sprints, sprint boards, brand CRM pipelines, and financial tracking. Here is our hands-on review.`;
-    t_pros = `Interconnected relational databases link projects, daily tasks, content calendars, and invoices seamlessly\nClean, distraction-free aesthetic with intuitive toggle menus and customizable views\nAutomated formula-driven progress bars, priority scores, and deadline notifications\nOne-click duplicate into your personal or team Notion workspace with zero technical setup`;
-    t_cons = `Feature-packed architecture requires 20-30 minutes of orientation for complete Notion beginners\nAdvanced database customization requires familiarity with Notion formula 2.0 properties`;
-    t_intro = `Disorganized digital workflows kill productivity faster than almost anything else. ${cleanKw} was architected to replace scattered apps, endless browser tabs, and messy spreadsheets with a unified, elegant command center.\n\nDuplicating the workspace into our Notion account took under 10 seconds. The onboarding dashboard provides clear video walkthroughs explaining the database architecture and relation properties.`;
-    t_body = `During two months of continuous daily use, the project sprint pipeline and CRM tracker eliminated dropped balls across brand sponsorship deals. The automated status rollups kept our entire content queue moving like a well-oiled machine.`;
-    t_verdict = `${cleanKw} is quite simply one of the most thoughtfully engineered Notion systems on the market. An essential upgrade for anyone serious about reclaiming their daily time and sanity.`;
-  } else if (niche === 'courses') {
+    couponCode = 'NOTION15'; couponDisc = '15% OFF Workspace OS';
+    t_img = resolveImage('https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: All-in-One Notion Operating System Tested (2026)`;
+    t_excerpt = `We stress-tested ${cleanKw} across 60 days of intensive editorial sprints, sprint kanban boards, brand sponsorship CRM pipelines, and financial tracking: Relational database architecture and daily workflow ROI evaluated.`;
+
+    t_pros = `Interconnected relational databases seamlessly link high-level projects, daily tasks, content calendars, and brand CRM
+Clean, distraction-free aesthetic with intuitive toggle menus, quick-capture buttons, and customizable views
+Automated formula-driven progress bars, priority scores, and deadline notifications keep projects moving on schedule
+One-click duplicate into your personal or team Notion workspace with zero technical setup required
+Includes comprehensive video walkthroughs and modular templates that adapt effortlessly to solo or team operations`;
+
+    t_cons = `Feature-packed architecture requires 20–30 minutes of initial orientation for complete Notion novices
+Advanced formula customization requires basic familiarity with Notion Formulas 2.0 syntax
+Requires an active Notion account (compatible with both free personal and paid workspace tiers)`;
+
+    t_intro = `Disorganized digital workflows, scattered to-do apps, chaotic browser bookmark bars, and messy spreadsheets destroy professional productivity faster than almost anything else. The ${cleanKw} was architected by ${brandName} to permanently replace application overload with a unified, elegant, and modular command center built inside Notion.
+
+Duplicating the workspace into our Notion account took under 15 seconds. The onboarding dashboard is remarkably welcoming: featuring concise video walkthroughs explaining the interconnected database architecture, relation properties, and daily quick-capture widgets.`;
+
+    t_body = `Our editorial and operations team ran our entire publication through the ${cleanKw} workspace for two full months. The project sprint pipeline and brand sponsorship CRM eliminated dropped communications across complex brand deals, while the automated status rollups kept our daily content queue moving with clockwork precision.
+
+The quick-capture mobile dashboard proved indispensable on the go, allowing team members to log article ideas, meeting notes, and expense receipts in seconds, with the relational database automatically sorting them into their appropriate project views.
+
+Compared to rigid commercial project management SaaS suites charging expensive monthly per-seat subscription fees, this one-time purchase Notion OS delivers superior flexibility at a fraction of the cost.`;
+
+    t_verdict = `${cleanKw} by ${brandName} is quite simply one of the most thoughtfully engineered digital workspace systems on the market. An essential upgrade for anyone serious about reclaiming their daily time, focus, and operational sanity.
+
+Order through the verified link below to secure the complete template, all bonus modules, and lifetime version updates.`;
+  }
+  // 21. Video Courses & Educational Masterclasses
+  else if (niche === 'courses') {
     catName = 'Video Courses';
     priceU = '$79.00'; priceV = '1.975.000₫'; priceO = '$149.00';
-    t_img = 'https://images.unsplash.com/photo-1513185041617-8ab03f83d6c5?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} Masterclass: 42-Lesson Hands-On Curriculum & Frameworks`;
-    t_excerpt = `We purchased and completed the entire ${cleanKw} system. Here is our brutally honest review of the actionable video modules, production quality, community access, and overall return on investment.`;
-    t_pros = `Highly actionable, step-by-step video frameworks that bypass theoretical fluff and filler\nIncludes production-ready Notion systems, downloadable cheatsheets, and SOP templates\nDirect access to lifetime updates reflecting 2026 algorithms and industry shifts\nClear, concise modular format engineered for immediate execution within 48 hours`;
-    t_cons = `Requires genuine commitment to implement the systems to see measurable results\nNot suitable for complete beginners looking for passive overnight miracles`;
-    t_intro = `The digital product space is flooded with repackaged blog posts and theoretical filler. When ${cleanKw} launched, it claimed to deliver concrete, proven blueprints for hardware testers, affiliate publishers, and content creators. We purchased access to find out if it lives up to the hype.\n\nThe curriculum structure is immediately impressive. Every single module links directly to usable Notion templates, copy-paste automation scripts, and workflow diagrams.`;
-    t_body = `Implementing the recommended framework yielded tangible workflow optimizations by day three. The step-by-step guidance on structuring high-converting tech reviews and negotiation frameworks with hardware brands is worth the price of entry by itself.`;
-    t_verdict = `If you are serious about accelerating your digital workflow and monetizing authority content, ${cleanKw} is one of the highest ROI investments you can make in 2026.`;
-  } else {
-    // General Tech / Hardware fallback
+    couponCode = 'MASTER15'; couponDisc = '15% OFF Masterclass Access';
+    t_img = resolveImage('https://images.unsplash.com/photo-1513185041617-8ab03f83d6c5?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: 42-Lesson Hands-On Curriculum & ROI Tested (2026)`;
+    t_excerpt = `We purchased and completed the entire ${cleanKw} curriculum: Video lesson production quality, actionable Notion systems, community mentorship, and real-world commercial ROI evaluated.`;
+
+    t_pros = `Highly actionable, step-by-step modular video frameworks that bypass theoretical fluff and deliver tangible tactical execution
+Includes production-ready Notion systems, downloadable cheatsheets, negotiation swipe files, and SOP templates
+Direct access to an active private student community with instructor office hours and collaborative feedback
+Continuously updated curriculum reflecting 2026's latest algorithms, technical shifts, and commercial monetization models
+Concise, fluff-free video delivery engineered for immediate implementation within 48 hours of enrollment`;
+
+    t_cons = `Demands genuine time commitment and disciplined execution to implement the frameworks to achieve measurable financial ROI
+Intermediate-to-advanced curriculum pace may require beginners to pause and review fundamental concepts
+Premium pricing makes it a serious professional career investment rather than an impulse entertainment buy`;
+
+    t_intro = `The online digital education marketplace is tragically overcrowded with bloated video courses that deliver hours of generic theoretical lecture without providing a single actionable framework. When ${cleanKw} launched, it claimed to deliver concrete, battle-tested blueprints for modern digital operators, content creators, and hardware reviewers. We purchased full enrollment anonymously to determine if it lives up to the lofty promises.
+
+The learning management platform is blazingly fast and intuitively organized. Every single lesson is accompanied by downloadable resources: including production-ready Notion templates, copy-paste email swipe files, and step-by-step execution checklists.`;
+
+    t_body = `Diving into the 42-lesson curriculum, the instructor's delivery is concise, energetic, and completely focused on tactical execution. Instead of vague motivational advice, the course breaks down complex monetization funnels into repeatable daily workflows. The "over-the-shoulder" screen capture sessions—where you watch real campaigns structured live—are worth the price of admission alone.
+
+The private student community is remarkably active, providing rapid answers to technical questions and fertile ground for partnership networking. Implementing the recommended content negotiation frameworks resulted in tangible business optimizations within our first week of study.`;
+
+    t_verdict = `If you are serious about accelerating your digital skill set, streamlining your workflow, and monetizing authority content with proven frameworks, ${cleanKw} is one of the highest-yield educational investments available in 2026.
+
+Enroll through the verified official link below to receive full course access, all downloadable templates, and exclusive partner pricing.`;
+  }
+  // 22. General Tech Hardware Fallback
+  else {
     catName = 'Audio & Sound';
-    t_img = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80';
-    t_title = `${cleanKw} In-Depth Review: Lab Benchmarks & Real-World Testing (2026)`;
-    t_excerpt = `An exhaustive technical evaluation of the ${cleanKw}. We break down industrial build quality, day-to-day ergonomic tolerances, benchmark performance, and long-term durability.`;
-    t_pros = `Precision-engineered industrial chassis utilizing aerospace-grade materials for structural rigidity\nClass-leading processing architecture delivers blazing-fast performance and compute times\nExcellent heat dissipation and stable performance under load without thermal throttling\nComprehensive software ecosystem with seamless cross-platform synchronization`;
-    t_cons = `Premium pricing places it strictly in the enthusiast/prosumer category\nProprietary accessories required to unlock the full ecosystem potential`;
-    t_intro = `In an era of iterative yearly updates that barely move the needle, the ${cleanKw} represents a genuine generational leap. Engineered to push the boundaries of what consumers expect in this category, it has dominated tech headlines since its announcement.\n\nOut of the box, the industrial design commands attention. The seamless integration of glass and precision-milled alloy feels incredibly dense and premium in the hand.`;
-    t_body = `Booting up our synthetic benchmark suite, the ${cleanKw} immediately began breaking records. Under sustained multi-core workloads, where competitors rapidly succumb to thermal throttling, this unit maintained 96% of its peak performance thanks to an entirely redesigned vapor-chamber cooling matrix.`;
-    t_verdict = `The ${cleanKw} is a triumph of modern engineering that definitively justifies its flagship price tag. For power users and enthusiasts unwilling to compromise, this is the current gold standard.`;
+    priceU = '$199.00'; priceV = '4.975.000₫'; priceO = '$249.00';
+    couponCode = 'SMARTPICKS15'; couponDisc = '15% OFF Global Order';
+    t_img = resolveImage('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Lab Benchmarks & Real-World Testing (2026)`;
+    t_excerpt = `An exhaustive technical evaluation of ${cleanKw} by ${brandName}: We break down industrial build quality, day-to-day ergonomic tolerances, benchmark performance, thermal efficiency, and long-term durability.`;
+
+    t_pros = `Precision-engineered industrial chassis utilizing aerospace-grade materials for exceptional structural rigidity
+Class-leading processing architecture delivers blazing-fast performance and ultra-low compute latencies
+Advanced thermal dissipation matrix maintains peak performance under sustained load without thermal throttling
+Comprehensive software ecosystem with seamless cross-platform synchronization and intuitive user controls
+Superior energy efficiency delivers class-leading battery endurance during demanding daily workloads`;
+
+    t_cons = `Premium flagship pricing places it strictly in the enthusiast and prosumer category
+Advanced features require a brief initial learning curve to unlock maximum performance customization
+Proprietary accessories required to unlock the full ecosystem potential in specialized workflows`;
+
+    t_intro = `In an era of iterative yearly product updates that barely move the needle, the ${cleanKw} engineered by ${brandName} represents a genuine generational leap forward. Designed to push the boundaries of performance, ergonomics, and reliability, it has commanded tech headlines and enthusiast discussions since its official announcement. Our testing laboratory secured a retail unit to conduct an exhaustive 30-day evaluation across demanding real-world conditions.
+
+Out of the box, the industrial design commands immediate respect. The seamless integration of precision-machined materials feels dense, balanced, and uncompromisingly premium in the hand. Tolerances across seams, ports, and buttons are razor-thin, reflecting world-class manufacturing standards that outclass mass-market competitors.
+
+Initial setup and onboarding were remarkably frictionless. The device powered on instantly, guiding us through a streamlined configuration process that took under three minutes. Ergonomically, the device fits naturally into daily life, offering balanced weight distribution and intuitive tactile feedback.`;
+
+    t_body = `Our hardware evaluation team put the ${cleanKw} through an intensive 30-day benchmark protocol. Under sustained heavy workloads where competing products succumb to aggressive thermal throttling, the ${cleanKw} maintained 96% of its peak throughput thanks to an innovative internal cooling architecture that dissipates heat evenly without noisy fan whine.
+
+Real-world daily testing confirmed outstanding reliability. Across hundreds of hours of continuous operation, we observed zero crashes, zero connection drops, and zero performance stutters. Power efficiency was equally stellar, stretching battery endurance well past manufacturer claims.
+
+When compared directly against its top two market competitors in the same price tier, the ${cleanKw} demonstrated superior build durability, tighter software integration, and a significantly higher customer satisfaction rating.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is a triumph of modern engineering that definitively justifies its flagship price tag. For discerning users unwilling to settle for compromises in quality, performance, or longevity, it is the undisputed gold standard in its category.
+
+Order through the verified official link below to receive authentic direct stock, full manufacturer warranty, and exclusive discount pricing.`;
   }
 
   if (isEn) {
@@ -2717,8 +3276,8 @@ function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customIm
       affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=SMARTPICKS`),
       image: resolveImage(t_img),
       priceUsd: priceU, priceVnd: priceV, priceOrig: priceO,
-      coupon: 'SMARTPICKS15', couponDiscount: '15% OFF Global Order', couponExpiry: '12/31/2026',
-      rating: 9.6,
+      coupon: couponCode, couponDiscount: couponDisc, couponExpiry: couponExp,
+      rating: ratingScore,
       pros: t_pros,
       cons: t_cons,
       intro: t_intro,
@@ -2726,24 +3285,42 @@ function buildAiArticleData(keyword, niche, brand, lang, customAffLink, customIm
       verdict: t_verdict
     };
   } else {
-    // VIETNAMESE TRANSLATION (Clean, perfectly spelled, professional)
+    // VIETNAMESE TRANSLATION (Rich, Authoritative, In-Depth, Flawless Grammar)
     return {
-      title: `Đánh Giá Chuyên Sâu ${cleanKw} (2026): Kiểm Chứng Thực Tế & Lời Khuyên Mua Sắm`,
+      title: `Đánh Giá Toàn Diện ${cleanKw} (2026): Thử Nghiệm 30 Ngày & Phân Tích Kỹ Thuật Chuyên Sâu`,
       slug: cleanSlug,
       category: catName,
-      excerpt: `Đánh giá toàn diện về ${cleanKw} sau 30 ngày thử nghiệm khắc nghiệt: Chất lượng hoàn thiện, hiệu năng đo đạc thực tế, và phân tích chi phí so với giá trị nhận lại.`,
+      excerpt: `Bản đánh giá chuyên sâu toàn diện về ${cleanKw} từ ${brandName} sau 30 ngày thử nghiệm thực tế: Đo đạc hiệu năng phòng lab, độ bền vật liệu, cảm giác công thái học hàng ngày và phân tích chi phí đầu tư.`,
       brand: brandName,
-      btnText: 'ĐẶT MUA NGAY',
+      btnText: 'ĐẶT MUA CHÍNH HÃNG NGAY',
       affiliateLink: resolveAffLink(`https://${brandSlug}.com/?ref=SMARTPICKS`),
       image: resolveImage(t_img),
       priceUsd: priceU, priceVnd: priceV, priceOrig: priceO,
-      coupon: 'SMARTPICKS15', couponDiscount: 'Giảm 15% Toàn Đơn Hàng', couponExpiry: '31/12/2026',
-      rating: 9.6,
-      pros: `Độ hoàn thiện tinh xảo với vật liệu cao cấp, mang lại cảm giác vô cùng chắc chắn\nHiệu năng thực tế xuất sắc, vượt qua các bài kiểm tra áp lực một cách dễ dàng\nThiết kế thông minh, tối ưu hóa trải nghiệm người dùng trong điều kiện sử dụng hàng ngày\nĐộ bền được đánh giá cao, xứng đáng là khoản đầu tư dài hạn`,
-      cons: `Mức giá khởi điểm thuộc phân khúc cao cấp\nCó thể cần thời gian ngắn để làm quen và tối ưu hóa các tính năng nâng cao\nTình trạng khan hàng có thể xảy ra ở một số đại lý bán lẻ`,
-      intro: `Trong một thị trường tràn ngập những sản phẩm nâng cấp nhỏ giọt, ${cleanKw} nổi lên như một điểm sáng hiếm hoi được đầu tư nghiên cứu kỹ lưỡng từ trong ra ngoài. Đội ngũ đánh giá của chúng tôi đã trực tiếp thử nghiệm thiết bị này liên tục trong suốt một tháng, đặt nó vào các điều kiện áp lực cao để đưa ra nhận định chân thực nhất cho bạn đọc.\n\nẤn tượng đầu tiên khi mở hộp là sự chỉn chu tuyệt đối về mặt hoàn thiện. Sản phẩm được chế tác tinh xảo với các đường cắt sắc nét, bề mặt xử lý chống bám vân tay và các khớp nối có dung sai cực nhỏ. Cảm giác cầm trên tay rất đầm, tạo nên độ tin cậy vượt trội so với các sản phẩm phổ thông trên thị trường.`,
-      body: `Để có cái nhìn chính xác nhất, chúng tôi chia bài kiểm tra hiệu năng thành hai phần: Thử thách áp lực tối đa và Đánh giá độ ổn định dài hạn. Ở điều kiện làm việc tải nặng liên tục, ${cleanKw} vẫn duy trì hiệu suất hoạt động mượt mà, không hề có hiện tượng sụt giảm hiệu năng do quá nhiệt hay gián đoạn tín hiệu.\n\nKhi đặt lên bàn cân so sánh trực tiếp với các đối thủ lớn nhất cùng tầm giá, ${cleanKw} thể hiện rõ ưu thế về độ bền linh kiện và trải nghiệm công thái học. Khả năng tối ưu năng lượng cũng rất ấn tượng, giúp bạn yên tâm sử dụng thời gian dài mà không cần bận tâm về việc sạc hay cắm nguồn liên tục. Hệ sinh thái đi kèm được thiết kế tối giản, tập trung vào các tính năng thực dụng.`,
-      verdict: `Một sản phẩm tốt không chỉ dừng lại ở những con số quảng cáo hào nhoáng, mà phải đem lại giá trị thực tế trong từng giây phút bạn sử dụng nó mỗi ngày. ${cleanKw} đã hoàn thành xuất sắc sứ mệnh này và hoàn toàn xứng đáng với mức giá niêm yết. Nếu bạn đang tìm kiếm một sự lựa chọn cao cấp, bền bỉ và mạnh mẽ, đây chắc chắn là khoản đầu tư thông minh nhất năm 2026.`
+      coupon: couponCode, couponDiscount: couponDisc, couponExpiry: '31/12/2026',
+      rating: ratingScore,
+      pros: `Độ hoàn thiện tinh xảo với vật liệu cao cấp chuẩn công nghiệp, mang lại độ đầm chắc và bền bỉ vượt trội
+Hiệu năng đo đạc thực tế xuất sắc, vượt qua các bài kiểm tra tải nặng mà không bị quá nhiệt hay sụt giảm công suất
+Thiết kế công thái học thông minh, tối ưu hóa trải nghiệm sử dụng hàng ngày thoải mái mà không gây mỏi
+Hệ sinh thái phần mềm và tính năng đồng bộ mượt mà, phản hồi tức thì với độ trễ cực thấp
+Được bảo chứng bởi các bài kiểm tra phòng lab độc lập cùng hàng ngàn phản hồi tích cực từ người dùng thực tế`,
+      cons: `Mức giá thuộc phân khúc cao cấp/prosumer, đòi hỏi cân nhắc ngân sách đầu tư ban đầu
+Cần thời gian làm quen ngắn để khai thác tối đa các tùy chỉnh và tính năng chuyên sâu nâng cao
+Tình trạng khan hàng có thể xảy ra ở một số đợt phát hành do nhu cầu thị trường rất lớn`,
+      intro: `Trong một thị trường công nghệ và đời sống tràn ngập những sản phẩm nâng cấp nhỏ giọt mang tính chất tiếp thị, ${cleanKw} từ ${brandName} nổi lên như một điểm sáng hiếm hoi được đầu tư nghiên cứu kỹ lưỡng từ trong ra ngoài. Để mang lại cái nhìn trung thực và khách quan nhất cho bạn đọc, đội ngũ biên tập viên chuyên trách của chúng tôi đã trực tiếp đặt mua phiên bản thương mại chính thức và đưa sản phẩm vào quy trình kiểm định liên tục trong suốt 30 ngày dưới những điều kiện sử dụng thực tế khắt khe nhất.
+
+Cảm nhận đầu tiên ngay khi mở hộp là sự chỉn chu và tôn trọng khách hàng tuyệt đối từ nhà sản xuất. Sản phẩm được đóng gói kiên cố trong hộp bảo vệ cao cấp với các lớp đệm định hình chống va đập hoàn hảo. Cầm ${cleanKw} trên tay, độ đầm và độ chắc chắn của vật liệu tạo nên sự an tâm ngay tức thì: từng đường nét cắt gọt, bề mặt xử lý chống bám vân tay và các khớp nối cơ khí đều đạt dung sai cực nhỏ, hoàn toàn không có cảm giác ọp ẹp hay chi tiết thừa thường thấy trên các dòng sản phẩm phổ thông.
+
+Quá trình thiết lập và đưa vào sử dụng hàng ngày diễn ra vô cùng liền mạch. Các nút bấm vật lý và giao diện tương tác mang lại phản hồi xúc giác rõ ràng, chính xác. Thiết kế công thái học được tính toán tỉ mỉ giúp sản phẩm hòa nhập tự nhiên vào nhịp sống và công việc hàng ngày mà không đòi hỏi người dùng phải thay đổi thói quen một cách gượng ép.`,
+      body: `Để có được dữ liệu đánh giá thuyết phục nhất, chúng tôi chia bài kiểm tra hiệu năng của ${cleanKw} thành ba giai đoạn chính: Đo đạc thông số kỹ thuật tiêu chuẩn trong phòng thí nghiệm, Thử nghiệm áp lực tải nặng liên tục và Nhật ký theo dõi độ ổn định dài hạn sau 30 ngày.
+
+Ở các bài kiểm tra hiệu năng tải nặng, ${cleanKw} thể hiện sự vượt trội đáng kinh ngạc. Kiến trúc phần cứng và hệ thống quản lý nhiệt năng được tối ưu hóa xuất sắc, duy trì hiệu suất hoạt động liên tục ở mức 96% công suất đỉnh mà không hề xảy ra hiện tượng sụt giảm đột ngột do quá nhiệt hay nghẽn cổ chai. Độ ổn định của tín hiệu và khả năng xử lý các tác vụ phức tạp đều diễn ra mượt mà, chính xác đến từng mili-giây.
+
+Trong nhật ký trải nghiệm thực tế suốt bốn tuần, sản phẩm đã chứng minh được giá trị bền bỉ của mình. Dù trải qua lịch trình sử dụng dày đặc từ sáng sớm đến đêm muộn, thiết bị vẫn giữ vững phong độ ổn định như ngày đầu tiên mở hộp. Mức tiêu hao năng lượng được kiểm soát tối ưu, giúp kéo dài thời lượng vận hành vượt xa mức kỳ vọng trung bình trong phân khúc.
+
+Khi đặt lên bàn cân so sánh trực tiếp với hai đối thủ lớn nhất cùng tầm giá trên thị trường, ${cleanKw} áp đảo hoàn toàn về chất lượng vật liệu chế tạo, độ hoàn thiện tinh xảo và tính thực dụng của hệ sinh thái đi kèm. Không chạy theo những tính năng màu mè thiếu thực tế, sản phẩm tập trung giải quyết triệt để những nhu cầu cốt lõi nhất của người dùng với độ tin cậy tuyệt đối.`,
+      verdict: `Một sản phẩm thực sự xuất sắc không chỉ nằm ở những lời quảng cáo hào nhoáng, mà phải chứng minh được giá trị thực tế trong từng khoảnh khắc người dùng trải nghiệm mỗi ngày. ${cleanKw} từ ${brandName} đã hoàn thành xuất sắc sứ mệnh này và hoàn toàn xứng đáng với mức giá niêm yết của một sản phẩm đầu bảng năm 2026.
+
+Chúng tôi đặc biệt khuyến nghị bạn đọc nên đặt mua trực tiếp qua liên kết đối tác chính thức được xác minh bên dưới để đảm bảo nhận được hàng chính hãng 100%, chế độ bảo hành đầy đủ từ nhà sản xuất và áp dụng mã giảm giá độc quyền tốt nhất.`
     };
   }
 }
@@ -3247,6 +3824,16 @@ function generateCardHtml(data) {
 }
 
 function generateFullPostHtml(data) {
+  function formatArticleParagraphs(rawText, fallbackText) {
+    const textToUse = rawText && rawText.trim() ? rawText.trim() : (fallbackText || '');
+    if (!textToUse) return '';
+    return textToUse.split(/\n\s*\n/)
+      .map(p => p.trim())
+      .filter(Boolean)
+      .map(p => `<p class="text-slate-700 dark:text-purple-200/90 leading-relaxed mb-3.5 text-xs sm:text-sm">${escapeHtml(p)}</p>`)
+      .join('\n');
+  }
+
   const i18nPayload = {
     brand: data.brand || '',
     coupon: data.coupon || '',
@@ -3474,7 +4061,7 @@ function generateFullPostHtml(data) {
   </header>
 
   <!-- ARTICLE MAIN CONTENT -->
-  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
+  <main class="flex-1 max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-7 w-full review-page-main">
 
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-purple-300/70 mb-6">
@@ -3494,7 +4081,7 @@ function generateFullPostHtml(data) {
       <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
 
         <!-- 1. Luxury Product Showcase (Never Cropped) -->
-        <div class="product-hero-container relative rounded-3xl overflow-hidden border border-purple-200/80 dark:border-purple-800/60 shadow-xl bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#180933] dark:via-[#110424] dark:to-[#0a0218] p-5 sm:p-6 flex flex-col items-center justify-center">
+        <div class="product-hero-container relative rounded-2xl overflow-hidden border border-purple-200/80 dark:border-purple-800/60 shadow-md bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-[#180933] dark:via-[#110424] dark:to-[#0a0218] p-3.5 sm:p-4 flex flex-col items-center justify-center">
           <div class="w-full flex items-center justify-between mb-3 z-10">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-md uppercase tracking-wider">
               <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
@@ -3506,8 +4093,8 @@ function generateFullPostHtml(data) {
             </div>
           </div>
 
-          <div class="w-full flex items-center justify-center py-2 min-h-[260px] sm:min-h-[300px]">
-            <img src="${escapeHtml(data.image)}" alt="${escapeHtml(data.title)}" class="max-h-[340px] sm:max-h-[380px] w-auto max-w-full h-auto object-contain rounded-2xl drop-shadow-2xl mx-auto transition-transform duration-300 hover:scale-[1.03]">
+          <div class="w-full flex items-center justify-center py-1 sm:py-2 min-h-[190px] sm:min-h-[220px]">
+            <img src="${escapeHtml(data.image)}" alt="${escapeHtml(data.title)}" class="max-h-[240px] sm:max-h-[260px] w-auto max-w-[90%] h-auto object-contain rounded-xl drop-shadow-xl mx-auto transition-transform duration-300 hover:scale-[1.02]">
           </div>
 
           <p class="text-[11px] text-center text-slate-400 dark:text-purple-300/60 mt-2 font-medium">
@@ -3516,12 +4103,12 @@ function generateFullPostHtml(data) {
         </div>
 
         <!-- 2. Editor's Choice Deal & Price Box -->
-        <div class="p-6 rounded-3xl bg-gradient-to-tr from-purple-50 to-pink-50 dark:from-[#170a36] dark:to-[#210e4a] border-2 border-purple-300 dark:border-purple-800 shadow-xl space-y-5">
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-tr from-purple-50 to-pink-50 dark:from-[#170a36] dark:to-[#210e4a] border border-purple-300 dark:border-purple-800 shadow-lg space-y-4 review-deal-box">
           <div class="flex items-start justify-between gap-4 pb-4 border-b border-purple-200/70 dark:border-purple-900/60">
             <div>
               <span class="text-xs font-black uppercase text-pink-600 dark:text-pink-400 tracking-wider">Editor's Choice Deal:</span>
               <div class="flex items-baseline gap-3 mt-1">
-                <span class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono price-val font-display" data-usd="${escapeHtml(data.priceUsd)}" data-vnd="${escapeHtml(data.priceVnd)}">${escapeHtml(data.priceUsd)}</span>
+                <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono price-val font-display" data-usd="${escapeHtml(data.priceUsd)}" data-vnd="${escapeHtml(data.priceVnd)}">${escapeHtml(data.priceUsd)}</span>
                 <span class="text-sm text-slate-400 line-through font-mono strike-val price-val font-display" data-usd="${escapeHtml(data.priceOrig)}" data-vnd="${escapeHtml(priceOrigVnd)}">${escapeHtml(data.priceOrig)}</span>
               </div>
             </div>
@@ -3544,7 +4131,7 @@ function generateFullPostHtml(data) {
 
           <!-- Primary CTA Button -->
           <div>
-            <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-xl shadow-purple-600/30 transition-all btn-shimmer group">
+            <a href="${escapeHtml(data.affiliateLink)}" target="_blank" rel="sponsored noopener" class="w-full py-3 sm:py-3.5 px-5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-purple-600/25 transition-all btn-shimmer group">
               <span>${escapeHtml(data.btnText)}</span>
               <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
             </a>
@@ -3595,11 +4182,11 @@ function generateFullPostHtml(data) {
             </span>
           </div>
 
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-snug font-display">
+          <h1 class="text-xl sm:text-2xl lg:text-[1.75rem] font-black text-slate-900 dark:text-white tracking-tight leading-snug font-display">
             ${escapeHtml(data.title)}
           </h1>
 
-          <p class="text-base sm:text-lg text-slate-600 dark:text-purple-200/90 leading-relaxed font-normal">
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-200/80 leading-relaxed font-normal">
             ${escapeHtml(data.excerpt)}
           </p>
 
@@ -3630,33 +4217,29 @@ function generateFullPostHtml(data) {
           
           <!-- Section 1 -->
           <div class="space-y-3">
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
               <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">1</span>
               Hands-On Experience & Design Overview
             </h2>
-            <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
-              ${escapeHtml(data.intro || data.excerpt)}
-            </p>
+            ${formatArticleParagraphs(data.intro, data.excerpt)}
           </div>
 
           <!-- Section 2 -->
           <div class="space-y-3">
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
               <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">2</span>
               In-Depth Performance & Technical Analysis
             </h2>
-            <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
-              ${escapeHtml(data.body || 'Engineered with high-precision tolerances and verified under demanding real-world conditions.')}
-            </p>
+            ${formatArticleParagraphs(data.body, "Engineered with high-precision tolerances and verified under demanding real-world conditions.")}
           </div>
 
           <!-- Section 3: Live Comparison Table -->
           <div class="space-y-3">
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
               <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">3</span>
               Price Comparison & Where to Buy
             </h2>
-            <div class="comparison-table-wrapper w-full max-w-full rounded-3xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm overflow-x-auto bg-white dark:bg-[#120a26]">
+            <div class="comparison-table-wrapper w-full max-w-full rounded-2xl border border-purple-200/80 dark:border-purple-800/60 shadow-sm overflow-x-auto bg-white dark:bg-[#120a26]">
               <table class="comparison-table text-xs text-left w-full min-w-[600px]">
                 <thead class="bg-purple-50 dark:bg-purple-950/70 text-purple-900 dark:text-purple-200 font-bold">
                   <tr>
@@ -3709,19 +4292,17 @@ function generateFullPostHtml(data) {
 
           <!-- Section 4: Final Verdict -->
           <div class="space-y-3">
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display flex items-center gap-2">
               <span class="w-7 h-7 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-black inline-flex items-center justify-center">4</span>
               Final Verdict: Is It Worth It?
             </h2>
-            <p class="text-slate-700 dark:text-purple-200/90 leading-relaxed">
-              ${escapeHtml(data.verdict || 'With its class-leading design and proven performance, this is an undeniable recommendation for anyone looking for the best in class.')}
-            </p>
+            ${formatArticleParagraphs(data.verdict, "With its class-leading design and proven performance, this is an undeniable recommendation for anyone looking for the best in class.")}
           </div>
 
         </article>
 
         <!-- Bottom Final CTA Banner -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-purple-900 via-violet-900 to-pink-900 text-white space-y-4 shadow-2xl">
+        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-purple-900 via-violet-900 to-pink-900 text-white space-y-3.5 shadow-xl">
           <h3 class="text-xl sm:text-2xl font-black">Ready to Experience ${escapeHtml(data.brand)}?</h3>
           <p class="text-xs sm:text-sm text-purple-200 leading-relaxed">
             Order through the verified direct affiliate link below to secure exclusive promotional pricing with promo code: <strong class="text-amber-300 font-mono">${escapeHtml(data.coupon)}</strong>.
