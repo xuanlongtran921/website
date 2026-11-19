@@ -851,6 +851,46 @@ export default {
             const html = await fetchResp.text();
             const finalUrl = fetchResp.url || targetUrl;
             scraped = parseLiveScrapedHtml(html, finalUrl);
+
+            // Shopify store products discovery
+            try {
+              const origin = new URL(finalUrl).origin;
+              const shopifyResp = await fetch(`${origin}/products.json?limit=10`, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'Accept': 'application/json' }
+              });
+              if (shopifyResp.ok) {
+                const shopifyJson = await shopifyResp.json();
+                if (shopifyJson && Array.isArray(shopifyJson.products) && shopifyJson.products.length > 0) {
+                  scraped.storeProducts = shopifyJson.products.slice(0, 10).map(p => {
+                    const variant = (p.variants && p.variants[0]) || {};
+                    const priceNum = parseFloat(variant.price || 0);
+                    const origNum = parseFloat(variant.compare_at_price || (priceNum * 1.25));
+                    const img = (p.images && p.images[0] && p.images[0].src) || (p.image && p.image.src) || '';
+                    return {
+                      id: p.id,
+                      title: p.title,
+                      productUrl: `${origin}/products/${p.handle}`,
+                      salePriceUsd: '$' + priceNum.toFixed(2),
+                      numericPriceUsd: priceNum,
+                      salePriceVnd: (Math.round(priceNum * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫',
+                      originalPriceUsd: '$' + origNum.toFixed(2),
+                      image: img,
+                      brand: p.vendor || scraped.brand || 'Merchant'
+                    };
+                  });
+                  if (scraped.storeProducts.length > 0 && (!scraped.productTitle || scraped.productTitle.includes('Verified Product'))) {
+                    const top = scraped.storeProducts[0];
+                    scraped.productTitle = top.title;
+                    scraped.salePriceUsd = top.salePriceUsd;
+                    scraped.numericPriceUsd = top.numericPriceUsd;
+                    scraped.salePriceVnd = top.salePriceVnd;
+                    scraped.originalPriceUsd = top.originalPriceUsd;
+                    if (top.image) scraped.image = top.image;
+                    if (top.brand) scraped.brand = top.brand;
+                  }
+                }
+              }
+            } catch (shopErr) {}
           }
         } catch (fetchErr) {
           console.warn('Worker live fetch failed:', fetchErr);

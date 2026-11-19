@@ -314,7 +314,7 @@
           </div>
 
           <div class="flex items-center gap-2 flex-wrap">
-            <button id="btn-open-ai-generator" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white text-xs font-black border border-pink-400/50 flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/20 cursor-pointer">
+            <button id="btn-open-ai-generator" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-black border border-cyan-400/50 flex items-center gap-1.5 transition-all shadow-md shadow-cyan-500/20 cursor-pointer">
               <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
               <span>AI Review Generator (US English)</span>
             </button>
@@ -356,17 +356,17 @@
         <!-- ============================================================ -->
         <!-- AI ARTICLE GENERATOR PANEL (US ENGLISH PRIORITY) -->
         <!-- ============================================================ -->
-        <div id="ai-generator-panel" class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#170833] via-[#2a0e54] to-[#14062c] border-2 border-pink-500/50 shadow-2xl relative overflow-hidden space-y-4">
+        <div id="ai-generator-panel" class="p-5 sm:p-6 rounded-3xl bg-[#0e121d] border border-slate-800 shadow-xl relative overflow-hidden space-y-4">
           <!-- Ambient cosmic blur -->
-          <div class="absolute -right-10 -bottom-10 w-56 h-56 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
-          <div class="absolute -left-10 -top-10 w-56 h-56 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -right-10 -bottom-10 w-56 h-56 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -left-10 -top-10 w-56 h-56 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
           <div class="relative z-10 space-y-4">
             <!-- Header of AI Tool -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-purple-800/60">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
               <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-pink-500/30 flex-shrink-0 animate-pulse">
-                  <i data-lucide="sparkles" class="w-6 h-6 text-amber-200"></i>
+                <div class="w-11 h-11 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-white flex items-center justify-center shadow-lg shadow-cyan-500/10 flex-shrink-0 animate-pulse">
+                  <i data-lucide="sparkles" class="w-6 h-6 text-cyan-400"></i>
                 </div>
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
@@ -377,18 +377,18 @@
                       <i data-lucide="check-check" class="w-3 h-3"></i> US English Prioritized (Default)
                     </span>
                   </div>
-                  <p class="text-xs text-purple-200/80 mt-0.5">
+                  <p class="text-xs text-slate-400 mt-0.5">
                     Enter product name or choose a 1-click preset. AI generates complete: Title, Slug, Excerpt, Scores, Pros/Cons, Comparison Matrix, and full international-grade review content!
                   </p>
                 </div>
               </div>
 
               <!-- Language selector with English prioritized -->
-              <div class="flex items-center gap-2 bg-[#0e0520] px-3 py-1.5 rounded-xl border border-purple-800/80 flex-shrink-0">
-                <label for="ai-gen-lang" class="text-[11px] font-bold text-purple-300 flex items-center gap-1">
+              <div class="flex items-center gap-2 bg-[#07080e] px-3 py-1.5 rounded-xl border border-slate-800 flex-shrink-0">
+                <label for="ai-gen-lang" class="text-[11px] font-bold text-slate-300 flex items-center gap-1">
                   <i data-lucide="globe" class="w-3.5 h-3.5 text-pink-400"></i> Language:
                 </label>
-                <select id="ai-gen-lang" class="bg-[#1c0a3d] text-xs font-bold text-amber-300 border border-purple-700/80 rounded-lg px-2.5 py-1 focus:outline-none focus:border-pink-500">
+                <select id="ai-gen-lang" class="bg-[#07080e] text-xs font-bold text-amber-300 border border-slate-800 rounded-lg px-2.5 py-1 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500">
                   <option value="en" selected>🇺🇸 English (US Default / Recommended)</option>
                   <option value="vi">🇻🇳 Vietnamese (Tiếng Việt)</option>
                   <option value="zh">🇨🇳 Chinese (简体中文)</option>
@@ -402,51 +402,49 @@
               <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                 <!-- Keyword Input -->
                 <div class="md:col-span-5">
-                  <label class="block text-xs font-bold text-purple-200 mb-1">
+                  <label class="block text-xs font-bold text-slate-300 mb-1">
                     Product Name / Focus Keyword <span class="text-pink-400">*</span>
                   </label>
                   <div class="relative">
-                    <input id="ai-input-keyword" type="text" placeholder="e.g. Mowrator S1 4WD, Sony XM5, Keychron Q1..." class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-white text-xs font-semibold focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all">
-                    <i data-lucide="search" class="w-4 h-4 text-purple-400 absolute left-3 top-3"></i>
+                    <input id="ai-input-keyword" type="text" placeholder="e.g. Mowrator S1 4WD, Sony XM5, Keychron Q1..." class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#0e121d] border border-slate-800 text-white text-xs font-semibold focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
                   </div>
                 </div>
 
                 <!-- Niche Select -->
                 <div class="md:col-span-3">
-                                    <div class="flex items-center justify-between mb-1">
+                  <div class="flex items-center justify-between mb-1">
                     <label for="ai-input-niche" class="block text-xs font-bold text-slate-300">Category / Niche</label>
                     <span id="ai-niche-auto-indicator" class="hidden text-[10px] font-bold text-cyan-300 bg-cyan-950/90 border border-cyan-500/50 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm transition-all duration-300">
                       <i data-lucide="sparkles" class="w-3 h-3 text-cyan-400"></i>
                       <span id="ai-niche-auto-text">Auto-Detected</span>
                     </span>
                   </div>
-                  <select id="ai-input-niche" class="w-full px-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-purple-200 text-xs font-semibold focus:border-pink-500 focus:outline-none">
-                    <optgroup label="PHYSICAL GEAR & HARDWARE">
-                      <option value="beauty">Beauty & Personal Care (Beauty & Skincare)</option>
-                      <option value="tech_audio">Audio & Headphones (Audio & Tech)</option>
-                      <option value="tech_keyboard">Mechanical Keyboards & Gear (Desk Setup & EDC)</option>
-                      <option value="auto">RC, Robotics, Outdoor & Auto (Robotics & Auto)</option>
-                      <option value="watches">Mechanical Watches & Horology (Watches)</option>
-                      <option value="fashion">Designer & Gothic Fashion (Alt & Gothic Fashion)</option>
-                      <option value="cameras">Cameras & Creator Gear (Cameras & Video)</option>
-                      <option value="coffee">Espresso & Barista Gear (Coffee & Lifestyle)</option>
-                      <option value="gaming">Gaming Laptops & Battlestations (Gaming & Gear)</option>
-                      <option value="smarthome">Smart Home, Matter & IoT (Smart Home)</option>
+                  <select id="ai-input-niche" class="w-full px-3 py-2.5 rounded-xl bg-[#07080e] border border-slate-800 text-slate-100 text-xs font-semibold focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-all">
+                    <optgroup label="PHYSICAL GEAR & HARDWARE (8)">
+                      <option value="audio" selected>Audio & Sound</option>
+                      <option value="smarthome">Smart Home & IoT</option>
+                      <option value="edc">Desk Setup & EDC</option>
+                      <option value="wearables">Smart Wearables</option>
+                      <option value="robotics">Robotics & Drones</option>
+                      <option value="cameras">Cameras & Creator Gear</option>
+                      <option value="computing">Computing & Gaming</option>
+                      <option value="power">Power & GaN Charging</option>
                     </optgroup>
-                    <optgroup label="DIGITAL PRODUCTS & ASSETS">
-                      <option value="ebooks">Ebooks & Playbooks (Digital Guides)</option>
-                      <option value="presets">Lightroom Presets & LUTs (Creative Assets)</option>
-                      <option value="templates">Notion Templates & Workspace OS (Productivity)</option>
-                      <option value="courses">Video Workshops & Masterclasses (Video Courses)</option>
-                      <option value="saas">SaaS, AI Tools & Cloud Licenses (Software)</option>
+                    <optgroup label="DIGITAL ASSETS & SOFTWARE (5)">
+                      <option value="saas">SaaS & AI Tools</option>
+                      <option value="ebooks">Ebooks & Playbooks</option>
+                      <option value="presets">Presets & LUTs</option>
+                      <option value="templates">Notion OS</option>
+                      <option value="courses">Video Courses</option>
                     </optgroup>
                   </select>
                 </div>
 
                 <!-- Brand Input -->
                 <div class="md:col-span-2">
-                  <label class="block text-xs font-bold text-purple-200 mb-1">Brand Name / Store</label>
-                  <input id="ai-input-brand" type="text" placeholder="e.g. Mowrator, Sony..." class="w-full px-3 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-white text-xs focus:border-pink-500 focus:outline-none">
+                  <label class="block text-xs font-bold text-slate-300 mb-1">Brand Name / Store</label>
+                  <input id="ai-input-brand" type="text" placeholder="e.g. Mowrator, Sony..." class="w-full px-3 py-2.5 rounded-xl bg-[#0e121d] border border-slate-800 text-white text-xs focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none">
                 </div>
 
                 <!-- Product Price Input (Direct User Override) -->
@@ -459,7 +457,7 @@
                     <span id="ai-price-calc-hint" class="text-[10px] text-pink-300 font-mono font-bold" title="Auto-calculates exchange rate">Edit Price</span>
                   </div>
                   <div class="relative">
-                    <input id="ai-input-price" type="text" placeholder="e.g. $49.99 / 1tr2" class="w-full pl-7 pr-2 py-2.5 rounded-xl bg-[#110526] border-2 border-emerald-500/70 text-emerald-300 text-xs font-mono font-bold focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all shadow-inner" title="Enter your exact custom price in USD ($) or VND (₫). AI will prioritize this exact price!">
+                    <input id="ai-input-price" type="text" placeholder="e.g. $49.99 / 1tr2" class="w-full pl-7 pr-2 py-2.5 rounded-xl bg-[#0e121d] border-2 border-emerald-500/70 text-emerald-300 text-xs font-mono font-bold focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner" title="Enter your exact custom price in USD ($) or VND (₫). AI will prioritize this exact price!">
                     <i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-400 absolute left-2 top-3"></i>
                   </div>
                 </div>
@@ -470,50 +468,52 @@
                 <!-- Link Ref / Affiliate URL -->
                 <div class="lg:col-span-5">
                   <div class="flex items-center justify-between mb-1">
-                    <label class="block text-xs font-bold text-purple-200 flex items-center gap-1.5">
+                    <label class="block text-xs font-bold text-slate-300 flex items-center gap-1.5">
                       <i data-lucide="link" class="w-3.5 h-3.5 text-pink-400"></i>
                       <span>Your Direct Affiliate / Referral URL</span>
                     </label>
-                    <span class="text-[10px] text-emerald-400 font-bold">✓ Tự động quét & gắn đúng link vào nút đặt mua</span>
+                    <span class="text-[10px] text-amber-300 font-bold">Attached to ORDER NOW button</span>
                   </div>
                   <div class="relative flex items-center">
-                    <input id="ai-input-aff-link" type="url" placeholder="https://brand.com/?ref=YOUR_CODE (Paste product / affiliate link...)" class="w-full pl-9 pr-28 py-2.5 rounded-xl bg-[#110526] border border-purple-700/80 text-pink-300 text-xs font-mono focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all">
+                    <input id="ai-input-aff-link" type="url" placeholder="https://brand.com/?ref=YOUR_CODE (Paste product / affiliate link...)" class="w-full pl-9 pr-28 py-2.5 rounded-xl bg-[#0e121d] border border-slate-800 text-pink-300 text-xs font-mono focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-all">
                     <i data-lucide="zap" class="w-4 h-4 text-pink-400 absolute left-3 top-3"></i>
-                    <button id="ai-btn-scan-link" type="button" class="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-500/30 transition-all cursor-pointer active:scale-95">
-                      <i data-lucide="scan-line" class="w-3.5 h-3.5"></i>
-                      <span id="btn-ai-scan-label">⚡ Quét Link</span>
+                    <button id="ai-btn-scan-link" type="button" class="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-[11px] font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-md" title="Quét link: tự lấy tên, ảnh, thương hiệu, giá và danh mục chuẩn">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+                      <span>✨ Quét Link</span>
                     </button>
                   </div>
+                  <!-- Product Discovery Bar (rendered dynamically when store has multiple products) -->
+                  <div id="ai-store-products-container" class="hidden mt-2"></div>
                 </div>
 
                 <!-- Custom Image URL & Upload -->
                 <div class="lg:col-span-4">
                   <div class="flex items-center justify-between mb-1">
-                    <label class="block text-xs font-bold text-purple-200 flex items-center gap-1.5">
+                    <label class="block text-xs font-bold text-slate-300 flex items-center gap-1.5">
                       <i data-lucide="image" class="w-3.5 h-3.5 text-pink-400"></i>
                       <span>Product Image (Custom URL / Upload)</span>
                     </label>
-                    <span class="text-[10px] text-purple-300/80">Customize if AI image needs update</span>
+                    <span class="text-[10px] text-slate-300/80">Customize if AI image needs update</span>
                   </div>
 
                   <div class="flex items-center gap-2">
                     <!-- Thumbnail Preview -->
-                    <div class="w-10 h-10 rounded-xl bg-[#110526] border border-purple-700/80 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
+                    <div class="w-10 h-10 rounded-xl bg-[#0e121d] border border-slate-800 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
                       <img id="ai-img-thumb" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=120&q=80" alt="Thumb" class="w-full h-full object-cover">
                     </div>
 
                     <!-- Input Image URL -->
-                    <input id="ai-input-image" type="url" placeholder="Paste image link or choose file from PC..." class="w-full px-3 py-2 rounded-xl bg-[#110526] border border-purple-700/80 text-white text-xs focus:border-pink-500 focus:outline-none">
+                    <input id="ai-input-image" type="url" placeholder="Paste image link or choose file from PC..." class="w-full px-3 py-2 rounded-xl bg-[#0e121d] border border-slate-800 text-white text-xs focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none">
 
                     <!-- File Upload Input (Hidden + Label) -->
-                    <label for="ai-file-image" class="px-2.5 py-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs font-bold border border-purple-700/80 flex items-center gap-1 flex-shrink-0 cursor-pointer transition-all" title="Upload directly from computer">
+                    <label for="ai-file-image" class="px-2.5 py-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-slate-300 text-xs font-bold border border-slate-800 flex items-center gap-1 flex-shrink-0 cursor-pointer transition-all" title="Upload directly from computer">
                       <i data-lucide="upload" class="w-3.5 h-3.5 text-amber-300"></i>
                       <span class="hidden sm:inline text-[11px]">Upload</span>
                     </label>
                     <input type="file" id="ai-file-image" accept="image/*" class="hidden">
 
                     <!-- Shuffle/Switch Image Button -->
-                    <button id="ai-btn-shuffle-img" type="button" class="p-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-purple-200 text-xs border border-purple-700/80 flex-shrink-0 cursor-pointer transition-all" title="Switch to another verified high-res photo">
+                    <button id="ai-btn-shuffle-img" type="button" class="p-2 rounded-xl bg-purple-900/70 hover:bg-purple-800 text-slate-300 text-xs border border-slate-800 flex-shrink-0 cursor-pointer transition-all" title="Switch to another verified high-res photo">
                       <i data-lucide="shuffle" class="w-3.5 h-3.5 text-pink-400"></i>
                     </button>
                   </div>
@@ -521,9 +521,9 @@
 
                 <!-- Generate Action Button -->
                 <div class="lg:col-span-3">
-                  <button id="btn-ai-generate" type="button" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-black text-xs shadow-xl shadow-pink-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-95 h-[40px]">
+                  <button id="btn-ai-generate" type="button" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-95 h-[40px]">
                     <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
-                    <span id="ai-btn-label">GENERATE ARTICLE WITH AI</span>
+                    <span id="ai-btn-label">GENERATE REVIEW WITH AI</span>
                   </button>
                 </div>
               </div>
@@ -531,52 +531,52 @@
 
             <!-- Quick 1-Click Chips -->
             <div class="pt-2 flex flex-wrap items-center gap-2">
-              <span class="text-[11px] font-bold text-purple-300/80 flex items-center gap-1 w-full mb-1">
+              <span class="text-[11px] font-bold text-slate-300/80 flex items-center gap-1 w-full mb-1">
                 <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i> Quick 1-Click AI Presets (Physical & Digital):
               </span>
-              <!-- Physical Presets -->
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-pink-900/60 hover:bg-pink-600 border border-pink-500/60 text-white font-bold transition-all cursor-pointer shadow-sm" data-niche="smarthome" data-keyword="Aqara Hub M3 Matter & Thread Smart Central" data-brand="Aqara Official" data-aff="https://aqara.com/us/hub-m3?ref=SMARTPMM15">
-                Aqara Hub M3 ($82.99)
+              <!-- Tech Hardware Presets -->
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/50 text-cyan-200 font-bold transition-all cursor-pointer shadow-sm" data-niche="smarthome" data-keyword="Roborock S8 Pro Ultra Robot Vacuum and Mop" data-brand="Roborock Official" data-aff="https://roborock.com/s8-pro-ultra?ref=TECHPICKS">
+                Roborock S8 Pro ($1,199)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="tech_audio" data-keyword="Sony WH-1000XM5 Wireless ANC Headphones" data-brand="Sony Official" data-aff="https://store.sony.com/wh1000xm5?ref=SONYWH15">
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-slate-800/60 text-slate-300 hover:text-white transition-all cursor-pointer" data-niche="audio" data-keyword="Sony WH-1000XM5 Wireless ANC Headphones" data-brand="Sony Official" data-aff="https://store.sony.com/wh1000xm5?ref=TECHPICKS">
                 Sony WH-1000XM5
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="tech_keyboard" data-keyword="Keychron Q1 Pro Custom QMK Keyboard" data-brand="Keychron" data-aff="https://keychron.com/products/keychron-q1-pro?ref=KEYPRO10">
-                Keychron Q1 Pro
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-teal-950/60 hover:bg-teal-900 border border-teal-500/50 text-teal-200 font-bold transition-all cursor-pointer shadow-sm" data-niche="wearables" data-keyword="Apple Watch Ultra 2 Rugged GPS Cellular Titanium" data-brand="Apple Official" data-aff="https://apple.com/watch-ultra-2?ref=TECHPICKS">
+                Apple Watch Ultra 2 ($799)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="watches" data-keyword="Sea-Gull 1963 Chronograph 38mm Mechanical Watch" data-brand="Sea-Gull Official" data-aff="https://seagull1963.com/product/st1901-38mm?ref=PETE1963">
-                Sea-Gull 1963
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 font-bold transition-all cursor-pointer shadow-sm" data-niche="robotics" data-keyword="DJI Mini 4 Pro Drone 4K HDR Obstacle Sensing" data-brand="DJI Official" data-aff="https://dji.com/mini-4-pro?ref=TECHPICKS">
+                DJI Mini 4 Pro ($759)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="fashion" data-keyword="LilyVow Celestial Starlight Lolita Dress" data-brand="LilyVow Official" data-aff="https://lilyvow.com/celestial-lolita-dress?ref=PURPOSE15">
-                LilyVow Celestial
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-slate-800/60 text-slate-300 hover:text-white transition-all cursor-pointer" data-niche="edc" data-keyword="Keychron Q1 Pro Custom QMK Keyboard" data-brand="Keychron" data-aff="https://keychron.com/products/keychron-q1-pro?ref=TECHPICKS">
+                Keychron Q1 Pro ($199)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="auto" data-keyword="BullBoost Billet CNC Intake Manifold K20" data-brand="BullBoost Performance" data-aff="https://bullboostperformance.com/k20-manifold?ref=BWFXDIYT50">
-                BullBoost Billet K20
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-slate-800/60 text-slate-300 hover:text-white transition-all cursor-pointer" data-niche="edc" data-keyword="Elgato Stream Deck MK.2 15 LCD Keys Controller" data-brand="Elgato Official" data-aff="https://elgato.com/stream-deck-mk2?ref=TECHPICKS">
+                Elgato Stream Deck ($149)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="cameras" data-keyword="Sony Alpha 7 IV Full-Frame Camera" data-brand="Sony Official" data-aff="https://store.sony.com/alpha-a7iv?ref=ALPHA150">
-                Sony Alpha 7 IV
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-slate-800/60 text-slate-300 hover:text-white transition-all cursor-pointer" data-niche="cameras" data-keyword="DJI Osmo Pocket 3 Creator Combo 1-Inch CMOS 4K" data-brand="DJI Official" data-aff="https://dji.com/osmo-pocket-3?ref=TECHPICKS">
+                DJI Osmo Pocket 3 ($669)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="coffee" data-keyword="Gaggia Classic Pro Espresso Machine" data-brand="Gaggia Milano" data-aff="https://gaggiadirect.com/classic-pro?ref=BARISTA50">
-                Gaggia Classic Pro
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-slate-800/60 text-slate-300 hover:text-white transition-all cursor-pointer" data-niche="computing" data-keyword="ASUS ROG Ally X Handheld Gaming PC 24GB RAM" data-brand="ASUS ROG" data-aff="https://rog.asus.com/gaming-handhelds/rog-ally-x?ref=TECHPICKS">
+                ASUS ROG Ally X ($799)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-purple-700/60 text-purple-200 hover:text-white transition-all cursor-pointer" data-niche="gaming" data-keyword="Razer Blade 16 Mini-LED Gaming Laptop" data-brand="Razer Official" data-aff="https://razer.com/gaming-laptops/razer-blade-16?ref=BLADE10">
-                Razer Blade 16
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-purple-900/60 hover:bg-pink-600/80 border border-slate-800/60 text-slate-300 hover:text-white transition-all cursor-pointer" data-niche="power" data-keyword="Ugreen Nexode 300W GaN 5-Port Desktop Charger" data-brand="Ugreen Official" data-aff="https://ugreen.com/nexode-300w?ref=TECHPICKS">
+                Ugreen 300W GaN ($199)
               </button>
               <!-- Digital Presets -->
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="ebooks" data-keyword="Affiliate Blog Blueprint 2026 Ebook Playbook" data-brand="SmartPicks Publishing" data-aff="https://smartpicks.gumroad.com/l/affiliate-blueprint?discount=BLUEPRINT20">
-                Affiliate Blueprint Ebook
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-cyan-950/70 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-200 transition-all cursor-pointer" data-niche="saas" data-keyword="Perplexity Pro AI Research Assistant Annual Plan" data-brand="Perplexity AI" data-aff="https://perplexity.ai/pro?ref=TECHPICKS">
+                Perplexity AI Pro ($200)
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="presets" data-keyword="25 Pro Lightroom Presets Cinematic Tech Pack" data-brand="CyberShutter Visuals" data-aff="https://cybershutter.store/tokyo-cyber-luts?coupon=NEO50">
-                Cinematic Presets Pack
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-cyan-950/70 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-200 transition-all cursor-pointer" data-niche="ebooks" data-keyword="Tech Affiliate Mastery 2026 Ebook Playbook" data-brand="TechPicks Publishing" data-aff="https://techpicks.gumroad.com/l/tech-blueprint">
+                Tech Affiliate Playbook
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="templates" data-keyword="Ultimate Content Creator OS Notion Workspace" data-brand="NotionMasters Studio" data-aff="https://notionmasters.gumroad.com/l/creator-os?ref=NOTION30">
-                Notion Content OS
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-cyan-950/70 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-200 transition-all cursor-pointer" data-niche="presets" data-keyword="25 Pro Cyberpunk & Cinematic Tech LUTs Pack" data-brand="TechPicks Visuals" data-aff="https://techpicks.store/cyber-luts">
+                Cinematic Tech LUTs
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="courses" data-keyword="High-Ticket Affiliate & SEO Mastery Video Masterclass" data-brand="Affiliate Academy" data-aff="https://affiliateacademy.teachable.com/p/seo-masterclass?coupon=MASTERCLASS">
-                SEO & CRO Masterclass
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-cyan-950/70 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-200 transition-all cursor-pointer" data-niche="templates" data-keyword="Ultimate Hardware Tester OS Notion Workspace" data-brand="TechPicks Studio" data-aff="https://techpicks.gumroad.com/l/hardware-os">
+                Hardware Tester OS
               </button>
-              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-indigo-900/70 hover:bg-pink-600/80 border border-indigo-700/60 text-pink-200 hover:text-white transition-all cursor-pointer" data-niche="saas" data-keyword="SmartPicks AI Studio Pro 1-Year Cloud License" data-brand="SmartPicks Cloud" data-aff="https://smartpicks.ai/pricing?discount=CLOUD50">
-                SmartPicks AI Studio
+              <button type="button" class="ai-chip-prompt text-[11px] px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-cyan-950/70 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-200 transition-all cursor-pointer" data-niche="saas" data-keyword="TechPicks AI Studio Pro 1-Year Cloud License" data-brand="TechPicks Cloud" data-aff="https://techpicks.ai/pricing?discount=TECH50">
+                TechPicks AI Studio
               </button>
             </div>
 
