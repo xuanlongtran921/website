@@ -13,6 +13,7 @@
   let allHomeArticles = [];
   let currentHomePage = 1;
   const itemsPerPage = 8;
+  let lastRenderedArticlesJson = '';
 
   // Trilingual UI strings
   const homeI18n = {
@@ -144,6 +145,20 @@
       const p = parseInt(params.get('home_page'), 10);
       if (!isNaN(p) && p > 0) currentHomePage = p;
     }
+
+    // 0ms SWR Cache Hydration: Render immediately from localStorage if available
+    try {
+      const cached = localStorage.getItem('smartpicks_home_articles_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          allHomeArticles = parsed;
+          lastRenderedArticlesJson = cached;
+          window.allHomeArticles = allHomeArticles;
+          renderHomePage(currentHomePage, false);
+        }
+      }
+    } catch (e) {}
 
     // Fetch live posts from API / Static JSON with cache busting and fallback
     try {
@@ -420,7 +435,7 @@
                   ? 'bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 text-white shadow-md scale-105' 
                   : 'bg-white dark:bg-[#120a26] text-slate-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 active:scale-95'
               }"
-              aria-label="Trang ${i}"
+              aria-label="Page ${i}"
             >
               ${i}
             </button>
