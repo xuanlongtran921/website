@@ -1255,8 +1255,241 @@ const NICHE_CANONICAL_MAP = {
   'courses': { name: 'Video Courses', group: 'digital' }
 };
 
+const FLAGSHIP_STORE_REGISTRY = {
+  bosgame: {
+    brand: 'BOSGAME Official',
+    categorySlug: 'computing',
+    category: 'Computing & Gaming',
+    defaultProduct: {
+      title: 'BOSGAME M5 MAX Mini PC (AMD Ryzen AI Max+ PRO 495, 192GB, 2TB)',
+      salePriceUsd: '$6,199.00',
+      numericPriceUsd: 6199.00,
+      originalPriceUsd: '$7,748.75',
+      image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/2_fbed0334-eda4-4575-9f5d-caf3ae62b304.png?v=1793257514',
+      description: 'Compact AI Workstation powered by AMD Ryzen AI Max+ PRO 495 (16C/32T, up to 5.2GHz, Radeon 8065S GPU) with up to 131 TOPS to run 320B LLMs locally. 192GB onboard LPDDR5, 2TB PCIe 4.0 NVMe SSD, dual 10GbE RJ45, and OCuLink PCIe 4.0 x4 eGPU expansion.'
+    },
+    products: [
+      {
+        id: 15472904798371,
+        title: 'BOSGAME M5 MAX Mini PC (AMD Ryzen AI Max+ PRO 495, 192GB, 2TB)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-m5-max-mini-pc-ryzen-ai-max-pro-495-192gb-2tb-linux-friendly-ai-workstation-for-llm-ci-and-virtualization',
+        salePriceUsd: '$6,199.00',
+        numericPriceUsd: 6199.00,
+        salePriceVnd: '154.975.000₫',
+        originalPriceUsd: '$7,748.75',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/2_fbed0334-eda4-4575-9f5d-caf3ae62b304.png?v=1793257514',
+        brand: 'Bosgame'
+      },
+      {
+        id: 8985078333603,
+        title: 'BOSGAME M5 AI Mini Desktop (Ryzen AI Max+ 395, 96GB/128GB, 2TB)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-m5-ai-mini-desktop-ryzen-ai-max-395-96gb-128gb-2tb',
+        salePriceUsd: '$3,099.00',
+        numericPriceUsd: 3099.00,
+        salePriceVnd: '77.475.000₫',
+        originalPriceUsd: '$3,873.75',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/BOSGAME_M5_AI_PC.png?v=1793863150',
+        brand: 'Bosgame'
+      },
+      {
+        id: 9156767940771,
+        title: 'BOSGAME Mini PC P4 Ultra (AMD Ryzen 7 7730U, 16GB, 1TB SSD)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-mini-pc-p4-ultra-amd-ryzen-7-7730u-16gb-ddr4-1tb-nvme-pcie-ssd-dual-2-5g-lan-wi-fi-6e-bt5-2-4k-triple-display',
+        salePriceUsd: '$469.99',
+        numericPriceUsd: 469.99,
+        salePriceVnd: '11.750.000₫',
+        originalPriceUsd: '$587.49',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/4_61870041-bc1a-4635-92c3-061f54837904.png?v=1782107234',
+        brand: 'Bosgame'
+      },
+      {
+        id: 8719806693539,
+        title: 'BOSGAME Mini PC B100 (Intel 12th Gen Alder Lake N100, 16GB, 512GB)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-mini-pc-b100-intel-12th-gen-alder-lake-n100-full-feathured-usb-c-port',
+        salePriceUsd: '$299.49',
+        numericPriceUsd: 299.49,
+        salePriceVnd: '7.487.000₫',
+        originalPriceUsd: '$374.36',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/Bosgame-Intel-n100-mini-pc.webp?v=1742011097',
+        brand: 'Bosgame'
+      },
+      {
+        id: 9218661056675,
+        title: 'BOSGAME E7 Mini PC (Intel Core 3 100U, 16GB, 512GB NVMe SSD)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-e7-mini-pc-intel-4c-8t-cpu-up-to-4-7ghz-16gb-ddr4-512gb-nvme-ssd-triple-display-dual-2-5g-lan-wifi-6-bt5-2-mini-computer-for-office-design',
+        salePriceUsd: '$379.99',
+        numericPriceUsd: 379.99,
+        salePriceVnd: '9.500.000₫',
+        originalPriceUsd: '$474.99',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/1_9232dabb-eedb-450e-8b23-b747a57d5e97.png?v=1786169783',
+        brand: 'Bosgame'
+      },
+      {
+        id: 9127595835555,
+        title: 'Magicnuc AG3 Mini PC (Intel Core i9-13900HK, 32GB DDR5, 1TB SSD)',
+        productUrl: 'https://www.bosgame.com/products/magicnuc-ag3-mini-pc-core-i9-13900hk-32gb-ddr5-1tb-pcie-ssd-quad-display-dual-lan-hdmi-dp-wi-fi-6-bt-5-2',
+        salePriceUsd: '$729.00',
+        numericPriceUsd: 729.00,
+        salePriceVnd: '18.225.000₫',
+        originalPriceUsd: '$911.25',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/AG3-13900HK-__01.jpg?v=1779448508',
+        brand: 'Bosgame'
+      }
+    ]
+  },
+  powerqueen: {
+    brand: 'Power Queen Official',
+    categorySlug: 'power',
+    category: 'Power & GaN Charging',
+    defaultProduct: {
+      title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC with 7 Outlets & LCD Remote Control',
+      salePriceUsd: '$223.99',
+      numericPriceUsd: 223.99,
+      originalPriceUsd: '$289.99',
+      image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+      description: 'Heavy-duty 3000W pure sine wave inverter converting 12V DC battery power to clean 110V AC household electricity.'
+    },
+    products: [
+      {
+        id: 881001,
+        title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC',
+        productUrl: 'https://ipowerqueen.com/products/power-queen-3000w-pure-sine-wave-inverter',
+        salePriceUsd: '$223.99',
+        numericPriceUsd: 223.99,
+        salePriceVnd: '5.600.000₫',
+        originalPriceUsd: '$289.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881002,
+        title: 'Power Queen Battery Balancer 12V-48V Active Equalizer',
+        productUrl: 'https://ipowerqueen.com/products/battery-balancer',
+        salePriceUsd: '$45.35',
+        numericPriceUsd: 45.35,
+        salePriceVnd: '1.134.000₫',
+        originalPriceUsd: '$59.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/balancer.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881003,
+        title: 'Power Queen 12V 100Ah Mini LiFePO4 Lithium Battery',
+        productUrl: 'https://ipowerqueen.com/products/12v-100ah-mini-lifepo4',
+        salePriceUsd: '$209.99',
+        numericPriceUsd: 209.99,
+        salePriceVnd: '5.250.000₫',
+        originalPriceUsd: '$279.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/12v100ah.jpg?v=1729068065',
+        brand: 'Power Queen'
+      }
+    ]
+  },
+  ipowerqueen: {
+    brand: 'Power Queen Official',
+    categorySlug: 'power',
+    category: 'Power & GaN Charging',
+    defaultProduct: {
+      title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC with 7 Outlets & LCD Remote Control',
+      salePriceUsd: '$223.99',
+      numericPriceUsd: 223.99,
+      originalPriceUsd: '$289.99',
+      image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+      description: 'Heavy-duty 3000W pure sine wave inverter converting 12V DC battery power to clean 110V AC household electricity.'
+    },
+    products: [
+      {
+        id: 881001,
+        title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC',
+        productUrl: 'https://ipowerqueen.com/products/power-queen-3000w-pure-sine-wave-inverter',
+        salePriceUsd: '$223.99',
+        numericPriceUsd: 223.99,
+        salePriceVnd: '5.600.000₫',
+        originalPriceUsd: '$289.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881002,
+        title: 'Power Queen Battery Balancer 12V-48V Active Equalizer',
+        productUrl: 'https://ipowerqueen.com/products/battery-balancer',
+        salePriceUsd: '$45.35',
+        numericPriceUsd: 45.35,
+        salePriceVnd: '1.134.000₫',
+        originalPriceUsd: '$59.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/balancer.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881003,
+        title: 'Power Queen 12V 100Ah Mini LiFePO4 Lithium Battery',
+        productUrl: 'https://ipowerqueen.com/products/12v-100ah-mini-lifepo4',
+        salePriceUsd: '$209.99',
+        numericPriceUsd: 209.99,
+        salePriceVnd: '5.250.000₫',
+        originalPriceUsd: '$279.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/12v100ah.jpg?v=1729068065',
+        brand: 'Power Queen'
+      }
+    ]
+  },
+  meowant: {
+    brand: 'Meowant Official',
+    categorySlug: 'smarthome',
+    category: 'Smart Home & IoT',
+    defaultProduct: {
+      title: 'Meowant Self-Cleaning Cat Litter Box – MW-SC10',
+      salePriceUsd: '$245.99',
+      numericPriceUsd: 245.99,
+      originalPriceUsd: '$549.99',
+      image: 'https://cdn.shopify.com/s/files/1/0697/3466/2441/files/SC10_8b84ccac-2cf1-4721-9e3f-21bc201448c7.png?v=1794553720',
+      description: 'Meowant SC10 Open-Top Self-Cleaning Cat Litter Box with spacious 72L capacity, 11.9L waste drawer for up to 15 days hands-free cleaning.'
+    },
+    products: [
+      {
+        id: 10095445147945,
+        title: 'Meowant Self-Cleaning Cat Litter Box – MW-SC10',
+        productUrl: 'https://meowant.com/products/meowant-self-cleaning-cat-litter-box-mw-sc10',
+        salePriceUsd: '$245.99',
+        numericPriceUsd: 245.99,
+        salePriceVnd: '6.150.000₫',
+        originalPriceUsd: '$549.99',
+        image: 'https://cdn.shopify.com/s/files/1/0697/3466/2441/files/SC10_8b84ccac-2cf1-4721-9e3f-21bc201448c7.png?v=1794553720',
+        brand: 'Meowant'
+      },
+      {
+        id: 9982913577257,
+        title: 'Meowant Self-Cleaning Cat Litter Box – MW-SC09',
+        productUrl: 'https://meowant.com/products/meowant-self-cleaning-cat-litter-box-mw-sc09',
+        salePriceUsd: '$295.99',
+        numericPriceUsd: 295.99,
+        salePriceVnd: '7.400.000₫',
+        originalPriceUsd: '$789.99',
+        image: 'https://cdn.shopify.com/s/files/1/0697/3466/2441/files/SC09_97889cc7-323a-4c57-8b1f-65b5fa14d209.png?v=1794553855',
+        brand: 'Meowant'
+      }
+    ]
+  }
+};
+
 function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand = '') {
   const combined = `${url} ${keyword} ${title} ${brand}`.toLowerCase().replace(/[-_]/g, ' ');
+
+  // Direct Flagship Registry match
+  const regKey = Object.keys(FLAGSHIP_STORE_REGISTRY).find(k => combined.includes(k));
+  if (regKey && FLAGSHIP_STORE_REGISTRY[regKey]) {
+    return { slug: FLAGSHIP_STORE_REGISTRY[regKey].categorySlug, name: FLAGSHIP_STORE_REGISTRY[regKey].category };
+  }
+
+  // Computing & Gaming (Mini PC, PCs, Desktops, Laptops, Handhelds, Workstations)
+  if (/bosgame|bosgamepc|magicnuc|minisforum|gmktec|chatreey|aoostar|trigkey|geekom|beelink|mini[\s\-_]*pc|minipc|mini[\s\-_]*desktop|desktop|workstation|gaming[\s\-_]*pc|handheld[\s\-_]*pc|laptop|laptops|macbook|gpu|cpu|ram|ssd|ryzen|intel|core[\s\-_]*i[3579]|radeon|nvidia|geforce|rtx|rog[\s\-_]*ally|ally[\s\-_]*x|steam[\s\-_]*deck|legion[\s\-_]*go|razer[\s\-_]*blade|blade[\s\-_]*16|alienware|\bpc\b/.test(combined)) {
+    return { slug: 'computing', name: 'Computing & Gaming' };
+  }
+
+  // Power & GaN Charging (Power Queen Inverters, LiFePO4, Balancers, Ugreen, Anker)
+  if (/power[\s\-_]*queen|ipowerqueen|inverter|pure[\s\-_]*sine|sine[\s\-_]*wave|battery[\s\-_]*balancer|battery[\s\-_]*bank|lifepo4|equalizer|dc[\s\-_]*to[\s\-_]*ac|12v[\s\-_]*to[\s\-_]*110v|solar[\s\-_]*inverter|ugreen|nexode|anker|anker[\s\-_]*737|baseus|blade[\s\-_]*hd|power[\s\-_]*bank|powerbank|gan[\s\-_]*charger|gan\b|fast[\s\-_]*charger|desktop[\s\-_]*charger|usb[\s\-_]*c[\s\-_]*charger|portable[\s\-_]*power|power[\s\-_]*station|ecoflow|jackery|anker[\s\-_]*solix|charging[\s\-_]*station|magsafe[\s\-_]*charger|e[\s\-_]*marker|watt\b|140w|100w|65w|300w|3000w/.test(combined)) {
+    return { slug: 'power', name: 'Power & GaN Charging' };
+  }
 
   // 0. Beauty & Personal Care / Wellness / Cleanses (RogersHood, ParaFy, Skincare, Supplements)
   if (/cleanse|parasite|herbal|tincture|parafy|apothecary|rogershood|detox|skincare|skin care|serum|cream|lotion|collagen|wellness|beauty|supplement|gut health|holistic|cosmetic|anti aging|shampoo|cleanser|moisturizer|spf|sunscreen/.test(combined)) {
@@ -1283,7 +1516,6 @@ function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand 
     return { slug: 'auto', name: 'Auto Performance' };
   }
 
-
   // 1. Robotics & Drones (RC gliders, airplanes, drones, mavic, flycam, robot mowers, uav)
   if (/mowrator|mower|lawnmower|lawn mower|navimow|luba|drone|drones|flycam|fly cam|quadcopter|uav|dji|mini 4|mavic|avata|phantom|air 3|rc car|rc plane|rc glider|rc boat|rc jet|rc aircraft|rc flight|volantex|exhobby|xpilot|glider|airplane|aircraft|aerobatic|stunt plane|fixed wing|propeller|flight controller|crawler|4wd robot|telemetry|unmanned|patrol vehicle|robotics|robot\b/.test(combined)) {
     return { slug: 'robotics', name: 'Robotics & Drones' };
@@ -1295,7 +1527,7 @@ function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand 
   }
 
   // 3. Smart Home & IoT (robovacs, roborock, dreame, matter, aqara, projectors)
-  if (/roborock|dreame|ecovacs|roomba|vacuum|robot vacuum|robot mop|smart mop|aqara|matter|smart home|smarthome|smart lock|smart plug|mmwave|presence sensor|smart bulb|smart curtain|thermostat|magcubic|projector|hy350|video doorbell|home assistant|zigbee|thread hub|sliding gate/.test(combined)) {
+  if (/roborock|dreame|ecovacs|roomba|vacuum|robot vacuum|robot mop|smart mop|aqara|matter|smart home|smarthome|smart lock|smart plug|mmwave|presence sensor|smart bulb|smart curtain|thermostat|magcubic|projector|hy350|video doorbell|home assistant|zigbee|thread hub|sliding gate|meowant|litter box|cat litter|automatic feeder|pet feeder/.test(combined)) {
     return { slug: 'smarthome', name: 'Smart Home & IoT' };
   }
 
@@ -1307,16 +1539,6 @@ function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand 
   // 5. Desk Setup & EDC (keyboards, keychron, mx master, desk mats, slings, backpacks)
   if (/keychron|keyboard|keyboards|mechanical keyboard|custom keyboard|qmk|via|key switch|keycap|mx master|logitech mx|trackball|desk mat|deskmat|stream deck|elgato|wrist rest|monitor arm|pegboard|desk shelf|sling bag|sling|matein|everyday carry|edc|multitool|screen protector/.test(combined)) {
     return { slug: 'edc', name: 'Desk Setup & EDC' };
-  }
-
-  // 6. Computing & Gaming (rog ally, steam deck, laptops, mini pcs, gpus)
-  if (/rog ally|ally x|steam deck|legion go|handheld gaming|razer blade|blade 16|alienware|gaming laptop|macbook|geforce|rtx 40|rtx 50|mini pc|geekom|beelink|mechanical gaming|handheld pc|gaming pc|graphics card/.test(combined)) {
-    return { slug: 'computing', name: 'Computing & Gaming' };
-  }
-
-  // 7. Power & GaN Charging (ugreen, nexode, anker, power banks, fast chargers)
-  if (/ugreen|nexode|anker|anker 737|baseus|blade hd|power bank|powerbank|gan charger|gan |fast charger|desktop charger|usb c charger|portable power|power station|ecoflow|jackery|anker solix|charging station|magsafe charger|e marker|watt\b|140w|100w|65w|300w/.test(combined)) {
-    return { slug: 'power', name: 'Power & GaN Charging' };
   }
 
   // 8. Audio & Sound (headphones, sony xm5, bose, sennheiser, iem, dac, speakers)
@@ -1349,6 +1571,11 @@ function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand 
     return { slug: 'courses', name: 'Video Courses' };
   }
 
+  // Fallback heuristics
+  if (/\b(pc|mini pc|computer|desktop|workstation|windows|laptop|hardware|ryzen|intel|processor|gpu|cpu|ram|ssd)\b/i.test(combined)) {
+    return { slug: 'computing', name: 'Computing & Gaming' };
+  }
+
   return null;
 }
 
@@ -1360,9 +1587,29 @@ function applyAutoDetectedNiche(detected, sourceUrl = '') {
   const badgeIndicator = document.getElementById('ai-niche-auto-indicator');
   const badgeText = document.getElementById('ai-niche-auto-text');
 
+  let targetSlug = (detected.slug || '').toLowerCase();
+  if (targetSlug === 'gaming') targetSlug = 'computing';
+  if (targetSlug === 'tech') targetSlug = 'audio';
+
   // Update AI select
   if (selectAiNiche) {
-    selectAiNiche.value = detected.slug;
+    let matchedAi = false;
+    for (let opt of selectAiNiche.options) {
+      if (opt.value === targetSlug || opt.value === detected.slug) {
+        selectAiNiche.value = opt.value;
+        matchedAi = true;
+        break;
+      }
+    }
+    if (!matchedAi && detected.name) {
+      for (let opt of selectAiNiche.options) {
+        if (opt.text.toLowerCase().includes(detected.name.toLowerCase()) || detected.name.toLowerCase().includes(opt.text.toLowerCase())) {
+          selectAiNiche.value = opt.value;
+          matchedAi = true;
+          break;
+        }
+      }
+    }
     selectAiNiche.classList.add('border-cyan-400', 'ring-2', 'ring-cyan-500/30');
     setTimeout(() => {
       selectAiNiche.classList.remove('ring-2', 'ring-cyan-500/30');
@@ -1373,13 +1620,14 @@ function applyAutoDetectedNiche(detected, sourceUrl = '') {
   if (selectFormCategory) {
     let matchedOption = false;
     for (let opt of selectFormCategory.options) {
-      if (opt.value === detected.slug || opt.text.toLowerCase().includes(detected.name.toLowerCase()) || detected.name.toLowerCase().includes(opt.text.toLowerCase())) {
+      const optSlug = opt.getAttribute('data-slug');
+      if (optSlug === targetSlug || optSlug === detected.slug || opt.value === detected.slug || opt.value === detected.name || opt.text.toLowerCase().includes(detected.name.toLowerCase()) || detected.name.toLowerCase().includes(opt.text.toLowerCase())) {
         selectFormCategory.value = opt.value;
         matchedOption = true;
         break;
       }
     }
-    if (!matchedOption) {
+    if (!matchedOption && detected.name) {
       selectFormCategory.value = detected.name;
     }
   }
@@ -2057,14 +2305,44 @@ function extractFallbackMetadataFromUrl(rawUrl) {
     const u = new URL(rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl);
     const domain = u.hostname.replace(/^www\./, '').split('.')[0];
     const brand = domain.charAt(0).toUpperCase() + domain.slice(1) + ' Official';
+
+    // Check Flagship Store Registry
+    const hostLower = `${u.hostname} ${rawUrl}`.toLowerCase();
+    const regKey = Object.keys(FLAGSHIP_STORE_REGISTRY).find(k => hostLower.includes(k));
+    if (regKey && FLAGSHIP_STORE_REGISTRY[regKey]) {
+      const reg = FLAGSHIP_STORE_REGISTRY[regKey];
+      const p = reg.defaultProduct || (reg.products && reg.products[0]);
+      if (p) {
+        return {
+          success: true,
+          url: rawUrl,
+          productTitle: p.title,
+          brand: reg.brand,
+          category: reg.category,
+          categorySlug: reg.categorySlug,
+          salePriceUsd: p.salePriceUsd,
+          numericPriceUsd: p.numericPriceUsd,
+          salePriceVnd: p.salePriceVnd || (Math.round(p.numericPriceUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫',
+          originalPriceUsd: p.originalPriceUsd,
+          image: p.image || '',
+          description: p.description || '',
+          storeProducts: reg.products || [],
+          couponCode: (reg.brand.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 8) || 'SMART') + '15',
+          couponDiscount: '15% OFF Verified Merchant Deal',
+          couponExpiry: '12/31/2026',
+          source: 'flagship_registry'
+        };
+      }
+    }
+
     const detected = detectNicheFromUrlAndKeyword(rawUrl);
     return {
       success: true,
       url: rawUrl,
       productTitle: brand.replace(' Official', '') + ' Flagship Edition',
       brand: brand,
-      category: detected ? detected.name : 'Beauty & Personal Care',
-      categorySlug: detected ? detected.slug : 'beauty',
+      category: detected ? detected.name : 'Computing & Gaming',
+      categorySlug: detected ? detected.slug : 'computing',
       salePriceUsd: '$89.99',
       numericPriceUsd: 89.99,
       salePriceVnd: '2.250.000₫',
@@ -2141,8 +2419,12 @@ function renderDiscoveredStoreProducts(products) {
       // Populate input fields
       const aiKw = document.getElementById('ai-input-keyword');
       const inputTitle = document.getElementById('input-title');
+      const inputSlug = document.getElementById('input-slug');
       if (aiKw) aiKw.value = selected.title;
       if (inputTitle) inputTitle.value = selected.title;
+      if (inputSlug && selected.title) {
+        inputSlug.value = 'post-' + selected.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 50);
+      }
 
       if (selected.image) {
         const formImg = document.getElementById('input-image');
@@ -2259,11 +2541,34 @@ async function fetchAndApplyBrandPrice(targetUrl, silent = false) {
     if (data.productTitle) {
       const aiKw = document.getElementById('ai-input-keyword');
       const inputTitle = document.getElementById('input-title');
+      const inputSlug = document.getElementById('input-slug');
       if (aiKw) {
         aiKw.value = data.productTitle;
       }
-      if (inputTitle && (!inputTitle.value.trim() || inputTitle.value.includes('Sony WH-1000XM5') || inputTitle.value.includes('Sample') || inputTitle.value.includes('Mowrator') || inputTitle.value.includes('Keychron'))) {
+      if (inputTitle) {
         inputTitle.value = data.productTitle;
+      }
+      if (inputSlug) {
+        const cleanSlug = 'post-' + data.productTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 50);
+        inputSlug.value = cleanSlug;
+      }
+    }
+
+    // Enrich storeProducts and category from FLAGSHIP_STORE_REGISTRY if missing or incomplete
+    const allText = `${url} ${data.productTitle || ''} ${data.brand || ''}`.toLowerCase();
+    const regKey = Object.keys(FLAGSHIP_STORE_REGISTRY).find(k => allText.includes(k));
+    if (regKey && FLAGSHIP_STORE_REGISTRY[regKey]) {
+      const reg = FLAGSHIP_STORE_REGISTRY[regKey];
+      if (!data.storeProducts || data.storeProducts.length === 0) {
+        data.storeProducts = reg.products;
+      }
+      if (!data.categorySlug || data.categorySlug === 'beauty') {
+        data.categorySlug = reg.categorySlug;
+        data.category = reg.category;
+      }
+      if (data.salePriceUsd === '$170.00' && reg.defaultProduct.numericPriceUsd > 180) {
+        data.salePriceUsd = reg.defaultProduct.salePriceUsd;
+        data.salePriceVnd = (Math.round(reg.defaultProduct.numericPriceUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
       }
     }
 
@@ -3101,6 +3406,40 @@ Battery endurance averaged 115 minutes of continuous 4K/60fps recording on a sin
     t_verdict = `The ${cleanKw} by ${brandName} is the undisputed champion of compact creator cameras. By packaging a large 1-inch sensor, flawless autofocus, mechanical gimbal stabilization, and instantaneous deployment into an ultra-portable chassis, it empowers solo operators to produce studio-grade visuals with zero logistical headache.
 
 For vloggers, travel filmmakers, commercial social creators, and documentary storytellers, it is an indispensable creative weapon. Order through the verified official link below to receive full warranty protection, creator accessory bundles, and exclusive promotional pricing.`;
+  }
+  // 14.8 Mini PCs, AI Workstations & Compact Desktops (BOSGAME, Beelink, Minisforum, Geekom)
+  else if (/mini[\s\-_]*pc|minipc|mini[\s\-_]*desktop|workstation|desktop|magicnuc|bosgame|beelink|geekom|minisforum|chatreey|gmktec|aoostar|trigkey|alder[\s\-_]*lake|ryzen[\s\-_]*ai/i.test(kwLower) || ((niche === 'computing' || niche === 'gaming') && /pc|desktop|workstation/i.test(kwLower))) {
+    catName = 'Computing & Gaming';
+    priceU = '$469.99'; priceV = '11.750.000₫'; priceO = '$587.49';
+    couponCode = (brandName.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 8) || 'BOSGAME') + '15';
+    couponDisc = '15% OFF High-Performance Workstation';
+    t_img = resolveImage('https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=1200&q=80');
+    t_title = `${cleanKw} Comprehensive Review: Thermal Dissipation & Multi-Monitor AI Workflows Tested (2026)`;
+    t_excerpt = `We benchmarked ${cleanKw} by ${brandName} across sustained CPU render workloads, multi-monitor 4K desktop productivity, and local AI model inference: Thermal acoustics, DDR5 memory bandwidth, dual 2.5GbE LAN throughput, and PCIe 4.0 NVMe speeds evaluated.`;
+
+    t_pros = `High-efficiency multi-core processor architecture delivers outstanding compute density with ultra-low idle power draw under 15W
+Dual high-speed 2.5GbE RJ45 ethernet ports paired with Wi-Fi 6E provide ultra-reliable multi-gigabit networking for NAS and home labs
+Supports up to 4K triple/quad independent display outputs across HDMI 2.0, DisplayPort 1.4, and full-featured USB-C
+Easily expandable storage and memory chassis featuring dual-channel DDR4/DDR5 SO-DIMM and high-speed M.2 PCIe NVMe SSD slots
+Whisper-quiet copper heat-pipe cooling system keeps internal components below 72°C under sustained multi-thread stress`;
+
+    t_cons = `Heavy 3D rendering and ray-traced gaming workloads benefit from pairing an external eGPU via USB4 or OCuLink
+Compact chassis necessitates external power brick adapter rather than internal AC power supply
+Front panel USB-C port does not supply high-wattage reverse USB-PD power to charge external high-drain laptops`;
+
+    t_intro = `The landscape of desktop computing has shifted dramatically over the past two years. Bulky 20-liter ATX desktop towers that consumed massive desk real estate and poured excessive heat into home offices are increasingly being replaced by ultra-compact mini PCs. The ${cleanKw} engineered by ${brandName} represents the cutting edge of this compact revolution, cramming enterprise-grade multi-core processing, expansive high-speed connectivity, and whisper-quiet cooling into a sleek palm-sized enclosure.
+
+Designed for software engineers, digital creators, content managers, and financial analysts demanding seamless multitasking, the ${cleanKw} pairs a high-performance processing silicon architecture with responsive high-bandwidth memory and rapid PCIe NVMe storage. Whether driving triple 4K workstations, compiling multi-container Docker development environments, or running local AI inference pipelines, this mini desktop delivers uncompromising workstation throughput while maintaining an astonishingly minuscule footprint.`;
+
+    t_body = `Our hardware evaluation team subjected the ${cleanKw} to rigorous real-world benchmark stress tests over a 21-day evaluation period. Across synthetic Cinebench R23, Geekbench 6 multi-core tests, and 4K ProRes timeline rendering, the system delivered sustained peak clock speeds without encountering thermal throttling. The dual-channel memory configuration provides generous memory bandwidth, ensuring that memory-intensive browser workloads with 60+ open tabs, IDEs, and virtualization instances execute without stutter.
+
+Thermal dissipation and acoustic performance are where ${cleanKw} truly excels. Mini PCs often suffer from irritating, high-pitched fan whine under load. ${brandName} engineered an advanced thermal module featuring pure copper heat pipes, dense aluminum heatsink fins, and an oversized low-RPM turbine fan. In our sound-dampened audio testing chamber, idle sound levels registered at an imperceptible 24 dB(A), rising to just 34 dB(A) under sustained 100% CPU multi-threaded stress tests. Temperature sensors logged silicon core temperatures safely below 71°C.
+
+Connectivity is exceptionally well-appointed. The rear and front I/O panels host multiple high-speed USB 3.2 ports, full-featured USB-C with 4K DisplayPort Alt Mode, dual HDMI/DP video outputs, and dual 2.5G RJ45 Ethernet jacks. This networking layout makes the ${cleanKw} an extraordinary machine for running high-speed home labs, Proxmox hypervisors, OPNsense firewalls, or Plex media servers. Dual-band Wi-Fi 6E and Bluetooth 5.2 ensure rock-solid wireless stability for wireless mechanical keyboards, mice, and studio monitors.`;
+
+    t_verdict = `The ${cleanKw} by ${brandName} is an exceptional mini PC that proves desktop users no longer need to sacrifice workspace or endure noisy fans to achieve workstation-class computing performance. With its potent processor, whisper-quiet thermal acoustics, dual 2.5GbE connectivity, and effortless expandability, it stands as one of the best compact desktop investments of 2026.
+
+Whether you are upgrading an executive home office, assembling a space-saving multi-monitor command center, or deploying a high-efficiency 24/7 home server, the ${cleanKw} earns our highest editorial recommendation. Purchase via the verified direct merchant link below to guarantee genuine factory warranty, all regional power adapters, and the latest firmware revisions.`;
   }
   // 15. Computing, Handheld Gaming & Laptops (Razer Blade, ASUS ROG Ally)
   else if (niche === 'computing') {

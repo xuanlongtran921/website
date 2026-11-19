@@ -421,15 +421,22 @@
                     </span>
                   </div>
                   <select id="ai-input-niche" class="w-full px-3 py-2.5 rounded-xl bg-[#07080e] border border-slate-800 text-slate-100 text-xs font-semibold focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-all">
-                    <optgroup label="PHYSICAL GEAR & HARDWARE (8)">
-                      <option value="audio" selected>Audio & Sound</option>
+                    <optgroup label="HARDWARE & TECH GEAR (8)">
+                      <option value="computing" selected>Computing & Gaming</option>
+                      <option value="audio">Audio & Sound</option>
                       <option value="smarthome">Smart Home & IoT</option>
-                      <option value="edc">Desk Setup & EDC</option>
-                      <option value="wearables">Smart Wearables</option>
+                      <option value="power">Power & GaN Charging</option>
                       <option value="robotics">Robotics & Drones</option>
                       <option value="cameras">Cameras & Creator Gear</option>
-                      <option value="computing">Computing & Gaming</option>
-                      <option value="power">Power & GaN Charging</option>
+                      <option value="edc">Desk Setup & EDC</option>
+                      <option value="wearables">Smart Wearables</option>
+                    </optgroup>
+                    <optgroup label="LIFESTYLE & SPECIALTY (5)">
+                      <option value="beauty">Beauty & Personal Care</option>
+                      <option value="fashion">Alt & Gothic Fashion</option>
+                      <option value="watches">Watches & Horology</option>
+                      <option value="coffee">Espresso & Coffee</option>
+                      <option value="auto">Auto Performance & Racing</option>
                     </optgroup>
                     <optgroup label="DIGITAL ASSETS & SOFTWARE (5)">
                       <option value="saas">SaaS & AI Tools</option>
@@ -626,24 +633,29 @@
                   <div>
                     <label class="block text-xs font-bold text-purple-200 mb-1">Category / Vertical</label>
                     <select id="input-category" class="w-full px-3.5 py-2 rounded-xl bg-[#190c3d] border border-purple-800 text-white text-xs focus:border-pink-500 focus:outline-none">
-                      <optgroup label="PHYSICAL GEAR & HARDWARE">
+                      <optgroup label="HARDWARE & TECH GEAR">
+                        <option value="Computing & Gaming" data-slug="computing">Computing & Gaming</option>
+                        <option value="Audio & Tech Gear" data-slug="audio">Audio & Tech Gear</option>
+                        <option value="Smart Home" data-slug="smarthome">Smart Home & IoT</option>
+                        <option value="Power & GaN Charging" data-slug="power">Power & GaN Charging</option>
+                        <option value="Robotics & Drones" data-slug="robotics">Robotics & Drones</option>
+                        <option value="Cameras & Creator Gear" data-slug="cameras">Cameras & Creator Gear</option>
+                        <option value="Desk Setup & EDC" data-slug="edc">Desk Setup & EDC</option>
+                        <option value="Smart Wearables" data-slug="wearables">Smart Wearables</option>
+                      </optgroup>
+                      <optgroup label="LIFESTYLE & SPECIALTY">
                         <option value="Beauty & Personal Care" data-slug="beauty">Beauty & Personal Care</option>
                         <option value="Alt & Gothic Fashion" data-slug="fashion">Alt & Gothic Fashion</option>
                         <option value="Watches & Horology" data-slug="watches">Watches & Horology</option>
-                        <option value="Auto Performance" data-slug="auto">Auto Performance & Racing</option>
-                        <option value="Audio & Tech" data-slug="tech">Audio & Tech Gear</option>
-                        <option value="Desk Setup & EDC" data-slug="edc">Desk Setup & EDC</option>
-                        <option value="Cameras & Video" data-slug="cameras">Cameras & Creator Gear</option>
                         <option value="Espresso & Coffee" data-slug="coffee">Espresso & Coffee Gear</option>
-                        <option value="Gaming Gear & Laptops" data-slug="gaming">Gaming Gear & Laptops</option>
-                        <option value="Smart Home" data-slug="smarthome">Smart Home & Automation</option>
+                        <option value="Auto Performance" data-slug="auto">Auto Performance & Racing</option>
                       </optgroup>
-                      <optgroup label="DIGITAL PRODUCTS & ASSETS">
+                      <optgroup label="DIGITAL ASSETS & SOFTWARE">
+                        <option value="SaaS & AI Tools" data-slug="saas">SaaS, Cloud & AI Tools</option>
                         <option value="Ebooks & Playbooks" data-slug="ebooks">Ebooks & Strategy Playbooks</option>
                         <option value="Presets & LUTs" data-slug="presets">Creative Presets & LUTs</option>
                         <option value="Notion Templates" data-slug="templates">Notion Templates & Productivity OS</option>
                         <option value="Video Courses" data-slug="courses">Video Courses & Masterclasses</option>
-                        <option value="SaaS & AI Tools" data-slug="saas">SaaS, Cloud & AI Tools</option>
                       </optgroup>
                     </select>
                   </div>

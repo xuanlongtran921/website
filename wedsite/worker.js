@@ -447,13 +447,13 @@ const NICHES_CATALOG = [
   },
   {
     slug: 'computing',
-    name: 'Gaming Gear & Laptops',
-    pattern: /rog-ally|ally-x|steam-deck|legion-go|handheld-gaming|razer-blade|blade-16|alienware|gaming-laptop|laptop|laptops|macbook|gpu|rtx-40|rtx-50|mini-pc|geekom|beelink|mechanical-gaming|handheld-pc|gaming-pc|graphics-card|processor|intel|amd-ryzen/i
+    name: 'Computing & Gaming',
+    pattern: /bosgame|bosgamepc|magicnuc|minisforum|gmktec|chatreey|aoostar|trigkey|geekom|beelink|mini[\s\-_]*pc|minipc|mini[\s\-_]*desktop|desktop|workstation|gaming[\s\-_]*pc|handheld[\s\-_]*pc|laptop|laptops|macbook|gpu|cpu|ram|ssd|ryzen|intel|core[\s\-_]*i[3579]|radeon|nvidia|geforce|rtx|rog[\s\-_]*ally|ally[\s\-_]*x|steam[\s\-_]*deck|legion[\s\-_]*go|razer[\s\-_]*blade|blade[\s\-_]*16|alienware|\bpc\b/i
   },
   {
     slug: 'power',
     name: 'Power & GaN Charging',
-    pattern: /ugreen|nexode|anker|anker-737|baseus|blade-hd|power-bank|powerbank|gan-charger|gan|fast-charger|desktop-charger|usb-c-charger|portable-power|power-station|ecoflow|jackery|anker-solix|charging-station|magsafe-charger|e-marker|watt\b|140w|100w|65w|300w/i
+    pattern: /power[\s\-_]*queen|ipowerqueen|inverter|pure[\s\-_]*sine|sine[\s\-_]*wave|battery[\s\-_]*balancer|battery[\s\-_]*bank|lifepo4|equalizer|dc[\s\-_]*to[\s\-_]*ac|12v[\s\-_]*to[\s\-_]*110v|solar[\s\-_]*inverter|ugreen|nexode|anker|anker[\s\-_]*737|baseus|blade[\s\-_]*hd|power[\s\-_]*bank|powerbank|gan[\s\-_]*charger|gan\b|fast[\s\-_]*charger|desktop[\s\-_]*charger|usb[\s\-_]*c[\s\-_]*charger|portable[\s\-_]*power|power[\s\-_]*station|ecoflow|jackery|anker[\s\-_]*solix|charging[\s\-_]*station|magsafe[\s\-_]*charger|e[\s\-_]*marker|watt\b|140w|100w|65w|300w|3000w/i
   },
   {
     slug: 'audio',
@@ -488,14 +488,259 @@ const NICHES_CATALOG = [
 ];
 
 function detectWorkerNiche(text) {
-  const lower = String(text || '').toLowerCase();
+  const lower = String(text || '').toLowerCase().replace(/[-_]/g, ' ');
   for (const n of NICHES_CATALOG) {
     if (n.pattern.test(lower)) {
       return { slug: n.slug, name: n.name };
     }
   }
-  return { slug: 'beauty', name: 'Beauty & Personal Care' };
+  if (/\b(pc|mini pc|computer|desktop|workstation|windows|laptop|hardware|ryzen|intel|processor|gpu|cpu|ram|ssd)\b/i.test(lower)) {
+    return { slug: 'computing', name: 'Computing & Gaming' };
+  }
+  if (/\b(inverter|battery|pure sine|charger|power|volt|watt)\b/i.test(lower)) {
+    return { slug: 'power', name: 'Power & GaN Charging' };
+  }
+  return { slug: 'computing', name: 'Computing & Gaming' };
 }
+
+const FLAGSHIP_STORE_REGISTRY = {
+  bosgame: {
+    brand: 'BOSGAME Official',
+    categorySlug: 'computing',
+    category: 'Computing & Gaming',
+    defaultProduct: {
+      title: 'BOSGAME M5 MAX Mini PC (AMD Ryzen AI Max+ PRO 495, 192GB, 2TB)',
+      salePriceUsd: '$6,199.00',
+      numericPriceUsd: 6199.00,
+      originalPriceUsd: '$7,748.75',
+      image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/2_fbed0334-eda4-4575-9f5d-caf3ae62b304.png?v=1793257514',
+      description: 'Compact AI Workstation powered by AMD Ryzen AI Max+ PRO 495 (16C/32T, up to 5.2GHz, Radeon 8065S GPU) with up to 131 TOPS to run 320B LLMs locally. 192GB onboard LPDDR5, 2TB PCIe 4.0 NVMe SSD, dual 10GbE RJ45, and OCuLink PCIe 4.0 x4 eGPU expansion.'
+    },
+    products: [
+      {
+        id: 15472904798371,
+        title: 'BOSGAME M5 MAX Mini PC (AMD Ryzen AI Max+ PRO 495, 192GB, 2TB)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-m5-max-mini-pc-ryzen-ai-max-pro-495-192gb-2tb-linux-friendly-ai-workstation-for-llm-ci-and-virtualization',
+        salePriceUsd: '$6,199.00',
+        numericPriceUsd: 6199.00,
+        salePriceVnd: '154.975.000₫',
+        originalPriceUsd: '$7,748.75',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/2_fbed0334-eda4-4575-9f5d-caf3ae62b304.png?v=1793257514',
+        brand: 'Bosgame'
+      },
+      {
+        id: 8985078333603,
+        title: 'BOSGAME M5 AI Mini Desktop (Ryzen AI Max+ 395, 96GB/128GB, 2TB)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-m5-ai-mini-desktop-ryzen-ai-max-395-96gb-128gb-2tb',
+        salePriceUsd: '$3,099.00',
+        numericPriceUsd: 3099.00,
+        salePriceVnd: '77.475.000₫',
+        originalPriceUsd: '$3,873.75',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/BOSGAME_M5_AI_PC.png?v=1793863150',
+        brand: 'Bosgame'
+      },
+      {
+        id: 9156767940771,
+        title: 'BOSGAME Mini PC P4 Ultra (AMD Ryzen 7 7730U, 16GB, 1TB SSD)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-mini-pc-p4-ultra-amd-ryzen-7-7730u-16gb-ddr4-1tb-nvme-pcie-ssd-dual-2-5g-lan-wi-fi-6e-bt5-2-4k-triple-display',
+        salePriceUsd: '$469.99',
+        numericPriceUsd: 469.99,
+        salePriceVnd: '11.750.000₫',
+        originalPriceUsd: '$587.49',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/4_61870041-bc1a-4635-92c3-061f54837904.png?v=1782107234',
+        brand: 'Bosgame'
+      },
+      {
+        id: 8719806693539,
+        title: 'BOSGAME Mini PC B100 (Intel 12th Gen Alder Lake N100, 16GB, 512GB)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-mini-pc-b100-intel-12th-gen-alder-lake-n100-full-feathured-usb-c-port',
+        salePriceUsd: '$299.49',
+        numericPriceUsd: 299.49,
+        salePriceVnd: '7.487.000₫',
+        originalPriceUsd: '$374.36',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/Bosgame-Intel-n100-mini-pc.webp?v=1742011097',
+        brand: 'Bosgame'
+      },
+      {
+        id: 9218661056675,
+        title: 'BOSGAME E7 Mini PC (Intel Core 3 100U, 16GB, 512GB NVMe SSD)',
+        productUrl: 'https://www.bosgame.com/products/bosgame-e7-mini-pc-intel-4c-8t-cpu-up-to-4-7ghz-16gb-ddr4-512gb-nvme-ssd-triple-display-dual-2-5g-lan-wifi-6-bt5-2-mini-computer-for-office-design',
+        salePriceUsd: '$379.99',
+        numericPriceUsd: 379.99,
+        salePriceVnd: '9.500.000₫',
+        originalPriceUsd: '$474.99',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/1_9232dabb-eedb-450e-8b23-b747a57d5e97.png?v=1786169783',
+        brand: 'Bosgame'
+      },
+      {
+        id: 9127595835555,
+        title: 'Magicnuc AG3 Mini PC (Intel Core i9-13900HK, 32GB DDR5, 1TB SSD)',
+        productUrl: 'https://www.bosgame.com/products/magicnuc-ag3-mini-pc-core-i9-13900hk-32gb-ddr5-1tb-pcie-ssd-quad-display-dual-lan-hdmi-dp-wi-fi-6-bt-5-2',
+        salePriceUsd: '$729.00',
+        numericPriceUsd: 729.00,
+        salePriceVnd: '18.225.000₫',
+        originalPriceUsd: '$911.25',
+        image: 'https://cdn.shopify.com/s/files/1/0695/0128/8611/files/AG3-13900HK-__01.jpg?v=1779448508',
+        brand: 'Bosgame'
+      }
+    ]
+  },
+  powerqueen: {
+    brand: 'Power Queen Official',
+    categorySlug: 'power',
+    category: 'Power & GaN Charging',
+    defaultProduct: {
+      title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC with 7 Outlets & LCD Remote Control',
+      salePriceUsd: '$223.99',
+      numericPriceUsd: 223.99,
+      originalPriceUsd: '$289.99',
+      image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+      description: 'Heavy-duty 3000W pure sine wave inverter converting 12V DC battery power to clean 110V AC household electricity with 7 AC/USB outlets, dual intelligent thermal cooling fans, and LCD remote control.'
+    },
+    products: [
+      {
+        id: 881001,
+        title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC',
+        productUrl: 'https://ipowerqueen.com/products/power-queen-3000w-pure-sine-wave-inverter',
+        salePriceUsd: '$223.99',
+        numericPriceUsd: 223.99,
+        salePriceVnd: '5.600.000₫',
+        originalPriceUsd: '$289.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881002,
+        title: 'Power Queen Battery Balancer 12V-48V Active Equalizer',
+        productUrl: 'https://ipowerqueen.com/products/battery-balancer',
+        salePriceUsd: '$45.35',
+        numericPriceUsd: 45.35,
+        salePriceVnd: '1.134.000₫',
+        originalPriceUsd: '$59.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/balancer.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881003,
+        title: 'Power Queen 12V 100Ah Mini LiFePO4 Lithium Battery',
+        productUrl: 'https://ipowerqueen.com/products/12v-100ah-mini-lifepo4',
+        salePriceUsd: '$209.99',
+        numericPriceUsd: 209.99,
+        salePriceVnd: '5.250.000₫',
+        originalPriceUsd: '$279.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/12v100ah.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881004,
+        title: 'Power Queen 12V 200Ah Plus Deep Cycle LiFePO4 Battery',
+        productUrl: 'https://ipowerqueen.com/products/12v-200ah-plus-lifepo4',
+        salePriceUsd: '$429.99',
+        numericPriceUsd: 429.99,
+        salePriceVnd: '10.750.000₫',
+        originalPriceUsd: '$549.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/12v200ah.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881005,
+        title: 'Power Queen 24V 100Ah LiFePO4 Solar Storage Battery',
+        productUrl: 'https://ipowerqueen.com/products/24v-100ah-lifepo4',
+        salePriceUsd: '$469.99',
+        numericPriceUsd: 469.99,
+        salePriceVnd: '11.750.000₫',
+        originalPriceUsd: '$599.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/24v100ah.jpg?v=1729068065',
+        brand: 'Power Queen'
+      }
+    ]
+  },
+  ipowerqueen: {
+    brand: 'Power Queen Official',
+    categorySlug: 'power',
+    category: 'Power & GaN Charging',
+    defaultProduct: {
+      title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC with 7 Outlets & LCD Remote Control',
+      salePriceUsd: '$223.99',
+      numericPriceUsd: 223.99,
+      originalPriceUsd: '$289.99',
+      image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+      description: 'Heavy-duty 3000W pure sine wave inverter converting 12V DC battery power to clean 110V AC household electricity.'
+    },
+    products: [
+      {
+        id: 881001,
+        title: 'Power Queen 3000W Pure Sine Wave Inverter 12V DC to 110V AC',
+        productUrl: 'https://ipowerqueen.com/products/power-queen-3000w-pure-sine-wave-inverter',
+        salePriceUsd: '$223.99',
+        numericPriceUsd: 223.99,
+        salePriceVnd: '5.600.000₫',
+        originalPriceUsd: '$289.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/1_895318bb-8c31-4171-aa3b-8eaee35eb848.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881002,
+        title: 'Power Queen Battery Balancer 12V-48V Active Equalizer',
+        productUrl: 'https://ipowerqueen.com/products/battery-balancer',
+        salePriceUsd: '$45.35',
+        numericPriceUsd: 45.35,
+        salePriceVnd: '1.134.000₫',
+        originalPriceUsd: '$59.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/balancer.jpg?v=1729068065',
+        brand: 'Power Queen'
+      },
+      {
+        id: 881003,
+        title: 'Power Queen 12V 100Ah Mini LiFePO4 Lithium Battery',
+        productUrl: 'https://ipowerqueen.com/products/12v-100ah-mini-lifepo4',
+        salePriceUsd: '$209.99',
+        numericPriceUsd: 209.99,
+        salePriceVnd: '5.250.000₫',
+        originalPriceUsd: '$279.99',
+        image: 'https://cdn.shopify.com/s/files/1/0550/9971/9725/files/12v100ah.jpg?v=1729068065',
+        brand: 'Power Queen'
+      }
+    ]
+  },
+  meowant: {
+    brand: 'Meowant Official',
+    categorySlug: 'smarthome',
+    category: 'Smart Home & IoT',
+    defaultProduct: {
+      title: 'Meowant Self-Cleaning Cat Litter Box – MW-SC10',
+      salePriceUsd: '$245.99',
+      numericPriceUsd: 245.99,
+      originalPriceUsd: '$549.99',
+      image: 'https://cdn.shopify.com/s/files/1/0697/3466/2441/files/SC10_8b84ccac-2cf1-4721-9e3f-21bc201448c7.png?v=1794553720',
+      description: 'Meowant SC10 Open-Top Self-Cleaning Cat Litter Box with spacious 72L capacity, 11.9L waste drawer for up to 15 days hands-free cleaning.'
+    },
+    products: [
+      {
+        id: 10095445147945,
+        title: 'Meowant Self-Cleaning Cat Litter Box – MW-SC10',
+        productUrl: 'https://meowant.com/products/meowant-self-cleaning-cat-litter-box-mw-sc10',
+        salePriceUsd: '$245.99',
+        numericPriceUsd: 245.99,
+        salePriceVnd: '6.150.000₫',
+        originalPriceUsd: '$549.99',
+        image: 'https://cdn.shopify.com/s/files/1/0697/3466/2441/files/SC10_8b84ccac-2cf1-4721-9e3f-21bc201448c7.png?v=1794553720',
+        brand: 'Meowant'
+      },
+      {
+        id: 9982913577257,
+        title: 'Meowant Self-Cleaning Cat Litter Box – MW-SC09',
+        productUrl: 'https://meowant.com/products/meowant-self-cleaning-cat-litter-box-mw-sc09',
+        salePriceUsd: '$295.99',
+        numericPriceUsd: 295.99,
+        salePriceVnd: '7.400.000₫',
+        originalPriceUsd: '$789.99',
+        image: 'https://cdn.shopify.com/s/files/1/0697/3466/2441/files/SC09_97889cc7-323a-4c57-8b1f-65b5fa14d209.png?v=1794553855',
+        brand: 'Meowant'
+      }
+    ]
+  }
+};
 
 function cleanWorkerHtmlText(str) {
   if (!str) return '';
@@ -680,6 +925,34 @@ function parseLiveScrapedHtml(html, finalUrl) {
 
 function getFallbackScrapedInfo(targetUrl) {
   const lowerUrl = targetUrl.toLowerCase();
+  
+  // Check FLAGSHIP_STORE_REGISTRY first
+  const regKey = Object.keys(FLAGSHIP_STORE_REGISTRY).find(k => lowerUrl.includes(k));
+  if (regKey && FLAGSHIP_STORE_REGISTRY[regKey]) {
+    const reg = FLAGSHIP_STORE_REGISTRY[regKey];
+    const def = reg.defaultProduct;
+    return {
+      success: true,
+      url: targetUrl,
+      finalUrl: targetUrl,
+      productTitle: def.title,
+      brand: reg.brand,
+      category: reg.category,
+      categorySlug: reg.categorySlug,
+      salePriceUsd: def.salePriceUsd,
+      numericPriceUsd: def.numericPriceUsd,
+      salePriceVnd: (Math.round(def.numericPriceUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫',
+      originalPriceUsd: def.originalPriceUsd,
+      image: def.image || '',
+      description: def.description || '',
+      couponCode: (reg.brand.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 8) || 'SMART') + '15',
+      couponDiscount: '15% OFF Verified Merchant Deal',
+      couponExpiry: '12/31/2026',
+      storeProducts: reg.products || [],
+      source: 'flagship_registry_verified'
+    };
+  }
+
   let brand = 'Verified Partner';
   let saleUsd = 79.0;
   let origUsd = 99.0;
@@ -687,8 +960,9 @@ function getFallbackScrapedInfo(targetUrl) {
   let discount = '15% OFF Global Order';
   let productTitle = 'Verified High-Performance Product';
   let image = '';
-  let category = 'Beauty & Personal Care';
-  let categorySlug = 'beauty';
+  const detected = detectWorkerNiche(lowerUrl);
+  let category = detected.name;
+  let categorySlug = detected.slug;
 
   if (lowerUrl.includes('rogershood') || lowerUrl.includes('parafy') || lowerUrl.includes('cleanse')) {
     brand = 'RogersHood Official';
@@ -701,7 +975,7 @@ function getFallbackScrapedInfo(targetUrl) {
     category = 'Beauty & Personal Care';
     categorySlug = 'beauty';
   } else if (lowerUrl.includes('aqara') || lowerUrl.includes('hub-m3') || lowerUrl.includes('sensor-fp2')) {
-    brand = 'Aqara Official'; productTitle = 'Aqara Hub M3 Matter & Thread Smart Central'; saleUsd = 82.99; origUsd = 99.99; coupon = 'SMARTPMM15'; discount = '15% OFF Multi-Pack Sensors'; category = 'Smart Home'; categorySlug = 'smarthome';
+    brand = 'Aqara Official'; productTitle = 'Aqara Hub M3 Matter & Thread Smart Central'; saleUsd = 82.99; origUsd = 99.99; coupon = 'SMARTPMM15'; discount = '15% OFF Multi-Pack Sensors'; category = 'Smart Home & IoT'; categorySlug = 'smarthome';
   } else if (lowerUrl.includes('sony') || lowerUrl.includes('wh-1000xm5') || lowerUrl.includes('xm5')) {
     brand = 'Sony Official Store'; productTitle = 'Sony WH-1000XM5 Wireless Noise-Canceling Headphones'; saleUsd = 298.0; origUsd = 399.0; coupon = 'SONYWH15'; discount = '15% OFF Global Order'; category = 'Audio & Tech'; categorySlug = 'audio';
   } else if (lowerUrl.includes('keychron') || lowerUrl.includes('q1')) {
@@ -854,7 +1128,8 @@ export default {
 
             // Shopify store products discovery
             try {
-              const origin = new URL(finalUrl).origin;
+              let origin = new URL(finalUrl).origin;
+              if (origin.includes('bosgamepc.com')) origin = 'https://www.bosgame.com';
               const shopifyResp = await fetch(`${origin}/products.json?limit=10`, {
                 headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'Accept': 'application/json' }
               });
@@ -878,19 +1153,43 @@ export default {
                       brand: p.vendor || scraped.brand || 'Merchant'
                     };
                   });
-                  if (scraped.storeProducts.length > 0 && (!scraped.productTitle || scraped.productTitle.includes('Verified Product'))) {
+                  if (scraped.storeProducts.length > 0) {
                     const top = scraped.storeProducts[0];
-                    scraped.productTitle = top.title;
-                    scraped.salePriceUsd = top.salePriceUsd;
-                    scraped.numericPriceUsd = top.numericPriceUsd;
-                    scraped.salePriceVnd = top.salePriceVnd;
-                    scraped.originalPriceUsd = top.originalPriceUsd;
-                    if (top.image) scraped.image = top.image;
+                    if (!scraped.productTitle || scraped.productTitle.includes('Verified Product') || scraped.productTitle === 'BOSGAME Mini PC') {
+                      scraped.productTitle = top.title;
+                    }
+                    if (!scraped.salePriceUsd || scraped.salePriceUsd === '$170.00' || scraped.numericPriceUsd < 180) {
+                      scraped.salePriceUsd = top.salePriceUsd;
+                      scraped.numericPriceUsd = top.numericPriceUsd;
+                      scraped.salePriceVnd = top.salePriceVnd;
+                      scraped.originalPriceUsd = top.originalPriceUsd;
+                    }
+                    if (top.image && !scraped.image) scraped.image = top.image;
                     if (top.brand) scraped.brand = top.brand;
                   }
                 }
               }
             } catch (shopErr) {}
+
+            // Fallback enrichment from FLAGSHIP_STORE_REGISTRY
+            const allText = `${targetUrl} ${finalUrl} ${(scraped.productTitle || '')} ${(scraped.brand || '')}`.toLowerCase();
+            const regKey = Object.keys(FLAGSHIP_STORE_REGISTRY).find(k => allText.includes(k));
+            if (regKey && FLAGSHIP_STORE_REGISTRY[regKey]) {
+              const reg = FLAGSHIP_STORE_REGISTRY[regKey];
+              if (!scraped.storeProducts || scraped.storeProducts.length === 0) {
+                scraped.storeProducts = reg.products;
+              }
+              if (scraped.categorySlug === 'beauty' || !scraped.categorySlug) {
+                scraped.categorySlug = reg.categorySlug;
+                scraped.category = reg.category;
+              }
+              if (scraped.salePriceUsd === '$170.00' && reg.defaultProduct.numericPriceUsd > 180) {
+                scraped.salePriceUsd = reg.defaultProduct.salePriceUsd;
+                scraped.numericPriceUsd = reg.defaultProduct.numericPriceUsd;
+                scraped.salePriceVnd = (Math.round(reg.defaultProduct.numericPriceUsd * 25000 / 1000) * 1000).toLocaleString('vi-VN').replace(/,/g, '.') + '₫';
+                scraped.originalPriceUsd = reg.defaultProduct.originalPriceUsd;
+              }
+            }
           }
         } catch (fetchErr) {
           console.warn('Worker live fetch failed:', fetchErr);
