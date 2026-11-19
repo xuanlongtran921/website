@@ -418,7 +418,7 @@ const NICHES_CATALOG = [
   {
     slug: 'auto',
     name: 'Auto Performance',
-    pattern: /auto|intake|exhaust|turbo|tuning|bullboost|brembo|brake|racing|motor|engine|coilover/i
+    pattern: /\bauto\b|\bautomotive\b|exhaust|turbo|tuning|bullboost|brembo|\bbrakes?\b|racing|coilover/i
   },
   {
     slug: 'robotics',
@@ -489,6 +489,10 @@ const NICHES_CATALOG = [
 
 function detectWorkerNiche(text) {
   const lower = String(text || '').toLowerCase().replace(/[-_]/g, ' ');
+  const regKey = Object.keys(FLAGSHIP_STORE_REGISTRY).find(k => lower.includes(k));
+  if (regKey && FLAGSHIP_STORE_REGISTRY[regKey] && FLAGSHIP_STORE_REGISTRY[regKey].categorySlug) {
+    return { slug: FLAGSHIP_STORE_REGISTRY[regKey].categorySlug, name: FLAGSHIP_STORE_REGISTRY[regKey].category };
+  }
   for (const n of NICHES_CATALOG) {
     if (n.pattern.test(lower)) {
       return { slug: n.slug, name: n.name };

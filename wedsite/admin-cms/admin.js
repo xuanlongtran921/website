@@ -1512,7 +1512,7 @@ function detectNicheFromUrlAndKeyword(url = '', keyword = '', title = '', brand 
   }
 
   // 0e. Auto Performance
-  if (/auto|intake|exhaust|turbo|tuning|bullboost|brembo|brake|racing|motor|engine|coilover/.test(combined)) {
+  if (/\bauto\b|\bautomotive\b|intake|exhaust|turbo|tuning|bullboost|brembo|\bbrakes?\b|racing|coilover/.test(combined)) {
     return { slug: 'auto', name: 'Auto Performance' };
   }
 
